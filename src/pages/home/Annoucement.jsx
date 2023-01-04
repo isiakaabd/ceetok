@@ -16,7 +16,7 @@ const Annoucement = () => {
             border: "1px solid #FF9B04",
             height: "6rem",
             padding: "1.2rem 2rem",
-            width: "34rem",
+            width: "30rem",
           }}
           flexWrap="nowrap"
           gap={3}

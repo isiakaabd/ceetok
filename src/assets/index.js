@@ -11,9 +11,11 @@ import facebook from "./images/facebook.png";
 import linkedin from "./images/linkedin.png";
 import annoucement from "./images/annoucement.png";
 import instagram from "./images/instagram.png";
+import davido from "./images/davido.png";
 
 export default {
   logo,
+  davido,
   facebook,
   instagram,
   twitter,

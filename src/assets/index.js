@@ -12,9 +12,13 @@ import linkedin from "./images/linkedin.png";
 import annoucement from "./images/annoucement.png";
 import instagram from "./images/instagram.png";
 import davido from "./images/davido.png";
+import fb from "./images/fb.png";
+import gmail from "./images/gmail.png";
 
 export default {
+  gmail,
   logo,
+  fb,
   davido,
   facebook,
   instagram,

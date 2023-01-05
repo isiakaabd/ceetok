@@ -13,6 +13,7 @@ const Modals = ({
   children,
   rowSpacing,
   height,
+  styles,
 }) => {
   const style = {
     position: "absolute",
@@ -26,20 +27,19 @@ const Modals = ({
 
   //   const classes = useStyles();
   return (
-    <Stack>
-      <Modal
-        open={isOpen}
-        onClose={handleClose}
-        aria-labelledby="modal-title"
-        closeAfterTransition
-        aria-describedby="modal-description"
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      aria-labelledby="modal-title"
+      closeAfterTransition
+      aria-describedby="modal-description"
+    >
+      <Box
+        sx={[style, { ...styles, margin: "auto" }]}
+        width={width ? width : "35vw"}
+        padding={{ sm: 4, xs: 3, md: 4 }}
       >
-        <Box
-          sx={style}
-          width={width ? width : "35vw"}
-          padding={{ sm: 4, xs: 3, md: 4 }}
-        >
-          <Grid
+        {/* <Grid
             container
             rowSpacing={rowSpacing ? rowSpacing : 4}
             // className={classes.modal}
@@ -51,6 +51,7 @@ const Modals = ({
               justifyContent="space-between"
               alignItems="center"
               flex="2"
+              flexD
             >
               <Grid item>
                 <Typography variant="h3">{title}</Typography>
@@ -75,10 +76,11 @@ const Modals = ({
               </Grid>
             </Grid>
             {children}
-          </Grid>
-        </Box>
-      </Modal>
-    </Stack>
+          </Grid> */}
+
+        {children}
+      </Box>
+    </Modal>
   );
 };
 Modals.propTypes = {

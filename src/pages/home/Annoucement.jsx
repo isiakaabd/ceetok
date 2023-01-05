@@ -39,9 +39,11 @@ const Annoucement = () => {
             backgroundColor: "#5F5C5C",
             color: "#fff",
             fontWeight: 700,
-            fontSize: "1.5rem",
+            fontSize: "1.2rem",
             padding: "1rem 2rem",
           }}
+          variant="contained"
+          disableElevation
         >
           Make Annoucement
         </Button>
@@ -89,6 +91,7 @@ const Annoucement = () => {
             textTransform: "capitalize",
             mt: 4,
           }}
+          variant="outlined"
         >
           See More
         </Button>

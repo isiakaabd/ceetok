@@ -52,6 +52,7 @@ const LeftTab = () => {
             color: "#fff",
             fontWeight: 700,
           }}
+          variant="outlined"
         >
           See More
         </Button>

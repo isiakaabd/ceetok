@@ -7,6 +7,7 @@ import { Footer, Header } from "components";
 import { Announcement, Home } from "pages";
 
 const App = () => {
+  console.log(muiTheme);
   return (
     <ThemeProvider theme={muiTheme}>
       <Grid

@@ -152,6 +152,7 @@ const Footer = () => {
                 fontWeight: 700,
                 color: "#fff",
               }}
+              variant="outlined"
             >
               Subscribe
             </Button>

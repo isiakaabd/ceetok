@@ -16,6 +16,11 @@ import {
   FilterList,
   IosShareOutlined,
 } from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { loginState } from "redux/slices/authSlice";
+import Modals from "components/Modal";
+import RegisterModal from "components/modals/RegisterModal";
 
 const Announcement = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -68,161 +73,185 @@ const Announcement = () => {
       },
     },
   }));
-
+  const loginStatus = useSelector((state) => state.auth.auth);
+  const [modal, setModal] = useState(false);
+  console.log(loginStatus);
+  const navigate = useNavigate();
   return (
-    <Grid item container sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}>
-      <Grid
-        item
-        container
-        alignItems="center"
-        justifyContent="space-between"
-        gap={3}
-        flexWrap="nowrap"
-      >
-        <Grid item container alignItems="center">
-          <Grid
-            item
-            container
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              cursor: "pointer",
-              //   border: "1px solid #FF9B04",
-              height: "6rem",
-              padding: "1.2rem 2rem",
-              width: "30rem",
-            }}
-            flexWrap="nowrap"
-            gap={3}
-          >
-            <img
-              src={images.annoucement}
-              alt="annoucement icon"
-              style={{ width: "4rem", height: "4rem", display: "inline-block" }}
-            />
-            <Typography
-              sx={{ color: "#464646", fontSize: "2.5rem", fontWeight: 700 }}
+    <>
+      <Grid item container sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}>
+        <Grid
+          item
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          gap={3}
+          flexWrap="nowrap"
+        >
+          <Grid item container alignItems="center">
+            <Grid
+              item
+              container
+              alignItems="center"
+              justifyContent="center"
+              sx={{
+                cursor: "pointer",
+                height: "6rem",
+                padding: "1.2rem 2rem",
+                width: "30rem",
+              }}
+              flexWrap="nowrap"
+              gap={3}
             >
-              Annoucement
-            </Typography>
+              <img
+                src={images.annoucement}
+                alt="annoucement icon"
+                style={{
+                  width: "4rem",
+                  height: "4rem",
+                  display: "inline-block",
+                }}
+              />
+              <Typography
+                sx={{ color: "#464646", fontSize: "2.5rem", fontWeight: 700 }}
+              >
+                Annoucement
+              </Typography>
+            </Grid>
+            <Button
+              sx={{
+                height: "3.5rem",
+                borderRadius: ".5rem",
+                backgroundColor: "#5F5C5C",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "1.2rem",
+                padding: "1rem 2rem",
+                "&:hover": {
+                  backgroundColor: "#5F5C5C",
+                  color: "#fff",
+                },
+              }}
+              variant="outlined"
+              onClick={() =>
+                loginStatus ? navigate("/make-announcement") : setModal(true)
+              }
+            >
+              Make Annoucement
+            </Button>
           </Grid>
-          <Button
-            sx={{
-              height: "3.5rem",
-              borderRadius: ".5rem",
-              backgroundColor: "#5F5C5C",
-              color: "#fff",
-              fontWeight: 700,
-              fontSize: "1.2rem",
-              padding: "1rem 2rem",
-            }}
-          >
-            Make Annoucement
-          </Button>
+
+          <div>
+            <Button
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              variant="contained"
+              disableElevation
+              sx={{ width: "10rem" }}
+              onClick={handleClick}
+              startIcon={<FilterList />}
+            >
+              Sort by
+            </Button>
+            <StyledMenu
+              id="demo-customized-menu"
+              MenuListProps={{
+                "aria-labelledby": "demo-customized-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose} disableRipple>
+                Date
+              </MenuItem>
+              <MenuItem onClick={handleClose} disableRipple>
+                Trending
+              </MenuItem>
+              <MenuItem onClick={handleClose} disableRipple>
+                Recent
+              </MenuItem>
+            </StyledMenu>
+          </div>
         </Grid>
 
-        <div>
-          <Button
-            id="demo-customized-button"
-            aria-controls={open ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            variant="contained"
-            disableElevation
-            sx={{ width: "10rem" }}
-            onClick={handleClick}
-            startIcon={<FilterList />}
-          >
-            Sort by
-          </Button>
-          <StyledMenu
-            id="demo-customized-menu"
-            MenuListProps={{
-              "aria-labelledby": "demo-customized-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose} disableRipple>
-              Date
-            </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>
-              Trending
-            </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>
-              Recent
-            </MenuItem>
-          </StyledMenu>
-        </div>
-      </Grid>
-
-      {/* list */}
-      <Grid
-        item
-        container
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "repeat(4,1fr)" },
-          py: 8,
-          gap: 4,
-          borderRadius: "1.6rem",
-          background: "White",
-        }}
-      >
-        {Array(20)
-          .fill(undefined)
-          .map((item, index) => (
-            <Grid item container key={index} flexWrap="nowrap">
-              <Grid
-                item
-                sx={{
-                  padding: "2rem",
-                  border: "1px solid #9B9A9A",
-                  borderRadius: "1.2rem",
-                }}
-              >
-                <img src={images.davido} alt="davido" />
-
-                <Typography
-                  sx={{ color: "#464646", fontSize: "1.3rem", fontWeight: 700 }}
-                >
-                  David Ifeanyi Adeleke is confirmed dead after drowing in a
-                  swimming pool
-                </Typography>
+        {/* list */}
+        <Grid
+          item
+          container
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "repeat(4,1fr)" },
+            py: 8,
+            gap: 4,
+            borderRadius: "1.6rem",
+            background: "White",
+          }}
+        >
+          {Array(20)
+            .fill(undefined)
+            .map((item, index) => (
+              <Grid item container key={index} flexWrap="nowrap">
                 <Grid
                   item
-                  container
-                  justifyContent="space-between"
-                  alignItems="center"
-                  flexWrap="nowrap"
-                  sx={{ color: "#5F5C5C", mt: 3 }}
+                  sx={{
+                    padding: "2rem",
+                    border: "1px solid #9B9A9A",
+                    borderRadius: "1.2rem",
+                  }}
                 >
-                  <Grid item>
-                    <Grid container alignItems="center">
-                      <ChatBubbleOutline />
-                      <Typography variant="span" sx={{ ml: 1 }}>
-                        223
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Grid container alignItems="center">
-                      <FavoriteBorderOutlined />
-                      <Typography variant="span" sx={{ ml: 1 }}>
-                        223
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <IosShareOutlined />
+                  <img src={images.davido} alt="davido" />
 
-                  <MoreVertIcon />
+                  <Typography
+                    sx={{
+                      color: "#464646",
+                      fontSize: "1.3rem",
+                      fontWeight: 700,
+                    }}
+                  >
+                    David Ifeanyi Adeleke is confirmed dead after drowing in a
+                    swimming pool
+                  </Typography>
+                  <Grid
+                    item
+                    container
+                    justifyContent="space-between"
+                    alignItems="center"
+                    flexWrap="nowrap"
+                    sx={{ color: "#5F5C5C", mt: 3 }}
+                  >
+                    <Grid item>
+                      <Grid container alignItems="center">
+                        <ChatBubbleOutline />
+                        <Typography variant="span" sx={{ ml: 1 }}>
+                          223
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid container alignItems="center">
+                        <FavoriteBorderOutlined />
+                        <Typography variant="span" sx={{ ml: 1 }}>
+                          223
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <IosShareOutlined />
+
+                    <MoreVertIcon />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          ))}
+            ))}
+        </Grid>
       </Grid>
-    </Grid>
+
+      <Modals isOpen={modal} handleClose={() => setModal(false)}>
+        <RegisterModal />
+      </Modals>
+    </>
   );
 };
 

@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import Modals from "./Modal";
 import RegisterModal from "./modals/RegisterModal";
-import { LoginModal } from "./modals";
+import LoginModal from "./modals/LoginModal";
 const pages = [
   {
     id: 0,
@@ -50,8 +50,6 @@ const pages = [
     title: "Contact Us",
   },
 ];
-// const pages = ["Trending", "Live", "New", "Recent", "Contact Us"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
   const ListItem = styled(MenuItem)(({ theme }) => ({
@@ -281,18 +279,17 @@ function Header() {
         </Grid>
       </Grid>
 
-      <Modals styles={{ width: "60vw", height: "90vh" }} isOpen={modal}>
-        <RegisterModal
-          handleClose={handleRegisterClose}
-          handleLoginOpen={handleLoginOpen}
-        />
-      </Modals>
-      <Modals styles={{ width: "60vw", height: "90vh" }} isOpen={isLogin}>
+      {modal && (
+        <RegisterModal handleClose={handleRegisterClose} isOpen={modal} />
+      )}
+
+      {isLogin && (
         <LoginModal
           handleClose={handleLoginClose}
-          handleRegisterOpen={handleRegisterOpen}
+          // handleRegisterOpen={handleRegisterOpen}
+          isLogin={isLogin}
         />
-      </Modals>
+      )}
     </>
   );
 }

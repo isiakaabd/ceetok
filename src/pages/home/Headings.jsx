@@ -7,7 +7,7 @@ const Headings = () => {
       sx={{
         borderRadius: "1.5rem",
         mt: "4rem",
-        p: "3rem",
+        p: { md: "4rem", xs: "1.5rem" },
         color: "#fff",
         backgroundColor: "#044402",
         alignItems: "center",
@@ -15,26 +15,48 @@ const Headings = () => {
       }}
     >
       <Typography variant="h1">Welcome to Ceetok</Typography>
-      <Typography variant="h2" style={{ mt: "1rem" }}>
+      <Typography variant="h2" style={{ mt: "1rem", lineHeight: "2.1rem" }}>
         As e dey hot...
       </Typography>
 
       <Grid item sx={{ mt: 4 }}>
-        <Grid container gap={3}>
-          <Typography style={{ fontWeight: 700 }}>
-            Stats: <span style={{ fontWeight: 500 }}>2,943,466</span>{" "}
+        <Grid container gap={3} sx={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}>
+          <Typography style={{ fontWeight: 700, font: "inherit" }}>
+            Stats:{" "}
+            <Typography
+              variant="span"
+              style={{ fontWeight: 500, font: "inherit" }}
+            >
+              2,943,466
+            </Typography>{" "}
           </Typography>
-          <Typography style={{ fontWeight: 700 }}>
+          <Typography style={{ fontWeight: 700, font: "inherit" }}>
             Members:
-            <span style={{ fontWeight: 500 }}>7,128,053 topics.</span>
+            <Typography
+              variant="span"
+              style={{ fontWeight: 500, font: "inherit" }}
+            >
+              7,128,053 topics.
+            </Typography>
           </Typography>
-          <Typography style={{ fontWeight: 700 }}>
+          <Typography style={{ fontWeight: 700, font: "inherit" }}>
             Date:{" "}
-            <span style={{ fontWeight: 500 }}>Thursday, 20 October 2022</span>{" "}
+            <Typography
+              variant="span"
+              style={{ fontWeight: 500, font: "inherit" }}
+            >
+              Thursday, 20 October 2022
+            </Typography>{" "}
           </Typography>
-          <Typography style={{ fontWeight: 700 }}>
+          <Typography style={{ fontWeight: 700, font: "inherit" }}>
             {" "}
-            Time: <span style={{ fontWeight: 500 }}>10:58 AM</span>{" "}
+            Time:{" "}
+            <Typography
+              variant="span"
+              style={{ fontWeight: 500, font: "inherit" }}
+            >
+              10:58 AM
+            </Typography>{" "}
           </Typography>
         </Grid>
       </Grid>

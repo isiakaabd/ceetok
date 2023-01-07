@@ -6,7 +6,8 @@ const RightTab = () => {
     <Grid
       item
       container
-      xs={9}
+      md={9}
+      xs={12}
       sx={{
         background: "#fff",
         borderRadius: "2rem ",
@@ -51,8 +52,17 @@ const RightTab = () => {
                   {index}
                 </Typography>
 
-                <img src={images.obi} style={{ marginTop: 2 }} alt="obi" />
-                <Grid item container direction="column" sx={{ flex: 1, ml: 2 }}>
+                <img
+                  src={images.obi}
+                  style={{ marginTop: 2, height: "8rem" }}
+                  alt="obi"
+                />
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  sx={{ flex: { md: 3, sm: 1 }, mx: 2 }}
+                >
                   <Typography
                     variant="p"
                     sx={{
@@ -70,8 +80,8 @@ const RightTab = () => {
                     variant="h6"
                     sx={{
                       color: "#5F5C5C",
-                      mt: 2,
-                      fontSize: "2rem",
+                      mt: { md: 2, xs: 1 },
+                      fontSize: { md: "2rem", xs: "1rem" },
                       fontWeight: 700,
                     }}
                   >
@@ -81,16 +91,23 @@ const RightTab = () => {
                     item
                     container
                     gap={2}
-                    sx={{ fontSize: "1.2rem", fontWeight: 400 }}
+                    sx={{
+                      fontSize: { md: "1.2rem", xs: ".8rem" },
+                      fontWeight: 400,
+                    }}
                   >
-                    <Typography>Joshual@gamil.com</Typography>
-                    <Typography>15 Oct.2022</Typography>
-                    <Typography>8:39pm</Typography>
+                    <Typography sx={{ font: "inherit" }}>
+                      Joshual@gamil.com
+                    </Typography>
+                    <Typography sx={{ font: "inherit" }}>
+                      15 Oct.2022
+                    </Typography>
+                    <Typography sx={{ font: "inherit" }}>8:39pm</Typography>
                   </Grid>
                 </Grid>
                 <Grid
                   sx={{
-                    width: "10rem",
+                    flex: { sm: 0, md: 1 },
                     alignItems: "center",
                     display: "flex",
                     justifyContent: "center",

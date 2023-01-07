@@ -24,10 +24,11 @@ const Footer = () => {
         sx={{
           padding: "3rem",
 
-          flexWrap: "nowrap",
+          flexWrap: { md: "nowrap", xs: "wrap" },
+          flexDirection: { md: "row", xs: "column" },
         }}
       >
-        <Grid item sx={{ flex: 1.2 }}>
+        <Grid item sx={{ flex: { md: 1.2, xs: 1 } }}>
           <img src={images.logo} alt="ceetok" style={{ width: "10rem" }} />
           <Typography style={{ fontSize: "1.2rem", fontWeight: 500 }}>
             Tortor, lobortis semper viverra ac, molestie tortor laoreet amet
@@ -37,7 +38,7 @@ const Footer = () => {
             turpis nunc in turpis massa et
           </Typography>
         </Grid>
-        <Grid item sx={{ flex: 1 }}>
+        <Grid item sx={{ flex: { md: 1, xs: 1 } }}>
           <List>
             <ListItem dense disableGutters>
               <ListItemText
@@ -58,7 +59,7 @@ const Footer = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item sx={{ flex: 1 }}>
+        <Grid item sx={{ flex: { md: 1, xs: 1 } }}>
           <List>
             <ListItem dense disableGutters>
               <ListItemText
@@ -82,7 +83,7 @@ const Footer = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item sx={{ flex: 1.2 }}>
+        <Grid item sx={{ flex: { md: 1.2, xs: 1 } }}>
           <List>
             <ListItem dense disableGutters>
               <ListItemText
@@ -103,7 +104,10 @@ const Footer = () => {
             </Grid>
           </List>
         </Grid>
-        <Grid item sx={{ flex: 2.5, mt: 3 }}>
+        <Grid
+          item
+          sx={{ flex: { md: 2.5, xs: 1 }, mt: 3, order: { xs: 1, md: 5 } }}
+        >
           <List>
             <ListItem dense disableGutters>
               <ListItemText

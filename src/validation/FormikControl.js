@@ -5,6 +5,8 @@ import Input from "./Input";
 // import DateComponent from "./Date";
 // import Textarea from "./Textarea";
 import PropTypes from "prop-types";
+import InputsAdornment from "./InputsAdornment";
+import SelectAdornment from "./SelectAdornment";
 // import Files from "./File";
 // import Files2 from "./File2";
 // import DateTimePicker from "./DateTimePicker";
@@ -13,10 +15,10 @@ const FormikControl = ({ control, ...rest }) => {
   switch (control) {
     case "input":
       return <Input {...rest} />;
-    // case "textarea":
-    //   return <Textarea {...rest} />;
-    // case "select":
-    //   return <Selects {...rest} />;
+    case "inputs":
+      return <InputsAdornment {...rest} />;
+    case "selects":
+      return <SelectAdornment {...rest} />;
     // case "check":
     //   return <Checkboxes {...rest} />;
     // case "date":

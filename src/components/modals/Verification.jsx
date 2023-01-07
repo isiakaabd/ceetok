@@ -1,14 +1,13 @@
-import { Grid, Typography } from "@mui/material";
-import { useState } from "react";
-import { Formik, Form } from "formik/dist";
-import FormikControl from "validation/FormikControl";
 import { CloseOutlined } from "@mui/icons-material";
-import Modals from "components/Modal";
-import CreatePassword from "./CreatePassword";
+import { Grid, Button, Typography, ButtonBase, Divider } from "@mui/material";
+import { useState } from "react";
+// import FormikControl from "validation/FormikControl";
 import { CustomButton } from "components";
-
-const ConfirmMail = ({ isOpen, handleClose }) => {
-  const [showCreatePassword, setShowCreatePassword] = useState(false);
+// import LoginModal from "./LoginModal";
+import Modals from "components/Modal";
+import VerifyPage from "./VerifyPage";
+const Verification = ({ isOpen, handleClose }) => {
+  const [showLogin, setShowLogin] = useState(false);
   return (
     <>
       <Modals
@@ -23,7 +22,7 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
             />
           </Grid>
-          <Grid item xs={9} sx={{ margin: "auto", flex: 1 }}>
+          <Grid item xs={9} sx={{ marginInline: "auto", flex: 1 }}>
             <Grid
               container
               alignItems="center"
@@ -34,18 +33,17 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
               <Typography
                 sx={{
                   fontSize: "3rem",
-                  my: 5,
-                  mb: 2,
+                  my: 2,
                   fontWeight: 700,
                   color: "#464646",
                 }}
               >
-                Check Your Mail
+                Email Verification
               </Typography>
               <Typography
                 sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
               >
-                We have sent you a password recovery instruction to your mail.
+                We have just sent you an e-mail.
               </Typography>
               <Typography
                 sx={{
@@ -57,35 +55,63 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
               >
                 Please check your inbox to find the e-mail and complete your
                 registration. Please check your spam folder if you cannot find
-                it in your inbox.{" "}
+                it in your inbox.
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "1.7rem",
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
+              >
+                Didn’t get any mail?{" "}
+                <Typography
+                  variant="span"
+                  sx={{
+                    color: "#37D42A",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  RESEND CONFIRMATION
+                </Typography>
               </Typography>
               <Grid
                 item
                 container
                 justifyContent="center"
                 alignItems="center"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, cursor: "pointer" }}
+                gap={3}
               >
-                <CustomButton onClick={() => setShowCreatePassword(true)}>
-                  Email confirmed
-                </CustomButton>
+                <Typography
+                  sx={{ color: "#9B9A9A", fontWeight: 700, fontSize: "1.6rem" }}
+                  onClick={() => setShowLogin(true)}
+                >
+                  {" "}
+                  {/* onClick={() => setShowLogin(true)} */}
+                  Verified Already?
+                </Typography>
+
+                <CustomButton>Login</CustomButton>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Modals>
-      {showCreatePassword && (
-        <CreatePassword
+
+      {showLogin && (
+        <VerifyPage
           handleClose={() => {
             handleClose();
-            setShowCreatePassword(false);
+            setShowLogin(false);
           }}
-          isOpen={showCreatePassword}
-          // handleLoginOpen={handleLoginOpen}
+          isOpen={showLogin}
         />
       )}
     </>
   );
 };
 
-export default ConfirmMail;
+export default Verification;

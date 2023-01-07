@@ -14,9 +14,11 @@ import instagram from "./images/instagram.png";
 import davido from "./images/davido.png";
 import fb from "./images/fb.png";
 import gmail from "./images/gmail.png";
+import placeholder from "./images/placeholder.png";
 
 export default {
   gmail,
+  placeholder,
   logo,
   fb,
   davido,

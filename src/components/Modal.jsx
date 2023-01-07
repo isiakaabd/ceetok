@@ -35,49 +35,10 @@ const Modals = ({
       aria-describedby="modal-description"
     >
       <Box
-        sx={[style, { ...styles, margin: "auto" }]}
-        width={width ? width : "35vw"}
+        sx={[style, { ...styles, ...width, marginInline: "auto" }]}
+        width={width ? width : "95%"}
         padding={{ sm: 4, xs: 3, md: 4 }}
       >
-        {/* <Grid
-            container
-            rowSpacing={rowSpacing ? rowSpacing : 4}
-            // className={classes.modal}
-            flexDirection="column"
-          >
-            <Grid
-              item
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              flex="2"
-              flexD
-            >
-              <Grid item>
-                <Typography variant="h3">{title}</Typography>
-              </Grid>
-              <Grid item>
-                {!isClose ? (
-                  <CloseIcon
-                    color={color ? color : "secondary"}
-                    style={{
-                      "&.MuiSvgIcon-root": {
-                        fontSize: "2rem",
-                        cursor: "pointer",
-
-                        "&:hover": {
-                          color: "red",
-                        },
-                      },
-                    }}
-                    onClick={handleClose}
-                  />
-                ) : null}
-              </Grid>
-            </Grid>
-            {children}
-          </Grid> */}
-
         {children}
       </Box>
     </Modal>

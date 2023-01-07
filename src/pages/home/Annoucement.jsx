@@ -4,58 +4,70 @@ import images from "assets";
 import { Link } from "react-router-dom";
 const Annoucement = () => {
   return (
-    <Grid container sx={{ padding: { xs: "1rem", md: "4rem 3rem" } }}>
+    <Grid
+      container
+      sx={{
+        padding: { xs: "2rem", md: "4rem 3rem" },
+        mt: 3,
+        mx: "1rem",
+        background: "#fff",
+        borderRadius: "1.2rem",
+      }}
+    >
       <Grid item container alignItems="center" gap={3}>
         <Grid
           item
-          container
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            cursor: "pointer",
-            border: "1px solid #FF9B04",
-            height: "6rem",
-            padding: "1.2rem 2rem",
-            width: "30rem",
-          }}
-          flexWrap="nowrap"
-          gap={3}
+          md={2}
+          sm={2}
+          sx={{ border: "1px solid #FF9B04", padding: "1rem 2rem" }}
         >
-          <img
-            src={images.annoucement}
-            alt="annoucement icon"
-            style={{ width: "4rem", height: "4rem", display: "inline-block" }}
-          />
-          <Typography
-            sx={{ color: "#464646", fontSize: "2.5rem", fontWeight: 700 }}
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              cursor: "pointer",
+            }}
+            flexWrap="nowrap"
+            gap={2}
           >
-            Annoucement
-          </Typography>
+            <img
+              src={images.annoucement}
+              alt="annoucement icon"
+              style={{ width: "3rem", display: "inline-block" }}
+            />
+            <Typography
+              sx={{ color: "#464646", fontSize: "2rem", fontWeight: 700 }}
+            >
+              Annoucement
+            </Typography>
+          </Grid>
         </Grid>
-        <Button
-          sx={{
-            height: "3.5rem",
-            borderRadius: ".5rem",
-            backgroundColor: "#5F5C5C",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: "1.2rem",
-            padding: "1rem 2rem",
-          }}
-          variant="contained"
-          disableElevation
-        >
-          Make Annoucement
-        </Button>
+        <Grid item xs={3}>
+          <Button
+            sx={{
+              height: "3.5rem",
+              borderRadius: ".5rem",
+              backgroundColor: "#5F5C5C",
+              color: "#fff",
+              fontWeight: 600,
+              fontSize: "1.2rem",
+              padding: "1rem 4em",
+              whiteSpace: "nowrap",
+            }}
+            variant="contained"
+            disableElevation
+          >
+            Make Annoucement
+          </Button>
+        </Grid>
       </Grid>
-
       <Grid
         item
         container
         display="grid"
-        gridTemplateColumns={"repeat(3,1fr)"}
         gap={3}
-        sx={{ mt: 6 }}
+        sx={{ mt: 6, gridTemplateColumns: { md: "repeat(3,1fr)", xs: "1fr" } }}
       >
         {Array(10)
           .fill({

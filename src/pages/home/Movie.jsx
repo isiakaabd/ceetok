@@ -2,7 +2,13 @@ import images from "assets";
 import { Grid } from "@mui/material";
 const Movie = () => {
   return (
-    <Grid sx={{ height: "40rem", position: "relative" }}>
+    <Grid
+      sx={{
+        height: "40rem",
+        display: { xs: "none", md: "block" },
+        position: "relative",
+      }}
+    >
       <img
         src={images.vedio}
         alt="bg"

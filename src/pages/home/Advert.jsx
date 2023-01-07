@@ -7,9 +7,20 @@ const Advert = () => {
   const imgArr = [image01, image02, image03];
   return (
     <Grid item container sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}>
-      <Grid item container gap={4} alignItems="center" sx={{ p: 4 }}>
+      <Grid
+        item
+        container
+        gap={3}
+        alignItems="center"
+        sx={{ p: 4, justifyContent: { md: "left", xs: "center" } }}
+      >
         <Typography
-          sx={{ color: "#464646", fontSize: "3.3rem", fontWeight: 700 }}
+          sx={{
+            color: "#464646",
+            textAlign: { md: "left", xs: "center" },
+            fontSize: "3rem",
+            fontWeight: 700,
+          }}
         >
           Ads
         </Typography>

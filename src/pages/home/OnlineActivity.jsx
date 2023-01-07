@@ -5,7 +5,8 @@ const OnlineActivity = () => {
   return (
     <Grid item container sx={{ pb: 4 }}>
       <Grid
-        xs={10}
+        xs={12}
+        md={10}
         sx={{
           backgroundColor: "#5F5C5C",
           paddingBlock: "1.2rem",

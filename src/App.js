@@ -7,7 +7,6 @@ import { Footer, Header } from "components";
 import { Announcement, Home } from "pages";
 
 const App = () => {
-  console.log(muiTheme);
   return (
     <ThemeProvider theme={muiTheme}>
       <Grid
@@ -21,6 +20,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/annoucement" element={<Announcement />} />
+            {/* <Route path="/verify" element={<VerifyPage />} /> */}
           </Routes>
           <Footer />
         </BrowserRouter>

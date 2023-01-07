@@ -1,12 +1,5 @@
 import images from "assets";
-import {
-  Typography,
-  Divider,
-  Menu,
-  MenuItem,
-  Grid,
-  Button,
-} from "@mui/material";
+import { Typography, Menu, MenuItem, Grid, Button } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -16,9 +9,9 @@ import {
   FilterList,
   IosShareOutlined,
 } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { loginState } from "redux/slices/authSlice";
+
 import Modals from "components/Modal";
 import RegisterModal from "components/modals/RegisterModal";
 
@@ -75,7 +68,6 @@ const Announcement = () => {
   }));
   const loginStatus = useSelector((state) => state.auth.auth);
   const [modal, setModal] = useState(false);
-  console.log(loginStatus);
   const navigate = useNavigate();
   return (
     <>
@@ -96,9 +88,8 @@ const Announcement = () => {
               justifyContent="center"
               sx={{
                 cursor: "pointer",
-                height: "6rem",
+
                 padding: "1.2rem 2rem",
-                width: "30rem",
               }}
               flexWrap="nowrap"
               gap={3}

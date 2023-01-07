@@ -5,7 +5,8 @@ const LeftTab = () => {
   return (
     <Grid
       item
-      xs={3}
+      md={3}
+      display={{ md: "block", xs: "none" }}
       sx={{
         background: "white",
         borderRadius: "0 2rem 2rem 0",

@@ -269,7 +269,7 @@ function Header() {
                     display: "block",
                     maxWidth: "15rem",
                     textTransform: "capitalize",
-                    width: { md: "15rem", sm: "10rem" },
+                    width: { md: "15rem", xs: "10rem" },
                     backgroundColor: "#37D42A",
                     "&:hover": {
                       backgroundColor: "#37D42A",

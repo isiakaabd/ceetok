@@ -129,7 +129,7 @@ const RightTab = () => {
             open={open}
             onClose={handleClose}
           >
-            <Grid container sx={{ p: 2 }}>
+            <Grid container flexWrap="nowrap" sx={{ p: 2 }}>
               <Grid item container>
                 <FormControl>
                   <FormLabel id="demo-radio-buttons-group-label">
@@ -162,7 +162,9 @@ const RightTab = () => {
                     />
                   </RadioGroup>
                 </FormControl>
-                <Divider orientation="vertical" sx={{ p: 2 }} />
+              </Grid>
+              <Divider orientation="vertical" flexItem xsx={{ p: 2 }} />
+              <Grid item container>
                 <FormControl sx={{ px: 2 }}>
                   <FormLabel id="demo-radio-buttons-group-label">
                     Show

@@ -32,7 +32,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
     <>
       <Modals
         styles={{ height: { xs: "auto", md: "auto" } }}
-        width={{ md: "60vw", xs: "95%", sm: "90%" }}
+        width={{ md: "60vw", xs: "95%", sm: "95%" }}
         isOpen={isOpen}
       >
         <Grid

@@ -56,7 +56,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
 
   return (
     <Modals
-      height="95vh"
+      height="90vh"
       width={{ md: "60vw", xs: "95%", sm: "90%" }}
       isOpen={isOpen}
       background="#fff"
@@ -74,7 +74,11 @@ const VerifyPage = ({ isOpen, handleClose }) => {
           item
           container
           flexDirection="column"
-          sx={{ mt: 1, height: "100%", padding: "1rem" }}
+          sx={{
+            mt: 1,
+            height: "100%",
+            padding: { md: "1rem", xs: "2rem 1rem" },
+          }}
           flexWrap="nowrap"
           gap={2}
         >

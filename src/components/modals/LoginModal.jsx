@@ -27,7 +27,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
     <>
       <Modals
         // styles={{ height: { xs: "auto", md: "95vh" } }}
-        width={{ md: "60vw", xs: "95%", sm: "90%" }}
+        width={{ md: "60vw", xs: "95%", sm: "95%" }}
         isOpen={isLogin}
       >
         <Grid

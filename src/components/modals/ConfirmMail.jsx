@@ -12,18 +12,23 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
-        <Grid item container sx={{ mt: 1, height: "100%" }}>
+        <Grid
+          item
+          container
+          flexDirection="column"
+          sx={{ mt: 1, height: "100%" }}
+        >
           <Grid item>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
             />
           </Grid>
-          <Grid item xs={9} sx={{ margin: "auto", flex: 1 }}>
+          <Grid item md={9} xs={12} sx={{ margin: "auto", flex: 1 }}>
             <Grid
               container
               alignItems="center"
@@ -33,9 +38,7 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
             >
               <Typography
                 sx={{
-                  fontSize: "3rem",
-                  my: 5,
-                  mb: 2,
+                  fontSize: { md: "3rem", xs: "2.4rem" },
                   fontWeight: 700,
                   color: "#464646",
                 }}
@@ -43,13 +46,18 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
                 Check Your Mail
               </Typography>
               <Typography
-                sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
+                sx={{
+                  fontSize: { md: "1.7rem", sm: "1.5rem" },
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
               >
                 We have sent you a password recovery instruction to your mail.
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "1.7rem",
+                  fontSize: { md: "1.7rem", sm: "1.5rem" },
                   color: "#9B9A9A",
                   fontWeight: 500,
                   textAlign: "center",

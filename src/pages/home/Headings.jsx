@@ -15,7 +15,7 @@ const Headings = () => {
       }}
     >
       <Typography variant="h1">Welcome to Ceetok</Typography>
-      <Typography variant="h2" style={{ mt: "1rem", lineHeight: "2.1rem" }}>
+      <Typography variant="h2" sx={{ mt: "2rem" }}>
         As e dey hot...
       </Typography>
 

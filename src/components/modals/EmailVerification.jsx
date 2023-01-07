@@ -9,7 +9,12 @@ const EmailVerification = ({ handleClose }) => {
   const [showVerifyPage, setShowVerifyPage] = useState(false);
   return (
     <>
-      <Grid item container sx={{ mt: 1, height: "100%" }}>
+      <Grid
+        item
+        container
+        flexDirection="column"
+        sx={{ mt: 1, height: "100%" }}
+      >
         <Grid item>
           <CloseOutlined
             onClick={handleClose}
@@ -26,7 +31,7 @@ const EmailVerification = ({ handleClose }) => {
           >
             <Typography
               sx={{
-                fontSize: "3rem",
+                fontSize: { md: "3rem", xs: "2.4rem" },
                 my: 2,
                 fontWeight: 700,
                 color: "#464646",

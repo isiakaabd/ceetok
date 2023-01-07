@@ -31,14 +31,15 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   return (
     <>
       <Modals
-        styles={{ height: "95vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
         <Grid
+          item
           container
           sx={{
-            position: "absolute",
+            position: { md: "absolute" },
             zIndex: 3,
             borderRadius: "2.5rem",
             top: 0,
@@ -110,17 +111,19 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
             item
             md={7.5}
             xs={12}
-            sx={{ background: "#fff", borderRadius: " 0 2rem 2rem 0" }}
+            sx={{
+              background: "#fff",
+              borderRadius: { md: " 0 2rem 2rem 0", xs: "2rem" },
+            }}
           >
             <Grid
               container
               sx={{
                 backgroundColor: "inherit",
-                // alignItems: "center",
-                // justifyContent: "center",
+
                 height: "100%",
                 padding: "2rem",
-                borderRadius: " 0 2rem 2rem 0",
+                borderRadius: { md: " 0 2rem 2rem 0", xs: "2rem" },
                 color: "#fff",
               }}
               flexDirection="column"
@@ -142,7 +145,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                   sx={{
                     color: "#464646",
                     textAlign: "center",
-                    fontSize: "3.2rem",
+                    fontSize: { md: "3.2rem", xs: "2.2rem" },
                     fontWeight: "700",
                   }}
                 >
@@ -171,6 +174,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                       objectFit: "contain",
                       height: "3rem",
                       width: "3rem",
+                      cursor: "pointer",
                     }}
                     alt="facebook icon"
                   />
@@ -178,6 +182,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                     src={images.gmail}
                     style={{
                       objectFit: "contain",
+                      cursor: "pointer",
                       height: "3rem",
                       width: "3rem",
                     }}
@@ -207,7 +212,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                     }}
                   >
                     <Form style={{ width: "100%" }}>
-                      <Grid xs={10} sx={{ mx: "auto" }}>
+                      <Grid md={10} sm={12} sx={{ mx: "auto" }}>
                         <Grid
                           container
                           gap={2}

@@ -9,33 +9,55 @@ const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
-        <Grid item container sx={{ mt: 1, pb: 2, px: 3, height: "100%" }}>
-          <Grid item>
+        <Grid
+          item
+          container
+          flexDirection="column"
+          sx={{
+            position: { md: "absolute" },
+            zIndex: 3,
+            borderRadius: "2.5rem",
+            top: 0,
+            left: 0,
+            height: "100%",
+            mt: 3,
+          }}
+        >
+          <Grid item padding={{ md: 3 }}>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
             />
           </Grid>
-          <Grid item sx={{ width: "100%", flex: 1 }}>
+          <Grid
+            item
+            container
+            alignItems="center"
+            justifyContent="flex-start"
+            flexDirection="column"
+          >
+            <Grid item>
+              <CheckCircleOutlineSharp
+                sx={{
+                  fontSize: { md: "15rem", xs: "7rem" },
+                  color: "#37D42A",
+                }}
+              />
+            </Grid>
             <Grid
               container
               alignItems="center"
               justifyContent="center"
               flexDirection="column"
-              sx={{ mt: 4 }}
+              gap={2}
             >
-              <Grid item>
-                <CheckCircleOutlineSharp
-                  sx={{ fontSize: "15rem", color: "#37D42A" }}
-                />
-              </Grid>
               <Typography
                 sx={{
-                  fontSize: "3rem",
+                  fontSize: { md: "3rem", sm: "2.4rem" },
                   my: 5,
                   mb: 2,
                   fontWeight: 700,
@@ -45,7 +67,11 @@ const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
                 {heading}
               </Typography>
               <Typography
-                sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
+                sx={{
+                  fontSize: { md: "1.7rem", sm: "1.3rem" },
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                }}
               >
                 {Subheadings}
               </Typography>

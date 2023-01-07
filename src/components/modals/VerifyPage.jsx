@@ -57,7 +57,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   return (
     <Modals
       styles={{ height: "90vh" }}
-      width={{ md: "60vw", xs: "80%", sm: "80%" }}
+      width={{ md: "60vw", xs: "90%", sm: "90%" }}
       isOpen={isOpen}
     >
       <Grid
@@ -76,7 +76,11 @@ const VerifyPage = ({ isOpen, handleClose }) => {
         >
           <Grid item>
             <Typography
-              sx={{ color: "#464646", fontWeight: 700, fontSize: "2.8rem" }}
+              sx={{
+                color: "#464646",
+                fontWeight: 700,
+                fontSize: { md: "2.8rem", xs: "1.5rem" },
+              }}
             >
               Complete Registration
             </Typography>
@@ -130,7 +134,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                   textAlign: "center",
                   color: "#5F5C5C",
                   fontWeight: 700,
-                  fontSize: "1.5rem",
+                  fontSize: { md: "1.5rem", sm: "1.2rem" },
                   whiteSpace: "nowrap",
                 }}
               >
@@ -245,7 +249,6 @@ const VerifyPage = ({ isOpen, handleClose }) => {
               </Form>
             </Formik>
           </Grid>
-          {/* </Grid> */}
         </Grid>
 
         <Grid
@@ -268,7 +271,12 @@ const VerifyPage = ({ isOpen, handleClose }) => {
             }}
           >
             <Typography
-              sx={{ color: "#5F5C5C", fontWeight: 700, fontSize: "2rem" }}
+              sx={{
+                color: "#5F5C5C",
+                fontWeight: 700,
+                fontSize: { md: "2rem", sm: "1.6rem" },
+                textAlign: { xs: "center", md: "left" },
+              }}
             >
               Area Of Interest
             </Typography>
@@ -276,8 +284,8 @@ const VerifyPage = ({ isOpen, handleClose }) => {
               sx={{
                 color: "#464646",
                 mb: 2,
-                fontSize: "1.8rem",
-                textAlign: { sm: "center", md: "left" },
+                fontSize: { md: "1.8rem", sm: "1.4rem" },
+                textAlign: { xs: "justify", md: "left" },
               }}
             >
               Select atleast three (3) interest that matches the updates you
@@ -322,12 +330,23 @@ const VerifyPage = ({ isOpen, handleClose }) => {
             }}
           >
             <Typography
-              sx={{ color: "#5F5C5C", fontWeight: 700, fontSize: "1.5rem" }}
+              sx={{
+                color: "#5F5C5C",
+                fontWeight: 700,
+                fontSize: { md: "1.5rem", sm: "1.3rem" },
+                textAlign: { xs: "center", md: "left" },
+                width: "100%",
+              }}
             >
               Privacy Policy
             </Typography>
             <Typography
-              sx={{ mt: 2, mb: 4, color: "#636262", fontSize: "1.6rem" }}
+              sx={{
+                mt: 2,
+                mb: 4,
+                color: "#636262",
+                fontSize: { md: "1.6rem", sm: "1.3rem" },
+              }}
             >
               By clicking on “Complete Registration” you agree to our{" "}
               <Typography sx={agreement} variant="span">

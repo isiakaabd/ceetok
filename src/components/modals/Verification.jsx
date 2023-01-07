@@ -11,28 +11,33 @@ const Verification = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
-        <Grid item container sx={{ mt: 1, height: "100%" }}>
+        <Grid
+          item
+          container
+          flexDirection="column"
+          sx={{ mt: 1, height: "100%" }}
+        >
           <Grid item>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
             />
           </Grid>
-          <Grid item xs={9} sx={{ marginInline: "auto", flex: 1 }}>
+          <Grid item md={9} xs={12} sx={{ marginInline: "auto", flex: 1 }}>
             <Grid
               container
               alignItems="center"
               justifyContent="space-between"
               flexDirection="column"
-              gap={4}
+              gap={3}
             >
               <Typography
                 sx={{
-                  fontSize: "3rem",
+                  fontSize: { md: "3rem", xs: "2.4rem" },
                   my: 2,
                   fontWeight: 700,
                   color: "#464646",
@@ -41,13 +46,17 @@ const Verification = ({ isOpen, handleClose }) => {
                 Email Verification
               </Typography>
               <Typography
-                sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
+                sx={{
+                  fontSize: { md: "1.7rem", sm: "1.4rem" },
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                }}
               >
                 We have just sent you an e-mail.
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "1.7rem",
+                  fontSize: { md: "1.7rem", sm: "1.4rem" },
                   color: "#9B9A9A",
                   fontWeight: 500,
                   textAlign: "center",
@@ -59,30 +68,29 @@ const Verification = ({ isOpen, handleClose }) => {
               </Typography>
               <Typography
                 sx={{
-                  fontSize: "1.7rem",
+                  fontSize: { md: "1.7rem", sm: "1.4rem" },
                   color: "#9B9A9A",
                   fontWeight: 500,
                   textAlign: "center",
                 }}
               >
                 Didn’t get any mail?{" "}
-                <Typography
-                  variant="span"
-                  sx={{
-                    color: "#37D42A",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  RESEND CONFIRMATION
-                </Typography>
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#37D42A",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                RESEND CONFIRMATION
               </Typography>
               <Grid
                 item
                 container
                 justifyContent="center"
                 alignItems="center"
-                sx={{ mt: 2, cursor: "pointer" }}
+                sx={{ cursor: "pointer" }}
                 gap={3}
               >
                 <Typography

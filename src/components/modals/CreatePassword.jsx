@@ -12,28 +12,39 @@ const CreatePassword = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
-        <Grid item container sx={{ mt: 3, height: "100%" }}>
-          <Grid item>
+        <Grid
+          item
+          container
+          sx={{
+            position: { md: "absolute" },
+            zIndex: 3,
+            borderRadius: "2.5rem",
+            top: 0,
+            left: 0,
+            height: "100%",
+          }}
+          flexDirection="column"
+        >
+          <Grid item sx={{ p: 4 }}>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
             />
           </Grid>
-          <Grid item sx={{ width: "100%", flex: 1 }}>
+          <Grid item xs={10} sx={{ width: "100%", mx: "auto", flex: 1 }}>
             <Grid
               container
               alignItems="center"
               justifyContent="center"
               flexDirection="column"
-              sx={{ mt: 3 }}
             >
               <Typography
                 sx={{
-                  fontSize: "3rem",
+                  fontSize: { md: "3rem", xs: "2.4rem" },
                   my: 5,
                   mb: 2,
                   fontWeight: 700,
@@ -43,7 +54,12 @@ const CreatePassword = ({ isOpen, handleClose }) => {
                 Create New Password
               </Typography>
               <Typography
-                sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
+                sx={{
+                  fontSize: { md: "1.7rem", xs: "1.5rem" },
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
               >
                 The password must be different from the previous one
               </Typography>
@@ -52,7 +68,7 @@ const CreatePassword = ({ isOpen, handleClose }) => {
                 initialValues={{ password: "", confrimPassword: "" }}
               >
                 <Form style={{ width: "100%" }}>
-                  <Grid xs={6} sx={{ mx: "auto" }}>
+                  <Grid item container>
                     <Grid container flexDirection="column" alignItems="center">
                       <Grid item container sx={{ mt: 2 }}>
                         <FormikControl

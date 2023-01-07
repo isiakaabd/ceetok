@@ -14,12 +14,25 @@ export const Phoneverification = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
+        onClose={handleClose}
       >
-        <Grid item container sx={{ mt: 1, height: "100%" }}>
-          <Grid item>
+        <Grid
+          item
+          container
+          sx={{
+            position: { md: "absolute" },
+            zIndex: 3,
+            borderRadius: "2.5rem",
+            top: 0,
+            left: 0,
+            height: "100%",
+          }}
+          direction="column"
+        >
+          <Grid item sx={{ p: 2 }}>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
@@ -35,7 +48,7 @@ export const Phoneverification = ({ isOpen, handleClose }) => {
             >
               <Typography
                 sx={{
-                  fontSize: "3rem",
+                  fontSize: { md: "3rem", xs: "2.4rem" },
                   my: 2,
                   fontWeight: 700,
                   color: "#464646",
@@ -44,14 +57,17 @@ export const Phoneverification = ({ isOpen, handleClose }) => {
                 Phone Verification
               </Typography>
               <Typography
-                sx={{ fontSize: "1.7rem", color: "#9B9A9A", fontWeight: 500 }}
+                sx={{
+                  fontSize: { md: "1.7rem", sm: "1.5rem" },
+                  color: "#9B9A9A",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
               >
                 We have just sent you an OTP Code Kindly input the code to
                 complete your registration.
               </Typography>
-              {/* <Formik initialValues={{ otp: "" }}>
-              {({ values, handleChange }) => (
-                <Form> */}
+
               <OTPInput
                 name="otp"
                 fullWidth

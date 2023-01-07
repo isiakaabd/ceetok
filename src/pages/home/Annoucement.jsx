@@ -14,12 +14,11 @@ const Annoucement = () => {
         borderRadius: "1.2rem",
       }}
     >
-      <Grid item container alignItems="center" gap={3}>
+      <Grid item container alignItems="center" gap={2}>
         <Grid
           item
-          md={2}
-          sm={2}
-          sx={{ border: "1px solid #FF9B04", padding: "1rem 2rem" }}
+          flexWrap="nowrap"
+          sx={{ border: "1px solid #FF9B04", padding: "1rem 1.2rem" }}
         >
           <Grid
             container
@@ -29,12 +28,12 @@ const Annoucement = () => {
               cursor: "pointer",
             }}
             flexWrap="nowrap"
-            gap={2}
+            columnGap={1}
           >
             <img
               src={images.annoucement}
               alt="annoucement icon"
-              style={{ width: "3rem", display: "inline-block" }}
+              style={{ width: "3rem", display: "block" }}
             />
             <Typography
               sx={{ color: "#464646", fontSize: "2rem", fontWeight: 700 }}
@@ -43,7 +42,7 @@ const Annoucement = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item>
           <Button
             sx={{
               height: "3.5rem",
@@ -52,7 +51,7 @@ const Annoucement = () => {
               color: "#fff",
               fontWeight: 600,
               fontSize: "1.2rem",
-              padding: "1rem 4em",
+              padding: "1rem 1.5rem",
               whiteSpace: "nowrap",
             }}
             variant="contained"
@@ -67,7 +66,14 @@ const Annoucement = () => {
         container
         display="grid"
         gap={3}
-        sx={{ mt: 6, gridTemplateColumns: { md: "repeat(3,1fr)", xs: "1fr" } }}
+        sx={{
+          mt: 6,
+          gridTemplateColumns: {
+            md: "repeat(3,1fr)",
+            xs: "1fr",
+            sm: "1fr 1fr",
+          },
+        }}
       >
         {Array(10)
           .fill({
@@ -80,7 +86,7 @@ const Annoucement = () => {
                 <Typography
                   sx={{
                     color: "#5F5C5C",
-                    fontSize: "2rem",
+                    fontSize: { md: "2rem", xs: "1.5rem" },
                     fontWeight: 700,
                   }}
                 >

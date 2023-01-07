@@ -29,14 +29,14 @@ const LoginModal = ({ isLogin, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: "90vh" }}
-        width={{ md: "60vw", xs: "80%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "95vh" } }}
+        width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isLogin}
       >
         <Grid
           container
           sx={{
-            position: "absolute",
+            position: { md: "absolute" },
             zIndex: 3,
             borderRadius: "2.5rem",
             top: 0,
@@ -51,7 +51,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
             sx={{
               background: "#fff",
               borderRadius: { md: "2rem 0 0 2rem", xs: "2rem" },
-              paddingBottom: { xs: 4, md: 0 },
+              paddingBottom: { xs: 2, md: 0 },
             }}
           >
             <Grid
@@ -59,7 +59,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
               sx={{
                 backgroundColor: "inherit",
                 height: "100%",
-                padding: "2rem",
+                padding: { md: "2rem", xs: "1.5rem" },
                 borderRadius: { md: "2rem 0 0 2rem", xs: "2rem" },
                 color: "#fff",
               }}
@@ -75,14 +75,14 @@ const LoginModal = ({ isLogin, handleClose }) => {
                 item
                 container
                 justifyContent="center"
-                sx={{ mt: 2, background: "#fff" }}
+                sx={{ mt: 1, background: "#fff" }}
                 flexDirection="column"
               >
                 <Typography
                   sx={{
                     color: "#464646",
                     textAlign: "center",
-                    fontSize: "3.5rem",
+                    fontSize: { md: "3.5rem", sm: "2.4rem" },
                     fontWeight: "700",
                   }}
                 >
@@ -92,7 +92,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                   sx={{
                     color: "#9B9A9A",
                     textAlign: "center",
-                    fontSize: "1.5rem",
+                    fontSize: { md: "1.5rem", sm: "1.4rem" },
                     fontWeight: "500",
                   }}
                 >
@@ -147,14 +147,14 @@ const LoginModal = ({ isLogin, handleClose }) => {
                     }}
                   >
                     <Form style={{ width: "100%" }}>
-                      <Grid xs={10} sx={{ mx: "auto" }}>
+                      <Grid md={10} xs={12} sx={{ mx: "auto" }}>
                         <Grid
                           container
                           flexDirection="column"
                           alignItems="center"
-                          gap={{ xs: 2 }}
+                          gap={{ md: 2, xs: 1 }}
                         >
-                          <Grid item container>
+                          <Grid item container mb={2}>
                             <FormikControl
                               control="input"
                               name={"email_or_phone"}
@@ -178,14 +178,21 @@ const LoginModal = ({ isLogin, handleClose }) => {
                             flexWrap="nowrap"
                             justifyContent="space-between"
                             alignItems="center"
-                            sx={{ mt: 1 }}
                           >
                             <Typography
                               sx={{
                                 fontWeight: 500,
-                                fontSize: "1.3rem",
+                                fontSize: {
+                                  md: "1.2rem",
+                                  xs: ".9rem ",
+                                },
                                 color: "#828484",
                               }}
+                              fontSize={{
+                                md: "1.2rem",
+                                sm: ".7rem !important",
+                              }}
+                              variant="h6"
                             >
                               Login with{" "}
                               <Typography
@@ -194,6 +201,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                                   color: "#37D42A",
                                   fontWeight: 700,
                                   cursor: "pointer",
+                                  fontSize: "inherit",
                                 }}
                                 onClick={() => setState(!state)}
                               >
@@ -203,7 +211,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                             <Typography
                               sx={{
                                 fontWeight: 700,
-                                fontSize: "1.3rem",
+                                fontSize: { md: "1.2rem", xs: ".9rem" },
                                 color: "#828484",
                                 cursor: "pointer",
                                 "&:hover": {
@@ -251,6 +259,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                             item
                             sx={{
                               display: { sm: "block", md: "none" },
+                              mt: 2,
                             }}
                           >
                             <Typography
@@ -258,7 +267,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                                 textAlign: "center",
                                 color: "#5F5C5C",
                                 fontWeight: 500,
-                                fontSize: "1.3rem",
+                                fontSize: "1.2rem",
                               }}
                             >
                               New Here?{" "}
@@ -267,7 +276,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                                 onClick={() => setRegister(true)}
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
                               >
-                                Signup
+                                Signup{" "}
                               </Typography>
                               and get up-to date news
                             </Typography>

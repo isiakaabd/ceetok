@@ -31,6 +31,7 @@ const RightTab = () => {
             display: "none",
           },
         }}
+        xs={12}
       >
         {Array(20)
           .fill({
@@ -47,6 +48,7 @@ const RightTab = () => {
                     color: "#000",
                     fontSize: "1.5rem",
                     fontWeight: 700,
+                    display: { md: "block", xs: "none" },
                   }}
                 >
                   {index}
@@ -54,14 +56,17 @@ const RightTab = () => {
 
                 <img
                   src={images.obi}
-                  style={{ marginTop: 2, height: "8rem" }}
+                  style={{ marginTop: 2, height: "4.6rem", width: "5rem" }}
                   alt="obi"
                 />
                 <Grid
                   item
                   container
                   direction="column"
-                  sx={{ flex: { md: 3, sm: 1 }, mx: 2 }}
+                  sx={{
+                    flex: { md: 3, sm: 1 },
+                    mx: 2,
+                  }}
                 >
                   <Typography
                     variant="p"
@@ -90,7 +95,7 @@ const RightTab = () => {
                   <Grid
                     item
                     container
-                    gap={2}
+                    columnGap={2}
                     sx={{
                       fontSize: { md: "1.2rem", xs: ".8rem" },
                       fontWeight: 400,

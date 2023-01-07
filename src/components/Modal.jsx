@@ -20,7 +20,7 @@ const Modals = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    height,
+    height: "100%",
     bgcolor: "background.paper",
     borderRadius: "2rem",
   };
@@ -33,11 +33,12 @@ const Modals = ({
       aria-labelledby="modal-title"
       closeAfterTransition
       aria-describedby="modal-description"
+      // sx={{ height: "100%" }}
     >
       <Box
-        sx={[style, { ...styles, ...width, marginInline: "auto" }]}
+        sx={[style, { ...styles, ...width, margin: "auto" }]}
         width={width ? width : "95%"}
-        padding={{ sm: 4, xs: 3, md: 4 }}
+        padding={{ xs: 2, md: 4 }}
       >
         {children}
       </Box>

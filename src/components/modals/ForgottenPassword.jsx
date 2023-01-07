@@ -11,11 +11,17 @@ const ForgottenPassword = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
+        background="#fff"
       >
-        <Grid item flexDirection="column" container sx={{ height: "100%" }}>
+        <Grid
+          item
+          flexDirection="column"
+          container
+          sx={{ height: "100%", background: "#fff" }}
+        >
           <Grid item>
             <CloseOutlined
               onClick={handleClose}

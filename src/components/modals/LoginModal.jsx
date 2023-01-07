@@ -29,20 +29,20 @@ const LoginModal = ({ isLogin, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        // styles={{ height: { xs: "auto", md: "95vh" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isLogin}
       >
         <Grid
           container
-          sx={{
-            position: { md: "absolute" },
-            zIndex: 3,
-            borderRadius: "2.5rem",
-            top: 0,
-            left: 0,
-            height: "100%",
-          }}
+          // sx={{
+          //   position: { md: "absolute" },
+          //   zIndex: 3,
+          //   borderRadius: "2.5rem",
+          //   top: 0,
+          //   left: 0,
+          //   height: "100%",
+          // }}
         >
           <Grid
             item
@@ -273,7 +273,9 @@ const LoginModal = ({ isLogin, handleClose }) => {
                               New Here?{" "}
                               <Typography
                                 variant="span"
-                                onClick={() => setRegister(true)}
+                                onClick={() => {
+                                  setRegister(true);
+                                }}
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
                               >
                                 Signup{" "}
@@ -339,7 +341,10 @@ const LoginModal = ({ isLogin, handleClose }) => {
                       background: "#fff",
                     },
                   }}
-                  onClick={() => setRegister(true)}
+                  onClick={() => {
+                    setRegister(true);
+                    handleClose();
+                  }}
                 >
                   Sign-up
                 </Button>

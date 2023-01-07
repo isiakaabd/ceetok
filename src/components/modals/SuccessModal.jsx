@@ -9,16 +9,17 @@ const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
+        background="#fff"
       >
         <Grid
           item
           container
           flexDirection="column"
           sx={{
-            position: { md: "absolute" },
+            // position: { md: "absolute" },
             zIndex: 3,
             borderRadius: "2.5rem",
             top: 0,
@@ -27,7 +28,7 @@ const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
             mt: 3,
           }}
         >
-          <Grid item padding={{ md: 3 }}>
+          <Grid item padding={{ md: 1 }}>
             <CloseOutlined
               onClick={handleClose}
               style={{ color: "#000", fontSize: 20, cursor: "pointer" }}

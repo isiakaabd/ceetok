@@ -12,9 +12,10 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
+        background="#fff"
       >
         <Grid
           item

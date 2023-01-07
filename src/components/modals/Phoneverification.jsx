@@ -14,16 +14,17 @@ export const Phoneverification = ({ isOpen, handleClose }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
+        background="#fff"
         onClose={handleClose}
       >
         <Grid
           item
           container
           sx={{
-            position: { md: "absolute" },
+            // position: { md: "absolute" },
             zIndex: 3,
             borderRadius: "2.5rem",
             top: 0,

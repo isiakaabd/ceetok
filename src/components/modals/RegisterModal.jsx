@@ -31,7 +31,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   return (
     <>
       <Modals
-        styles={{ height: { xs: "auto", md: "95vh" } }}
+        // styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "90%", sm: "80%" }}
         isOpen={isOpen}
       >
@@ -39,7 +39,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
           item
           container
           sx={{
-            position: { md: "absolute" },
+            // position: { md: "absolute" },
             zIndex: 3,
             borderRadius: "2.5rem",
             top: 0,
@@ -290,7 +290,10 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                               Already have an account?{" "}
                               <Typography
                                 variant="span"
-                                onClick={() => setLogin(true)}
+                                onClick={() => {
+                                  setLogin(true);
+                                  handleClose();
+                                }}
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
                               >
                                 Login

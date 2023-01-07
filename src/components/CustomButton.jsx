@@ -14,6 +14,7 @@ const CustomButton = ({ children, ...rest }) => {
       zIndex: 1,
     },
   }));
+
   return <CustomBtn {...rest}>{children}</CustomBtn>;
 };
 

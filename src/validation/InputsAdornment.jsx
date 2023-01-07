@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import { TextError } from "./TextError";
 
-const Text = ({ placeholder, Icon }) => {
+const Text = ({ placeholder, Icon, order, buttonStyle }) => {
+  console.log(order);
   return (
     <Grid
       item
@@ -22,18 +23,22 @@ const Text = ({ placeholder, Icon }) => {
         borderRadius: "3rem",
         color: "#828484",
         border: "1px solid rgba(0,0,0,0.2)",
+        flexDirection: order ? "row-reverse" : "row",
       }}
     >
       <IconButton>
-        <Icon sx={{ fontSize: "3rem" }} />
+        <Icon sx={{ fontSize: "2rem", ...buttonStyle }} />
       </IconButton>
-      <InputBase sx={{ flex: 1, pr: 2 }} placeholder={placeholder} />
+      <InputBase
+        sx={{ flex: 1, px: 2, order: order }}
+        placeholder={placeholder}
+      />
     </Grid>
   );
 };
 
 const InputsAdornment = (props) => {
-  const { label, name, type, styles, ...rest } = props;
+  const { label, name, type, styles, order, buttonStyle, ...rest } = props;
   // const classes = useStyles();
   return (
     <Grid container direction="column">
@@ -41,6 +46,8 @@ const InputsAdornment = (props) => {
         id={name}
         name={name}
         as={Text}
+        order={order}
+        buttonStyle={buttonStyle}
         type={type ? type : "text"}
         // className={classes.input}
         {...rest}

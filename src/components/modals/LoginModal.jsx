@@ -22,15 +22,12 @@ const LoginModal = ({ isLogin, handleClose }) => {
   const [register, setRegister] = useState(false);
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const handleConfirmOpen = () => {
-    setShowForgottenPassword(true);
-    setShowPassword(true);
-  };
+
   return (
     <>
       <Modals
         // styles={{ height: { xs: "auto", md: "95vh" } }}
-        width={{ md: "60vw", xs: "90%", sm: "80%" }}
+        width={{ md: "60vw", xs: "95%", sm: "90%" }}
         isOpen={isLogin}
       >
         <Grid
@@ -68,7 +65,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
               <Grid item sx={{ marginRight: "auto" }}>
                 <CloseOutlined
                   onClick={handleClose}
-                  style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
+                  style={{ color: "#000", fontSize: 30, cursor: "pointer" }}
                 />
               </Grid>
               <Grid
@@ -343,7 +340,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                   }}
                   onClick={() => {
                     setRegister(true);
-                    handleClose();
+                    // handleClose();
                   }}
                 >
                   Sign-up
@@ -396,7 +393,6 @@ const LoginModal = ({ isLogin, handleClose }) => {
             handleClose();
           }}
           isOpen={showForgottenPassword}
-          // handlesetConfirmOpen={() => showForgottenPassword(true)}
         />
       )}
 

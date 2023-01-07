@@ -12,6 +12,8 @@ import {
   ListItemAvatar,
   ListItemButton,
   Button,
+  InputBase,
+  Menu,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import images from "assets";
@@ -22,6 +24,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Modals from "./Modal";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
+import { ArrowDropDown, SearchOutlined } from "@mui/icons-material";
 const pages = [
   {
     id: 0,
@@ -60,17 +63,14 @@ function Header() {
     display: "flex",
     alignItems: "center",
 
-    "&:hover": {
-      background: "transparent",
-    },
-    "&.Mui-selected": {
+    "&.Mui-selected,&:hover": {
       borderBottom: `3px solid ${theme.palette.success.main}`,
       background: "transparent",
     },
     "& .MuiListItemText-root": {
       textDecoration: "none",
       color: "currentColor",
-
+      fontSize: "2.2rem",
       //   padding: "1rem 1.5rem",
       "&:active,&:hover": {},
     },
@@ -79,8 +79,19 @@ function Header() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+  const [anchorEl, setAnchorEl] = useState(null);
+  // const opens = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const [anchorEls, setAnchorEls] = useState(null);
+  const opens = Boolean(anchorEl);
+  const handleClicks = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloses = () => {
+    setAnchorEl(null);
   };
 
   const handleClose = (event) => {
@@ -90,15 +101,6 @@ function Header() {
 
     setOpen(false);
   };
-
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
-    }
-  }
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
@@ -123,6 +125,33 @@ function Header() {
     setIsLogin(true);
   };
   const handleLoginClose = () => setIsLogin(false);
+  const Search = () => {
+    return (
+      <Grid
+        item
+        container
+        alignItems="center"
+        border="1px solid #D3D3D3"
+        sx={{ borderRadius: "3rem", height: "4rem", background: "#fff" }}
+      >
+        <IconButton>
+          <SearchOutlined sx={{ fontSize: "2rem", color: "#9B9A9A" }} />
+        </IconButton>
+        <InputBase
+          sx={{ flex: 1, px: 2 }}
+          placeholder="Search Categories"
+          color="#9B9A9A"
+          fontSize="1.1rem"
+        />
+        <Typography color="#9B9A9A" fontSize="1.1rem">
+          All
+        </Typography>
+        <IconButton>
+          <ArrowDropDown />
+        </IconButton>
+      </Grid>
+    );
+  };
   return (
     <>
       <Grid item container>
@@ -152,19 +181,21 @@ function Header() {
               <Box
                 sx={{
                   display: { xs: "none", md: "flex", margin: "auto" },
-                  gap: "3rem",
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
                 {pages.map((page, index) => (
                   <Link
                     to={page.path}
-                    style={{ textDecoration: "none", marginInline: "1rem" }}
+                    style={{
+                      textDecoration: "none",
+                      paddingInline: "2.5rem",
+                    }}
+                    onClick={() => setActive(index)}
                   >
                     <ListItem key={page.path} selected={index === active}>
-                      <ListItemText>{page.title}</ListItemText>
+                      <ListItemText disableTypography>
+                        {page.title}
+                      </ListItemText>
                       {page.title === "Live" && (
                         <ListItemAvatar
                           sx={{
@@ -212,32 +243,33 @@ function Header() {
                   alignItems: "center",
                 }}
               >
-                {/* <Link to={"/login"} style={{ textDecoration: "none" }}> */}
                 <MenuItem
-                  sx={{ padding: 0, margin: 0, color: "#37D42A" }}
+                  sx={{
+                    padding: 0,
+                    margin: 0,
+                    color: "#37D42A",
+                    fontSize: { md: "1.8rem", sm: "1.3rem" },
+                    fontWeight: 700,
+                  }}
                   onClick={handleLoginOpen}
                 >
-                  <ListItemText>Login</ListItemText>
+                  {/* <ListItemText sx={{ }}> */}
+                  Login
+                  {/* </ListItemText> */}
                 </MenuItem>
-                {/* </Link> */}
-                {/* <Link to={"/login"} style={{ textDecoration: "none" }}> */}
-                {/* <MenuItem
-                  sx={{
-                    padding: ".8rem 2.5rem",
-                    background: "blue",
-                    borderRadius: 50,
-                    margin: 0,
-                    color: "#fff",
-                    backgroundColor: "#37D42A",
-                  }}
-                > */}
+
                 <Button
                   sx={{
-                    padding: "1.5rem 3rem",
-                    background: "blue",
-                    borderRadius: 50,
+                    padding: "1rem 2.5rem",
+                    borderRadius: "3rem",
                     margin: 0,
+                    fontWeight: 700,
+                    fontSize: { md: "1.8rem", sm: "1.3rem" },
                     color: "#fff",
+                    display: "block",
+                    maxWidth: "15rem",
+                    textTransform: "capitalize",
+                    width: { md: "15rem", sm: "10rem" },
                     backgroundColor: "#37D42A",
                     "&:hover": {
                       backgroundColor: "#37D42A",
@@ -247,36 +279,63 @@ function Header() {
                   disableElevation
                   onClick={handleRegisterOpen}
                 >
-                  Register
+                  Sign-up
                 </Button>
-                {/* </MenuItem> */}
-                {/* </Link> */}
               </Box>
             </Toolbar>
           </Container>
         </AppBar>
         <Offset />
-        <Offset />
-        <Offset />
-        <Offset />
-        <Grid sx={{ paddingInline: "2rem" }}>
-          <Box
-            sx={{
-              display: { xs: "flex", md: "none" },
-              position: "relative",
-            }}
+
+        <Grid
+          item
+          container
+          alignItems="center"
+          gap={2}
+          sx={{
+            flexWrap: "nowrap",
+            display: { md: "none", xs: "flex" },
+            paddingInline: "1rem",
+          }}
+        >
+          <IconButton
+            id="basic-button"
+            aria-controls={opens ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={opens ? "true" : undefined}
+            onClick={handleClicks}
+            size="large"
+            sx={{ p: 0 }}
           >
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="red"
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
+            <MenuIcon sx={{ p: 0, fontSize: "3rem" }} />
+          </IconButton>
+          <Search />
         </Grid>
+
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={opens}
+          onClose={handleCloses}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          {pages.map((page) => (
+            <Link
+              to={page.path}
+              style={{ textDecoration: "none" }}
+              key={page.path}
+            >
+              <MenuItem
+                sx={{ color: "#5F5C5C", fontSize: "1.8rem" }}
+                onClick={handleCloses}
+              >
+                {page.title}
+              </MenuItem>
+            </Link>
+          ))}
+        </Menu>
       </Grid>
 
       {modal && (

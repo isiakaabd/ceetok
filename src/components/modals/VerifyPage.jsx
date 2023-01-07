@@ -56,311 +56,320 @@ const VerifyPage = ({ isOpen, handleClose }) => {
 
   return (
     <Modals
-      styles={{ height: { xs: "auto", md: "auto" } }}
-      width={{ md: "60vw", xs: "90%", sm: "80%" }}
+      height="95vh"
+      width={{ md: "60vw", xs: "95%", sm: "90%" }}
       isOpen={isOpen}
       background="#fff"
     >
       <Grid
-        item
-        container
-        flexDirection="column"
-        sx={{ mt: 1, height: "100%", overflowY: "scroll", padding: "1rem" }}
-        flexWrap="nowrap"
-        gap={2}
+        sx={{
+          overflowY: "scroll",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+        }}
       >
         <Grid
           item
           container
-          alignItems={"center"}
-          justifyContent="space-between"
+          flexDirection="column"
+          sx={{ mt: 1, height: "100%", padding: "1rem" }}
+          flexWrap="nowrap"
+          gap={2}
         >
-          <Grid item>
-            <Typography
-              sx={{
-                color: "#464646",
-                fontWeight: 700,
-                fontSize: { md: "2.8rem", xs: "1.5rem" },
-              }}
-            >
-              Complete Registration
-            </Typography>
-          </Grid>
-          <Grid item>
-            <CloseOutlined
-              onClick={handleClose}
-              style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid
-          item
-          gap={3}
-          // sx={{}}
-          container
-          // flexWrap="nowrap"
-          // alignItems="center"
-          display="grid"
-          sx={{
-            gridTemplateColumns: "1fr 4fr",
-          }}
-        >
-          {/* image */}
           <Grid
             item
-            justifyContent="center"
-            alignItems={{ md: "flex-end", xs: "flex-start" }}
             container
-            // xs={2}
-            sx={{
-              height: "100%",
-              gridColumn: "1/2",
-              gridRow: { md: "1/3", xs: "1/2" },
-              padding: { xs: "0 2rem" },
-            }}
+            alignItems={"center"}
+            justifyContent="space-between"
           >
             <Grid item>
-              <img
-                style={{
-                  width: "100%",
-                  display: "inline-block",
-                  //   height: "100%",
-                }}
-                alt="name"
-                src={images.placeholder}
-              />
               <Typography
                 sx={{
-                  textAlign: "center",
-                  color: "#5F5C5C",
+                  color: "#464646",
                   fontWeight: 700,
-                  fontSize: { md: "1.5rem", sm: "1.2rem" },
-                  whiteSpace: "nowrap",
+                  fontSize: { md: "2.8rem", xs: "1.5rem" },
                 }}
               >
-                Update Avatar
-              </Typography>
-            </Grid>
-          </Grid>
-          {/* text */}
-          {/* <Grid item xs={12} md={10} sx={{ background: "red" }}> */}
-          {/* text */}
-          <Grid
-            container
-            gap={2}
-            gridColumn="2/3"
-            gridRow="1/2"
-            sx={{
-              paddingRight: { xs: "2rem" },
-            }}
-            alignItems="center"
-          >
-            <Grid item flex={1} sx={{ color: "#464646" }}>
-              <Typography sx={{ fontSize: "2.8rem" }}>Nnaji Joshua </Typography>
-              <Typography variant="h4" sx={{ fontSize: "1.3rem", my: 1 }}>
-                ID: FM9|009865
+                Complete Registration
               </Typography>
             </Grid>
             <Grid item>
-              <Button
-                variant="contained"
-                color="success"
-                sx={{
-                  padding: ".2rem 2rem",
-                  borderRadius: 50,
-                  color: "#fff",
-                  fontSize: "1rem",
-                  fontWeight: 500,
-                }}
-                disableElevation
-              >
-                change
-              </Button>
+              <CloseOutlined
+                onClick={handleClose}
+                style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
+              />
             </Grid>
           </Grid>
-          {/* input */}''
-          <Grid
-            item
-            container
-            sx={{ mt: 2 }}
-            gridColumn={{ md: "2/3", xs: "1/3" }}
-            gridRow="2/3"
-          >
-            <Formik>
-              <Form style={{ width: "100%" }}>
-                <Grid item container gap={2} flexDirection="column">
-                  <Grid
-                    item
-                    container
-                    gap={2}
-                    flexWrap={{ md: "nowrap", xs: "wrap" }}
-                  >
-                    <Grid item xs={12} md={6}>
-                      <FormikControl
-                        control="inputs"
-                        name="name"
-                        placeholder="Username"
-                        Icon={AccountCircle}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormikControl
-                        control="inputs"
-                        name="dob"
-                        placeholder="Date of Birth"
-                        Icon={CakeOutlined}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    gap={2}
-                    flexWrap={{ md: "nowrap", xs: "wrap" }}
-                  >
-                    <Grid item xs={12} md={6}>
-                      <FormikControl
-                        control="selects"
-                        name="name"
-                        options={[
-                          {
-                            label: "Male",
-                            value: "Male",
-                          },
-                          {
-                            label: "Female",
-                            value: "Female",
-                          },
-                        ]}
-                        Icon={FemaleOutlined}
-                        placeholder="Gender"
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormikControl
-                        control="inputs"
-                        name="location"
-                        Icon={RoomOutlined}
-                        placeholder="Location"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Form>
-            </Formik>
-          </Grid>
-        </Grid>
 
-        <Grid
-          item
-          container
-          sx={{ flexDirection: "column" }}
-          // sx={{ }}
-          flexWrap="nowrap"
-        >
           <Grid
             item
+            gap={3}
             container
-            flexDirection={"column"}
-            flexWrap="nowrap"
+            display="grid"
             sx={{
-              ...boxStyle,
-
-              border: { md: "1px solid #9B9A9A", xs: "none" },
-              textAlign: { sm: "center", md: "left" },
+              gridTemplateColumns: "1fr 4fr",
             }}
           >
-            <Typography
+            {/* image */}
+            <Grid
+              item
+              justifyContent="center"
+              alignItems={{ md: "flex-end", xs: "flex-start" }}
+              container
+              // xs={2}
               sx={{
-                color: "#5F5C5C",
-                fontWeight: 700,
-                fontSize: { md: "2rem", sm: "1.6rem" },
-                textAlign: { xs: "center", md: "left" },
+                height: "100%",
+                gridColumn: "1/2",
+                gridRow: { md: "1/3", xs: "1/2" },
+                padding: { xs: "0 2rem" },
               }}
             >
-              Area Of Interest
-            </Typography>
-            <Typography
+              <Grid item>
+                <img
+                  style={{
+                    width: "100%",
+                    display: "inline-block",
+                    //   height: "100%",
+                  }}
+                  alt="name"
+                  src={images.placeholder}
+                />
+                <Typography
+                  sx={{
+                    textAlign: "center",
+                    color: "#5F5C5C",
+                    fontWeight: 700,
+                    fontSize: { md: "1.5rem", sm: "1.2rem" },
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Update Avatar
+                </Typography>
+              </Grid>
+            </Grid>
+            {/* text */}
+            {/* <Grid item xs={12} md={10} sx={{ background: "red" }}> */}
+            {/* text */}
+            <Grid
+              container
+              gap={2}
+              gridColumn="2/3"
+              gridRow="1/2"
               sx={{
-                color: "#464646",
-                mb: 2,
-                fontSize: { md: "1.8rem", sm: "1.4rem" },
-                textAlign: { xs: "justify", md: "left" },
+                paddingRight: { xs: "2rem" },
               }}
+              alignItems="center"
             >
-              Select atleast three (3) interest that matches the updates you
-              want to always get
-            </Typography>
+              <Grid item flex={1} sx={{ color: "#464646" }}>
+                <Typography sx={{ fontSize: "2.8rem" }}>
+                  Nnaji Joshua{" "}
+                </Typography>
+                <Typography variant="h4" sx={{ fontSize: "1.3rem", my: 1 }}>
+                  ID: FM9|009865
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{
+                    padding: ".2rem 2rem",
+                    borderRadius: 50,
+                    color: "#fff",
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                  }}
+                  disableElevation
+                >
+                  change
+                </Button>
+              </Grid>
+            </Grid>
+            {/* input */}''
             <Grid
               item
               container
-              gap={2}
-              sx={{
-                height: { xs: "200px", md: "auto" },
-                overflowY: { md: "hidden", xs: "scroll" },
-              }}
+              sx={{ mt: 2 }}
+              gridColumn={{ md: "2/3", xs: "1/3" }}
+              gridRow="2/3"
             >
-              {likes.map((item, index) => (
-                <ChipItem item={item} key={index} size="medium" />
-              ))}
+              <Formik>
+                <Form style={{ width: "100%" }}>
+                  <Grid item container gap={2} flexDirection="column">
+                    <Grid
+                      item
+                      container
+                      gap={2}
+                      flexWrap={{ md: "nowrap", xs: "wrap" }}
+                    >
+                      <Grid item xs={12} md={6}>
+                        <FormikControl
+                          control="inputs"
+                          name="name"
+                          placeholder="Username"
+                          Icon={AccountCircle}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <FormikControl
+                          control="inputs"
+                          name="dob"
+                          placeholder="Date of Birth"
+                          Icon={CakeOutlined}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      gap={2}
+                      flexWrap={{ md: "nowrap", xs: "wrap" }}
+                    >
+                      <Grid item xs={12} md={6}>
+                        <FormikControl
+                          control="selects"
+                          name="name"
+                          options={[
+                            {
+                              label: "Male",
+                              value: "Male",
+                            },
+                            {
+                              label: "Female",
+                              value: "Female",
+                            },
+                          ]}
+                          Icon={FemaleOutlined}
+                          placeholder="Gender"
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <FormikControl
+                          control="inputs"
+                          name="location"
+                          Icon={RoomOutlined}
+                          placeholder="Location"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Form>
+              </Formik>
             </Grid>
           </Grid>
-          <Typography
-            sx={{
-              my: 3,
-              px: "2rem",
-              fontWeight: 700,
-              color: "#636262",
-              fontSize: "1.5rem",
-            }}
-          >
-            Selected:
-            <Typography variant="span" sx={{ fontWeight: 400 }}>
-              {" "}
-              Politics, Game, Interest
-            </Typography>{" "}
-          </Typography>
 
           <Grid
             item
             container
-            sx={{
-              ...boxStyle,
-              border: { md: "1px solid #9B9A9A", xs: "none" },
-            }}
+            sx={{ flexDirection: "column" }}
+            // sx={{ }}
+            flexWrap="nowrap"
           >
-            <Typography
+            <Grid
+              item
+              container
+              flexDirection={"column"}
+              flexWrap="nowrap"
               sx={{
-                color: "#5F5C5C",
-                fontWeight: 700,
-                fontSize: { md: "1.5rem", sm: "1.3rem" },
-                textAlign: { xs: "center", md: "left" },
-                width: "100%",
+                ...boxStyle,
+
+                border: { md: "1px solid #9B9A9A", xs: "none" },
+                textAlign: { sm: "center", md: "left" },
               }}
             >
-              Privacy Policy
-            </Typography>
-            <Typography
-              sx={{
-                mt: 2,
-                mb: 4,
-                color: "#636262",
-                fontSize: { md: "1.6rem", sm: "1.3rem" },
-              }}
-            >
-              By clicking on “Complete Registration” you agree to our{" "}
-              <Typography sx={agreement} variant="span">
-                terms of service
-              </Typography>{" "}
-              and{" "}
-              <Typography sx={agreement} variant="span">
-                privacy policy{" "}
+              <Typography
+                sx={{
+                  color: "#5F5C5C",
+                  fontWeight: 700,
+                  fontSize: { md: "2rem", sm: "1.6rem" },
+                  textAlign: { xs: "center", md: "left" },
+                }}
+              >
+                Area Of Interest
               </Typography>
+              <Typography
+                sx={{
+                  color: "#464646",
+                  mb: 2,
+                  fontSize: { md: "1.8rem", sm: "1.4rem" },
+                  textAlign: { xs: "justify", md: "left" },
+                }}
+              >
+                Select atleast three (3) interest that matches the updates you
+                want to always get
+              </Typography>
+              <Grid
+                item
+                container
+                gap={2}
+                sx={{
+                  height: { xs: "200px", md: "auto" },
+                  overflowY: { md: "hidden", xs: "scroll" },
+                }}
+              >
+                {likes.map((item, index) => (
+                  <ChipItem item={item} key={index} size="medium" />
+                ))}
+              </Grid>
+            </Grid>
+            <Typography
+              sx={{
+                my: 3,
+                px: "2rem",
+                fontWeight: 700,
+                color: "#636262",
+                fontSize: "1.5rem",
+              }}
+            >
+              Selected:
+              <Typography variant="span" sx={{ fontWeight: 400 }}>
+                {" "}
+                Politics, Game, Interest
+              </Typography>{" "}
             </Typography>
-            <CustomButton onClick={handleClose}>
-              Complete Registration
-            </CustomButton>
+
+            <Grid
+              item
+              container
+              sx={{
+                ...boxStyle,
+                border: { md: "1px solid #9B9A9A", xs: "none" },
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#5F5C5C",
+                  fontWeight: 700,
+                  fontSize: { md: "1.5rem", sm: "1.3rem" },
+                  textAlign: { xs: "center", md: "left" },
+                  width: "100%",
+                }}
+              >
+                Privacy Policy
+              </Typography>
+              <Typography
+                sx={{
+                  mt: 2,
+                  mb: 4,
+                  color: "#636262",
+                  fontSize: { md: "1.6rem", sm: "1.3rem" },
+                }}
+              >
+                By clicking on “Complete Registration” you agree to our{" "}
+                <Typography sx={agreement} variant="span">
+                  terms of service
+                </Typography>{" "}
+                and{" "}
+                <Typography sx={agreement} variant="span">
+                  privacy policy{" "}
+                </Typography>
+              </Typography>
+              <CustomButton onClick={handleClose}>
+                Complete Registration
+              </CustomButton>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

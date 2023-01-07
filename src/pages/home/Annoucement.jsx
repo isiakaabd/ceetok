@@ -107,6 +107,8 @@ const Annoucement = () => {
             fontSize: "1.2rem",
             fontWeight: 700,
             textTransform: "capitalize",
+            outline: "none",
+            borderColor: "currentColor",
             mt: 4,
           }}
           variant="outlined"

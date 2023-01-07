@@ -31,8 +31,8 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   return (
     <>
       <Modals
-        // styles={{ height: { xs: "auto", md: "auto" } }}
-        width={{ md: "60vw", xs: "90%", sm: "80%" }}
+        styles={{ height: { xs: "auto", md: "auto" } }}
+        width={{ md: "60vw", xs: "95%", sm: "90%" }}
         isOpen={isOpen}
       >
         <Grid
@@ -131,7 +131,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
               <Grid item sx={{ marginLeft: "auto" }}>
                 <CloseOutlined
                   onClick={handleClose}
-                  style={{ color: "#000", fontSize: 20, cursor: "pointer" }}
+                  style={{ color: "#000", fontSize: 30, cursor: "pointer" }}
                 />
               </Grid>
               <Grid

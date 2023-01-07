@@ -1,6 +1,8 @@
 import React from "react";
 import { Grid, Typography, Button } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Search, SearchOutlined } from "@mui/icons-material";
+import { Form, Formik } from "formik/dist";
+import FormikControl from "validation/FormikControl";
 const LeftTab = () => {
   return (
     <Grid
@@ -20,9 +22,26 @@ const LeftTab = () => {
           padding: { xs: "1rem", md: "2rem 2rem 2rem 4rem" },
         }}
       >
-        <Grid>
-          <input /> <Search />
-        </Grid>
+        <Formik initialValues={{ name: "" }}>
+          <Form>
+            <FormikControl
+              control="inputs"
+              name="name"
+              placeholder="Search..."
+              Icon={SearchOutlined}
+              order={1}
+              buttonStyle={{
+                background: "#37D42A",
+                color: "#fff",
+                width: "2rem",
+                height: "2rem",
+                fontSize: "6rem",
+                padding: ".2rem",
+                borderRadius: "50%",
+              }}
+            />
+          </Form>
+        </Formik>
         {Array(10)
           .fill(30)
           .map((item) => {
@@ -52,8 +71,10 @@ const LeftTab = () => {
             width: "10rem",
             color: "#fff",
             fontWeight: 700,
+            outline: "none",
           }}
-          variant="outlined"
+          variant="contained"
+          disableElevation
         >
           See More
         </Button>

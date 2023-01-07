@@ -20,7 +20,12 @@ const Headings = () => {
       </Typography>
 
       <Grid item sx={{ mt: 4 }}>
-        <Grid container gap={3} sx={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}>
+        <Grid
+          container
+          justifyContent={"center"}
+          gap={3}
+          sx={{ fontSize: "clamp(1rem, 8vw, 1.2rem)" }}
+        >
           <Typography style={{ fontWeight: 700, font: "inherit" }}>
             Stats:{" "}
             <Typography

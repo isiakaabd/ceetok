@@ -57,7 +57,7 @@ const Text = ({ placeholder, options, Icon }) => {
             }}
           >
             <IconButton>
-              <Icon sx={{ fontSize: "3rem", ml: -1.5 }} />
+              <Icon sx={{ fontSize: "2rem", ml: -1.5 }} />
             </IconButton>
 
             <Typography>{value || placeholder}</Typography>

@@ -21,7 +21,9 @@ const Modals = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    height: "auto",
+    height: height ? height : "auto",
+    // bgcolor: "red",
+    // overflowY: "scroll",
     bgcolor: background ? background : "transparent",
     borderRadius: "2rem",
   };

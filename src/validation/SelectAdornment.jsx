@@ -18,7 +18,16 @@ import {
 } from "@mui/material";
 import { TextError } from "./TextError";
 
-const Text = ({ placeholder, options, Icon }) => {
+const Text = ({
+  placeholder,
+  options,
+  color,
+  height,
+  borderRadius,
+  buttonStyle,
+  border,
+  Icon,
+}) => {
   return (
     // <Grid
     //   item
@@ -35,15 +44,18 @@ const Text = ({ placeholder, options, Icon }) => {
     <Select
       displayEmpty
       sx={{
-        borderRadius: "3rem",
-        color: "#828484",
-        height: "5rem",
+        borderRadius: borderRadius ? borderRadius : "3rem",
+        color: color ? color : "#828484",
+        height: height ? height : "5rem",
+        border: border,
+
         "&:active,&:focus": {
           borderColor: "currentColor",
           outline: "none",
         },
         "& .MuiSelect-icon": {
           fontSize: "3rem",
+          color: color ? color : "#828484",
         },
       }}
       renderValue={(value) => {
@@ -57,7 +69,14 @@ const Text = ({ placeholder, options, Icon }) => {
             }}
           >
             <IconButton>
-              <Icon sx={{ fontSize: "2rem", ml: -1.5 }} />
+              <Icon
+                sx={{
+                  fontSize: "2rem",
+                  color: color,
+                  ml: -1.5,
+                  ...buttonStyle,
+                }}
+              />
             </IconButton>
 
             <Typography>{value || placeholder}</Typography>
@@ -76,11 +95,17 @@ const Text = ({ placeholder, options, Icon }) => {
 };
 
 const SelectAdornment = (props) => {
-  const { label, name, type, styles, ...rest } = props;
+  const { label, name, type, styles, borderRadius, ...rest } = props;
   // const classes = useStyles();
   return (
     <Grid container direction="column">
-      <Field id={name} name={name} as={Text} {...rest} />
+      <Field
+        id={name}
+        name={name}
+        as={Text}
+        {...rest}
+        borderRadius={borderRadius}
+      />
       <ErrorMessage name={name} component={TextError} />
     </Grid>
   );

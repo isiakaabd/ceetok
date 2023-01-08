@@ -11,3 +11,10 @@ body {
   min-height: 100vh;
   height: 100%;
 }
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  border: 0 !important;
+}
+.ql-editor {
+  min-height: 10rem !important;
+}

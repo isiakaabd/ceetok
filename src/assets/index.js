@@ -2,6 +2,7 @@ import logo from "./images/logo.png";
 import vedio from "./images/vedio.png";
 import play from "./images/play.png";
 import obi from "./images/obi.png";
+import obi2 from "./images/obi2.png";
 import image01 from "./images/image01.png";
 import image02 from "./images/image02.png";
 import image03 from "./images/image03.png";
@@ -18,6 +19,7 @@ import placeholder from "./images/placeholder.png";
 
 export default {
   gmail,
+  obi2,
   placeholder,
   logo,
   fb,

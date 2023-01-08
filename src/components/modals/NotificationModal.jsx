@@ -22,6 +22,12 @@ const NotificationModal = ({ isOpen, handleClose, children }) => {
         }}
         flexDirection="column"
       >
+        {/* <Grid item container justifyContent="space-between" alignItems="center">
+          {heading && (
+            <Grid item>
+              <Typography>{heading}</Typography>
+            </Grid>
+          )} */}
         <Grid item>
           <CloseOutlined
             onClick={handleClose}

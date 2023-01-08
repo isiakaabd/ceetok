@@ -1,28 +1,28 @@
-import React from "react";
 import { Field, ErrorMessage } from "formik/dist";
 import PropTypes from "prop-types";
-// import { makeStyles } from "@mui/styles";
-import {
-  OutlinedInput,
-  Paper,
-  IconButton,
-  InputBase,
-  InputAdornment,
-  Input,
-  Grid,
-} from "@mui/material";
+import { IconButton, InputBase, Grid } from "@mui/material";
 import { TextError } from "./TextError";
 
-const Text = ({ placeholder, Icon, order, buttonStyle }) => {
-  console.log(order);
+const Text = ({
+  placeholder,
+  borderRadius,
+  border,
+  Icon,
+  color,
+  order,
+  height,
+  buttonStyle,
+}) => {
   return (
     <Grid
       item
       container
       sx={{
-        borderRadius: "3rem",
+        borderRadius: borderRadius ? borderRadius : "3rem",
+        alignItems: "center",
         color: "#828484",
-        border: "1px solid rgba(0,0,0,0.2)",
+        border: border ? border : "1px solid rgba(0,0,0,0.2)",
+        height: "5rem",
         flexDirection: order ? "row-reverse" : "row",
       }}
     >
@@ -30,7 +30,13 @@ const Text = ({ placeholder, Icon, order, buttonStyle }) => {
         <Icon sx={{ fontSize: "2rem", ...buttonStyle }} />
       </IconButton>
       <InputBase
-        sx={{ flex: 1, px: 2, order: order }}
+        sx={{
+          flex: 1,
+          px: 2,
+          height: height ? height : "5rem",
+          color: color,
+          order: order,
+        }}
         placeholder={placeholder}
       />
     </Grid>
@@ -38,8 +44,17 @@ const Text = ({ placeholder, Icon, order, buttonStyle }) => {
 };
 
 const InputsAdornment = (props) => {
-  const { label, name, type, styles, order, buttonStyle, ...rest } = props;
-  // const classes = useStyles();
+  const {
+    label,
+    name,
+    type,
+    styles,
+    order,
+    buttonStyle,
+    borderRadius,
+    ...rest
+  } = props;
+
   return (
     <Grid container direction="column">
       <Field
@@ -47,9 +62,9 @@ const InputsAdornment = (props) => {
         name={name}
         as={Text}
         order={order}
+        borderRadius={borderRadius}
         buttonStyle={buttonStyle}
         type={type ? type : "text"}
-        // className={classes.input}
         {...rest}
       />
       <ErrorMessage name={name} component={TextError} />
@@ -57,7 +72,6 @@ const InputsAdornment = (props) => {
   );
 };
 InputsAdornment.propTypes = {
-  label: PropTypes.string,
   name: PropTypes.string,
 };
 

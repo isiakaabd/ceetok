@@ -10,6 +10,13 @@ import {
   MenuItem,
   FormControlLabel,
   Typography,
+  Menu,
+  List,
+  ListItemText,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemIcon,
 } from "@mui/material";
 import {
   Add,
@@ -21,17 +28,21 @@ import {
   Filter5Outlined,
   FilterList,
   FilterListOutlined,
+  RemoveRedEyeOutlined,
 } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
 import { StyledMenu } from "pages/Announcement";
 import { useSelector } from "react-redux";
 import RegisterModal from "components/modals/RegisterModal";
+import { Link } from "react-router-dom";
 
-const RightTab = () => {
+const RightTab = ({ setCreatePost }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
   const loginStatus = useSelector((state) => state.auth.auth);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,8 +53,19 @@ const RightTab = () => {
   const handleCreatePost = () => {
     if (!loginStatus) {
       setRegister(true);
+    } else {
+      setCreatePost(true);
     }
   };
+  const array =
+    posts.length > 0
+      ? posts
+      : Array(20).fill({
+          title:
+            "Obi campaign shutsdown Kaduna and path ways for North Eastern Collaboration",
+          category: "Politics",
+        });
+
   return (
     <>
       <Grid
@@ -63,7 +85,7 @@ const RightTab = () => {
           justifyContent="space-between"
           alignItems="center"
           flexWrap="nowrap"
-          sx={{ pb: 4 }}
+          sx={{ pb: 4, alignSelf: "flex-start" }}
         >
           <div>
             <Button
@@ -222,7 +244,7 @@ const RightTab = () => {
           {/* <MenuItem>Hello</MenuItem>
         </Select> */}
         </Grid>
-        <Grid
+        <List
           sx={{
             maxHeight: "80rem",
             overflowY: "scroll",
@@ -233,43 +255,58 @@ const RightTab = () => {
           }}
           xs={12}
         >
-          {Array(20)
-            .fill({
-              topic:
-                "Obi campaign shutsdown Kaduna and path ways for North Eastern Collaboration",
-            })
-            .map((item, index) => {
-              return (
-                <Grid item container flexWrap="nowrap" sx={{ mb: 4 }}>
-                  <Typography
-                    variant="h6"
+          {/* {posts.length > 0 ? ( */}
+          {array.map((post, index) => {
+            return (
+              <li>
+                <ListItem
+                  key={index}
+                  button
+                  component={Link}
+                  to={`/post/${index}`}
+                >
+                  <ListItemText
+                    disableTypography
                     sx={{
                       mr: "3rem !important",
                       color: "#000",
                       fontSize: "1.5rem",
                       fontWeight: 700,
-                      display: { md: "block", xs: "none" },
+                      display: {
+                        md: "block",
+                        xs: "none",
+                        maxWidth: "max-content",
+                      },
                     }}
                   >
                     {index}
-                  </Typography>
+                  </ListItemText>
 
-                  <img
-                    src={images.obi}
-                    style={{ marginTop: 2, height: "4.6rem", width: "5rem" }}
-                    alt="obi"
-                  />
-                  <Grid
+                  <ListItemAvatar
+                    sx={{
+                      height: { md: "12rem", xs: "100%" },
+                      width: { md: "11rem", xs: "5.3rem" },
+                    }}
+                  >
+                    <Avatar
+                      src={images.obi}
+                      alt="obi"
+                      variant="rounded"
+                      sx={{ marginTop: 2, height: "100%", width: "100%" }}
+                    />
+                  </ListItemAvatar>
+
+                  <List
                     item
                     container
                     direction="column"
                     sx={{
-                      flex: { md: 3, sm: 1 },
-                      mx: 2,
+                      flex: { md: 3, xs: 1 },
+                      mx: { md: 3, xs: 1 },
                     }}
                   >
-                    <Typography
-                      variant="p"
+                    <ListItemText
+                      disableTypography
                       sx={{
                         background: "#FF9B04",
                         padding: ".5rem 1.4rem",
@@ -277,45 +314,67 @@ const RightTab = () => {
                         fontWeight: 700,
                         width: "max-content",
                         color: "#fff",
+                        display: {
+                          md: "block",
+                          xs: "none",
+                          maxWidth: "max-content",
+                        },
                       }}
                     >
-                      politics
-                    </Typography>
-                    <Typography
-                      variant="h6"
+                      {post.category}
+                    </ListItemText>
+                    <ListItemText
+                      disableTypography
                       sx={{
                         color: "#5F5C5C",
                         mt: { md: 2, xs: 1 },
-                        fontSize: { md: "2rem", xs: "1rem" },
-                        fontWeight: 700,
+                        fontSize: { md: "2rem", xs: "1.1rem" },
+                        fontWeight: { md: 700, xs: 600 },
                       }}
                     >
-                      {item.topic}
-                    </Typography>
-                    <Grid
+                      {post.title}
+                    </ListItemText>
+
+                    <List
                       item
-                      container
-                      columnGap={2}
                       sx={{
+                        display: "flex",
+                        // gap: "2rem",
+                        justifyContent: "space-between",
                         fontSize: { md: "1.2rem", xs: ".8rem" },
                         fontWeight: 400,
                       }}
                     >
-                      <Typography sx={{ font: "inherit" }}>
+                      <ListItemText disableTypography>
                         Joshual@gamil.com
-                      </Typography>
-                      <Typography sx={{ font: "inherit" }}>
-                        15 Oct.2022
-                      </Typography>
-                      <Typography sx={{ font: "inherit" }}>8:39pm</Typography>
-                    </Grid>
-                  </Grid>
+                      </ListItemText>
+                      <ListItemText disableTypography>15 Oct.2022</ListItemText>
+                      <ListItemText disableTypography>8:39pm</ListItemText>
+                      {/* <ListItem> */}
+                      <Grid
+                        item
+                        sx={{
+                          flexWrap: "nowrap",
+                          alignItems: "center",
+                          gap: 1,
+                          display: { xs: "flex", md: "none" },
+                        }}
+                      >
+                        <ListItemIcon sx={{ minWidth: 0 }}>
+                          <RemoveRedEyeOutlined />
+                        </ListItemIcon>
+                        <ListItemText disableTypography primary={200} />
+                      </Grid>
+                      {/* </ListItem> */}
+                    </List>
+                  </List>
                   <Grid
                     sx={{
                       flex: { sm: 0, md: 1 },
                       alignItems: "center",
                       display: "flex",
                       justifyContent: "center",
+                      marginLeft: "auto",
                     }}
                   >
                     <div
@@ -332,10 +391,19 @@ const RightTab = () => {
                       {20}
                     </div>
                   </Grid>
-                </Grid>
-              );
-            })}
-        </Grid>
+                </ListItem>
+              </li>
+            );
+          })}
+          {/* // ) : (
+          //   <Typography 
+          //     fontSize={{ md: "3rem", sm: "2.5rem", xs: "2rem" }}
+          //     textAlign="center"
+          //   >
+          //     No Post Yet
+          //   </Typography>
+          // )}*/}
+        </List>
       </Grid>
       {register && (
         <RegisterModal

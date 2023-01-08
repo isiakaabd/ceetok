@@ -25,6 +25,8 @@ import Modals from "./Modal";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
 import { ArrowDropDown, SearchOutlined } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import UserAccount from "./UserAccount";
 const pages = [
   {
     id: 0,
@@ -75,7 +77,7 @@ function Header() {
       "&:active,&:hover": {},
     },
   }));
-
+  const loginStatus = useSelector((state) => state.auth.auth);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -234,54 +236,58 @@ function Header() {
                 ))}
               </Box>
               {/* 3 */}
-              <Box
-                sx={{
-                  display: "flex",
-                  flex: { md: 0, sm: 1 },
-                  justifyContent: "flex-end",
-                  gap: "3rem",
-                  alignItems: "center",
-                }}
-              >
-                <MenuItem
-                  sx={{
-                    padding: 0,
-                    margin: 0,
-                    color: "#37D42A",
-                    fontSize: { md: "1.8rem", sm: "1.3rem" },
-                    fontWeight: 700,
-                  }}
-                  onClick={handleLoginOpen}
-                >
-                  {/* <ListItemText sx={{ }}> */}
-                  Login
-                  {/* </ListItemText> */}
-                </MenuItem>
 
-                <Button
+              {loginStatus ? (
+                <UserAccount />
+              ) : (
+                <Box
                   sx={{
-                    padding: "1rem 2.5rem",
-                    borderRadius: "3rem",
-                    margin: 0,
-                    fontWeight: 700,
-                    fontSize: { md: "1.8rem", sm: "1.3rem" },
-                    color: "#fff",
-                    display: "block",
-                    maxWidth: "15rem",
-                    textTransform: "capitalize",
-                    width: { md: "15rem", xs: "10rem" },
-                    backgroundColor: "#37D42A",
-                    "&:hover": {
-                      backgroundColor: "#37D42A",
-                    },
+                    display: "flex",
+                    flex: { md: 0, sm: 1 },
+                    justifyContent: "flex-end",
+                    gap: "3rem",
+                    alignItems: "center",
                   }}
-                  variant="contained"
-                  disableElevation
-                  onClick={handleRegisterOpen}
                 >
-                  Sign-up
-                </Button>
-              </Box>
+                  <MenuItem
+                    sx={{
+                      padding: 0,
+                      margin: 0,
+                      color: "#37D42A",
+                      fontSize: { md: "1.8rem", sm: "1.3rem" },
+                      fontWeight: 700,
+                    }}
+                    onClick={handleLoginOpen}
+                  >
+                    Login
+                  </MenuItem>
+
+                  <Button
+                    sx={{
+                      padding: "1rem 2.5rem",
+                      borderRadius: "3rem",
+                      margin: 0,
+                      fontWeight: 700,
+                      fontSize: { md: "1.8rem", sm: "1.3rem" },
+                      color: "#fff",
+                      display: "block",
+                      maxWidth: "15rem",
+                      textTransform: "capitalize",
+                      width: { md: "15rem", xs: "10rem" },
+                      backgroundColor: "#37D42A",
+                      "&:hover": {
+                        backgroundColor: "#37D42A",
+                      },
+                    }}
+                    variant="contained"
+                    disableElevation
+                    disableTouchRipple
+                    onClick={handleRegisterOpen}
+                  >
+                    Sign-up
+                  </Button>
+                </Box>
+              )}
             </Toolbar>
           </Container>
         </AppBar>

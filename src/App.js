@@ -5,8 +5,11 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { Grid } from "@mui/material";
 import { Footer, Header } from "components";
 import { Announcement, Home } from "pages";
+import PrivateRoute from "routes/PrivateRoute";
+import Post from "pages/pages/Post";
 
 const App = () => {
+  console.log(muiTheme);
   return (
     <ThemeProvider theme={muiTheme}>
       <Grid
@@ -20,9 +23,13 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/annoucement" element={<Announcement />} />
-            {/* <Route path="/verify" element={<VerifyPage />} /> */}
+            <Route path="/post" element={<PrivateRoute />}>
+              <Route path=":postId" element={<Post />} />
+            </Route>
           </Routes>
-          <Footer />
+          <div style={{ marginTop: "auto" }}>
+            <Footer />
+          </div>
         </BrowserRouter>
       </Grid>
     </ThemeProvider>

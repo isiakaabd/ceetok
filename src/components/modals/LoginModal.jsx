@@ -16,13 +16,42 @@ import ForgottenPassword from "./ForgottenPassword";
 import Modals from "components/Modal";
 import { CustomButton } from "components";
 import RegisterModal from "./RegisterModal";
-
+import { useDispatch } from "react-redux";
+import { login } from "redux/slices/authSlice";
+import * as Yup from "yup";
 const LoginModal = ({ isLogin, handleClose }) => {
   const [state, setState] = useState(false);
   const [register, setRegister] = useState(false);
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
 
+  // Validation
+
+  const loginValidation = Yup.object({
+    email_or_phone: Yup.string("Enter Email or Phone Number").required(
+      "Required"
+    ),
+    // .oneOf()
+    // .email("Enter a valid email")
+    // .trim(),
+    // .required("Email is required"),
+    password: Yup.string()
+      .required("Enter your password")
+      .min(8, "password too short")
+      .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
+      .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
+      .matches(/^(?=.*[0-9])/, "Must contain at least one number")
+      .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
+    // name: Yup.string("Enter Your name").required("Name is ").trim(),
+  });
+  const handleSubmit = (values) => {
+    dispatch(login(values));
+
+    setTimeout(() => {
+      handleClose();
+    }, 3000);
+  };
   return (
     <>
       <Modals
@@ -139,9 +168,10 @@ const LoginModal = ({ isLogin, handleClose }) => {
                     enableReinitialize
                     initialValues={{
                       email_or_phone: "",
-                      name: "",
                       password: "",
                     }}
+                    onSubmit={handleSubmit}
+                    validationSchema={loginValidation}
                   >
                     <Form style={{ width: "100%" }}>
                       <Grid md={10} xs={12} sx={{ mx: "auto" }}>
@@ -250,7 +280,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                               label="Show Password"
                               labelPlacement="bottom"
                             />
-                            <CustomButton>Login</CustomButton>
+                            <CustomButton type="submit">Login</CustomButton>
                           </Grid>
                           <Grid
                             item

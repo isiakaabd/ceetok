@@ -567,9 +567,14 @@ const Post = () => {
           </Grid>
           <Divider
             variant="middle"
-            sx={{ width: "100%", m: 0, borderWidth: "1.2px" }}
+            // sx={{ width: "100%", m: 0, borderWidth: "1.2px" }}
           />
-          <Grid item container justifyContent="space-between">
+          <Grid
+            item
+            container
+            justifyContent="space-between"
+            alignItems="center"
+          >
             {socialItems.map((social) => (
               <IconButton>
                 <social.Icon sx={{ fontSize: "3rem" }} />

@@ -32,8 +32,9 @@ const Home = () => {
           sx={{
             mt: 3,
             pb: "3rem",
-            marginRight: { xs: "1rem", md: "4rem" },
-            marginLeft: { xs: "1rem", md: "0" },
+            marginInline: "auto",
+            marginRight: { md: "4rem" },
+            marginLeft: { md: "0" },
           }}
           flexWrap="nowrap"
           gap={3}

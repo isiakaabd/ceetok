@@ -73,11 +73,11 @@ const RightTab = ({ setCreatePost }) => {
         item
         container
         md={9}
-        xs={12}
+        xs={11}
         sx={{
-          background: "#fff",
           borderRadius: "2rem ",
-          padding: "2rem",
+          padding: { md: "2rem", xs: "1rem" },
+          marginInline: "auto",
         }}
       >
         <Grid
@@ -91,15 +91,15 @@ const RightTab = ({ setCreatePost }) => {
           <div>
             <Button
               sx={{
-                background: "#37D42A",
-                fontSize: "1.2rem",
-                paddingInline: "3rem",
+                backgroundColor: "#37D42A",
+                fontSize: { md: "1.2rem", xs: "1rem" },
+                paddingInline: { md: "3rem", xs: "1rem" },
                 borderRadius: 25,
                 color: "#fff",
                 fontWeight: 600,
-                ":hover": {
-                  background: "#37D42A",
-                },
+                // ":hover": {
+                //   background: "#37D42A",
+                // },
               }}
               variant="contained"
               disableElevation
@@ -109,27 +109,7 @@ const RightTab = ({ setCreatePost }) => {
               Create Post
             </Button>
           </div>
-          {/* <Formik initialValues={{ name: "filter" }}>
-          <Form>
-            <FormikControl
-              control="selects"
-              name="name"
-              options={[
-                {
-                  label: "Male",
-                  value: "Male",
-                },
-                {
-                  label: "Female",
-                  value: "Female",
-                },
-              ]}
-              Icon={FilterListOutlined}
-              placeholder="Filter"
-            />
-          </Form>
-        </Formik> */}
-          {/* <SelectDialog /> */}
+
           <Button
             id="demo-customized-button"
             aria-controls={open ? "demo-customized-menu" : undefined}

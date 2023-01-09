@@ -268,16 +268,14 @@ function Header() {
                       borderRadius: "3rem",
                       margin: 0,
                       fontWeight: 700,
-                      fontSize: { md: "1.8rem", sm: "1.3rem" },
+                      fontSize: { md: "1.5rem", sm: "1.3rem" },
                       color: "#fff",
                       display: "block",
-                      maxWidth: "15rem",
+                      // maxWidth: "15rem",
                       textTransform: "capitalize",
-                      width: { md: "15rem", xs: "10rem" },
+                      // width: { md: "15rem", xs: "10rem" },
                       backgroundColor: "#37D42A",
-                      "&:hover": {
-                        backgroundColor: "#37D42A",
-                      },
+                      whiteSpace: "nowrap",
                     }}
                     variant="contained"
                     disableElevation

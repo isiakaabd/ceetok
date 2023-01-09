@@ -127,7 +127,7 @@ const Footer = () => {
               updates{" "}
             </ListItemText>
           </List>
-          <Grid
+          {/* <Grid
             item
             container
             sx={{ height: "4rem", border: "transparent", flexWrap: "nowrap" }}
@@ -160,7 +160,7 @@ const Footer = () => {
             >
               Subscribe
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       <Typography

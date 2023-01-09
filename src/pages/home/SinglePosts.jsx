@@ -12,7 +12,7 @@ import { RemoveRedEyeOutlined } from "@mui/icons-material";
 
 import { Link } from "react-router-dom";
 
-const SinglePosts = ({ post, index, display }) => {
+const AllPosts = ({ post, index }) => {
   return (
     <li>
       <ListItem button component={Link} to={`/post/${index}`}>
@@ -89,16 +89,24 @@ const SinglePosts = ({ post, index, display }) => {
           <List
             item
             sx={{
-              display: "flex",
+              display: { md: "flex", xs: "none" },
               // gap: "2rem",
               justifyContent: "space-between",
               fontSize: { md: "1.2rem", xs: ".8rem" },
               fontWeight: 400,
             }}
           >
-            <ListItemText disableTypography>Joshual@gamil.com</ListItemText>
-            <ListItemText disableTypography>15 Oct.2022</ListItemText>
-            <ListItemText disableTypography>8:39pm</ListItemText>
+            <ListItem disableGutters disablePadding>
+              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
+                Joshual@gamil.com
+              </ListItemText>
+              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
+                15 Oct.2022
+              </ListItemText>
+              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
+                8:39pm
+              </ListItemText>
+            </ListItem>
             {/* <ListItem> */}
             <Grid
               item
@@ -121,7 +129,7 @@ const SinglePosts = ({ post, index, display }) => {
           sx={{
             flex: { sm: 0, md: 1 },
             alignItems: "center",
-            display: display ? display : "flex",
+            display: { md: "flex", xs: "none" },
             justifyContent: "center",
             marginLeft: "auto",
           }}
@@ -145,4 +153,4 @@ const SinglePosts = ({ post, index, display }) => {
   );
 };
 
-export default SinglePosts;
+export default AllPosts;

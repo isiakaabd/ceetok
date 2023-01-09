@@ -33,6 +33,7 @@ import {
   AccountCircleOutlined,
   LogoutOutlined,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function Notifications({
   open,
@@ -108,6 +109,7 @@ export default function Notifications({
     {
       title: "Profile",
       Icon: AccountCircleOutlined,
+      link: "/user/profile",
     },
     {
       title: "Logout",
@@ -132,6 +134,7 @@ export default function Notifications({
 
     prevOpens.current = opens;
   }, [opens]);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -242,6 +245,10 @@ export default function Notifications({
                         border:
                           account.title === "Logout" && ".7px solid #FF9B04",
                         borderRadius: ".7rem",
+                      }}
+                      onClick={() => {
+                        navigate(account.link);
+                        setOpens(false);
                       }}
                     >
                       <ListItemIcon>

@@ -131,10 +131,12 @@ const Annoucement = () => {
             fontWeight: 700,
             textTransform: "capitalize",
             outline: "none",
-            borderColor: "currentColor",
             mt: 4,
+            ":hover": {
+              backgroundColor: "#FF9B04",
+            },
           }}
-          variant="outlined"
+          variant="contained"
         >
           See More
         </Button>

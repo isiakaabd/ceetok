@@ -81,25 +81,14 @@ const CreatePost = ({ open, handleClose, heading }) => {
                       placeholder="Category"
                     />
                   </Grid>
-                  <Grid
-                    item
-                    container
-                    sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
-                    flexDirection="column"
-                  >
-                    <Editor
-                      theme="snow"
-                      value={values.text}
-                      handleChange={handleChange("text")}
-                      placeholder="write something..."
-                    />
-                    <Typography
-                      color="#9B9A9A"
-                      sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
-                    >
-                      Message
-                    </Typography>
-                  </Grid>
+
+                  <Editor
+                    theme="snow"
+                    value={values.text}
+                    handleChange={handleChange("text")}
+                    placeholder="write something..."
+                  />
+
                   {errors && <TextError>{errors.text}</TextError>}
                   <Typography
                     fontSize={{ md: "1.3rem", xs: ".9rem", fontWeight: 400 }}

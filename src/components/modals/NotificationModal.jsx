@@ -1,13 +1,19 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Modals from "components/Modal";
 import React from "react";
 
-const NotificationModal = ({ isOpen, handleClose, children }) => {
+const NotificationModal = ({
+  isOpen,
+  width,
+  heading,
+  handleClose,
+  children,
+}) => {
   return (
     <Modals
       styles={{ height: { xs: "auto", md: "auto" } }}
-      width={{ md: "60vw", xs: "95%", sm: "90%" }}
+      width={{ md: "60vw", xs: "95%", sm: "90%", ...width }}
       isOpen={isOpen}
       background="#fff"
     >
@@ -22,17 +28,30 @@ const NotificationModal = ({ isOpen, handleClose, children }) => {
         }}
         flexDirection="column"
       >
-        {/* <Grid item container justifyContent="space-between" alignItems="center">
+        <Grid item container justifyContent="space-between" alignItems="center">
           {heading && (
             <Grid item>
-              <Typography>{heading}</Typography>
+              <Typography
+                sx={{
+                  color: "#5F5C5C",
+                  fontSize: { md: "1.6rem", xs: "1.4rem" },
+                }}
+                fontWeight={700}
+              >
+                {heading}
+              </Typography>
             </Grid>
-          )} */}
-        <Grid item>
-          <CloseOutlined
-            onClick={handleClose}
-            style={{ color: "#000", fontSize: 30, cursor: "pointer" }}
-          />
+          )}
+          <Grid item>
+            <CloseOutlined
+              onClick={handleClose}
+              style={{
+                color: "#000",
+                fontSize: { md: 30, sm: 25, xs: 20 },
+                cursor: "pointer",
+              }}
+            />
+          </Grid>
         </Grid>
         {children}
       </Grid>

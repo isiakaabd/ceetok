@@ -1,4 +1,12 @@
-import { Grid, Button, Typography } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  ListItem,
+  List,
+  ListItemText,
+  ListItemButton,
+} from "@mui/material";
 import React from "react";
 import images from "assets";
 import { Link } from "react-router-dom";
@@ -61,13 +69,13 @@ const Annoucement = () => {
           </Button>
         </Grid>
       </Grid>
-      <Grid
+      <List
         item
         container
-        display="grid"
-        gap={3}
         sx={{
           mt: 6,
+          gap: { md: 3, xs: 2 },
+          display: "grid",
           gridTemplateColumns: {
             md: "repeat(3,1fr)",
             xs: "1fr",
@@ -82,23 +90,38 @@ const Annoucement = () => {
           })
           .map((item, i) => {
             return (
-              <Grid item>
-                <Typography
-                  sx={{
-                    color: "#5F5C5C",
-                    fontSize: { md: "2rem", xs: "1.5rem" },
-                    fontWeight: 700,
-                  }}
-                >
-                  {item.title}
-                </Typography>
-                <Typography sx={{ fontWeight: 400, fontSize: "1.5rem" }}>
-                  {item.time}
-                </Typography>
-              </Grid>
+              <ListItem disableGutters disablePadding alignItems="flex-start">
+                <ListItemButton disableGutters dense>
+                  <ListItemText
+                    primary={item.title}
+                    primaryTypographyProps={{
+                      color: "#5F5C5C",
+                      fontSize: { md: "2rem", xs: "1.5rem" },
+                      fontWeight: 700,
+                    }}
+                    secondary={
+                      <Typography sx={{ fontWeight: 400, fontSize: "1.5rem" }}>
+                        {item.time}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+
+                {/* </ListItemText> */}
+              </ListItem>
+              // <Grid item>
+              //   <Typography
+              //     sx={{
+
+              //     {item.title}
+              //   </Typography>
+              //   <Typography sx={{ fontWeight: 400, fontSize: "1.5rem" }}>
+              //     {item.time}
+              //   </Typography>
+              // </Grid>
             );
           })}
-      </Grid>
+      </List>
       <Link to="annoucement" style={{ textDecoration: "none" }}>
         <Button
           sx={{

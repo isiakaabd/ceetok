@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   Switch,
   Divider,
+  IconButton,
 } from "@mui/material";
 
 import images from "assets";
@@ -128,27 +129,31 @@ const LoginModal = ({ isLogin, handleClose }) => {
                   item
                   container
                   gap={8}
-                  sx={{ mt: 4, mb: 3 }}
+                  // sx={{ mt: 4, mb: 3 }}
                   justifyContent="center"
                 >
-                  <img
-                    src={images.fb}
-                    style={{
-                      objectFit: "contain",
-                      height: "3rem",
-                      width: "3rem",
-                    }}
-                    alt="facebook icon"
-                  />
-                  <img
-                    src={images.gmail}
-                    style={{
-                      objectFit: "contain",
-                      height: "3rem",
-                      width: "3rem",
-                    }}
-                    alt="gmail icon"
-                  />
+                  <IconButton>
+                    <img
+                      src={images.fb}
+                      style={{
+                        objectFit: "contain",
+                        height: "3rem",
+                        width: "3rem",
+                      }}
+                      alt="facebook icon"
+                    />
+                  </IconButton>
+                  <IconButton>
+                    <img
+                      src={images.gmail}
+                      style={{
+                        objectFit: "contain",
+                        height: "3rem",
+                        width: "3rem",
+                      }}
+                      alt="gmail icon"
+                    />
+                  </IconButton>
                 </Grid>
                 <Divider
                   flexItem

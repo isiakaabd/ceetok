@@ -22,7 +22,7 @@ const Text = ({
         alignItems: "center",
         color: "#828484",
         border: border ? border : "1px solid rgba(0,0,0,0.2)",
-        height: "5rem",
+        height: height ? height : "5rem",
         flexDirection: order ? "row-reverse" : "row",
       }}
     >

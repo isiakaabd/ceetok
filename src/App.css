@@ -3,7 +3,7 @@ body {
   font-size: 62.5%;
   font-family: "Raleway", sans-serif !important;
   scroll-behavior: smooth;
-  width: "100%";
+  width: 100%;
   background-color: #fafafa;
 }
 .container {

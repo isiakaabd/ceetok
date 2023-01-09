@@ -67,7 +67,7 @@ const LeftTab = () => {
 
         <Button
           sx={{
-            backgroundColor: "#636262",
+            background: "#636262",
             width: "10rem",
             color: "#fff",
             fontWeight: 700,

@@ -2,7 +2,7 @@ import { useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
-
+import { Grid, Typography } from "@mui/material";
 Quill.register("modules/imageResize", ImageResize);
 
 /*
@@ -60,15 +60,28 @@ const formats = [
 
 const Editor = ({ theme, placeholder, value, handleChange }) => {
   return (
-    <ReactQuill
-      theme={theme}
-      onChange={handleChange}
-      value={value}
-      modules={modules}
-      formats={formats}
-      bounds={"#root"}
-      placeholder={placeholder}
-    />
+    <Grid
+      item
+      container
+      sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
+      flexDirection="column"
+    >
+      <ReactQuill
+        theme={theme}
+        onChange={handleChange}
+        value={value}
+        modules={modules}
+        formats={formats}
+        bounds={"#root"}
+        placeholder={placeholder}
+      />
+      <Typography
+        color="#9B9A9A"
+        sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
+      >
+        Message
+      </Typography>
+    </Grid>
   );
 };
 

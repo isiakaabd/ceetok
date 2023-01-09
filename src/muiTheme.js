@@ -3,7 +3,6 @@ import { createTheme } from "@mui/material/styles";
 const lightGrey = "#5F5C5C";
 const darkGreen = "#044402";
 const green = "#37D42A";
-const info = "#FF9B04";
 
 export const muiTheme = createTheme({
   palette: {
@@ -11,16 +10,20 @@ export const muiTheme = createTheme({
       lightGrey,
     },
     primary: {
-      main: green,
+      main: darkGreen,
     },
-    secondary: {
-      main: lightGrey,
-    },
+    // secondary: {
+    //   main: grey,
+    // },
     // error: {
     //   main: red,
     // },
+
+    secondary: {
+      main: lightGrey,
+    },
     info: {
-      main: info,
+      main: lightGrey,
     },
     success: {
       main: green,

@@ -19,6 +19,7 @@ const UserProfile = () => {
       sx={{
         paddingInline: { xs: "1rem", md: "4rem" },
         gap: { md: 2, sm: 1.5, xs: 1.2 },
+        background: "#fafafa",
       }}
     >
       <Grid item>

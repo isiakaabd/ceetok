@@ -1,6 +1,6 @@
 // import React from "react";
 import Input from "./Input";
-// import Selects from "./Select";
+import Selects from "./Select";
 // import Checkboxes from "./Checkboxs";
 // import DateComponent from "./Date";
 // import Textarea from "./Textarea";
@@ -19,8 +19,8 @@ const FormikControl = ({ control, ...rest }) => {
       return <InputsAdornment {...rest} />;
     case "selects":
       return <SelectAdornment {...rest} />;
-    // case "check":
-    //   return <Checkboxes {...rest} />;
+    case "select":
+      return <Selects {...rest} />;
     // case "date":
     //   return <DateComponent {...rest} />;
     // case "file":

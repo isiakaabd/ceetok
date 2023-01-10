@@ -29,18 +29,6 @@ const Text = ({
   Icon,
 }) => {
   return (
-    // <Grid
-    //   item
-    //   container
-    //   sx={{
-    //     borderRadius: "3rem",
-    //     color: "#828484",
-    //     border: "1px solid rgba(0,0,0,0.2)",
-    //   }}
-    // >
-    //   <IconButton>
-    //     <Icon sx={{ fontSize: "3rem" }} />
-    //   </IconButton>
     <Select
       displayEmpty
       sx={{

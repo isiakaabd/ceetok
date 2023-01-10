@@ -239,7 +239,7 @@ const Comment = ({ handleShare }) => {
           </Typography>
         </Grid>
         <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
-          <Details handleShare={handleShare} />
+          <Details handleShare={handleShare} icons={icons} />
         </Grid>
         <Divider flexItem sx={{ py: 2 }} />
       </Grid>
@@ -316,7 +316,7 @@ const Comment = ({ handleShare }) => {
                   </Typography>
                   <Grid container>
                     <Grid item md={8} sm={12}>
-                      <Details />
+                      <Details icons={icons} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -327,34 +327,38 @@ const Comment = ({ handleShare }) => {
     </>
   );
 };
-const Details = ({ handleShare }) => {
+export const Details = ({ icons, handleShare }) => {
   return (
     <Grid item container justifyContent="space-between" flexWrap="nowrap">
       {icons.map((icon) => (
         <Grid item key={icon.title}>
-          <IconButton
-            onClick={() => {
-              if (icon.title === "Share") {
-                handleShare();
-              }
-            }}
-          >
-            <icon.Icon />
-          </IconButton>
-          <Typography variant="span" sx={{ whiteSpace: "nowrap" }}>
-            {icon.title}
-          </Typography>
+          <Grid container alignItems="center">
+            <IconButton
+              onClick={() => {
+                if (icon.title === "Share") {
+                  handleShare();
+                }
+              }}
+            >
+              <icon.Icon />
+            </IconButton>
+            <Typography
+              variant="span"
+              sx={{ textAlign: "center", whiteSpace: "nowrap" }}
+            >
+              {icon.title}
+            </Typography>
+          </Grid>
         </Grid>
       ))}
     </Grid>
   );
 };
-const Post = () => {
+const Post = ({ icons }) => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
   const [openShareModal, setOpenShareModal] = useState(false);
   const handleShare = () => {
-    console.log(123);
     setOpenShareModal(true);
   };
   return (

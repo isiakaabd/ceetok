@@ -2,7 +2,7 @@ import React from "react";
 import { Field, ErrorMessage } from "formik/dist";
 import PropTypes from "prop-types";
 // import { makeStyles } from "@mui/styles";
-import { FormLabel, Grid } from "@mui/material";
+import { FormLabel, Grid, Typography } from "@mui/material";
 import { TextError } from "./TextError";
 
 // const useStyles = makeStyles((theme) => ({
@@ -17,7 +17,8 @@ import { TextError } from "./TextError";
 // }));
 
 const Input = (props) => {
-  const { label, name, type, styles, ...rest } = props;
+  const { label, name, type, borderRadius, helperText, styles, ...rest } =
+    props;
   // const classes = useStyles();
   return (
     <Grid container direction="column">
@@ -25,11 +26,10 @@ const Input = (props) => {
         id={name}
         name={name}
         type={type ? type : "text"}
-        // className={classes.input}
         {...rest}
         style={{
-          minHeight: 40,
-          borderRadius: "2rem",
+          minHeight: "4rem",
+          borderRadius: borderRadius ? borderRadius : "1rem",
           outline: 0,
           padding: "0.5rem 1.5rem",
           width: "100%",
@@ -38,6 +38,7 @@ const Input = (props) => {
           border: "1px solid rgba(0,0,0,0.2)",
         }}
       />
+      {helperText && <Typography variant="span">{helperText}</Typography>}
       <ErrorMessage name={name} component={TextError} />
     </Grid>
   );

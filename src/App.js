@@ -8,6 +8,7 @@ import { Announcement, Home } from "pages";
 import PrivateRoute from "routes/PrivateRoute";
 import Post from "pages/pages/Post";
 import Profile from "pages/user/Profile";
+import Settings from "pages/user/Settings";
 
 const App = () => {
   console.log(muiTheme);
@@ -24,6 +25,7 @@ const App = () => {
             </Route>
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
           <div style={{ marginTop: "auto" }}>

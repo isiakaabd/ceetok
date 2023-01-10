@@ -1,0 +1,15 @@
+import { SvgIcon } from "@mui/material";
+
+function SettingsIcon(props) {
+  return (
+    <SvgIcon viewBox="0 0 23 23" {...props}>
+      <path
+        d="M9.25 1V4L7.75 4.75L5.5 2.5L2.5 5.5L4.75 7.75L4 9.25H1V13.75H4L4.75 15.25L2.5 17.5L5.5 20.5L7.75 18.25L9.25 19V22H13.75V19L15.25 18.25L17.5 20.5L20.5 17.5L18.25 15.25L19 13.75H22V9.25H19L18.25 7.75L20.5 5.5L17.5 2.5L15.25 4.75L13.75 4V1H9.25Z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </SvgIcon>
+  );
+}
+
+export default SettingsIcon;

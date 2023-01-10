@@ -1,5 +1,4 @@
-import { CheckBox } from "@mui/icons-material";
-import { Typography, Grid, Button } from "@mui/material";
+import { Typography, Grid, Button, Checkbox } from "@mui/material";
 import { CustomButton } from "components";
 import Editor from "components/Quil";
 import NotificationModal from "components/modals/NotificationModal";
@@ -104,7 +103,7 @@ const CreatePost = ({ open, handleClose, heading }) => {
                     flexWrap="nowrap"
                     alignItems="center"
                   >
-                    <CheckBox
+                    <Checkbox
                       defaultChecked
                       // fontSize="6rem"
                       sx={{

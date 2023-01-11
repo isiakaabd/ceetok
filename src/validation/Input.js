@@ -38,7 +38,16 @@ const Input = (props) => {
           border: "1px solid rgba(0,0,0,0.2)",
         }}
       />
-      {helperText && <Typography variant="span">{helperText}</Typography>}
+      {helperText && (
+        <Typography
+          variant="span"
+          color="#9B9A9A"
+          sx={{ md: ".5rem", xs: ".2rem" }}
+          fontSize={{ md: "1.2rem", xs: "1rem" }}
+        >
+          {helperText}
+        </Typography>
+      )}
       <ErrorMessage name={name} component={TextError} />
     </Grid>
   );

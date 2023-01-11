@@ -147,7 +147,9 @@ const ProfileDetails = (props) => {
         <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
           Friend List
         </Typography>
-        <CustomButton>See All</CustomButton>
+        <CustomButton onClick={() => navigate("/user/all-friends")}>
+          See All
+        </CustomButton>
       </Grid>
       <List sx={{ wdith: "100%", p: 2 }}>
         {Array(10)

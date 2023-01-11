@@ -7,6 +7,7 @@ import Selects from "./Select";
 import PropTypes from "prop-types";
 import InputsAdornment from "./InputsAdornment";
 import SelectAdornment from "./SelectAdornment";
+import SwitchComponent from "./Switch";
 // import Files from "./File";
 // import Files2 from "./File2";
 // import DateTimePicker from "./DateTimePicker";
@@ -21,8 +22,8 @@ const FormikControl = ({ control, ...rest }) => {
       return <SelectAdornment {...rest} />;
     case "select":
       return <Selects {...rest} />;
-    // case "date":
-    //   return <DateComponent {...rest} />;
+    case "switch":
+      return <SwitchComponent {...rest} />;
     // case "file":
     //   return <Files {...rest} />;
     // case "files":

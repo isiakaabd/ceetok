@@ -1,15 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Field, ErrorMessage } from "formik/dist";
-import {
-  FormControl,
-  Typography,
-  FormLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Box,
-} from "@mui/material";
+import { Typography, Select, MenuItem, Grid } from "@mui/material";
 
 import { TextError } from "./TextError";
 
@@ -17,6 +9,7 @@ export const Formiks = ({ borderRadius, options }) => {
   return (
     <Select
       displayEmpty
+      // placeholder={placeholder}
       sx={{
         borderRadius: borderRadius ? borderRadius : "1rem",
         color: "#828484",
@@ -32,6 +25,7 @@ export const Formiks = ({ borderRadius, options }) => {
         },
       }}
     >
+      {/* <MenuItem value="">{placeholder}</MenuItem> */}
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}
@@ -50,8 +44,8 @@ Formiks.propTypes = {
 };
 
 const Selects = (props) => {
-  const { label, name, type, styles, helperText, ...rest } = props;
-  // const classes = useStyles();
+  const { label, name, type, styles, helperText, placeholder, ...rest } = props;
+
   return (
     <Grid container direction="column">
       <Field id={name} name={name} as={Formiks} {...rest} />

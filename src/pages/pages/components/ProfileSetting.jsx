@@ -11,11 +11,12 @@ const ProfileSetting = (props) => {
     fontSize: "2.2rem",
     fontWeight: 600,
     color: "#5F5C5C",
+
     // textAlign: "center",
   }));
   return (
     <Grid item container>
-      <Grid item xs={10} sx={{ p: 3 }}>
+      <Grid item md={10} xs={12} sx={{ p: 3 }}>
         <Formik
           initialValues={{
             title: "",
@@ -33,10 +34,13 @@ const ProfileSetting = (props) => {
           <Form style={{ width: "100%" }}>
             <Grid item container gap={2}>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="User Title" />
+                <Grid item md={3} xs={0} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography
+                    fontSize={{ xs: "1.4rem" }}
+                    text="User Title"
+                  />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <FormikControl
                     name="title"
                     placeholder="User"
@@ -48,18 +52,21 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Date of Birth" />
+                <Grid item md={3} display={{ xs: "none", md: "block" }}>
+                  <CustomSubTypography
+                    fontSize={{ xs: "1.4rem" }}
+                    text="Date of Birth"
+                  />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Grid
                     item
                     container
                     gap={2}
-                    flexWrap="nowrap"
+                    flexWrap={{ md: "nowrap", xs: "wrap" }}
                     justifyContent="space-between"
                   >
-                    <Grid item xs={3}>
+                    <Grid item md={3} xs={12}>
                       <FormikControl
                         name="day"
                         placeholder="Day"
@@ -83,7 +90,7 @@ const ProfileSetting = (props) => {
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={3} xs={12}>
                       <FormikControl
                         placeholder="Month"
                         name="month"
@@ -109,7 +116,7 @@ const ProfileSetting = (props) => {
                         ]}
                       />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item md={3} xs={12}>
                       <FormikControl
                         placeholder="Year"
                         name="year"
@@ -139,10 +146,13 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Contact" />
+                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography
+                    fontSize={{ xs: "1.4rem" }}
+                    text="Contact"
+                  />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Grid
                     item
                     container
@@ -162,10 +172,10 @@ const ProfileSetting = (props) => {
               </Grid>
 
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Web" />
+                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography fontSize={{ xs: "1.4rem" }} text="Web" />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={8}>
                   <Grid
                     item
                     container
@@ -184,10 +194,10 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Bio" />
+                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography fontSize={{ xs: "1.4rem" }} text="Bio" />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={8}>
                   <Grid item container>
                     <FormikControl
                       name="web"
@@ -199,10 +209,13 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Location" />
+                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography
+                    fontSize={{ xs: "1.4rem" }}
+                    text="Location"
+                  />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Grid item container>
                     <FormikControl
                       name="location"
@@ -214,10 +227,13 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
               <Grid item container alignItems="center">
-                <Grid item xs={3}>
-                  <CustomSubTypography text="Occupation" />
+                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
+                  <CustomSubTypography
+                    fontSize={{ xs: "1.4rem" }}
+                    text="Occupation"
+                  />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Grid item container>
                     <FormikControl
                       name="occupation"

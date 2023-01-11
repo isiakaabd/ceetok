@@ -9,9 +9,9 @@ import PrivateRoute from "routes/PrivateRoute";
 import Post from "pages/pages/Post";
 import Profile from "pages/user/Profile";
 import Settings from "pages/user/Settings";
+import AllFriend from "pages/pages/components/AllFriend";
 
 const App = () => {
-  console.log(muiTheme);
   return (
     <ThemeProvider theme={muiTheme}>
       <div className="container">
@@ -26,6 +26,7 @@ const App = () => {
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="all-friends" element={<AllFriend />} />
             </Route>
           </Routes>
           <div style={{ marginTop: "auto" }}>

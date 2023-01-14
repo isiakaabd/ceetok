@@ -4,29 +4,68 @@ import { styled } from "@mui/material/styles";
 import images from "assets";
 import Modals from "components/Modal";
 import { Form, Formik } from "formik/dist";
-import { useState, lazy } from "react";
+import { useState } from "react";
 import FormikControl from "validation/FormikControl";
 import Verification from "./Verification";
 import { Phoneverification } from "./Phoneverification";
 import LoginModal from "./LoginModal";
 // import EmailVerification from "./EmailVerification";
-//
+import * as Yup from "yup";
+import { useRegisterMutation } from "redux/slices/authSlice";
+import { toast } from "react-toastify";
+import CustomButton from "components/CustomButton";
+import { useDispatch } from "react-redux";
+import { registerAction } from "redux/reducers/authReducer";
+const validationSchema = Yup.object({
+  email: Yup.string("Enter Email")
+    .email("Enter VAlid Email")
+    .required("Required"),
+  name: Yup.string("Enter your Name").required("Required"),
+  password: Yup.string()
+    .required("Enter your password")
+    .min(8, "password too short")
+    .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
+    .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
+    .matches(/^(?=.*[0-9])/, "Must contain at least one number")
+    .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
+});
+
 const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
-  const CustomButton = styled(ButtonBase)(({ theme }) => ({
-    background: "#37D42A",
-    display: "block",
-    padding: "1rem 6rem",
-    borderRadius: "2em",
-    fontWeight: 700,
-    "&:hover, &.Mui-focusVisible": {
-      zIndex: 1,
-    },
-  }));
+  const [register, { isLoading }] = useRegisterMutation();
+  // const CustomButton = styled(ButtonBase)(({ theme }) => ({
+  //   background: "#37D42A",
+  //   display: "block",
+  //   padding: "1rem 6rem",
+  //   borderRadius: "2em",
+  //   fontWeight: 700,
+  //   "&:hover, &.Mui-focusVisible": {
+  //     zIndex: 1,
+  //   },
+  // }));
   const [state, setState] = useState(true);
+  const dispatch = useDispatch();
   const [login, setLogin] = useState(false);
   const [showEmailVerification, setEmailVerifications] = useState(false);
   const [showPasswordVerification, setShowPasswordVerification] =
     useState(false);
+  const handleSubmit = async (values) => {
+    const { email, password, name } = values;
+    const { data, error } = await register({
+      email,
+      password,
+      full_name: name,
+    });
+    console.log(data);
+    if (error) toast.error(error);
+    if (data) {
+      toast.success(data.message);
+      dispatch(registerAction(data.body));
+      handleClose();
+      setTimeout(() => {
+        setLogin(true);
+      }, 3000);
+    }
+  };
 
   return (
     <>
@@ -34,6 +73,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
         styles={{ height: { xs: "auto", md: "auto" } }}
         width={{ md: "60vw", xs: "95%", sm: "95%" }}
         isOpen={isOpen}
+        handleClose={handleClose}
       >
         <Grid
           item
@@ -204,105 +244,103 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                 </Divider>
                 <Grid item container sx={{ mt: 3 }}>
                   <Formik
+                    validationSchema={validationSchema}
                     enableReinitialize
                     initialValues={{
-                      email_or_phone: "",
+                      email: "",
                       name: "",
                       password: "",
                     }}
+                    onSubmit={handleSubmit}
                   >
-                    <Form style={{ width: "100%" }}>
-                      <Grid md={10} sm={12} sx={{ mx: "auto" }}>
-                        <Grid
-                          container
-                          gap={2}
-                          flexDirection="column"
-                          alignItems="center"
-                        >
-                          <Grid item container>
-                            <FormikControl
-                              control="input"
-                              name="name"
-                              placeholder="Name"
-                            />
-                          </Grid>
-                          <Grid item container>
-                            <FormikControl
-                              control="input"
-                              name={"email_or_phone"}
-                              placeholder={
-                                state ? "Email Address" : "Phone number"
-                              }
-                            />
-                          </Grid>
-                          <Grid item container>
-                            <FormikControl
-                              control="input"
-                              name="password"
-                              placeholder="Password"
-                              type="password"
-                            />
-                          </Grid>
-                          <Typography
-                            sx={{
-                              fontWeight: 700,
-                              fontSize: "1.4rem",
-                              color: "#828484",
-                              textAlign: "center",
-                            }}
-                          >
-                            Or Sign-up with{" "}
-                            <Typography
-                              variant="span"
-                              sx={{ color: "#37D42A", cursor: "pointer" }}
-                              onClick={() => setState(!state)}
-                            >
-                              {state ? "Phone Number?" : "Email Address"}
-                            </Typography>
-                          </Typography>
-                          <div style={{ marginTop: 3 }}>
-                            <CustomButton
-                              onClick={() => {
-                                if (!state) {
-                                  setShowPasswordVerification(true);
-                                } else {
-                                  setEmailVerifications(true);
-                                }
-                              }}
-                            >
-                              Sign Up
-                            </CustomButton>
-                          </div>
+                    {({ isSubmitting }) => (
+                      <Form style={{ width: "100%" }}>
+                        <Grid item md={10} sm={12} sx={{ mx: "auto" }}>
                           <Grid
-                            item
-                            sx={{
-                              display: { sm: "block", md: "none" },
-                            }}
+                            container
+                            gap={2}
+                            flexDirection="column"
+                            alignItems="center"
                           >
+                            <Grid item container>
+                              <FormikControl
+                                control="input"
+                                name="name"
+                                placeholder="Name"
+                              />
+                            </Grid>
+                            <Grid item container>
+                              <FormikControl
+                                control="input"
+                                name={"email"}
+                                placeholder={
+                                  state ? "Email Address" : "Phone number"
+                                }
+                              />
+                            </Grid>
+                            <Grid item container>
+                              <FormikControl
+                                control="input"
+                                name="password"
+                                placeholder="Password"
+                                type="password"
+                              />
+                            </Grid>
                             <Typography
                               sx={{
+                                fontWeight: 700,
+                                fontSize: "1.4rem",
+                                color: "#828484",
                                 textAlign: "center",
-                                color: "#5F5C5C",
-                                fontWeight: 500,
-                                fontSize: "1.3rem",
                               }}
                             >
-                              Already have an account?{" "}
+                              Or Sign-up with{" "}
                               <Typography
                                 variant="span"
-                                onClick={() => {
-                                  setLogin(true);
-                                  handleClose();
-                                }}
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
+                                // onClick={() => setState(!state)}
                               >
-                                Login
+                                {state ? "Phone Number?" : "Email Address"}
                               </Typography>
                             </Typography>
+                            <div style={{ marginTop: 3 }}>
+                              <CustomButton
+                                type="submit"
+                                title="Sign Up"
+                                isSubmitting={isSubmitting}
+                              />
+                            </div>
+                            <Grid
+                              item
+                              sx={{
+                                display: { sm: "block", md: "none" },
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  textAlign: "center",
+                                  color: "#5F5C5C",
+                                  fontWeight: 500,
+                                  fontSize: "1.3rem",
+                                }}
+                              >
+                                Already have an account?{" "}
+                                <Typography
+                                  variant="span"
+                                  onClick={() => {
+                                    setLogin(true);
+                                    handleClose();
+                                  }}
+                                  sx={{ color: "#37D42A", cursor: "pointer" }}
+                                >
+                                  Login
+                                </Typography>
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Form>
+                      </Form>
+                    )}
                   </Formik>
                 </Grid>
               </Grid>

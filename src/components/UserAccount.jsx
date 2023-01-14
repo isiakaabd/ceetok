@@ -12,16 +12,20 @@ import {
 } from "@mui/material";
 import { useState, useRef } from "react";
 import Notifications from "./Notifications";
+import { useSelector } from "react-redux";
+import { userProfile } from "redux/reducers/authReducer";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-
+  const userDetails = useSelector(userProfile);
+  const state = useSelector((state) => state);
+  console.log(state);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-
+  console.log(userDetails);
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;

@@ -17,41 +17,32 @@ import ForgottenPassword from "./ForgottenPassword";
 import Modals from "components/Modal";
 import { CustomButton } from "components";
 import RegisterModal from "./RegisterModal";
-import { useDispatch } from "react-redux";
-import { login } from "redux/slices/authSlice";
 import * as Yup from "yup";
+import { useLoginMutation } from "redux/slices/authSlice";
+import { toast } from "react-toastify";
 const LoginModal = ({ isLogin, handleClose }) => {
+  const [loginUser, { isLoading }] = useLoginMutation();
   const [state, setState] = useState(false);
   const [register, setRegister] = useState(false);
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useDispatch();
 
   // Validation
 
   const loginValidation = Yup.object({
-    email_or_phone: Yup.string("Enter Email or Phone Number").required(
-      "Required"
-    ),
-    // .oneOf()
-    // .email("Enter a valid email")
-    // .trim(),
-    // .required("Email is required"),
-    password: Yup.string()
-      .required("Enter your password")
-      .min(8, "password too short")
-      .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
-      .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
-      .matches(/^(?=.*[0-9])/, "Must contain at least one number")
-      .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
-    // name: Yup.string("Enter Your name").required("Name is ").trim(),
+    email: Yup.string("Enter Email")
+      .email("Email is Required")
+      .required("Required"),
+    password: Yup.string().required("Enter your password"),
   });
-  const handleSubmit = (values) => {
-    dispatch(login(values));
-
-    setTimeout(() => {
-      handleClose();
-    }, 3000);
+  const handleSubmit = async (values) => {
+    const { email, password } = values;
+    const { data, error } = await loginUser({ email, password });
+    console.log(data, error);
+    if (error) toast.error("Invalid Email/Password");
+    // setTimeout(() => {
+    //   handleClose();
+    // }, 3000);
   };
   return (
     <>
@@ -60,17 +51,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
         width={{ md: "60vw", xs: "95%", sm: "95%" }}
         isOpen={isLogin}
       >
-        <Grid
-          container
-          // sx={{
-          //   position: { md: "absolute" },
-          //   zIndex: 3,
-          //   borderRadius: "2.5rem",
-          //   top: 0,
-          //   left: 0,
-          //   height: "100%",
-          // }}
-        >
+        <Grid container>
           <Grid
             item
             md={7.5}
@@ -172,7 +153,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                   <Formik
                     enableReinitialize
                     initialValues={{
-                      email_or_phone: "",
+                      email: "",
                       password: "",
                     }}
                     onSubmit={handleSubmit}
@@ -189,7 +170,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                           <Grid item container mb={2}>
                             <FormikControl
                               control="input"
-                              name={"email_or_phone"}
+                              name={"email"}
                               type={state ? "email" : "text"}
                               placeholder={
                                 state ? "Email Address" : "Phone number"
@@ -285,7 +266,11 @@ const LoginModal = ({ isLogin, handleClose }) => {
                               label="Show Password"
                               labelPlacement="bottom"
                             />
-                            <CustomButton type="submit">Login</CustomButton>
+                            <CustomButton
+                              type="submit"
+                              title="Login"
+                              isSubmitting={isLoading}
+                            />
                           </Grid>
                           <Grid
                             item

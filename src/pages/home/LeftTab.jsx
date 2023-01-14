@@ -1,9 +1,18 @@
 import React from "react";
-import { Grid, Typography, Button } from "@mui/material";
-import { Search, SearchOutlined } from "@mui/icons-material";
+import {
+  Grid,
+  Button,
+  List,
+  ListItemText,
+  ListItemButton,
+} from "@mui/material";
+import { SearchOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 const LeftTab = () => {
+  const loginStatus = useSelector((state) => state.auth.token);
   return (
     <Grid
       item
@@ -23,7 +32,7 @@ const LeftTab = () => {
         }}
       >
         <Formik initialValues={{ name: "" }}>
-          <Form>
+          <Form style={{ width: "100%" }}>
             <FormikControl
               control="inputs"
               name="name"
@@ -33,38 +42,63 @@ const LeftTab = () => {
               buttonStyle={{
                 background: "#37D42A",
                 color: "#fff",
-                width: "2rem",
-                height: "2rem",
-                fontSize: "6rem",
-                padding: ".2rem",
-                borderRadius: "50%",
               }}
             />
           </Form>
         </Formik>
-        {Array(10)
-          .fill(30)
-          .map((item) => {
-            return (
-              <Grid item container>
-                <Typography sx={{ flex: 1 }}>Health</Typography>
-                <div
-                  style={{
-                    width: "2.4rem",
-                    height: "2.4rem",
-                    borderRadius: "50%",
-                    backgroundColor: "#D3D3D3",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+        <List sx={{ width: "100%" }}>
+          {Array(10)
+            .fill(30)
+            .map((item, index) => {
+              return (
+                <ListItemButton
+                  key={index}
+                  component={loginStatus ? Link : "li"}
+                  to={"/entertainment"}
                 >
-                  {item}
-                </div>
-              </Grid>
-            );
-          })}
+                  <ListItemText
+                    primary="Entertainment"
+                    primaryTypographyProps={{
+                      color: "#9B9A9A",
+                      fontWeight: 600,
+                    }}
+                  />
 
+                  <ListItemText
+                    disableGutters
+                    primary="1.2k"
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                    primaryTypographyProps={{
+                      minWidth: "3.4rem",
+                      minHeight: "3.4rem",
+                      borderRadius: "50%",
+                      backgroundColor: "#D3D3D3",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    30
+                  </ListItemText>
+                  {/* </div> */}
+                  {/* <Typography sx={{ flex: 1 }}>Health</Typography>
+                  <div
+                    style={{
+                      width: "2.4rem",
+                      height: "2.4rem",
+                      borderRadius: "50%",
+                      backgroundColor: "#D3D3D3",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item}
+                  </div> */}
+                </ListItemButton>
+              );
+            })}
+        </List>
         <Button
           sx={{
             backgroundColor: "#636262",

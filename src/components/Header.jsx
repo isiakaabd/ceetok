@@ -77,31 +77,17 @@ function Header() {
       "&:active,&:hover": {},
     },
   }));
-  const loginStatus = useSelector((state) => state.auth.auth);
+  const loginStatus = useSelector((state) => state.auth.token);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-
+  console.log(loginStatus);
   const [anchorEl, setAnchorEl] = useState(null);
-  // const opens = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const [anchorEls, setAnchorEls] = useState(null);
   const opens = Boolean(anchorEl);
   const handleClicks = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloses = () => {
     setAnchorEl(null);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -172,12 +158,14 @@ function Header() {
         >
           <Container maxWidth="xl" sx={{ p: "0 !important" }}>
             <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-              <img
-                src={images.logo}
-                variant="square"
-                alt="logo"
-                style={{ width: "10em", objectFit: "contain" }}
-              />
+              <Link to="/">
+                <img
+                  src={images.logo}
+                  variant="square"
+                  alt="logo"
+                  style={{ width: "10em", objectFit: "contain" }}
+                />
+              </Link>
 
               {/* 2 */}
               <Box
@@ -188,6 +176,7 @@ function Header() {
                 {pages.map((page, index) => (
                   <Link
                     to={page.path}
+                    key={index}
                     style={{
                       textDecoration: "none",
                       paddingInline: "2.5rem",
@@ -208,8 +197,6 @@ function Header() {
                         >
                           <div
                             style={{
-                              // height: "1.5rem",
-                              // width: "1.5rem",
                               borderRadius: "50%",
                               display: "inline-flex",
                               justifyContent: "center",
@@ -256,6 +243,9 @@ function Header() {
                       color: "#37D42A",
                       fontSize: { md: "1.8rem", sm: "1.3rem" },
                       fontWeight: 700,
+                      "&:hover": {
+                        backgroundColor: "transparent",
+                      },
                     }}
                     onClick={handleLoginOpen}
                   >

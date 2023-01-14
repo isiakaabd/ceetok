@@ -10,6 +10,9 @@ import Post from "pages/pages/Post";
 import Profile from "pages/user/Profile";
 import Settings from "pages/user/Settings";
 import AllFriend from "pages/pages/components/AllFriend";
+import Entertainment from "pages/Entertainment";
+import CreatePost from "pages/pages/CreatePost";
+import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 
 const App = () => {
   return (
@@ -25,8 +28,16 @@ const App = () => {
             </Route>
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
+              <Route path="create-post" element={<CreatePost />} />
+              <Route
+                path="create-annoucement"
+                element={<CreateAnnoucement />}
+              />
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
+            </Route>
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="entertainment" element={<Entertainment />} />
             </Route>
           </Routes>
           <div style={{ marginTop: "auto" }}>

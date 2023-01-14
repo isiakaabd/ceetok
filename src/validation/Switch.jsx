@@ -58,7 +58,7 @@ const IOSSwitch = styled((props) => (
 const Switchs = ({ label, name, value, ...rest }) => {
   return (
     <FormControlLabel
-      control={<IOSSwitch sx={{ m: 1 }} name={name} {...rest} />}
+      control={<IOSSwitch sx={{ m: label ? 1 : 0 }} name={name} {...rest} />}
       label={label}
     />
   );
@@ -72,7 +72,7 @@ const SwitchComponent = (props) => {
       <Field
         id={name}
         type="checkbox"
-        label={label}
+        label={label ? label : null}
         name={name}
         as={Switchs}
         {...rest}

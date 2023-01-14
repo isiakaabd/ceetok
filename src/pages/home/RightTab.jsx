@@ -37,12 +37,13 @@ import { useSelector } from "react-redux";
 import RegisterModal from "components/modals/RegisterModal";
 import { Link } from "react-router-dom";
 import SinglePosts from "./SinglePosts";
+import Filters from "components/modals/Filters";
 
 const RightTab = ({ setCreatePost }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
   const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
   const loginStatus = useSelector((state) => state.auth.auth);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -109,8 +110,14 @@ const RightTab = ({ setCreatePost }) => {
               Create Post
             </Button>
           </div>
-
-          <Button
+          <Filters
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+            open={open}
+            handleClick={handleClick}
+            handleClose={handleClose}
+          />
+          {/* <Button
             id="demo-customized-button"
             aria-controls={open ? "demo-customized-menu" : undefined}
             aria-haspopup="true"
@@ -221,7 +228,7 @@ const RightTab = ({ setCreatePost }) => {
                 </FormControl>
               </Grid>
             </Grid>
-          </StyledMenu>
+          </StyledMenu> */}
           {/* <MenuItem>Hello</MenuItem>
         </Select> */}
         </Grid>

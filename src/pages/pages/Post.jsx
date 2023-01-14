@@ -26,11 +26,18 @@ import {
   Button,
   Divider,
   Grid,
+  Paper,
+  MenuItem,
+  Grow,
   IconButton,
+  Popper,
+  ClickAwayListener,
+  Menu,
+  MenuList,
   Typography,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import FormikControl from "validation/FormikControl";
 import UserProfile from "./UserProfile";
@@ -93,6 +100,39 @@ const socialItems = [
   },
 ];
 const Comment = ({ handleShare }) => {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
   return (
     <>
       <Grid
@@ -159,8 +199,17 @@ const Comment = ({ handleShare }) => {
                     />
                   </Grid>
                   <Grid item>
-                    <IconButton>
-                      <TuneOutlined sx={{ fontSize: "3rem", color: "#fff" }} />
+                    <IconButton
+                      ref={anchorRef}
+                      id="composition-avatar"
+                      aria-controls={open ? "composition-menu" : undefined}
+                      aria-expanded={open ? "true" : undefined}
+                      aria-haspopup="true"
+                      onClick={handleToggle}
+                    >
+                      <TuneOutlined
+                        sx={{ fontSize: "2.5rem", color: "#fff" }}
+                      />
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -324,6 +373,40 @@ const Comment = ({ handleShare }) => {
             ))}
         </Grid>
       </Grid>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-start"
+        transition
+        disablePortal
+        sx={{ zIndex: 900 }}
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom-start" ? "left top" : "left bottom",
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                  onKeyDown={handleListKeyDown}
+                >
+                  <MenuItem onClick={handleClose}>Edit Topic</MenuItem>
+                  <MenuItem onClick={handleClose}>Close Topic</MenuItem>
+                  <MenuItem onClick={handleClose}>Delete Topic</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </>
   );
 };

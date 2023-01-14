@@ -1,7 +1,5 @@
-import React from "react";
-import { Modal, Stack, Box, Typography, Grid } from "@mui/material";
+import { Modal, Box } from "@mui/material";
 import PropTypes from "prop-types";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Modals = ({
   isOpen,
@@ -22,8 +20,7 @@ const Modals = ({
     left: "50%",
     transform: "translate(-50%, -50%)",
     height: height ? height : "auto",
-    // bgcolor: "red",
-    // overflowY: "scroll",
+
     bgcolor: background ? background : "transparent",
     borderRadius: "2rem",
   };

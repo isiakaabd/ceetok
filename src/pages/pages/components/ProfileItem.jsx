@@ -1,19 +1,24 @@
+import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import { SettingsOutlined } from "@mui/icons-material";
 import {
-  Badge,
   Avatar,
-  Popper,
-  Grow,
-  Paper,
   ClickAwayListener,
-  MenuList,
+  Grid,
+  Grow,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemIcon,
+  ListItemText,
   MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Typography,
 } from "@mui/material";
 
-import images from "assets";
-import Pen from "assets/svgs/Pen";
-import { useState, useRef, useEffect } from "react";
-
-export default function ProfileImage() {
+const ProfileItem = ({ profile }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -47,27 +52,56 @@ export default function ProfileImage() {
 
     prevOpen.current = open;
   }, [open]);
-
   return (
     <>
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        badgeContent={<Pen sx={{ fill: "#37D42A" }} />}
-        ref={anchorRef}
-        id="composition-avatar"
-        aria-controls={open ? "composition-menu" : undefined}
-        aria-expanded={open ? "true" : undefined}
-        aria-haspopup="true"
-        onClick={handleToggle}
+      <ListItem
+        sx={{
+          borderRadius: "1rem",
+          mb: 2,
+          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        }}
       >
-        <Avatar
-          alt="Travis Howard"
-          src={images.dp}
-          sx={{ width: "10rem", height: "10rem", objectFit: "contain" }}
+        <ListItemAvatar alignItems="flex-start">
+          <IconButton>
+            <Avatar alt="Remy Sharp">R</Avatar>
+          </IconButton>
+        </ListItemAvatar>
+        <ListItemText
+          primary={
+            <Grid item alignItems="center" gap={1} container flexWrap="nowrap">
+              <Typography color="#9B9A9A" fontSize="1.4rem" fontWeight={400}>
+                John Friday
+              </Typography>
+              <div
+                style={{
+                  width: ".5rem",
+                  background: "#37D42A",
+                  height: ".5rem",
+                  borderRadius: "50%",
+                }}
+              />
+            </Grid>
+          }
+          // "Brunch this weekend?"
+          secondary={
+            <Typography fontSize="1.4rem" fontWeight={400} color="#9B9A9A">
+              @johnneskey
+            </Typography>
+          }
         />
-      </Badge>
-
+        <ListItemIcon>
+          <IconButton
+            ref={anchorRef}
+            id="composition-avatar"
+            aria-controls={open ? "composition-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            <SettingsOutlined sx={{ fontSize: "3rem", color: "#9B9A9A" }} />
+          </IconButton>
+        </ListItemIcon>
+      </ListItem>
       <Popper
         open={open}
         anchorEl={anchorRef.current}
@@ -75,6 +109,7 @@ export default function ProfileImage() {
         placement="bottom-start"
         transition
         disablePortal
+        sx={{ zIndex: 900 }}
       >
         {({ TransitionProps, placement }) => (
           <Grow
@@ -103,4 +138,8 @@ export default function ProfileImage() {
       </Popper>
     </>
   );
-}
+};
+
+ProfileItem.propTypes = {};
+
+export default ProfileItem;

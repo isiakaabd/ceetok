@@ -9,7 +9,7 @@ import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";
 import { useDispatch } from "react-redux";
-import { createPost } from "redux/slices/postSlice";
+import { createPost } from "redux/reducers/postReducer";
 import { TextError } from "validation/TextError";
 
 const CreatePost = ({ open, handleClose, heading }) => {

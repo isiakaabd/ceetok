@@ -1,8 +1,5 @@
-import { Typography, Grid, Button, Select, MenuItem } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useState } from "react";
-import images from "assets";
-
-import { Link } from "react-router-dom";
 import OnlineActivity from "./OnlineActivity";
 import Annoucement from "./Annoucement";
 import Advert from "./Advert";

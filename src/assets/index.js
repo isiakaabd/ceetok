@@ -2,6 +2,7 @@ import logo from "./images/logo.png";
 import vedio from "./images/vedio.png";
 import play from "./images/play.png";
 import obi from "./images/obi.png";
+import payment from "./images/payment.png";
 import obi2 from "./images/obi2.png";
 import image01 from "./images/image01.png";
 import image02 from "./images/image02.png";
@@ -18,11 +19,12 @@ import fb from "./images/fb.png";
 import dp from "./images/dp.png";
 import gmail from "./images/gmail.png";
 import placeholder from "./images/placeholder.png";
-
+//eslint-disable-next-line
 export default {
   image04,
   dp,
   gmail,
+  payment,
   obi2,
   placeholder,
   logo,

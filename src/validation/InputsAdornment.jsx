@@ -11,29 +11,28 @@ const Text = ({
   color,
   order,
   height,
-  buttonStyle,
+  buttonStyle: { background },
 }) => {
   return (
     <Grid
       item
       container
+      alignItems="center"
       sx={{
         borderRadius: borderRadius ? borderRadius : "3rem",
-        alignItems: "center",
         color: "#828484",
         border: border ? border : "1px solid rgba(0,0,0,0.2)",
-        height: height ? height : "5rem",
+        height: height ? height : "auto",
         flexDirection: order ? "row-reverse" : "row",
+        padding: ".5rem 1rem",
       }}
     >
-      <IconButton>
-        <Icon sx={{ fontSize: "2rem", ...buttonStyle }} />
+      <IconButton sx={{ background: background }}>
+        <Icon />
       </IconButton>
       <InputBase
         sx={{
           flex: 1,
-          px: 2,
-          height: height ? height : "5rem",
           color: color,
           order: order,
         }}

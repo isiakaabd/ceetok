@@ -11,6 +11,7 @@ import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { CustomButton } from "components";
 const LeftTab = () => {
   const loginStatus = useSelector((state) => state.auth.token);
   return (
@@ -80,38 +81,21 @@ const LeftTab = () => {
                   >
                     30
                   </ListItemText>
-                  {/* </div> */}
-                  {/* <Typography sx={{ flex: 1 }}>Health</Typography>
-                  <div
-                    style={{
-                      width: "2.4rem",
-                      height: "2.4rem",
-                      borderRadius: "50%",
-                      backgroundColor: "#D3D3D3",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {item}
-                  </div> */}
                 </ListItemButton>
               );
             })}
         </List>
-        <Button
-          sx={{
-            backgroundColor: "#636262",
-            width: "10rem",
-            color: "#fff",
-            fontWeight: 700,
-            outline: "none",
-          }}
-          variant="contained"
-          disableElevation
-        >
-          See More
-        </Button>
+        <Grid sx={{ pl: 2 }} item>
+          <CustomButton
+            background="#636262"
+            width="10rem"
+            color="#fff"
+            fontWeight={700}
+            fontSize={"1.2rem"}
+            title="See More"
+            borderRadius={".5rem"}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -34,7 +34,11 @@ const Filters = ({ anchorEl, setAnchorEl, open, handleClick, handleClose }) => {
         aria-expanded={open ? "true" : undefined}
         variant="outlined"
         disableElevation
-        sx={{ borderRadius: 25, paddingInline: "3rem", fontSize: "1.2rem" }}
+        sx={{
+          borderRadius: 25,
+          paddingInline: "3rem",
+          fontSize: { md: "1.9rem", xs: "1.4rem" },
+        }}
         onClick={handleClick}
         startIcon={<FilterList />}
       >

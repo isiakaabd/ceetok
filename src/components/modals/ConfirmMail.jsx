@@ -59,9 +59,10 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
               alignItems="center"
               sx={{ mt: 2 }}
             >
-              <CustomButton onClick={() => setShowCreatePassword(true)}>
-                Email confirmed
-              </CustomButton>
+              <CustomButton
+                title=" Email confirmed"
+                onClick={() => setShowCreatePassword(true)}
+              />
             </Grid>
           </Grid>
         </Grid>

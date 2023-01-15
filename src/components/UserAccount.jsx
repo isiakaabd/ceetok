@@ -13,19 +13,18 @@ import {
 import { useState, useRef } from "react";
 import Notifications from "./Notifications";
 import { useSelector } from "react-redux";
-import { userProfile } from "redux/reducers/authReducer";
+import NotificationIcon from "assets/svgs/NotificationIcon";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-  const userDetails = useSelector(userProfile);
-  const state = useSelector((state) => state);
-  console.log(state);
+  const userProfile = JSON.parse(localStorage.getItem("user"));
+  console.log(userProfile);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-  console.log(userDetails);
+
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -56,17 +55,18 @@ const UserAccount = () => {
         flexWrap="nowrap"
         alignItems="center"
       >
-        <IconButton>
-          <NotificationsNoneOutlined
-            ref={anchorRef}
-            id="composition-button"
-            aria-controls={open ? "composition-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
+        <IconButton
+          onClick={handleToggle}
+          ref={anchorRef}
+          id="composition-button"
+          aria-controls={open ? "composition-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+        >
+          <NotificationIcon
             sx={{
               fontSize: { md: "3rem", xs: "2.5rem" },
-              color: "#9B9A9A",
+              fill: "#9B9A9A",
             }}
           />
         </IconButton>
@@ -97,9 +97,15 @@ const UserAccount = () => {
               sx={{ fontSize: { md: "3rem", xs: "1.8rem" }, color: "#9B9A9A" }}
             >
               <Avatar
-                sx={{ width: { md: 32, sm: 15 }, height: { md: 32, sm: 15 } }}
+                sx={{
+                  width: { md: 32 },
+                  height: { md: 32 },
+                  fontSize: "1.8rem",
+                }}
+                src={userProfile?.avatar}
+                alt={userProfile?.full_name?.slice(0, 1).toUpperCase().slice(1)}
               >
-                M
+                {userProfile?.full_name?.slice(0, 1).toUpperCase()}
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -116,7 +122,7 @@ const UserAccount = () => {
             color="#9B9A9A"
             fontSize={{ md: "2rem", xs: "1.4rem", sm: "1.8rem" }}
           >
-            Joshua
+            {userProfile?.full_name}
           </Typography>
         </Grid>
       </Grid>

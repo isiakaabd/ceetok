@@ -1,24 +1,13 @@
 import {
   ArrowBackOutlined,
-  BookmarkAddRounded,
-  ChatBubbleOutline,
-  CopyAllRounded,
-  CopyrightRounded,
-  FacebookOutlined,
   FavoriteBorderOutlined,
   FilterList,
   IosShareOutlined,
-  MailOutline,
-  MailOutlineOutlined,
-  MessageOutlined,
   MoreVertOutlined,
-  Reply,
   Instagram,
-  ReplyAllOutlined,
   ReplyOutlined,
   ReportOutlined,
   SearchOutlined,
-  ShareOutlined,
   TuneOutlined,
 } from "@mui/icons-material";
 import {
@@ -54,6 +43,8 @@ import Copy from "assets/svgs/Copy";
 import Save from "assets/svgs/Save";
 import Share from "assets/svgs/Share";
 import Mail from "assets/svgs/Mail";
+import { useGetAPostQuery } from "redux/slices/postSlice";
+import Loader from "components/Loader";
 
 const icons = [
   {
@@ -99,7 +90,8 @@ const socialItems = [
     Icon: Messenger,
   },
 ];
-const Comment = ({ handleShare }) => {
+const Comment = ({ handleShare, data }) => {
+  console.log(data);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -219,7 +211,7 @@ const Comment = ({ handleShare }) => {
         </Grid>
         {/* user Profile */}
         <Grid item md={4} xs={12} sm={6} sx={{ my: 3 }}>
-          <UserProfile />
+          <UserProfile data={data} />
         </Grid>
       </Grid>
       <Grid
@@ -243,7 +235,7 @@ const Comment = ({ handleShare }) => {
             sx={{ whiteSpace: "nowrap" }}
             fontWeight="700"
           >
-            Obi campaign shutsdown Kaduna
+            {data?.title}
           </Typography>
 
           <Typography sx={{ color: "#FF9B04" }}>Follow</Typography>
@@ -258,20 +250,14 @@ const Comment = ({ handleShare }) => {
               textAlign: "justify",
             }}
           >
-            Tortor, lobortis semper viverra ac, molestie tortor laoreet amet
-            euismod et diam quis aliquam consequat porttitor integer a nisl, in
-            faucibus nunc et aenean turpis dui dignissim nec scelerisque
-            ullamcorper eu neque, augue quam quis lacus pretium eros est amet
-            turpis nunc in turpis massa et eget facilisis ante molestie
-            penatibus dolor volutpat, porta pellentesque scelerisque at ornare
-            dui tincidunt cras feugiat tempor lectus
+            {data?.body}
           </Typography>
           <Typography
             color="secondary"
             fontSize={{ md: "2.5rem", sm: "1.5rem" }}
             fontWeight={700}
           >
-            Lorem ipsum dolor sit amet cons
+            {data?.category}
           </Typography>
           <Typography
             color="secondary"
@@ -413,8 +399,8 @@ const Comment = ({ handleShare }) => {
 export const Details = ({ icons, handleShare }) => {
   return (
     <Grid item container justifyContent="space-between" flexWrap="nowrap">
-      {icons.map((icon) => (
-        <Grid item key={icon.title}>
+      {icons.map((icon, index) => (
+        <Grid item key={index}>
           <Grid container alignItems="center">
             <IconButton
               onClick={() => {
@@ -437,13 +423,18 @@ export const Details = ({ icons, handleShare }) => {
     </Grid>
   );
 };
-const Post = ({ icons }) => {
+const Post = () => {
   const { postId } = useParams();
+
   const [state, setState] = useState(true);
+  const { data, isLoading, error } = useGetAPostQuery(postId);
+  console.log(data);
   const [openShareModal, setOpenShareModal] = useState(false);
   const handleShare = () => {
     setOpenShareModal(true);
   };
+  if (isLoading) return <Loader />;
+  if (error) return <p>Soemthing went wrong...</p>;
   return (
     <>
       <Grid item container gap={2} flexWrap="nowrap">
@@ -520,7 +511,7 @@ const Post = ({ icons }) => {
               </Button>
             </Grid>
             {state ? (
-              <Comment handleShare={handleShare} />
+              <Comment handleShare={handleShare} data={data?.post} />
             ) : (
               <OtherConversation />
             )}
@@ -531,8 +522,15 @@ const Post = ({ icons }) => {
               paddingInline: { xs: "1rem", md: "4rem" },
             }}
           >
-            <Editor />
-
+            <Formik initialValues={{ text: "" }}>
+              <Form>
+                <Editor
+                  theme="snow"
+                  name="text"
+                  placeholder="write something..."
+                />
+              </Form>
+            </Formik>
             <Grid
               item
               container
@@ -554,9 +552,12 @@ const Post = ({ icons }) => {
               >
                 Cancel
               </Button>
-              <CustomButton variant="contained" type="submit">
-                Post
-              </CustomButton>
+              <CustomButton
+                title=" Post"
+                variant="contained"
+                width="10rem"
+                type="submit"
+              />
             </Grid>
           </Grid>
           <Grid
@@ -662,8 +663,8 @@ const Post = ({ icons }) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            {socialItems.map((social) => (
-              <IconButton>
+            {socialItems.map((social, index) => (
+              <IconButton key={index}>
                 <social.Icon sx={{ fontSize: "3rem" }} />
               </IconButton>
             ))}

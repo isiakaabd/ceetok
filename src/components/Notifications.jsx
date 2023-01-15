@@ -34,6 +34,8 @@ import {
   LogoutOutlined,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "redux/reducers/authReducer";
 
 export default function Notifications({
   open,
@@ -135,7 +137,11 @@ export default function Notifications({
     prevOpens.current = opens;
   }, [opens]);
   const navigate = useNavigate();
-
+  const handleClick = (link) => {
+    navigate(link);
+    setOpens(false);
+  };
+  const dispatch = useDispatch();
   return (
     <>
       <Popper
@@ -236,20 +242,23 @@ export default function Notifications({
                   id="composition-menu"
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDowns}
+                  sx={{ p: 2 }}
                 >
-                  {accountDetails.map((account) => (
+                  {accountDetails.map((account, index) => (
                     <MenuItem
                       sx={{
                         px: 2,
-                        m: 3,
+                        mb: 1,
                         border:
                           account.title === "Logout" && ".7px solid #FF9B04",
                         borderRadius: ".7rem",
                       }}
-                      onClick={() => {
-                        navigate(account.link);
-                        setOpens(false);
-                      }}
+                      onClick={() =>
+                        account.title !== "Logout"
+                          ? handleClick(account.link)
+                          : dispatch(logoutAction())
+                      }
+                      key={index}
                     >
                       <ListItemIcon>
                         {
@@ -262,16 +271,14 @@ export default function Notifications({
                         }
                       </ListItemIcon>
                       <ListItemText
-                        disableTypography
-                        sx={{
+                        primary={account.title}
+                        primaryTypographyProps={{
                           fontSize: "1.2rem",
                           fontWeight: 400,
                           color:
                             account.title === "Logout" ? "#FF9B04" : "#5F5C5C",
                         }}
-                      >
-                        {account.title}
-                      </ListItemText>
+                      />
                     </MenuItem>
                   ))}
                 </MenuList>

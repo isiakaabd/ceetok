@@ -1,5 +1,6 @@
 import { CloseOutlined } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
+import Dialogs from "components/Dialog";
 import Modals from "components/Modal";
 import React from "react";
 
@@ -11,10 +12,11 @@ const NotificationModal = ({
   children,
 }) => {
   return (
-    <Modals
+    <Dialogs
       styles={{ height: { xs: "auto", md: "auto" } }}
       width={{ md: "60vw", xs: "95%", sm: "90%", ...width }}
       isOpen={isOpen}
+      handleClose={handleClose}
       background="#fff"
     >
       <Grid
@@ -42,7 +44,7 @@ const NotificationModal = ({
               </Typography>
             </Grid>
           )}
-          <Grid item>
+          {/* <Grid item>
             <CloseOutlined
               onClick={handleClose}
               style={{
@@ -51,11 +53,11 @@ const NotificationModal = ({
                 cursor: "pointer",
               }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         {children}
       </Grid>
-    </Modals>
+    </Dialogs>
   );
 };
 

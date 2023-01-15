@@ -5,10 +5,11 @@ import { Typography, Select, MenuItem, Grid } from "@mui/material";
 
 import { TextError } from "./TextError";
 
-export const Formiks = ({ borderRadius, options }) => {
+export const Formiks = ({ borderRadius, options, ...rest }) => {
   return (
     <Select
       displayEmpty
+      {...rest}
       // placeholder={placeholder}
       sx={{
         borderRadius: borderRadius ? borderRadius : "1rem",
@@ -26,8 +27,12 @@ export const Formiks = ({ borderRadius, options }) => {
       }}
     >
       {/* <MenuItem value="">{placeholder}</MenuItem> */}
-      {options.map((option) => (
+      {options?.map((option) => (
         <MenuItem key={option.value} value={option.value}>
+          {/* {`${
+            option?.label?.split("")?.at(0)?.toUpperCase() +
+            option?.label?.slice(1)
+          }`} */}
           {option.label}
         </MenuItem>
       ))}
@@ -44,11 +49,27 @@ Formiks.propTypes = {
 };
 
 const Selects = (props) => {
-  const { label, name, type, styles, helperText, placeholder, ...rest } = props;
+  const {
+    label,
+    name,
+    type,
+    styles,
+    helperText,
+    options,
+    placeholder,
+    ...rest
+  } = props;
 
   return (
     <Grid container direction="column">
-      <Field id={name} name={name} as={Formiks} {...rest} />
+      <Field
+        id={name}
+        type="select"
+        options={options}
+        name={name}
+        as={Formiks}
+        {...rest}
+      />
       {helperText && <Typography variant="span">{helperText}</Typography>}
       <ErrorMessage name={name} component={TextError} />
     </Grid>

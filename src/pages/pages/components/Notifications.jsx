@@ -66,7 +66,12 @@ const Notifications = (props) => {
                     <Grid item xs={12} md={8}>
                       <FormikControl
                         name="email"
-                        options={[]}
+                        options={[
+                          {
+                            label: "Hello",
+                            value: "Hello",
+                          },
+                        ]}
                         control="select"
                       />
                       <Typography textAlign="justify">

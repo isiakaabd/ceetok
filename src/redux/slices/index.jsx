@@ -6,8 +6,6 @@ const baseQuery = fetchBaseQuery({
 
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
-    // const bearerToken = getState().reducer.bearerToken;
-    console.log(getState());
     headers.append("Content-Type", "application/json");
 
     if (token) {
@@ -36,6 +34,6 @@ const baseQuerywithAuth = async (args, api, extraOptions) => {
 export const api = createApi({
   // reducerPath: "api",
   baseQuery: baseQuerywithAuth,
-  tagTypes: ["GenerateEndPoint"],
+  tagTypes: ["post"],
   endpoints: () => ({}),
 });

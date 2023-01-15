@@ -3,28 +3,59 @@ import { CustomButton } from "components";
 import Editor from "components/Quil";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
-import React from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";
-import { useDispatch } from "react-redux";
-import { createPost } from "redux/reducers/postReducer";
+
 import { TextError } from "validation/TextError";
+import { useCreatePostMutation } from "redux/slices/postSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
+const validation = Yup.object({
+  title: Yup.string("Enter Title").required("Required"),
+  category: Yup.string("Enter Category")
+    // .mi?xed()
+    // .oneOf([
+    //   "entertainment",
+    //   "politics",
+    //   "crimes",
+    //   "romance",
+    //   "education",
+    //   "technology",
+    //   "celebrities",
+    //   "fashion",
+    //   "health",
+    //   "travel",
+    //   "crypto",
+    //   "religion",
+    //   "sports",
+    //   "jobs",
+    //   "tv",
+    //   "science",
+    //   "business",
+    //   "jokes",
+    // ])
+    .required("Required"),
+  text: Yup.string("Enter Category").required("Required"),
+  // name: Yup.string("Enter Your name").required("Name is ").trim(),
+});
 const CreatePost = ({ open, handleClose, heading }) => {
-  const validation = Yup.object({
-    title: Yup.string("Enter Title").required("Required"),
-    category: Yup.string("Enter Category").required("Required"),
-    text: Yup.string("Enter Category").required("Required"),
-    // name: Yup.string("Enter Your name").required("Name is ").trim(),
-  });
-  const dispatch = useDispatch();
+  const [create, { isLoading }] = useCreatePostMutation();
+  const navigate = useNavigate();
 
-  const handleCreatePost = (values) => {
-    // const { title, category, text } = values;
-    dispatch(createPost(values));
+  const handleCreatePost = async (values, onSubmitProps) => {
+    const { title, category, text } = values;
+    const { data, error } = await create({ title, category, body: text });
+    if (error) toast.error(error);
+    if (data) {
+      toast.success(data);
+      onSubmitProps.resetForm();
+      setTimeout(() => handleClose(), 3000);
+      navigate("/");
+    }
   };
+
   return (
     <NotificationModal
       isOpen={open}
@@ -46,8 +77,8 @@ const CreatePost = ({ open, handleClose, heading }) => {
               fontSize: { md: "1.7rem", xs: "1.5rem" },
             }}
           >
-            You are creating a post. The key to trending post is interesting
-            content and a descriptive title
+            You are creating a post. The label to trending post is interesting
+            content and a descriptive titlesss
           </Typography>
         </Grid>
 
@@ -56,7 +87,7 @@ const CreatePost = ({ open, handleClose, heading }) => {
           onSubmit={handleCreatePost}
           initialValues={{ title: "", category: "", text: "" }}
         >
-          {({ values, handleChange, errors }) => {
+          {({ errors }) => {
             return (
               <Form style={{ width: "100%" }}>
                 <Grid
@@ -75,20 +106,39 @@ const CreatePost = ({ open, handleClose, heading }) => {
                   </Grid>
                   <Grid item container>
                     <FormikControl
-                      control="input"
+                      control="select"
                       name="category"
                       placeholder="Category"
+                      options={[
+                        { label: "entertainment", value: "entertainment" },
+                        { label: "politics", value: "politics" },
+                        { label: "crimes", value: "crimes" },
+                        { label: "romance", value: "romance" },
+                        { label: "education", value: "education" },
+                        { label: "technology", value: "technology" },
+                        { label: "celebrities", value: "celebrities" },
+                        { label: "fashion", value: "fashion" },
+                        { label: "health", value: "health" },
+                        { label: "travel", value: "travel" },
+                        { label: "crypto", value: "crypto" },
+                        { label: "religion", value: "religion" },
+                        { label: "sports", value: "sports" },
+                        { label: "jobs", value: "jobs" },
+                        { label: "tv", value: "tv" },
+                        { label: "science", value: "science" },
+                        { label: "business", value: "business" },
+                        { label: "jokes", value: "jokes" },
+                      ]}
                     />
                   </Grid>
 
                   <Editor
                     theme="snow"
-                    value={values.text}
-                    handleChange={handleChange("text")}
+                    name="text"
                     placeholder="write something..."
                   />
 
-                  {errors && <TextError>{errors.text}</TextError>}
+                  {errors.text && <TextError>{errors.text}</TextError>}
                   <Typography
                     fontSize={{ md: "1.3rem", xs: ".9rem", fontWeight: 400 }}
                     color="#9B9A9A"
@@ -139,9 +189,11 @@ const CreatePost = ({ open, handleClose, heading }) => {
                     >
                       Cancel
                     </Button>
-                    <CustomButton variant="contained" type="submit">
-                      Post
-                    </CustomButton>
+                    <CustomButton
+                      isSubmitting={isLoading}
+                      title=" Post"
+                      type="submit"
+                    />
                   </Grid>
                 </Grid>
               </Form>

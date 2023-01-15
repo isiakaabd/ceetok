@@ -21,40 +21,28 @@ export const authSlice = api.injectEndpoints({
 
       // invalidatesTags: ["GenerateEndPoint"],
     }),
-    // forgotPassword: builder.mutation({
-    //   query: (body) => ({
-    //     url: "/forgot-password-link",
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //   }),
-    //   invalidatesTags: ["GenerateEndPoint"],
-    // }),
-    // forgotPasswordLinkConfirm: builder.mutation({
-    //   query: (body) => ({
-    //     url: "/forgot-password-link-confirm",
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //   }),
-    //   invalidatesTags: ["GenerateEndPoint"],
-    // }),
-    // forgotPasswordLinkReset: builder.mutation({
-    //   query: (body) => ({
-    //     url: "/forgot-password-link-reset",
-    //     method: "POST",
-    //     body: JSON.stringify(body),
-    //   }),
+    forgotPassword: builder.mutation({
+      query: (body) => ({
+        url: "/auth/init-reset-password",
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+      transformErrorResponse: (error) => error.data.message,
+    }),
 
-    //   invalidatesTags: ["GenerateEndPoint"],
-    // }),
     logout: builder.mutation({
       query: () => ({
         url: "/logout",
         method: "POST",
       }),
-
-      invalidatesTags: ["GenerateEndPoint"],
+      transformErrorResponse: (error) => error.data.message,
+      // invalidatesTags: ["GenerateEndPoint"],
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = authSlice;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useForgotPasswordMutation,
+} = authSlice;

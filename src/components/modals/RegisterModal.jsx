@@ -55,15 +55,16 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
       password,
       full_name: name,
     });
-    console.log(data);
     if (error) toast.error(error);
     if (data) {
       toast.success(data.message);
       dispatch(registerAction(data.body));
-      handleClose();
+      setTimeout(() => {
+        handleClose();
+      }, 3000);
       setTimeout(() => {
         setLogin(true);
-      }, 3000);
+      }, 5000);
     }
   };
 
@@ -140,7 +141,10 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                       background: "#fff",
                     },
                   }}
-                  onClick={() => setLogin(true)}
+                  onClick={() => {
+                    setLogin(true);
+                    // handleClose();
+                  }}
                 >
                   Login
                 </Button>

@@ -9,16 +9,18 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
-
+import moment from "moment";
 import { Link } from "react-router-dom";
 
 const AllPosts = ({ post, index }) => {
+  const { slug, user, title, category, views_count, updatedAt } = post;
+  console.log(index);
   return (
-    <li>
-      <ListItem button component={Link} to={`/post/${index}`}>
+    <li style={{ marginBottom: "1rem" }}>
+      <ListItem button component={Link} to={`/post/${slug}`}>
         <ListItemText
-          disableTypography
-          sx={{
+          primary={index}
+          primaryTypographyProps={{
             mr: "3rem !important",
             color: "#000",
             fontSize: "1.5rem",
@@ -26,12 +28,12 @@ const AllPosts = ({ post, index }) => {
             display: {
               md: "block",
               xs: "none",
-              maxWidth: "max-content",
             },
           }}
-        >
-          {index}
-        </ListItemText>
+          sx={{
+            maxWidth: "max-content",
+          }}
+        />
 
         <ListItemAvatar
           sx={{
@@ -57,9 +59,9 @@ const AllPosts = ({ post, index }) => {
           }}
         >
           <ListItemText
-            disableTypography
-            sx={{
-              background: "#FF9B04",
+            primary={category}
+            primaryTypographyProps={{
+              backgroundColor: "#FF9B04",
               padding: ".5rem 1.4rem",
               borderRadius: "2rem",
               fontWeight: 700,
@@ -71,20 +73,14 @@ const AllPosts = ({ post, index }) => {
                 maxWidth: "max-content",
               },
             }}
-          >
-            {post.category}
-          </ListItemText>
-          <ListItemText
-            disableTypography
-            sx={{
+            secondary={title}
+            secondaryTypographyProps={{
               color: "#5F5C5C",
               mt: { md: 2, xs: 1 },
               fontSize: { md: "2rem", xs: "1.1rem" },
               fontWeight: { md: 700, xs: 600 },
             }}
-          >
-            {post.title}
-          </ListItemText>
+          />
 
           <List
             item
@@ -98,13 +94,13 @@ const AllPosts = ({ post, index }) => {
           >
             <ListItem disableGutters disablePadding>
               <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                Joshual@gamil.com
+                {user?.email}
               </ListItemText>
               <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                15 Oct.2022
+                {moment(updatedAt).format("MMMM Do YYYY")}
               </ListItemText>
               <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                8:39pm
+                {moment(updatedAt).format("h:mma")}
               </ListItemText>
             </ListItem>
             {/* <ListItem> */}
@@ -145,7 +141,7 @@ const AllPosts = ({ post, index }) => {
               alignItems: "center",
             }}
           >
-            {20}
+            {views_count}
           </div>
         </Grid>
       </ListItem>

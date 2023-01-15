@@ -1,50 +1,22 @@
-import images from "assets";
-import {
-  Grid,
-  Button,
-  Divider,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  MenuItem,
-  FormControlLabel,
-  Typography,
-  Menu,
-  List,
-  ListItemText,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemIcon,
-} from "@mui/material";
-import {
-  Add,
-  AddCircleOutline,
-  Filter,
-  Filter1,
-  Filter1Outlined,
-  Filter2Outlined,
-  Filter5Outlined,
-  FilterList,
-  FilterListOutlined,
-  RemoveRedEyeOutlined,
-} from "@mui/icons-material";
-import { Formik, Form } from "formik/dist";
+import { Grid, Button, List } from "@mui/material";
+import { AddCircleOutline } from "@mui/icons-material";
 import { useState } from "react";
-import { StyledMenu } from "pages/Announcement";
+
 import { useSelector } from "react-redux";
 import RegisterModal from "components/modals/RegisterModal";
-import { Link } from "react-router-dom";
+
 import SinglePosts from "./SinglePosts";
 import Filters from "components/modals/Filters";
+import LoginModal from "components/modals/LoginModal";
+import { useGetPostQuery } from "redux/slices/postSlice";
 
 const RightTab = ({ setCreatePost }) => {
-  const posts = useSelector((state) => state.posts.posts);
+  // const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
-  const loginStatus = useSelector((state) => state.auth.auth);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const loginStatus = useSelector((state) => state.auth.token);
+  const { data: posts, error } = useGetPostQuery("");
+  console.log(posts, error);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +32,7 @@ const RightTab = ({ setCreatePost }) => {
     }
   };
   const array =
-    posts.length > 0
+    posts?.length > 0
       ? posts
       : Array(20).fill({
           title:
@@ -80,6 +52,9 @@ const RightTab = ({ setCreatePost }) => {
           padding: { md: "2rem", xs: "1rem" },
           marginInline: "auto",
         }}
+        gap={2}
+        flexDirection="column"
+        alignItems="flex-start"
       >
         <Grid
           item
@@ -87,29 +62,30 @@ const RightTab = ({ setCreatePost }) => {
           justifyContent="space-between"
           alignItems="center"
           flexWrap="nowrap"
-          sx={{ pb: 4, alignSelf: "flex-start" }}
+          // sx={{ pb: 4, alignSelf: "flex-start" }}
         >
-          <div>
-            <Button
-              sx={{
-                backgroundColor: "#37D42A",
-                fontSize: { md: "1.2rem", xs: "1rem" },
-                paddingInline: { md: "3rem", xs: "1rem" },
-                borderRadius: 25,
-                color: "#fff",
-                fontWeight: 600,
-                // ":hover": {
-                //   background: "#37D42A",
-                // },
-              }}
-              variant="contained"
-              disableElevation
-              startIcon={<AddCircleOutline />}
-              onClick={handleCreatePost}
-            >
-              Create Post
-            </Button>
-          </div>
+          <Button
+            background={"#37D42A"}
+            sx={{
+              backgroundColor: "#37D42A",
+              fontSize: { md: "1.9rem", xs: "1.4rem" },
+              paddingInline: { md: "3rem", xs: "1.2rem" },
+              borderRadius: 25,
+              color: "#fff",
+              fontWeight: 600,
+              height: "100%",
+              ":hover": {
+                background: "#37D42A",
+              },
+            }}
+            variant="contained"
+            disableElevation
+            startIcon={<AddCircleOutline />}
+            onClick={handleCreatePost}
+          >
+            Create Post
+          </Button>
+
           <Filters
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
@@ -232,28 +208,29 @@ const RightTab = ({ setCreatePost }) => {
           {/* <MenuItem>Hello</MenuItem>
         </Select> */}
         </Grid>
-        <List
-          sx={{
-            maxHeight: "80rem",
-            overflowY: "scroll",
-            "&::-webkit-scrollbar": {
-              width: ".85rem",
-              display: "none",
-            },
-          }}
-          xs={12}
-        >
-          {/* {posts.length > 0 ? ( */}
-          {array.map((post, index) => {
-            return <SinglePosts key={index} post={post} />;
-          })}
-        </List>
+        <Grid item container>
+          <List
+            sx={{
+              maxHeight: "80rem",
+              overflowY: "scroll",
+              width: "100%",
+              "&::-webkit-scrollbar": {
+                width: ".85rem",
+                display: "none",
+                background: "green",
+              },
+            }}
+            xs={12}
+          >
+            {/* {posts.length > 0 ? ( */}
+            {array.map((post, index) => {
+              return <SinglePosts key={index} index={index} post={post} />;
+            })}
+          </List>
+        </Grid>
       </Grid>
       {register && (
-        <RegisterModal
-          handleClose={() => setRegister(false)}
-          isOpen={register}
-        />
+        <LoginModal handleClose={() => setRegister(false)} isLogin={register} />
       )}
     </>
   );

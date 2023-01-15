@@ -10,15 +10,13 @@ import {
   ListItemText,
   MenuItem,
   ListItemAvatar,
-  ListItemButton,
   Button,
   InputBase,
   Menu,
 } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
 import images from "assets";
 import { Grid } from "@mui/material";
-import { alpha, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import Modals from "./Modal";
@@ -80,7 +78,6 @@ function Header() {
   const loginStatus = useSelector((state) => state.auth.token);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  console.log(loginStatus);
   const [anchorEl, setAnchorEl] = useState(null);
   const opens = Boolean(anchorEl);
   const handleClicks = (event) => {
@@ -108,7 +105,7 @@ function Header() {
     setIsLogin(false);
     setModal(true);
   };
-  const handleLoginOpen = () => {
+  const handleLoginOpen = async () => {
     setModal(false);
     setIsLogin(true);
   };
@@ -241,9 +238,9 @@ function Header() {
                       padding: 0,
                       margin: 0,
                       color: "#37D42A",
-                      fontSize: { md: "1.8rem", sm: "1.3rem" },
+                      fontSize: { md: "1.8rem", xs: "1.4rem" },
                       fontWeight: 700,
-                      "&:hover": {
+                      "&:hover,&:focus": {
                         backgroundColor: "transparent",
                       },
                     }}
@@ -258,9 +255,12 @@ function Header() {
                       borderRadius: "3rem",
                       margin: 0,
                       fontWeight: 700,
-                      fontSize: { md: "1.5rem", sm: "1.3rem" },
+                      fontSize: { md: "1.5rem", xs: "1.4rem" },
                       color: "#fff",
                       display: "block",
+                      "&:hover": {
+                        backgroundColor: "#37D42A",
+                      },
                       // maxWidth: "15rem",
                       textTransform: "capitalize",
                       // width: { md: "15rem", xs: "10rem" },
@@ -339,6 +339,7 @@ function Header() {
       {isLogin && (
         <LoginModal
           handleClose={handleLoginClose}
+          setIsLogin={setIsLogin}
           // handleRegisterOpen={handleRegisterOpen}
           isLogin={isLogin}
         />

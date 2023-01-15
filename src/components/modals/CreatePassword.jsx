@@ -71,13 +71,12 @@ const CreatePassword = ({ isOpen, handleClose }) => {
                       sx={{ mt: 5 }}
                     >
                       <CustomButton
+                        title="Reset Password"
                         onClick={() => {
                           //   handleClose();
                           setShowSuccess(true);
                         }}
-                      >
-                        Reset Password
-                      </CustomButton>
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

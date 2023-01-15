@@ -11,6 +11,8 @@ import { useState } from "react";
 import images from "assets";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "pages/user/modals/CreatePost";
+import AnnoucementIcon from "assets/svgs/AnnoucementIcon";
+import { CustomButton } from "components";
 const Annoucement = () => {
   const [openCreatePost, setCreatePost] = useState(false);
   const navigate = useNavigate();
@@ -29,33 +31,18 @@ const Annoucement = () => {
         }}
       >
         <Grid item container alignItems="center" gap={2}>
-          <Grid
-            item
-            flexWrap="nowrap"
-            sx={{ border: "1px solid #FF9B04", padding: "1rem 1.2rem" }}
+          <Button
+            variant="outlined"
+            sx={{
+              color: "#464646",
+              fontSize: { md: "1.9rem", xs: "1.4rem" },
+              fontWeight: 700,
+              border: "1px solid #FF9B04",
+            }}
+            startIcon={<AnnoucementIcon style={{ fontSize: "3rem" }} />}
           >
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="center"
-              sx={{
-                cursor: "pointer",
-              }}
-              flexWrap="nowrap"
-              columnGap={1}
-            >
-              <img
-                src={images.annoucement}
-                alt="annoucement icon"
-                style={{ width: "3rem", display: "block" }}
-              />
-              <Typography
-                sx={{ color: "#464646", fontSize: "2rem", fontWeight: 700 }}
-              >
-                Annoucement
-              </Typography>
-            </Grid>
-          </Grid>
+            Annoucement
+          </Button>
           <Grid item>
             <Button
               sx={{
@@ -64,7 +51,7 @@ const Annoucement = () => {
                 backgroundColor: "#5F5C5C",
                 color: "#fff",
                 fontWeight: 600,
-                fontSize: "1.2rem",
+                fontSize: { md: "1.4rem", xs: "1.2rem" },
                 padding: "1rem 1.5rem",
                 whiteSpace: "nowrap",
               }}
@@ -137,25 +124,15 @@ const Annoucement = () => {
                 );
               })}
           </List>
-          <Link to="annoucement" style={{ textDecoration: "none" }}>
-            <Button
-              sx={{
-                backgroundColor: "#FF9B04",
-                color: "#fff",
-                fontSize: "1.2rem",
-                fontWeight: 700,
-                textTransform: "capitalize",
-                outline: "none",
-                mt: 4,
-                ":hover": {
-                  backgroundColor: "#FF9B04",
-                },
-              }}
-              variant="contained"
-            >
-              See More
-            </Button>
-          </Link>
+          <CustomButton
+            title="See More"
+            width="10rem"
+            fontSize={"1.2rem"}
+            borderRadius=".5rem"
+            background="#FF9B04"
+            component={Link}
+            to="annoucement"
+          />
         </Grid>
       </Grid>
 

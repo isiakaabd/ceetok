@@ -93,7 +93,7 @@ const Privacy = (props) => {
                               <Grid container>
                                 <FormikControl
                                   name="contactInfo"
-                                  options={[]}
+                                  options={[{ label: "hello", value: "Hello" }]}
                                   control="select"
                                 />
                               </Grid>

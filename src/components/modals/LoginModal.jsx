@@ -20,7 +20,9 @@ import RegisterModal from "./RegisterModal";
 import * as Yup from "yup";
 import { useLoginMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
-const LoginModal = ({ isLogin, handleClose }) => {
+import { useDispatch } from "react-redux";
+import { loginAction } from "redux/reducers/authReducer";
+const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
   const [loginUser, { isLoading }] = useLoginMutation();
   const [state, setState] = useState(false);
   const [register, setRegister] = useState(false);
@@ -35,21 +37,30 @@ const LoginModal = ({ isLogin, handleClose }) => {
       .required("Required"),
     password: Yup.string().required("Enter your password"),
   });
+  const dispatch = useDispatch();
   const handleSubmit = async (values) => {
     const { email, password } = values;
     const { data, error } = await loginUser({ email, password });
-    console.log(data, error);
+
     if (error) toast.error("Invalid Email/Password");
-    // setTimeout(() => {
-    //   handleClose();
-    // }, 3000);
+    if (data) {
+      toast.success(data.message);
+      console.log(data.body.auth.accessToken);
+      dispatch(loginAction(data.body));
+
+      setTimeout(() => {
+        handleClose();
+      }, 3000);
+    }
   };
+
   return (
     <>
       <Modals
         // styles={{ height: { xs: "auto", md: "95vh" } }}
         width={{ md: "60vw", xs: "95%", sm: "95%" }}
         isOpen={isLogin}
+        handleClose={handleClose}
       >
         <Grid container>
           <Grid
@@ -231,7 +242,11 @@ const LoginModal = ({ isLogin, handleClose }) => {
                                   color: "#37D42A",
                                 },
                               }}
-                              onClick={() => setShowForgottenPassword(true)}
+                              onClick={async () => {
+                                setShowForgottenPassword(true);
+                                // setIsLogin(false);
+                                // setTimeout(() => handleClose(), 5000);
+                              }}
                             >
                               Forgot Password
                             </Typography>
@@ -358,10 +373,7 @@ const LoginModal = ({ isLogin, handleClose }) => {
                       background: "#fff",
                     },
                   }}
-                  onClick={() => {
-                    setRegister(true);
-                    // handleClose();
-                  }}
+                  onClick={() => setRegister(true)}
                 >
                   Sign-up
                 </Button>
@@ -383,7 +395,10 @@ const LoginModal = ({ isLogin, handleClose }) => {
                   New Here? Signup{" "}
                   <Typography
                     variant="span"
-                    onClick={() => setRegister(true)}
+                    onClick={() => {
+                      setRegister(true);
+                      handleClose();
+                    }}
                     sx={{ color: "#37D42A", cursor: "pointer" }}
                   >
                     Login
@@ -410,8 +425,9 @@ const LoginModal = ({ isLogin, handleClose }) => {
         <ForgottenPassword
           handleClose={() => {
             setShowForgottenPassword(false);
-            handleClose();
+            // handleClose();
           }}
+          handleParentModalClose={handleClose}
           isOpen={showForgottenPassword}
         />
       )}

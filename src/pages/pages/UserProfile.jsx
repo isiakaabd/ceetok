@@ -11,11 +11,16 @@ import { CloseOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 
-const UserProfile = () => {
+const UserProfile = ({ data }) => {
+  console.log(data);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => setOpen(!open);
   const handleClose = () => setOpen(false);
+  const {
+    updatedAt,
+    user: { full_name, email, avatar, username, phone },
+  } = data;
   return (
     <>
       <Grid
@@ -32,7 +37,9 @@ const UserProfile = () => {
       >
         <Grid item>
           {/* <Grid container alignItems="center" justifyContent="center"> */}
-          <Avatar sx={{ alignItems: "center" }}>N</Avatar>
+          <Avatar sx={{ alignItems: "center" }} alt={avatar}>
+            {full_name.slice(0, 1).toUpperCase()}
+          </Avatar>
           {/* </Grid> */}
         </Grid>
         <Grid item flex={1}>
@@ -50,14 +57,14 @@ const UserProfile = () => {
                   fontWeight: 600,
                 }}
               >
-                Posted by Josh@4real{" "}
+                Posted by {email}{" "}
               </Typography>
               <Typography
                 color="secondary"
                 variant="span"
                 sx={{ fontWeight: 400, fontSize: { md: "1.4rem", xs: "1rem" } }}
               >
-                15 oct, 2022 7:39pm
+                {updatedAt}
               </Typography>
             </Grid>
             <Grid item flex={1}>

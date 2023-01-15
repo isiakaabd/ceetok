@@ -7,11 +7,39 @@ import { CloseOutlined } from "@mui/icons-material";
 import ConfirmMail from "./ConfirmMail";
 import Modals from "components/Modal";
 import NotificationModal from "./NotificationModal";
-const ForgottenPassword = ({ isOpen, handleClose }) => {
+import * as Yup from "yup";
+import { useForgotPasswordMutation } from "redux/slices/authSlice";
+import { toast } from "react-toastify";
+const ForgottenPassword = ({ isOpen, handleClose, handleParentModalClose }) => {
   const [showConfirmMail, setShowConfirmMail] = useState(false);
+  const [resetPassword, { isLoading }] = useForgotPasswordMutation();
+  const handleSubmit = async (values) => {
+    console.log(values);
+
+    const { data, error } = await resetPassword({ email: values.email });
+    console.log(data, error);
+    //  onClick={() => {
+    // handleClose();
+    if (data) {
+      setTimeout(() => {
+        setShowConfirmMail(true);
+      }, 3000);
+    }
+    if (error) toast.error(error);
+    // }}
+  };
+  const validationSchema = Yup.object({
+    email: Yup.string("Enter Email")
+      .email("Email is Required")
+      .required("Required"),
+  });
   return (
     <>
-      <NotificationModal isOpen={isOpen} handleClose={handleClose}>
+      <NotificationModal
+        isOpen={isOpen}
+        handleClose={handleClose}
+        width={{ md: "50vw", xs: "95vw" }}
+      >
         <Grid item sx={{ width: "100%", flex: 1 }}>
           <Grid
             container
@@ -22,8 +50,7 @@ const ForgottenPassword = ({ isOpen, handleClose }) => {
             <Typography
               sx={{
                 fontSize: { md: "3rem", sm: "2.4rem" },
-                my: 5,
-                mb: 2,
+                my: 3,
                 fontWeight: 700,
                 color: "#464646",
               }}
@@ -40,7 +67,12 @@ const ForgottenPassword = ({ isOpen, handleClose }) => {
             >
               Enter the mail you used in creating this account
             </Typography>
-            <Formik enableReinitialize initialValues={{ email: "" }}>
+            <Formik
+              enableReinitialize
+              initialValues={{ email: "" }}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+            >
               <Form style={{ width: "100%" }}>
                 <Grid>
                   <Grid container flexDirection="column" alignItems="center">
@@ -61,13 +93,10 @@ const ForgottenPassword = ({ isOpen, handleClose }) => {
                       sx={{ mt: 5 }}
                     >
                       <CustomButton
-                        onClick={() => {
-                          //   handleClose();
-                          setShowConfirmMail(true);
-                        }}
-                      >
-                        Proceed
-                      </CustomButton>
+                        isSubmitting={isLoading}
+                        type="submit"
+                        title="Proceed"
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

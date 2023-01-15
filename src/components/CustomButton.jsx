@@ -14,7 +14,8 @@ const CustomButton = ({
 }) => {
   const CustomBtn = styled(ButtonBase)(({ theme }) => ({
     background: background ? background : "#37D42A",
-    display: "block",
+    display: "flex",
+    alignItems: "center",
     fontFamily: "Raleway",
     // padding: "1em 4em",
     width: width ? width : "10em",
@@ -29,7 +30,7 @@ const CustomButton = ({
   }));
 
   return (
-    <CustomBtn {...rest}>
+    <CustomBtn {...rest} disabled={isSubmitting}>
       {!isSubmitting && title}
 
       {isSubmitting && <Loader size={20} color="info" />}

@@ -94,12 +94,13 @@ const CreateAnnoucement = ({ handleClose, title }) => {
 
                       <Editor
                         theme="snow"
+                        name={"text"}
                         value={values.text}
                         handleChange={handleChange("text")}
                         placeholder="write something..."
                       />
 
-                      {errors && <TextError>{errors.text}</TextError>}
+                      {errors.text && <TextError>{errors.text}</TextError>}
                       <Typography
                         fontSize={{
                           md: "1.3rem",

@@ -81,6 +81,7 @@ const CreatePost = ({ handleClose, title }) => {
                     <Editor
                       theme="snow"
                       value={values.text}
+                      name="text"
                       handleChange={handleChange("text")}
                       placeholder="write something..."
                     />
@@ -140,11 +141,7 @@ const CreatePost = ({ handleClose, title }) => {
                       >
                         Cancel
                       </Button>
-                      <CustomButton
-                        variant="contained"
-                        title="Post"
-                        type="submit"
-                      />
+                      <CustomButton title="Post" type="submit" />
                     </Grid>
                   </Grid>
                 </Form>

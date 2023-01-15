@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@mui/material";
 import { CustomButton } from "components";
 import LoginModal from "./LoginModal";
-import { CheckCircleOutlineSharp, CloseOutlined } from "@mui/icons-material";
-import Modals from "components/Modal";
+import { CheckCircleOutlineSharp } from "@mui/icons-material";
+
 import { useState } from "react";
 import NotificationModal from "./NotificationModal";
 const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
@@ -54,9 +54,7 @@ const SuccessModal = ({ heading, isOpen, Subheadings, handleClose }) => {
               {Subheadings}
             </Typography>
             <Grid item sx={{ mt: 2 }}>
-              <CustomButton onClick={() => setShowLogin(true)}>
-                Login
-              </CustomButton>
+              <CustomButton title="Login" onClick={() => setShowLogin(true)} />
             </Grid>
           </Grid>
         </Grid>

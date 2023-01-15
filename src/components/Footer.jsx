@@ -97,7 +97,11 @@ const Footer = () => {
               {icons.map((icon, index) => (
                 //   <ListItem key={index}>
                 /* <ListItemIcon> */
-                <img src={icon} style={{ height: "3rem", width: "3rem" }} />
+                <img
+                  src={icon}
+                  key={index}
+                  style={{ height: "3rem", width: "3rem" }}
+                />
                 // </ListItemIcon>
                 //   </ListItem>
               ))}

@@ -210,7 +210,7 @@ const Comment = ({ handleShare, data }) => {
           </Grid>
         </Grid>
         {/* user Profile */}
-        <Grid item md={4} xs={12} sm={6} sx={{ my: 3 }}>
+        <Grid item md={6} xs={12} sm={6} sx={{ my: 3 }}>
           <UserProfile data={data} />
         </Grid>
       </Grid>

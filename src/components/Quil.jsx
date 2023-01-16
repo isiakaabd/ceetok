@@ -63,10 +63,10 @@ const Editor = ({ theme, name, placeholder }) => {
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {
     const body = new FormData();
-    body.append("media", file);
+    body.append("file", file);
     body.append("type", "posts");
 
-    const res = await uploadImage(body);
+    const res = await uploadImage({ body });
     console.log(res);
     // insertToEditor(res.uploadedImageUrl);
   };
@@ -79,8 +79,8 @@ const Editor = ({ theme, name, placeholder }) => {
     input.click();
 
     input.onchange = () => {
+      console.log(input.files);
       const file = input.files[0];
-      console.log(file);
       saveToServer(file);
     };
   };

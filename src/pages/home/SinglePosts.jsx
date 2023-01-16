@@ -9,12 +9,12 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
-import moment from "moment";
 import { Link } from "react-router-dom";
+import { getDate, getTime } from "helpers";
 
 const AllPosts = ({ post, index }) => {
   const { slug, user, title, category, views_count, updatedAt } = post;
-  console.log(index);
+
   return (
     <li style={{ marginBottom: "1rem" }}>
       <ListItem button component={Link} to={`/post/${slug}`}>
@@ -69,7 +69,7 @@ const AllPosts = ({ post, index }) => {
               color: "#fff",
               display: {
                 md: "block",
-                xs: "none",
+                // xs: "none",
                 maxWidth: "max-content",
               },
             }}
@@ -97,10 +97,10 @@ const AllPosts = ({ post, index }) => {
                 {user?.email}
               </ListItemText>
               <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                {moment(updatedAt).format("MMMM Do YYYY")}
+                {getDate(updatedAt)}
               </ListItemText>
               <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                {moment(updatedAt).format("h:mma")}
+                {getTime(updatedAt)}
               </ListItemText>
             </ListItem>
             {/* <ListItem> */}

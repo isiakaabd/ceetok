@@ -1,12 +1,37 @@
 import { useState } from "react";
 import { Chip, Typography, Grid } from "@mui/material";
 import NotificationModal from "./modals/NotificationModal";
-import { Formik, Form } from "formik/dist";
+import { Formik, Form, useFormikContext, Field } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import CustomButton from "./CustomButton";
 import PaymentModal from "./modals/PaymentModal";
-const ChipItem = ({ item, borderColor, color, backgroundColor }) => {
-  const [variant, setVariant] = useState(false);
+const ChipItem = ({
+  item,
+  borderColor,
+  color,
+  name,
+  backgroundColor,
+  onChange,
+  ...rest
+}) => {
+  const { setFieldValue, values } = useFormikContext();
+  const [variant, setVariant] = useState(values.interests.includes(item));
+  const addToArray = () => {
+    if (!variant) {
+      setFieldValue(
+        "interests",
+
+        [...values.interests, item]
+      );
+      setVariant(!variant);
+    } else {
+      setFieldValue(
+        "interests",
+        values.interests.filter((ite) => item !== ite)
+      );
+    }
+    setVariant(!variant);
+  };
   const [openCustom, setOpenCustom] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   return (
@@ -25,9 +50,13 @@ const ChipItem = ({ item, borderColor, color, backgroundColor }) => {
             backgroundColor: backgroundColor ? backgroundColor : "#37D42A",
           },
         }}
-        onClick={() =>
-          item === "Custom" ? setOpenCustom(true) : setVariant(!variant)
-        }
+        {...rest}
+        onClick={() => {
+          if (item === "Custom") {
+            setOpenCustom(true);
+          }
+          addToArray();
+        }}
       />
       <NotificationModal
         isOpen={openCustom}

@@ -7,7 +7,8 @@ import "quill/dist/quill.snow.css"; // Add css for snow theme
 // or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
 import { useFormikContext } from "formik/dist";
 import { useAddImageMutation } from "redux/slices/postSlice";
-const Editor = ({ theme, name, placeholder }) => {
+import { TextError } from "validation/TextError";
+const Editor = ({ theme, name, placeholder, value }) => {
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -50,7 +51,7 @@ const Editor = ({ theme, name, placeholder }) => {
     formats,
     placeholder,
   });
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, errors } = useFormikContext();
   const [uploadImage, { isLoading }] = useAddImageMutation();
   // const theme = 'bubble';
 
@@ -62,11 +63,11 @@ const Editor = ({ theme, name, placeholder }) => {
 
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {
-    const body = new FormData();
-    body.append("file", file);
-    body.append("type", "posts");
+    const form = new FormData();
+    form.append("type", "posts");
+    form.append("file", file);
 
-    const res = await uploadImage({ body });
+    const res = await uploadImage(form);
     console.log(res);
     // insertToEditor(res.uploadedImageUrl);
   };
@@ -89,11 +90,17 @@ const Editor = ({ theme, name, placeholder }) => {
     if (quill) {
       quill.on("text-change", (delta, oldDelta, source) => {
         //
-        setFieldValue(name, quill.getText());
+        setFieldValue(name, quill.root.innerHTML);
       });
     }
     //eslint-disable-next-line
   }, [quill]);
+
+  useEffect(() => {
+    if (quill && value) {
+      quill.clipboard.dangerouslyPasteHTML(value);
+    }
+  }, [value, quill]);
   useEffect(() => {
     if (quill) {
       // Add custom handler for Image Upload
@@ -101,21 +108,24 @@ const Editor = ({ theme, name, placeholder }) => {
     }
   }, [quill]);
   return (
-    <Grid
-      item
-      container
-      sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
-      flexDirection="column"
-    >
-      <Grid ref={quillRef} />
-
-      <Typography
-        color="#9B9A9A"
-        sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
+    <>
+      <Grid
+        item
+        container
+        sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
+        flexDirection="column"
       >
-        Message
-      </Typography>
-    </Grid>
+        <Grid ref={quillRef} />
+
+        <Typography
+          color="#9B9A9A"
+          sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
+        >
+          Message
+        </Typography>
+      </Grid>
+      {errors[name] && <TextError>{errors[name]}</TextError>}
+    </>
   );
 };
 

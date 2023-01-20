@@ -10,10 +10,13 @@ import { SearchOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CustomButton } from "components";
+import { useGetCategoriesQuery } from "redux/slices/postSlice";
 const LeftTab = () => {
   const loginStatus = useSelector((state) => state.auth.token);
+  const { data: categories } = useGetCategoriesQuery();
+  const navigate = useNavigate();
   return (
     <Grid
       item
@@ -48,42 +51,48 @@ const LeftTab = () => {
           </Form>
         </Formik>
         <List sx={{ width: "100%" }}>
-          {Array(10)
-            .fill(30)
-            .map((item, index) => {
-              return (
-                <ListItemButton
-                  key={index}
-                  component={loginStatus ? Link : "li"}
-                  to={"/entertainment"}
-                >
-                  <ListItemText
-                    primary="Entertainment"
-                    primaryTypographyProps={{
-                      color: "#9B9A9A",
-                      fontWeight: 600,
-                    }}
-                  />
+          {categories?.map((item, index) => {
+            return (
+              <ListItemButton
+                key={index}
+                onClick={() =>
+                  loginStatus
+                    ? navigate({
+                        pathname: "/posts",
+                        search: `?category=${item.name}`,
+                      })
+                    : null
+                }
+                // component={loginStatus ? Link : "li"}
+                // to={`/post/`}
+              >
+                <ListItemText
+                  primary={item?.name}
+                  primaryTypographyProps={{
+                    color: "#9B9A9A",
+                    fontWeight: 600,
+                  }}
+                />
 
-                  <ListItemText
-                    disableGutters
-                    primary="1.2k"
-                    sx={{ display: "flex", justifyContent: "flex-end" }}
-                    primaryTypographyProps={{
-                      minWidth: "3.4rem",
-                      minHeight: "3.4rem",
-                      borderRadius: "50%",
-                      backgroundColor: "#D3D3D3",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    30
-                  </ListItemText>
-                </ListItemButton>
-              );
-            })}
+                <ListItemText
+                  disableGutters
+                  primary="1.2k"
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                  primaryTypographyProps={{
+                    minWidth: "3.4rem",
+                    minHeight: "3.4rem",
+                    borderRadius: "50%",
+                    backgroundColor: "#D3D3D3",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  30
+                </ListItemText>
+              </ListItemButton>
+            );
+          })}
         </List>
         <Grid sx={{ pl: 2 }} item>
           <CustomButton

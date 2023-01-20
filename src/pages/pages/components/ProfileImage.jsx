@@ -7,13 +7,14 @@ import {
   ClickAwayListener,
   MenuList,
   MenuItem,
+  IconButton,
 } from "@mui/material";
 
 import images from "assets";
 import Pen from "assets/svgs/Pen";
 import { useState, useRef, useEffect } from "react";
 
-export default function ProfileImage() {
+export default function ProfileImage({ avatar, name }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -53,7 +54,11 @@ export default function ProfileImage() {
       <Badge
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        badgeContent={<Pen sx={{ fill: "#37D42A" }} />}
+        badgeContent={
+          <IconButton edge="start">
+            <Pen sx={{ fill: "#37D42A" }} />
+          </IconButton>
+        }
         ref={anchorRef}
         id="composition-avatar"
         aria-controls={open ? "composition-menu" : undefined}
@@ -62,10 +67,17 @@ export default function ProfileImage() {
         onClick={handleToggle}
       >
         <Avatar
-          alt="Travis Howard"
-          src={images.dp}
-          sx={{ width: "10rem", height: "10rem", objectFit: "contain" }}
-        />
+          alt={name}
+          src={avatar}
+          sx={{
+            width: "10rem",
+            fontSize: { md: "3rem", xs: "2.5rem" },
+            height: "10rem",
+            objectFit: "contain",
+          }}
+        >
+          {name?.slice(0, 1)?.toUpperCase()}
+        </Avatar>
       </Badge>
 
       <Popper

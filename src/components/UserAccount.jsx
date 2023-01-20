@@ -14,12 +14,14 @@ import { useState, useRef } from "react";
 import Notifications from "./Notifications";
 import { useSelector } from "react-redux";
 import NotificationIcon from "assets/svgs/NotificationIcon";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-  const userProfile = JSON.parse(localStorage.getItem("user"));
+  const { data: userProfile } = useUserProfileQuery();
+  // const userProfile = JSON.parse(localStorage.getItem("user"));
   console.log(userProfile);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

@@ -8,8 +8,6 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
-      // invalidatesTags: ["GenerateEndPoint"],
-      // transformResponse: (response) => response.data,
       transformErrorResponse: (error) => error.data.message,
     }),
     login: builder.mutation({
@@ -18,8 +16,6 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
-
-      // invalidatesTags: ["GenerateEndPoint"],
     }),
     forgotPassword: builder.mutation({
       query: (body) => ({
@@ -29,14 +25,32 @@ export const authSlice = api.injectEndpoints({
       }),
       transformErrorResponse: (error) => error.data.message,
     }),
+    userProfile: builder.query({
+      query: (body) => ({
+        url: "/user",
+        method: "GET",
+        body: JSON.stringify(body),
+      }),
+      transformResponse: (response) => response.body.user,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    userProfileUpdate: builder.mutation({
+      query: (body) => ({
+        url: "/user/edit",
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+      // transformResponse: (response) => response.body.user,
+      // transformErrorResponse: (error) => error.data.message,
+    }),
 
     logout: builder.mutation({
       query: () => ({
-        url: "/logout",
+        url: "user/logout",
         method: "POST",
       }),
-      transformErrorResponse: (error) => error.data.message,
-      // invalidatesTags: ["GenerateEndPoint"],
+      // transformResponse: (response) => response.body.user,
+      // transformErrorResponse: (error) => error.data.message,
     }),
   }),
 });
@@ -45,4 +59,7 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useForgotPasswordMutation,
+  useUserProfileQuery,
+  useLogoutMutation,
+  useUserProfileUpdateMutation,
 } = authSlice;

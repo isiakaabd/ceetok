@@ -18,6 +18,7 @@ import {
   MenuList,
   MenuItem,
   Typography,
+  Skeleton,
 } from "@mui/material";
 import ProfileImage from "./ProfileImage";
 import Pen from "assets/svgs/Pen";
@@ -27,6 +28,9 @@ import SettingsIcon from "assets/svgs/Settings";
 import { SettingsOutlined } from "@mui/icons-material";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
+import { useUserProfileQuery } from "redux/slices/authSlice";
+import { getDate } from "helpers";
+import VerifyPage from "components/modals/VerifyPage";
 
 const ProfileDetails = (props) => {
   const CustomTypography = styled(Typography)(({ theme }) => ({
@@ -43,7 +47,11 @@ const ProfileDetails = (props) => {
     })
   );
   const navigate = useNavigate();
-
+  const [open, setOpen] = useState(false);
+  const { data: userProfile, isLoading, isError } = useUserProfileQuery();
+  if (isLoading) return <Skeleton />;
+  if (isError) return <p>Something went wrong...</p>;
+  const { full_name, email, avatar, username, createdAt } = userProfile;
   return (
     <>
       <Grid
@@ -61,10 +69,10 @@ const ProfileDetails = (props) => {
       >
         <Grid item container flexDirection="column">
           <Grid item container flexDirection="column" alignItems="center">
-            <ProfileImage />
+            <ProfileImage avatar={avatar} name={full_name} />
             <Grid item container justifyContent="center" alignItems="center">
               <Typography fontWeight={700} fontSize="2.2rem" sx={{ mr: 1 }}>
-                Nnaji Joshua
+                {full_name}
               </Typography>
               <div
                 style={{
@@ -76,12 +84,12 @@ const ProfileDetails = (props) => {
               />
             </Grid>
             <Typography color="#9B9A9A" fontWeight={500} fontSize="1.7rem">
-              @Josh4real.
+              {email}
             </Typography>
             <Grid item>
               <Grid item container gap={2} alignItems="center">
                 <Typography color="#9B9A9A" fontWeight={500} fontSize="1rem">
-                  Youdunnowarrisgoingon
+                  {username || "Not Available"}
                 </Typography>
                 <Grid item>
                   <Grid container alignItems="center">
@@ -93,7 +101,7 @@ const ProfileDetails = (props) => {
                     >
                       Edit
                     </Typography>{" "}
-                    <IconButton>
+                    <IconButton onClick={() => setOpen(true)}>
                       <Pen sx={{ color: "#9B9A9A", fontSize: "1rem" }} />
                     </IconButton>
                   </Grid>
@@ -131,7 +139,7 @@ const ProfileDetails = (props) => {
               Last Activity: Today, 03:04pm
             </CustomSubTypography>
             <CustomSubTypography fontSize="1.4rem !important">
-              Joined: 01-31-2022 Mainland
+              Joined: {getDate(createdAt)}
             </CustomSubTypography>
             <CustomSubTypography fontSize="1.4rem !important">
               Location: Lagos Mainland
@@ -175,6 +183,8 @@ const ProfileDetails = (props) => {
             ))}
         </List>
       </Grid>
+
+      <VerifyPage isOpen={open} handleClose={() => setOpen(false)} />
     </>
   );
 };

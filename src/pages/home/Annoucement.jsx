@@ -23,14 +23,20 @@ const Annoucement = () => {
       <Grid
         container
         sx={{
-          padding: { xs: "2rem", md: "4rem 3rem" },
+          padding: { xs: "2rem 0", md: "4rem 3rem" },
           mt: 3,
           mx: "1rem",
           background: "#fff",
           borderRadius: "1.2rem",
         }}
       >
-        <Grid item container alignItems="center" gap={2}>
+        <Grid
+          item
+          container
+          alignItems="center"
+          flexWrap="nowrap"
+          gap={{ md: 2, xs: 1 }}
+        >
           <Button
             variant="outlined"
             sx={{
@@ -52,7 +58,7 @@ const Annoucement = () => {
                 color: "#fff",
                 fontWeight: 600,
                 fontSize: { md: "1.4rem", xs: "1.2rem" },
-                padding: "1rem 1.5rem",
+                padding: { md: "1rem 1.5rem", xs: "1rem" },
                 whiteSpace: "nowrap",
               }}
               onClick={() => navigate("/user/create-annoucement")}

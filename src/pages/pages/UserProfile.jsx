@@ -13,7 +13,6 @@ import FormikControl from "validation/FormikControl";
 import { getDate, getTime } from "helpers";
 
 const UserProfile = ({ data }) => {
-  console.log(data);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => setOpen(!open);
@@ -60,7 +59,7 @@ const UserProfile = ({ data }) => {
                   fontWeight: 600,
                 }}
               >
-                Posted by {email}{" "}
+                Posted by {email.split("@")[0]}{" "}
               </Typography>
               <Typography
                 color="secondary"

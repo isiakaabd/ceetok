@@ -36,6 +36,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "redux/reducers/authReducer";
+import { useLogoutMutation } from "redux/slices/authSlice";
 
 export default function Notifications({
   open,
@@ -137,11 +138,17 @@ export default function Notifications({
     prevOpens.current = opens;
   }, [opens]);
   const navigate = useNavigate();
+  const [logoutUser] = useLogoutMutation();
   const handleClick = (link) => {
     navigate(link);
     setOpens(false);
   };
   const dispatch = useDispatch();
+  const handleLogout = async () => {
+    const data = await logoutUser();
+    console.log(data);
+    dispatch(logoutAction());
+  };
   return (
     <>
       <Popper
@@ -256,7 +263,7 @@ export default function Notifications({
                       onClick={() =>
                         account.title !== "Logout"
                           ? handleClick(account.link)
-                          : dispatch(logoutAction())
+                          : handleLogout
                       }
                       key={index}
                     >

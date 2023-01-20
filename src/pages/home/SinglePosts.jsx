@@ -85,21 +85,34 @@ const AllPosts = ({ post, index }) => {
           <List
             item
             sx={{
-              display: { md: "flex", xs: "none" },
-              // gap: "2rem",
-              justifyContent: "space-between",
+              display: { xs: "flex" },
+
+              // justifyContent: "space-between",
               fontSize: { md: "1.2rem", xs: ".8rem" },
               fontWeight: 400,
             }}
           >
-            <ListItem disableGutters disablePadding>
-              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
-                {user?.email}
+            <ListItem
+              disableGutters
+              disablePadding
+              sx={{ gap: { md: "2rem", xs: "1rem" } }}
+            >
+              <ListItemText
+                disableTypography
+                sx={{ fontSize: "1rem", maxWidth: "max-content" }}
+              >
+                {user?.email?.split("@")[0]}
               </ListItemText>
-              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
+              <ListItemText
+                disableTypography
+                sx={{ fontSize: "1rem", maxWidth: "max-content" }}
+              >
                 {getDate(updatedAt)}
               </ListItemText>
-              <ListItemText disableTypography sx={{ fontSize: "1rem" }}>
+              <ListItemText
+                disableTypography
+                sx={{ fontSize: "1rem", maxWidth: "max-content" }}
+              >
                 {getTime(updatedAt)}
               </ListItemText>
             </ListItem>
@@ -110,7 +123,7 @@ const AllPosts = ({ post, index }) => {
                 flexWrap: "nowrap",
                 alignItems: "center",
                 gap: 1,
-                display: { xs: "flex", md: "none" },
+                display: { md: "none", xs: "flex" },
               }}
             >
               <ListItemIcon sx={{ minWidth: 0 }}>

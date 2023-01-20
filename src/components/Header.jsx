@@ -298,8 +298,9 @@ function Header() {
             aria-haspopup="true"
             aria-expanded={opens ? "true" : undefined}
             onClick={handleClicks}
-            size="large"
-            sx={{ p: 0 }}
+            size="small"
+            // sx={{ p: 0 }}
+            edge="start"
           >
             <MenuIcon sx={{ p: 0, fontSize: "3rem" }} />
           </IconButton>

@@ -8,15 +8,20 @@ import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";
 
 import { TextError } from "validation/TextError";
-import { useCreatePostMutation } from "redux/slices/postSlice";
+import {
+  useCreatePostMutation,
+  useEditAPostMutation,
+  useGetCategoriesQuery,
+} from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
   category: Yup.string("Enter Category")
     // .mi?xed()
-    // .oneOf([
+    // .oneOf([d
     //   "entertainment",
     //   "politics",
     //   "crimes",
@@ -40,10 +45,55 @@ const validation = Yup.object({
   text: Yup.string("Enter Category").required("Required"),
   // name: Yup.string("Enter Your name").required("Name is ").trim(),
 });
-const CreatePost = ({ open, handleClose, heading }) => {
-  const [create, { isLoading }] = useCreatePostMutation();
+const CreatePost = ({
+  open,
+  handleClose,
+  type,
+  initialValues,
+  heading,
+  data,
+}) => {
+  const [create] = useCreatePostMutation();
+  const [editPost] = useEditAPostMutation();
   const navigate = useNavigate();
+  // const { id, title, category, body } = data;
+  const editState = {
+    title: data?.title,
+    category: data?.category,
+    text: data?.body,
+  };
+  // console.log(data.body);
+  const handleEditPost = async (values, onSubmitProps) => {
+    const { title, category, text } = values;
+    const details = {
+      title,
+      category,
+      body: text,
+      id: data?.id,
+    };
+    const { data: dt, error } = await editPost(details);
 
+    if (dt) {
+      toast.success(dt);
+      setTimeout(() => handleClose(), 3000);
+      onSubmitProps.resetForm();
+      navigate("/");
+    }
+    if (error) {
+      toast.error(error);
+    }
+  };
+  const [categories, setCategories] = useState([]);
+  const { data: dt } = useGetCategoriesQuery();
+  useEffect(() => {
+    const cats = dt?.map((category) => {
+      return {
+        label: category.name,
+        value: category.slug,
+      };
+    });
+    setCategories(cats);
+  }, [dt]);
   const handleCreatePost = async (values, onSubmitProps) => {
     const { title, category, text } = values;
     const { data, error } = await create({ title, category, body: text });
@@ -52,10 +102,9 @@ const CreatePost = ({ open, handleClose, heading }) => {
       toast.success(data);
       onSubmitProps.resetForm();
       setTimeout(() => handleClose(), 3000);
-      navigate("/");
     }
   };
-
+  const initialValue = { title: "", category: "", text: "" };
   return (
     <NotificationModal
       isOpen={open}
@@ -69,7 +118,7 @@ const CreatePost = ({ open, handleClose, heading }) => {
             sx={{ textAlign: "center", fontSize: { md: "2rem", xs: "1.7rem" } }}
             fontWeight={700}
           >
-            Create Post
+            {type === "edit" ? "Edit Post" : "Create Post"}
           </Typography>
           <Typography
             sx={{
@@ -84,10 +133,16 @@ const CreatePost = ({ open, handleClose, heading }) => {
 
         <Formik
           validationSchema={validation}
-          onSubmit={handleCreatePost}
-          initialValues={{ title: "", category: "", text: "" }}
+          onSubmit={type === "edit" ? handleEditPost : handleCreatePost}
+          initialValues={
+            type === "edit"
+              ? editState
+              : initialValues
+              ? initialValues
+              : initialValue
+          }
         >
-          {({ errors }) => {
+          {({ initialValues, isSubmitting }) => {
             return (
               <Form style={{ width: "100%" }}>
                 <Grid
@@ -109,26 +164,7 @@ const CreatePost = ({ open, handleClose, heading }) => {
                       control="select"
                       name="category"
                       placeholder="Category"
-                      options={[
-                        { label: "entertainment", value: "entertainment" },
-                        { label: "politics", value: "politics" },
-                        { label: "crimes", value: "crimes" },
-                        { label: "romance", value: "romance" },
-                        { label: "education", value: "education" },
-                        { label: "technology", value: "technology" },
-                        { label: "celebrities", value: "celebrities" },
-                        { label: "fashion", value: "fashion" },
-                        { label: "health", value: "health" },
-                        { label: "travel", value: "travel" },
-                        { label: "crypto", value: "crypto" },
-                        { label: "religion", value: "religion" },
-                        { label: "sports", value: "sports" },
-                        { label: "jobs", value: "jobs" },
-                        { label: "tv", value: "tv" },
-                        { label: "science", value: "science" },
-                        { label: "business", value: "business" },
-                        { label: "jokes", value: "jokes" },
-                      ]}
+                      options={categories}
                     />
                   </Grid>
 
@@ -136,9 +172,9 @@ const CreatePost = ({ open, handleClose, heading }) => {
                     theme="snow"
                     name="text"
                     placeholder="write something..."
+                    value={initialValues.text}
                   />
 
-                  {errors.text && <TextError>{errors.text}</TextError>}
                   <Typography
                     fontSize={{ md: "1.3rem", xs: ".9rem", fontWeight: 400 }}
                     color="#9B9A9A"
@@ -190,8 +226,8 @@ const CreatePost = ({ open, handleClose, heading }) => {
                       Cancel
                     </Button>
                     <CustomButton
-                      isSubmitting={isLoading}
-                      title=" Post"
+                      isSubmitting={isSubmitting}
+                      title={type !== "edit" ? " Post" : "Update"}
                       type="submit"
                     />
                   </Grid>

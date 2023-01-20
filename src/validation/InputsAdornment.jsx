@@ -12,6 +12,7 @@ const Text = ({
   order,
   height,
   buttonStyle: { background },
+  ...rest
 }) => {
   return (
     <Grid
@@ -22,9 +23,10 @@ const Text = ({
         borderRadius: borderRadius ? borderRadius : "3rem",
         color: "#828484",
         border: border ? border : "1px solid rgba(0,0,0,0.2)",
-        height: height ? height : "auto",
+        height: height ? height : "4rem",
         flexDirection: order ? "row-reverse" : "row",
-        padding: ".5rem 1rem",
+        paddingInline: " 1rem",
+        alignItems: "center",
       }}
     >
       <IconButton sx={{ background: background }}>
@@ -36,6 +38,7 @@ const Text = ({
           color: color,
           order: order,
         }}
+        {...rest}
         placeholder={placeholder}
       />
     </Grid>

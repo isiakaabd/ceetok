@@ -29,10 +29,6 @@ export const Formiks = ({ borderRadius, options, ...rest }) => {
       {/* <MenuItem value="">{placeholder}</MenuItem> */}
       {options?.map((option) => (
         <MenuItem key={option.value} value={option.value}>
-          {/* {`${
-            option?.label?.split("")?.at(0)?.toUpperCase() +
-            option?.label?.slice(1)
-          }`} */}
           {option.label}
         </MenuItem>
       ))}
@@ -66,6 +62,7 @@ const Selects = (props) => {
         id={name}
         type="select"
         options={options}
+        placeholder={placeholder}
         name={name}
         as={Formiks}
         {...rest}

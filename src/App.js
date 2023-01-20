@@ -24,7 +24,10 @@ const App = () => {
             <Route path="/annoucement" element={<Announcement />} />
             <Route path="/post" element={<PrivateRoute />}>
               <Route path=":postId" element={<Post />} />
+              <Route path="" element={<Entertainment />} />
             </Route>
+            <Route path="/posts" element={<Entertainment />} />
+
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
               <Route path="create-post" element={<CreatePost />} />
@@ -35,9 +38,7 @@ const App = () => {
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
             </Route>
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="entertainment" element={<Entertainment />} />
-            </Route>
+            <Route path="/" element={<PrivateRoute />}></Route>
           </Routes>
           <div style={{ marginTop: "auto" }}>
             <Footer />

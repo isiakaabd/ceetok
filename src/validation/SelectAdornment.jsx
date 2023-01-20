@@ -27,16 +27,18 @@ const Text = ({
   buttonStyle,
   border,
   Icon,
+  ...rest
 }) => {
   return (
     <Select
       displayEmpty
+      {...rest}
       sx={{
         borderRadius: borderRadius ? borderRadius : "3rem",
         color: color ? color : "#828484",
-        height: height ? height : "5rem",
+        height: height ? height : "4rem",
         border: border,
-
+        paddingInline: " 1rem",
         "&:active,&:focus": {
           borderColor: "currentColor",
           outline: "none",
@@ -54,14 +56,15 @@ const Text = ({
               ml: 0,
               alignItems: "center",
               border: "none",
+              // paddingInline: " 1rem",
             }}
           >
-            <IconButton>
+            <IconButton edge="start">
               <Icon
                 sx={{
                   fontSize: "2rem",
                   color: color,
-                  ml: -1.5,
+                  // ml: -2,
                   ...buttonStyle,
                 }}
               />

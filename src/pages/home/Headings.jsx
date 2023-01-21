@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@mui/material";
+import { getDate, getTime } from "helpers";
 const Headings = () => {
   return (
     <Grid
@@ -50,7 +51,7 @@ const Headings = () => {
               variant="span"
               style={{ fontWeight: 500, font: "inherit" }}
             >
-              Thursday, 20 October 2022
+              {getDate(new Date())}
             </Typography>{" "}
           </Typography>
           <Typography style={{ fontWeight: 700, font: "inherit" }}>
@@ -60,7 +61,7 @@ const Headings = () => {
               variant="span"
               style={{ fontWeight: 500, font: "inherit" }}
             >
-              10:58 AM
+              {getTime(new Date())}
             </Typography>{" "}
           </Typography>
         </Grid>

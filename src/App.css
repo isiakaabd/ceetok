@@ -26,3 +26,6 @@ body {
 .ql-editor {
   min-height: 10rem !important;
 }
+.ql-editor > * {
+  word-break: break-all !important;
+}

@@ -1,7 +1,7 @@
 import NotificationModal from "./NotificationModal";
 import { Typography, Grid } from "@mui/material";
 import images from "assets";
-const PaymentModal = ({ open, handleClose }) => {
+const PaymentModal = ({ open, handleClose, state }) => {
   return (
     <NotificationModal
       isOpen={open}
@@ -42,7 +42,7 @@ const PaymentModal = ({ open, handleClose }) => {
         >
           Duration:{" "}
           <Typography variant="span" fontWeight={400}>
-            1 Week
+            {state?.annoucement && state?.annoucement[0]}
           </Typography>
         </Typography>
         <Typography
@@ -52,7 +52,7 @@ const PaymentModal = ({ open, handleClose }) => {
         >
           Budget:{" "}
           <Typography variant="span" fontWeight={400}>
-            N5,000
+            N{(+state?.slide * 50).toLocaleString()}
           </Typography>
         </Typography>
       </Grid>

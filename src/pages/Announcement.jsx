@@ -6,21 +6,38 @@ import {
   Grid,
   Button,
   IconButton,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled, alpha } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   ChatBubbleOutline,
+  Delete,
+  FavoriteBorder,
   FavoriteBorderOutlined,
+  FavoriteBorderRounded,
   FilterList,
   IosShareOutlined,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 
-import Modals from "components/Modal";
-import RegisterModal from "components/modals/RegisterModal";
+import AnnoucementIcon from "assets/svgs/AnnoucementIcon";
+import CreatePost from "./user/modals/CreatePost";
+import LoginModal from "components/modals/LoginModal";
+import {
+  useDeleteAnnoucementsMutation,
+  useGetAnnoucementsQuery,
+} from "redux/slices/annoucementSlice";
+import {
+  useDeleteAPostMutation,
+  useLikeAndUnlikePostMutation,
+} from "redux/slices/postSlice";
+import { toast } from "react-toastify";
+import SocialMedia from "components/modals/SocialMedia";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -65,6 +82,123 @@ export const StyledMenu = styled((props) => (
   },
 }));
 
+const Shares = ({ data: item }) => {
+  const [likeState, setLikeState] = useState(Boolean(item?.liked));
+  const [openShareModal, setOpenShareModal] = useState(false);
+  const [likePost] = useLikeAndUnlikePostMutation();
+  const handleLikePost = async () => {
+    const { error } = await likePost({
+      parent_type: "announcements",
+      parent_id: item?.id,
+    });
+
+    if (error) toast.error(error);
+    setLikeState(!likeState);
+  };
+
+  const [deleteAnnoucement, { isLoading }] = useDeleteAnnoucementsMutation();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloses = () => {
+    setAnchorEl(null);
+  };
+  const handleDeleteComment = async (id) => {
+    const { data, error } = await deleteAnnoucement({ id });
+
+    if (data) toast.success(data);
+    handleCloses();
+    if (error) toast.error(error);
+  };
+  return (
+    <>
+      <Grid
+        item
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="nowrap"
+        sx={{ color: "#5F5C5C", mt: "auto" }}
+      >
+        <Grid item>
+          <Grid container alignItems="center" sx={{ cursor: "pointer" }}>
+            {/* <IconButton edge="start"> */}
+            <ChatBubbleOutline />
+            {/* </IconButton> */}
+            <Typography variant="span" sx={{ ml: 1 }}>
+              {item?.comments_count}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid
+            container
+            alignItems="center"
+            onClick={handleLikePost}
+            sx={{ cursor: "pointer", color: item?.liked && "red" }}
+          >
+            {!item?.liked ? <FavoriteBorderOutlined /> : <FavoriteIcon />}
+            <Typography variant="span" sx={{ ml: 1 }}>
+              {item?.likes_count}
+            </Typography>
+          </Grid>
+        </Grid>
+        <IconButton
+          edge="start"
+          size="small"
+          onClick={() => setOpenShareModal(true)}
+        >
+          <IosShareOutlined />
+        </IconButton>
+
+        <IconButton
+          edge="start"
+          size="small"
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleCloses}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDeleteComment(item.id)}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <ListItemIcon>
+              <Delete sx={{ fontSize: "2rem" }} />
+            </ListItemIcon>
+            <ListItemText sx={{ fontSize: "3rem" }}>
+              {isLoading ? "Deleting" : "Delete"}
+            </ListItemText>
+          </MenuItem>
+        </Menu>
+      </Grid>
+      <SocialMedia
+        open={openShareModal}
+        handleClose={() => setOpenShareModal(false)}
+      />
+    </>
+  );
+};
+
 const Announcement = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -75,9 +209,19 @@ const Announcement = () => {
     setAnchorEl(null);
   };
 
-  const loginStatus = useSelector((state) => state.auth.auth);
+  const loginStatus = useSelector((state) => state.auth.token);
   const [modal, setModal] = useState(false);
-  const navigate = useNavigate();
+  const [openCreatePost, setOpenCreatePost] = useState(false);
+
+  const handleOpenCreateAnnoucement = () => {
+    if (!loginStatus) {
+      setModal(true);
+    }
+
+    setOpenCreatePost(true);
+  };
+  const { data: annoucements } = useGetAnnoucementsQuery();
+  console.log(annoucements);
   return (
     <>
       <Grid
@@ -105,53 +249,50 @@ const Announcement = () => {
               item
               flexWrap="nowrap"
               sx={{
-                border: { md: "1px solid #FF9B04", sm: "none" },
+                // border: { md: "1px solid #FF9B04", sm: "none" },
                 padding: "1rem 1.2rem",
               }}
             >
               <Grid
+                item
                 container
                 alignItems="center"
-                justifyContent="center"
-                sx={{
-                  cursor: "pointer",
-                }}
                 flexWrap="nowrap"
-                columnGap={1}
+                gap={{ md: 2, xs: 1 }}
               >
-                <img
-                  src={images.annoucement}
-                  alt="annoucement icon"
-                  style={{ width: "3rem", display: "block" }}
-                />
-                <Typography
-                  sx={{ color: "#464646", fontSize: "2rem", fontWeight: 700 }}
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#464646",
+                    fontSize: { md: "1.9rem", xs: "1.4rem" },
+                    fontWeight: 700,
+                    border: "1px solid #FF9B04",
+                  }}
+                  startIcon={<AnnoucementIcon style={{ fontSize: "3rem" }} />}
                 >
                   Annoucement
-                </Typography>
+                </Button>
+                <Grid item>
+                  <Button
+                    sx={{
+                      height: "3.5rem",
+                      borderRadius: ".5rem",
+                      backgroundColor: "#5F5C5C",
+                      color: "#fff",
+                      fontWeight: 600,
+                      fontSize: { md: "1.4rem", xs: "1.2rem" },
+                      padding: { md: "1rem 1.5rem", xs: "1rem" },
+                      whiteSpace: "nowrap",
+                    }}
+                    onClick={handleOpenCreateAnnoucement}
+                    variant="contained"
+                    disableElevation
+                  >
+                    Make Annoucement
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Button
-              sx={{
-                height: "3.5rem",
-                borderRadius: ".5rem",
-                backgroundColor: "#5F5C5C",
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: "1rem",
-                padding: "1rem 1.5rem",
-                "&:hover": {
-                  backgroundColor: "#5F5C5C",
-                  color: "#fff",
-                },
-              }}
-              variant="outlined"
-              onClick={() =>
-                loginStatus ? navigate("/make-announcement") : setModal(true)
-              }
-            >
-              Make Annoucement
-            </Button>
           </Grid>
 
           <Grid item display={{ md: "block", xs: "none" }}>
@@ -191,83 +332,85 @@ const Announcement = () => {
         </Grid>
 
         {/* list */}
-        <Grid
-          item
-          container
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "repeat(4,1fr)" },
-            py: 8,
-            gap: 4,
-            borderRadius: "1.6rem",
-            background: "White",
-          }}
-        >
-          {Array(20)
-            .fill(undefined)
-            .map((item, index) => (
+        {annoucements?.length > 0 ? (
+          <Grid
+            item
+            container
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(4,1fr)" },
+              py: 8,
+              gap: 4,
+              borderRadius: "1.6rem",
+              background: "White",
+            }}
+          >
+            {annoucements?.map((item, index) => (
               <Grid item container key={index} flexWrap="nowrap">
                 <Grid
                   item
+                  container
                   sx={{
                     padding: "2rem",
                     border: "1px solid #9B9A9A",
                     borderRadius: "1.2rem",
+                    flexDirection: "column",
                   }}
                 >
-                  <img
-                    src={images.davido}
-                    style={{ width: "100%" }}
-                    alt="davido"
-                  />
-
-                  <Typography
-                    sx={{
-                      color: "#464646",
-                      fontSize: "1.3rem",
-                      fontWeight: 700,
-                    }}
-                  >
-                    David Ifeanyi Adeleke is confirmed dead after drowing in a
-                    swimming pool
-                  </Typography>
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                    flexWrap="nowrap"
-                    sx={{ color: "#5F5C5C", mt: 3 }}
-                  >
-                    <Grid item>
-                      <Grid container alignItems="center">
-                        <ChatBubbleOutline />
-                        <Typography variant="span" sx={{ ml: 1 }}>
-                          223
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Grid container alignItems="center">
-                        <FavoriteBorderOutlined />
-                        <Typography variant="span" sx={{ ml: 1 }}>
-                          223
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <IosShareOutlined />
-
-                    <MoreVertIcon />
+                  <Grid item>
+                    <img
+                      src={images.davido}
+                      style={{ width: "100%" }}
+                      alt="davido"
+                    />
                   </Grid>
+                  <Grid item>
+                    <Typography
+                      sx={{
+                        color: "#464646",
+                        fontSize: "1.3rem",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {parse(item?.body)}
+                    </Typography>
+                  </Grid>
+                  <Shares data={item} />
                 </Grid>
               </Grid>
             ))}
-        </Grid>
+          </Grid>
+        ) : (
+          <Typography
+            variant="h2"
+            width="100%"
+            textAlign="center"
+            sx={{ my: 4 }}
+          >
+            No Annoucement here
+          </Typography>
+        )}
       </Grid>
 
-      <Modals isOpen={modal} handleClose={() => setModal(false)}>
-        <RegisterModal />
-      </Modals>
+      {modal && (
+        <LoginModal
+          handleClose={() => setModal(false)}
+          // setIsLogin={setIsLogin}
+          // handleRegisterOpen={handleRegisterOpen}
+          isLogin={modal}
+        />
+      )}
+
+      <CreatePost
+        open={openCreatePost}
+        handleClose={() => setOpenCreatePost(false)}
+        postHeading={"Make Annoucement"}
+        initialValues={{
+          title: "",
+          text: "",
+          duration: "",
+        }}
+      />
     </>
   );
 };

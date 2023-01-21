@@ -15,7 +15,6 @@ import {
 import parse from "html-react-parser";
 import {
   Avatar,
-  Button,
   Divider,
   Grid,
   Paper,
@@ -55,7 +54,6 @@ export const Comment = ({ handleShare, data }) => {
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
   const anchorRef = useRef(null);
-  const anchorRefs = useRef(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -142,6 +140,7 @@ export const Comment = ({ handleShare, data }) => {
     handleCloses();
   };
   console.log(comments);
+
   return (
     <>
       <Grid
@@ -324,6 +323,7 @@ export const Comment = ({ handleShare, data }) => {
           {comments?.length > 0 ? (
             comments?.map((item, index) => {
               const { avatar, full_name, comment, createdAt, id } = item;
+              console.log(item);
               return (
                 <Grid
                   item
@@ -407,7 +407,7 @@ export const Comment = ({ handleShare, data }) => {
                         {parse(comment)}
                       </Typography>
                       <Grid item container>
-                        <Details icons={icons} data={data} />
+                        <Details icons={icons} data={item} />
                       </Grid>
                     </Grid>
                   </Grid>

@@ -10,8 +10,10 @@ import FormikControl from "validation/FormikControl";
 import { TextError } from "validation/TextError";
 import NotificationModal from "components/modals/NotificationModal";
 import DiscreteSliderMarks from "components/modals/LinearProgress";
+import ChipItems from "components/ChipItems";
+import PaymentModal from "components/modals/PaymentModal";
 
-const CreateAnnoucement = ({ handleClose, title }) => {
+const CreateAnnoucement = ({ handleClose, open, title }) => {
   const validation = Yup.object({
     title: Yup.string("Enter Title").required("Required"),
     category: Yup.string("Enter Category").required("Required"),
@@ -27,6 +29,11 @@ const CreateAnnoucement = ({ handleClose, title }) => {
     handleOpenModal();
     // dispatch(createPost(values));
   };
+  const [state, setState] = useState({});
+  const handleSubmit = (values) => {
+    handleOpenModal();
+    setState(values);
+  };
   const arr = [
     "1 week",
     "2 Weeks",
@@ -35,9 +42,13 @@ const CreateAnnoucement = ({ handleClose, title }) => {
     "6 Months",
     "Custom",
   ];
+  const validationSchema = Yup.object({
+    slide: Yup.string("Select Budget").required("Required"),
+    annoucement: Yup.array().min(1, "At least 1").required("Required"),
+  });
   return (
     <>
-      <Grid item container>
+      {/* <Grid item container>
         <Grid item md={5} xs={12} sm={8} sx={{ marginInline: "auto", p: 2 }}>
           <Grid item container gap={2}>
             <Grid item container flexDirection="column">
@@ -173,85 +184,125 @@ const CreateAnnoucement = ({ handleClose, title }) => {
             </Formik>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
       <NotificationModal
-        isOpen={openModal}
-        handleClose={handleCloseModal}
-        width={{ md: "40vw", xs: "95vw" }}
+        isOpen={open}
+        handleClose={handleClose}
+        width={{ md: "30vw", xs: "95vw" }}
         // height={{ md: "100%", xs: "auto" }}
       >
-        <Grid item container sx={{ height: "100%" }}>
-          <Grid item flexDirection={"column"} sx={{ height: "100%" }}>
-            <Grid
-              item
-              container
-              flexDirection={"column"}
-              //   sx={{ p: 1, height: "100%", background: "red", overflowY: "hidden" }}
-            >
-              <Typography
-                color="secondary"
-                fontWeight={700}
-                fontSize={{ md: "1.9rem", xs: "1.5rem" }}
-              >
-                Schedule and Budget
-              </Typography>
-              <Typography
-                fontSize={{ md: "1.6rem", xs: "1.3rem" }}
-                color="#5F5C5C"
-              >
-                Choose duration of Announcement
-              </Typography>
-              <Grid
-                item
-                container
-                gap={3}
-                sx={{ mt: 3 }}
-                justifyContent="space-between"
-              >
-                {arr.map((item) => (
-                  <ChipItem
-                    item={item}
-                    backgroundColor="#FF9B04"
-                    borderColor="#5F5C5C"
-                    color="#5F5C5C"
-                  />
-                ))}
-              </Grid>
-            </Grid>
-            <Grid item container sx={{ mt: 3 }} flexDirection={"column"}>
-              <Typography
-                colorr="#5F5C5C"
-                sx={{ fontSize: { md: "1.6rem", xs: "1.3rem" } }}
-              >
-                Budget
-              </Typography>
-              <DiscreteSliderMarks />
-            </Grid>
-            <Grid item container flexDirection={"column"}>
-              <Typography
-                sx={{ my: 4, fontSize: { md: "1.7rem", xs: "1.4rem" } }}
-                fontWeight={700}
-                color="#9B9A9A"
-              >
-                Privacy Policy & Completion
-              </Typography>
-              <Typography sx={{ fontWeight: 600, color: "#5F5C5C" }}>
-                By clicking on “Proceed to Payment” you agree to our terms of{" "}
-                <Typography variant="span" color="#37D42A">
-                  service{" "}
-                </Typography>
-                and{" "}
-                <Typography variant="span" color="#37D42A">
-                  privacy policy
-                </Typography>
-              </Typography>
-            </Grid>
-            <Grid item container sx={{ mt: 2 }}>
-              <CustomButton title={"Proceed to Payment"} width="22rem" />
-            </Grid>
-          </Grid>
-        </Grid>
+        <Formik
+          initialValues={{
+            slide: "",
+            annoucement: [],
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, errors }) => {
+            console.log(errors, values);
+            return (
+              <Form>
+                <Grid item container sx={{ height: "100%" }}>
+                  <Grid item flexDirection={"column"} sx={{ height: "100%" }}>
+                    <Grid
+                      item
+                      container
+                      flexDirection={"column"}
+                      //   sx={{ p: 1, height: "100%", background: "red", overflowY: "hidden" }}
+                    >
+                      <Typography
+                        color="secondary"
+                        fontWeight={700}
+                        fontSize={{ md: "1.9rem", xs: "1.5rem" }}
+                      >
+                        Schedule and Budget
+                      </Typography>
+                      <Typography
+                        fontSize={{ md: "1.6rem", xs: "1.3rem" }}
+                        color="#5F5C5C"
+                      >
+                        Choose duration of Announcement
+                      </Typography>
+                      <Grid item xs={12}>
+                        <Grid
+                          item
+                          container
+                          gap={3}
+                          sx={{ mt: 3 }}
+                          justifyContent="space-between"
+                        >
+                          {arr.map((item, index) => (
+                            <ChipItems
+                              item={item}
+                              key={index}
+                              backgroundColor="#FF9B04"
+                              borderColor="#5F5C5C"
+                              color="#5F5C5C"
+                            />
+                          ))}
+                        </Grid>
+                        <Grid item sx={{ mt: 1 }}>
+                          {errors && (
+                            <TextError>{errors.annoucement}</TextError>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid
+                      item
+                      container
+                      sx={{ mt: 3 }}
+                      flexDirection={"column"}
+                    >
+                      <Typography
+                        colorr="#5F5C5C"
+                        sx={{ fontSize: { md: "1.6rem", xs: "1.3rem" } }}
+                      >
+                        Budget
+                      </Typography>
+                      <DiscreteSliderMarks name="slide" />
+                    </Grid>
+                    <Grid item container flexDirection={"column"}>
+                      <Typography
+                        sx={{ my: 4, fontSize: { md: "1.7rem", xs: "1.4rem" } }}
+                        fontWeight={700}
+                        color="#9B9A9A"
+                      >
+                        Privacy Policy & Completion
+                      </Typography>
+                      <Typography sx={{ fontWeight: 600, color: "#5F5C5C" }}>
+                        By clicking on “Proceed to Payment” you agree to our
+                        terms of{" "}
+                        <Typography variant="span" color="#37D42A">
+                          service{" "}
+                        </Typography>
+                        and{" "}
+                        <Typography variant="span" color="#37D42A">
+                          privacy policy
+                        </Typography>
+                      </Typography>
+                    </Grid>
+                    <Grid item container sx={{ mt: 2 }}>
+                      <CustomButton
+                        title={"Proceed to Payment"}
+                        width="22rem"
+                        type="submit"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Form>
+            );
+          }}
+        </Formik>
       </NotificationModal>
+
+      <PaymentModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        state={state}
+      />
     </>
   );
 };

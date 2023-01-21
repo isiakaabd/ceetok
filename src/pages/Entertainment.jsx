@@ -1,5 +1,5 @@
 import { AddCircleOutline, SearchOutlined } from "@mui/icons-material";
-import { Button, Grid, List, Typography } from "@mui/material";
+import { Button, Grid, List, Skeleton, Typography } from "@mui/material";
 import Filters from "components/modals/Filters";
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import FormikControl from "validation/FormikControl";
 import SinglePosts from "pages/home/SinglePosts";
 import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import { useGetPostQuery } from "redux/slices/postSlice";
+import { useGetPostQuery, useGetViewsQuery } from "redux/slices/postSlice";
 import CreatePost from "./user/modals/CreatePost";
 
 const Entertainment = () => {
@@ -30,9 +30,13 @@ const Entertainment = () => {
     category: params.toLowerCase(),
     text: "",
   };
-  const { data: array } = useGetPostQuery({ category: params.toLowerCase() });
-
+  const { data: array, isLoading } = useGetPostQuery({
+    category: params.toLowerCase(),
+  });
+  console.log(array);
+  // const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const [createPostModal, setCreatePostModal] = useState(false);
+  if (isLoading) return <Skeleton />;
   return (
     <>
       <Grid item container sx={{ py: 2, background: "#fafafa" }}>
@@ -119,6 +123,7 @@ const Entertainment = () => {
             <Grid item container sx={{ p: 3 }}>
               <List
                 sx={{
+                  width: "100%",
                   maxHeight: "80rem",
                   overflowY: "scroll",
                   "&::-webkit-scrollbar": {
@@ -139,28 +144,39 @@ const Entertainment = () => {
             </Grid>
             {array?.length > 0 && (
               <Grid item container sx={{ p: 3 }}>
-                {Array(20)
-                  .fill("Adekunle107")
-                  .map((item, index) => (
-                    <Typography
-                      component={Link}
-                      to={`/${index}`}
-                      key={index}
-                      sx={{ width: "max-content", mr: 0.5 }}
-                      color="secondary"
-                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                    >
-                      {item}
-                    </Typography>
-                  ))}
-
-                <Typography
-                  variant="span"
-                  color="#FF9B04"
-                  fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                >
-                  and 102 guests
-                </Typography>
+                {array.slice(0, 50).map((item, index) => {
+                  console.log(item.recent_views);
+                  return item.recent_views.map((numbers) => {
+                    console.log(numbers);
+                    return (
+                      //  numbers?.viewer.map((view) => (
+                      <Typography
+                        component={Link}
+                        to={`/${index}`}
+                        key={index}
+                        sx={{ width: "max-content", mr: 0.5 }}
+                        color="secondary"
+                        fontSize={{
+                          md: "1.8rem",
+                          xs: "1.5rem",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {numbers?.viewer?.full_name}
+                      </Typography>
+                    );
+                    // ));
+                  });
+                })}
+                {array?.length >= 50 && (
+                  <Typography
+                    variant="span"
+                    color="#FF9B04"
+                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                  >
+                    {`and ${array.length - 50} guests`}
+                  </Typography>
+                )}
               </Grid>
             )}
           </Grid>

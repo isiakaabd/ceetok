@@ -27,7 +27,7 @@ export default function Dialogs({
 
   return (
     <Dialog
-      //   maxWidth={width}
+      // maxWidth={width}
       open={isOpen}
       onClose={handleClose}
       scroll={"body"}

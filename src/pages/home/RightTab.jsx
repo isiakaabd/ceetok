@@ -49,7 +49,7 @@ const RightTab = ({ setCreatePost }) => {
         xs={11}
         sx={{
           borderRadius: "2rem ",
-          padding: { md: "2rem", xs: "1rem" },
+          padding: { md: "0", xs: "1rem" },
           marginInline: "auto",
         }}
         gap={2}
@@ -211,7 +211,7 @@ const RightTab = ({ setCreatePost }) => {
         <Grid item container>
           <List
             sx={{
-              maxHeight: "80rem",
+              maxHeight: "100%",
               overflowY: "scroll",
               width: "100%",
               "&::-webkit-scrollbar": {

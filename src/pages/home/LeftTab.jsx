@@ -10,12 +10,13 @@ import { SearchOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CustomButton } from "components";
 import { useGetCategoriesQuery } from "redux/slices/postSlice";
 const LeftTab = () => {
   const loginStatus = useSelector((state) => state.auth.token);
   const { data: categories } = useGetCategoriesQuery();
+  console.log(categories);
   const navigate = useNavigate();
   return (
     <Grid
@@ -76,7 +77,7 @@ const LeftTab = () => {
 
                 <ListItemText
                   disableGutters
-                  primary="1.2k"
+                  primary={item?.posts_count}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                   primaryTypographyProps={{
                     minWidth: "3.4rem",
@@ -87,9 +88,7 @@ const LeftTab = () => {
                     justifyContent: "center",
                     alignItems: "center",
                   }}
-                >
-                  30
-                </ListItemText>
+                />
               </ListItemButton>
             );
           })}

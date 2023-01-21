@@ -145,9 +145,12 @@ export default function Notifications({
   };
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    const data = await logoutUser();
-    console.log(data);
-    dispatch(logoutAction());
+    console.log(123);
+    const { data, error } = await logoutUser();
+    console.log(data, error);
+    if (data) {
+      dispatch(logoutAction());
+    }
   };
   return (
     <>
@@ -263,7 +266,7 @@ export default function Notifications({
                       onClick={() =>
                         account.title !== "Logout"
                           ? handleClick(account.link)
-                          : handleLogout
+                          : handleLogout()
                       }
                       key={index}
                     >

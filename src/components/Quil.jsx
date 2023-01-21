@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Grid, Typography } from "@mui/material";
 import { useQuill } from "react-quilljs";
-// or const { useQuill } = require('react-quilljs');
 
 import "quill/dist/quill.snow.css"; // Add css for snow theme
 // or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
@@ -11,22 +10,23 @@ import { TextError } from "validation/TextError";
 const Editor = ({ theme, name, placeholder, value }) => {
   const modules = {
     toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ size: [] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link", "image", "video"],
+      ["bold", "italic", "underline", "strike"],
+      [{ align: [] }],
+
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["link", "image", "video", "code-block", "script"],
+      ["script", "underline", "align"],
+      [{ color: ["#fff", "#f00"] }, { background: [] }],
+
       ["clean"],
     ],
     clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
       matchVisual: false,
     },
+    syntax: true,
   };
 
   const formats = [
@@ -36,21 +36,26 @@ const Editor = ({ theme, name, placeholder, value }) => {
     "bold",
     "italic",
     "underline",
+    "align",
     "strike",
+    "script",
     "blockquote",
+    "background",
     "list",
     "bullet",
     "indent",
     "link",
     "image",
-    "video",
+    "color",
+    "code-block",
   ];
   const { quill, quillRef } = useQuill({
     theme,
+    ...formats,
     modules,
-    formats,
     placeholder,
   });
+  console.log(quill);
   const { setFieldValue, errors } = useFormikContext();
   const [uploadImage, { isLoading }] = useAddImageMutation();
   // const theme = 'bubble';
@@ -105,6 +110,7 @@ const Editor = ({ theme, name, placeholder, value }) => {
     if (quill) {
       // Add custom handler for Image Upload
       quill.getModule("toolbar").addHandler("image", selectLocalImage);
+      // quill.getModule("toolbar").addHandler("container", "#toolbar");
     }
   }, [quill]);
   return (

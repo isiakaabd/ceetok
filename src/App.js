@@ -21,12 +21,13 @@ const App = () => {
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/annoucement" element={<Announcement />} />
             <Route path="/post" element={<PrivateRoute />}>
               <Route path=":postId" element={<Post />} />
               <Route path="" element={<Entertainment />} />
             </Route>
-            <Route path="/posts" element={<Entertainment />} />
+            <Route path="/posts" element={<PrivateRoute />}>
+              <Route path="" element={<Entertainment />} />
+            </Route>
 
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
@@ -35,6 +36,7 @@ const App = () => {
                 path="create-annoucement"
                 element={<CreateAnnoucement />}
               />
+              <Route path="annoucement" element={<Announcement />} />
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
             </Route>

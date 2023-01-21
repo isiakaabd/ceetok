@@ -1,23 +1,26 @@
 import { useState } from "react";
 import { Box, Slider } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
+import { useFormikContext } from "formik/dist";
 const marks = [
   {
-    value: 0,
-    label: "0",
-  },
-  {
-    value: 30,
+    value: 20,
     label: "N1,000",
   },
   {
-    value: 60,
+    value: 40,
     label: "N2,000",
   },
   {
-    value: 90,
-    label: "N5,000",
+    value: 60,
+    label: "N3,000",
+  },
+  {
+    value: 80,
+    label: "N4,000",
+  },
+  {
+    value: 100,
   },
 ];
 
@@ -66,13 +69,16 @@ const PrettoSlider = styled(({ ...rest }) => <Slider {...rest} />)(
 );
 
 export default function DiscreteSliderMarks() {
+  const { setFieldValue } = useFormikContext();
   return (
     <Box sx={{ width: "100%" }}>
       <PrettoSlider
         aria-label="Custom marks"
-        defaultValue={30}
+        defaultValue={50}
         getAriaValueText={valuetext}
         step={10}
+        name="slide"
+        onChange={(_, value) => setFieldValue("slide", value)}
         valueLabelDisplay="auto"
         marks={marks}
       />

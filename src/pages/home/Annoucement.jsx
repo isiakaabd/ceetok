@@ -13,11 +13,15 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "pages/user/modals/CreatePost";
 import AnnoucementIcon from "assets/svgs/AnnoucementIcon";
 import { CustomButton } from "components";
+import CreateAnnoucement from "pages/pages/CreateAnnoucement";
+import { useGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
+import { getDate, getTime } from "helpers";
 const Annoucement = () => {
   const [openCreatePost, setCreatePost] = useState(false);
-  const navigate = useNavigate();
-  // const handleCreatePostOpen = () => setCreatePost(true);
+  const handleCreatePostOpen = () => setCreatePost(true);
+  const { data: annoucements } = useGetAnnoucementsQuery();
   const handleCreatePostClose = () => setCreatePost(false);
+
   return (
     <>
       <Grid
@@ -61,7 +65,7 @@ const Annoucement = () => {
                 padding: { md: "1rem 1.5rem", xs: "1rem" },
                 whiteSpace: "nowrap",
               }}
-              onClick={() => navigate("/user/create-annoucement")}
+              onClick={handleCreatePostOpen}
               variant="contained"
               disableElevation
             >
@@ -70,26 +74,23 @@ const Annoucement = () => {
           </Grid>
         </Grid>
         <Grid item container flexDirection="column">
-          <List
-            item
-            container
-            sx={{
-              mt: 6,
-              gap: { md: 3, xs: 2 },
-              display: "grid",
-              gridTemplateColumns: {
-                md: "repeat(3,1fr)",
-                xs: "1fr",
-                sm: "1fr 1fr",
-              },
-            }}
-          >
-            {Array(10)
-              .fill({
-                title: "Obasanjo dies @86 after brief illness at his home town",
-                time: "Joshua@4real   15 oct, 2022  7:39pm",
-              })
-              .map((item, i) => {
+          {annoucements?.length > 0 ? (
+            <List
+              item
+              container
+              sx={{
+                mt: 6,
+                gap: { md: 3, xs: 2 },
+                display: "grid",
+                gridTemplateColumns: {
+                  md: "repeat(3,1fr)",
+                  xs: "1fr",
+                  sm: "1fr 1fr",
+                },
+              }}
+            >
+              {annoucements?.map((item, i) => {
+                const { title, createdAt, user } = item;
                 return (
                   <ListItem
                     disableGutters
@@ -99,7 +100,7 @@ const Annoucement = () => {
                   >
                     <ListItemButton disableGutters dense>
                       <ListItemText
-                        primary={item.title}
+                        primary={title}
                         primaryTypographyProps={{
                           color: "#5F5C5C",
                           fontSize: { md: "2rem", xs: "1.5rem" },
@@ -109,40 +110,46 @@ const Annoucement = () => {
                           <Typography
                             sx={{ fontWeight: 400, fontSize: "1.5rem" }}
                           >
-                            {item.time}
+                            @{user.full_name} {getDate(createdAt)}{" "}
+                            {getTime(createdAt)}
                           </Typography>
                         }
                       />
                     </ListItemButton>
-
-                    {/* </ListItemText> */}
                   </ListItem>
-                  // <Grid item>
-                  //   <Typography
-                  //     sx={{
-
-                  //     {item.title}
-                  //   </Typography>
-                  //   <Typography sx={{ fontWeight: 400, fontSize: "1.5rem" }}>
-                  //     {item.time}
-                  //   </Typography>
-                  // </Grid>
                 );
               })}
-          </List>
-          <CustomButton
-            title="See More"
-            width="10rem"
-            fontSize={"1.2rem"}
-            borderRadius=".5rem"
-            background="#FF9B04"
-            component={Link}
-            to="annoucement"
-          />
+            </List>
+          ) : (
+            <Typography variant="h2" sx={{ mt: 4 }} textAlign="center">
+              No Annoucement Yet
+            </Typography>
+          )}
+
+          {annoucements?.length > 0 && (
+            <CustomButton
+              title="See More"
+              width="10rem"
+              fontSize={"1.2rem"}
+              borderRadius=".5rem"
+              background="#FF9B04"
+              component={Link}
+              to="/user/annoucement"
+            />
+          )}
         </Grid>
       </Grid>
 
-      <CreatePost open={openCreatePost} handleClose={handleCreatePostClose} />
+      <CreatePost
+        open={openCreatePost}
+        handleClose={handleCreatePostClose}
+        postHeading={"Make Annoucement"}
+        initialValues={{
+          title: "",
+          text: "",
+          duration: "",
+        }}
+      />
     </>
   );
 };

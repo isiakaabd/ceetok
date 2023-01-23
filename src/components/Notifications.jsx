@@ -148,9 +148,12 @@ export default function Notifications({
   const handleLogout = async () => {
     const { data, error } = await logoutUser();
     if (data) {
+      toast.success(data);
       dispatch(logoutAction());
     }
-    if (error) toast.error(error);
+    if (error) {
+      toast.error(error);
+    }
   };
   return (
     <>

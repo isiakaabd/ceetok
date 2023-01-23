@@ -328,7 +328,7 @@ const SingleAnnoucement = () => {
                 {views?.slice(0, 50)?.map((item, index) => (
                   <Typography
                     component={Link}
-                    to={`/${index}`}
+                    to={`/user/profile/?id=${item.viewer?.user_id}`}
                     key={index}
                     sx={{ width: "max-content", mr: 0.5 }}
                     color="secondary"

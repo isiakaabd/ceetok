@@ -130,6 +130,7 @@ const Shares = ({ data: item }) => {
           <Grid container alignItems="center" sx={{ cursor: "pointer" }}>
             <IconButton
               edge="start"
+              size="small"
               onClick={() => navigate(`/user/annoucement/${item.slug}`)}
             >
               <ChatBubbleOutline />
@@ -247,7 +248,6 @@ const Announcement = () => {
     setOpenCreatePost(true);
   };
   const { data: annoucements } = useGetAnnoucementsQuery();
-  console.log(annoucements);
   return (
     <>
       <Grid
@@ -276,7 +276,7 @@ const Announcement = () => {
               flexWrap="nowrap"
               sx={{
                 // border: { md: "1px solid #FF9B04", sm: "none" },
-                padding: "1rem 1.2rem",
+                paddingBlock: "1rem",
               }}
             >
               <Grid
@@ -376,6 +376,7 @@ const Announcement = () => {
                 <Grid
                   item
                   container
+                  // gap={2}
                   sx={{
                     padding: "2rem",
                     border: "1px solid #9B9A9A",
@@ -386,11 +387,11 @@ const Announcement = () => {
                   <Grid item>
                     <img
                       src={images.davido}
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", height: "100%" }}
                       alt="davido"
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item sx={{ mt: 2 }}>
                     <Typography
                       sx={{
                         color: "#464646",

@@ -74,10 +74,14 @@ const Editor = ({ theme, name, placeholder, value }) => {
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {
     const form = new FormData();
-    form.append("type", "posts");
+    // form.append("type", "posts");
     form.append("file", file);
-
-    const res = await uploadImage(form);
+    console.log(file);
+    const body = {
+      file: form,
+      type: "posts",
+    };
+    const res = await uploadImage({ body });
     console.log(res);
     // insertToEditor(res.uploadedImageUrl);
   };

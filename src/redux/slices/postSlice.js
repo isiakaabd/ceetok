@@ -24,14 +24,14 @@ export const postSlice = api.injectEndpoints({
       // transformErrorResponse: (error) => error.data.message,
     }),
     addImage: builder.mutation({
-      query: (form) => ({
+      query: ({ body }) => ({
         url: "/post/upload-media",
         method: "POST",
-        body: form,
-        headers: (headers) => {
-          headers.delete("Content-Type", "application/json");
-          headers.append("Content-type", "multipart/form-data");
-        },
+        body,
+        // headers: (headers) => {
+        //   headers.delete("Content-Type", "application/json");
+        //   headers.append("Content-type", "multipart/form-data");
+        // },
       }),
     }),
     getAPost: builder.query({

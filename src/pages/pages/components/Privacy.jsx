@@ -89,12 +89,13 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="contactInfo"
                                   options={[{ label: "hello", value: "Hello" }]}
                                   control="select"
+                                  placeholder="Contact Info"
                                 />
                               </Grid>
                             </Grid>
@@ -111,12 +112,13 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="avatar"
                                   options={[]}
                                   control="select"
+                                  placeholder="Avatar"
                                 />
                               </Grid>
                             </Grid>
@@ -133,12 +135,13 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="activities"
                                   options={[]}
                                   control="select"
+                                  placeholder="Activities"
                                 />
                               </Grid>
                             </Grid>
@@ -154,11 +157,12 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="activities"
                                   options={[]}
+                                  placeholder="Visitor Messages"
                                   control="select"
                                 />
                               </Grid>
@@ -175,12 +179,13 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="activities"
                                   options={[]}
                                   control="select"
+                                  placeholder="Subscribed"
                                 />
                               </Grid>
                             </Grid>
@@ -196,11 +201,12 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="subscribers"
                                   options={[]}
+                                  placeholder="Subscribers"
                                   control="select"
                                 />
                               </Grid>
@@ -217,11 +223,12 @@ const Privacy = (props) => {
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="subscribers"
                                   options={[]}
+                                  placeholder="Subscribers"
                                   control="select"
                                 />
                               </Grid>
@@ -234,15 +241,16 @@ const Privacy = (props) => {
                           >
                             <Grid item>
                               <CustomSubTypography
-                                text="Vedios"
+                                text="Videos"
                                 fontSize={{ xs: "1.4rem" }}
                               />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
                                   name="subscribers"
                                   options={[]}
+                                  placeholder="Videos"
                                   control="select"
                                 />
                               </Grid>

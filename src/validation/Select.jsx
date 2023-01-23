@@ -5,11 +5,14 @@ import { Typography, Select, MenuItem, Grid } from "@mui/material";
 
 import { TextError } from "./TextError";
 
-export const Formiks = ({ borderRadius, options, ...rest }) => {
+export const Formiks = ({ borderRadius, placeholder, options, ...rest }) => {
   return (
     <Select
       displayEmpty
       {...rest}
+      renderValue={(value) => (
+        <Typography color="#828484">{value || placeholder}</Typography>
+      )}
       // placeholder={placeholder}
       sx={{
         borderRadius: borderRadius ? borderRadius : "1rem",

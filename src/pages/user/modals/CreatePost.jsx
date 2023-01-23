@@ -6,8 +6,6 @@ import { Formik, Form } from "formik/dist";
 import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";
-
-import { TextError } from "validation/TextError";
 import {
   useCreatePostMutation,
   useEditAPostMutation,
@@ -164,7 +162,6 @@ const CreatePost = ({
             }
           >
             {({ initialValues, isSubmitting, errors }) => {
-              console.log(errors);
               return (
                 <Form style={{ width: "100%" }}>
                   <Grid

@@ -72,6 +72,7 @@ const Notifications = (props) => {
                             value: "Hello",
                           },
                         ]}
+                        placeholder="Email Address"
                         control="select"
                       />
                       <Typography textAlign="justify">

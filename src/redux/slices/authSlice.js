@@ -79,8 +79,8 @@ export const authSlice = api.injectEndpoints({
         url: "user/logout",
         method: "POST",
       }),
-      // transformResponse: (response) => response.body.user,
-      // transformErrorResponse: (error) => error.data.message,
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
   }),
 });

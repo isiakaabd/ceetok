@@ -48,29 +48,6 @@ import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 
-const socialItems = [
-  {
-    link: "",
-    Icon: Facebook,
-  },
-  {
-    link: "",
-    Icon: Instagram,
-  },
-  {
-    link: "",
-    Icon: Twitter,
-  },
-  {
-    link: "",
-    Icon: WhatsApp,
-  },
-  {
-    link: "",
-    Icon: Messenger,
-  },
-];
-
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
     item
@@ -215,7 +192,7 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
 const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
-  const { data: profile } = useUserProfileQuery();
+  const navigate = useNavigate();
   const { data, isLoading, error } = useGetAPostQuery(postId);
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
@@ -385,7 +362,7 @@ const Post = () => {
             item
             container
             alignItems="center"
-            sx={{ mt: 2, paddingInline: { xs: "3rem", md: "6rem" } }}
+            sx={{ mt: 2, paddingInline: { xs: "3rem", md: "4rem" } }}
           >
             <Typography
               variant="span"
@@ -399,13 +376,12 @@ const Post = () => {
                 {views?.slice(0, 50)?.map((item, index) => (
                   <Typography
                     component={Link}
-                    to={`/${index}`}
+                    to={`/user/profile/?id=${item.viewer?.user_id}`}
                     key={index}
                     sx={{ width: "max-content", mr: 0.5 }}
                     color="secondary"
                     fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
                   >
-                    {" "}
                     {item.viewer.full_name},
                   </Typography>
                 ))}

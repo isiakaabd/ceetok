@@ -226,13 +226,13 @@ const ReplyComment = () => {
           sx={{
             mx: "auto",
             background: "#f2f2f2",
-            padding: "3rem",
+            padding: { md: "3rem", xs: "1rem" },
             borderRadius: "2rem",
           }}
           item
           md={8}
           sm={8}
-          xs={6}
+          xs={11}
         >
           <Grid item container flexDirection={"column"}>
             <Grid item container>

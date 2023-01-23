@@ -34,17 +34,17 @@ const pages = [
   },
   {
     id: 1,
-    path: "#",
+    path: "/live",
     title: "Live",
   },
   {
     id: 2,
-    path: "#",
+    path: "/new",
     title: "New",
   },
   {
     id: 3,
-    path: "#",
+    path: "/recent",
     title: "Recent",
   },
   {

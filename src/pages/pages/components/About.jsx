@@ -1,11 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Divider, Grid, Skeleton, Typography } from "@mui/material";
+import { getDate } from "helpers";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 
 const About = (props) => {
+  const { data, isLoading } = useUserProfileQuery();
+
+  if (isLoading) return <Skeleton />;
+  const { dob, gender, interests, createdAt, occupation } = data;
   return (
     <Grid item container sx={{ background: "#fff", p: 2 }}>
-      <Grid item xs={8}>
+      <Grid item md={8} xs={12}>
         <Grid item container gap={4} flexDirection={"column"} sx={{ py: 2 }}>
           {/* Bio */}
           <Grid>
@@ -16,14 +20,14 @@ const About = (props) => {
             >
               Bio
             </Typography>
-            <Grid item container gap={3}>
+            <Grid item container flexDirection="column" gap={3}>
               <Typography
                 fontSize={{ md: "1.7rem", xs: "1.4rem" }}
                 fontWeight={600}
               >
                 DOB:
                 <Typography sx={{ ml: 1 }} variant="span">
-                  15th June, 1997
+                  {dob || "No Data yet"}
                 </Typography>
               </Typography>
               <Typography
@@ -32,7 +36,7 @@ const About = (props) => {
               >
                 Gender:
                 <Typography sx={{ ml: 1 }} variant="span">
-                  Male
+                  {gender || "No Data yet"}
                 </Typography>
               </Typography>
               <Typography
@@ -41,7 +45,7 @@ const About = (props) => {
               >
                 Occupation:
                 <Typography variant="span" sx={{ ml: 1 }}>
-                  Student
+                  {occupation || "No Data yet"}
                 </Typography>
               </Typography>
             </Grid>
@@ -172,7 +176,7 @@ const About = (props) => {
                 sx={{ ml: "auto", fontSize: { md: "1.7rem", xs: "1.4rem" } }}
                 fontWeight={600}
               >
-                05-07-2022
+                {getDate(createdAt) || "No Data yet"}
               </Typography>
             </Grid>
             <Divider />
@@ -187,21 +191,17 @@ const About = (props) => {
             </Typography>
 
             <Divider />
+            {interests.map((interest) => (
+              <Typography
+                color={"secondary"}
+                key={interest}
+                fontWeight={600}
+                fontSize={{ md: "1.7rem", xs: "1.4rem" }}
+              >
+                {interest?.slice(0, 1).toUpperCase() + interest?.slice(1)}
+              </Typography>
+            ))}
 
-            <Typography
-              color={"secondary"}
-              fontWeight={600}
-              fontSize={{ md: "1.7rem", xs: "1.4rem" }}
-            >
-              Entertainment
-            </Typography>
-            <Typography
-              color={"secondary"}
-              fontWeight={600}
-              fontSize={{ md: "1.7rem", xs: "1.4rem" }}
-            >
-              Politics
-            </Typography>
             <Divider />
           </Grid>
 

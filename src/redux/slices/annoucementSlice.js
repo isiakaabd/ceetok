@@ -32,6 +32,15 @@ export const annoucementSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getAnnoucement: builder.query({
+      query: ({ id }) => ({
+        url: `/announcement/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["announcement"],
+      // transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -39,4 +48,5 @@ export const {
   useCreateAnnoucementMutation,
   useGetAnnoucementsQuery,
   useDeleteAnnoucementsMutation,
+  useGetAnnoucementQuery,
 } = annoucementSlice;

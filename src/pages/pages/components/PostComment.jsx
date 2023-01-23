@@ -46,14 +46,21 @@ import {
 import { getDate, getTime } from "helpers";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import { Details } from "../Post";
+import PopOvers from "components/modals/PopOver";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 export const Comment = ({ handleShare, data }) => {
   const { id } = data;
   const navigate = useNavigate();
-
+  console.log(data);
+  const { data: profile } = useUserProfileQuery();
   const [open, setOpen] = useState(false);
+  const checkUser = profile?.id === data?.user_id;
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
+  console.log(profile);
   const anchorRef = useRef(null);
+  const anchorRefs = useRef(null);
+  const [openComment, setOpenComment] = useState(false);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -134,13 +141,24 @@ export const Comment = ({ handleShare, data }) => {
     },
   ];
   const handleDeleteComment = async (id) => {
-    const { data } = await deleteComment({ id });
-
-    if (data) toast.success(data);
+    const { data, error } = await deleteComment({ id });
+    console.log(data);
+    if (data) {
+      toast.success("comment deleted successfully");
+    }
+    if (error) {
+      toast.error(error);
+    }
     handleCloses();
+    console.log(error);
   };
-  console.log(comments);
 
+  const handleClicks = (id) => {
+    navigate({
+      pathname: "/user/profile",
+      search: `?id=${id}`,
+    });
+  };
   return (
     <>
       <Grid
@@ -206,20 +224,22 @@ export const Comment = ({ handleShare, data }) => {
                       ]}
                     />
                   </Grid>
-                  <Grid item>
-                    <IconButton
-                      ref={anchorRef}
-                      id="composition-avatar"
-                      aria-controls={open ? "composition-menu" : undefined}
-                      aria-expanded={open ? "true" : undefined}
-                      aria-haspopup="true"
-                      onClick={handleToggle}
-                    >
-                      <TuneOutlined
-                        sx={{ fontSize: "2.5rem", color: "#fff" }}
-                      />
-                    </IconButton>
-                  </Grid>
+                  {checkUser && (
+                    <Grid item>
+                      <IconButton
+                        ref={anchorRef}
+                        id="composition-avatar"
+                        aria-controls={open ? "composition-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleToggle}
+                      >
+                        <TuneOutlined
+                          sx={{ fontSize: "2.5rem", color: "#fff" }}
+                        />
+                      </IconButton>
+                    </Grid>
+                  )}
                 </Grid>
               </Form>
             </Formik>
@@ -322,8 +342,11 @@ export const Comment = ({ handleShare, data }) => {
         >
           {comments?.length > 0 ? (
             comments?.map((item, index) => {
-              const { avatar, full_name, comment, createdAt, id } = item;
-              console.log(item);
+              const { avatar, full_name, user_id, comment, createdAt, id } =
+                item;
+
+              const check = profile?.id === user_id;
+              console.log(check);
               return (
                 <Grid
                   item
@@ -334,7 +357,12 @@ export const Comment = ({ handleShare, data }) => {
                   gap={2}
                 >
                   <Grid item alignSelf={{ xs: "center", md: "flex-start" }}>
-                    <Avatar alt={full_name} src={avatar}>
+                    <Avatar
+                      alt={full_name}
+                      src={avatar}
+                      onClick={() => handleClicks(user_id)}
+                      sx={{ cursor: "pointer" }}
+                    >
                       {full_name?.slice(0, 1).toUpperCase()}
                     </Avatar>
                   </Grid>
@@ -344,34 +372,43 @@ export const Comment = ({ handleShare, data }) => {
                         item
                         container
                         alignItems="center"
+                        flexWrap="nowrap"
                         justifyContent="space-between"
                       >
                         <Typography
                           fontWeight={700}
                           color="#9B9A9A"
+                          title={full_name}
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            maxWidth: "20ch",
+                          }}
                           fontSize={{ md: "2rem", xs: "1.2rem" }}
                         >
                           {full_name}
-                          <Typography
-                            variant="span"
-                            color="#9B9A9A"
-                            fontWeight={400}
-                            fontSize={{ md: "1.6rem", xs: "1rem" }}
-                          >
-                            {" "}
-                            -{getDate(createdAt)} {getTime(createdAt)}
-                          </Typography>
                         </Typography>
-
-                        <IconButton
-                          id="basic-button"
-                          aria-controls={opens ? "basic-menu" : undefined}
-                          aria-haspopup="true"
-                          aria-expanded={opens ? "true" : undefined}
-                          onClick={handleClick}
+                        <Typography
+                          // variant="span"
+                          color="#9B9A9A"
+                          fontWeight={400}
+                          fontSize={{ md: "1.6rem", xs: "1rem" }}
                         >
-                          <MoreVertOutlined />
-                        </IconButton>
+                          {getDate(createdAt)} - {getTime(createdAt)}
+                        </Typography>
+                        {check && (
+                          <IconButton
+                            id="basic-button"
+                            aria-controls={opens ? "basic-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={opens ? "true" : undefined}
+                            onClick={handleClick}
+                            // sx={{ visibility: !check && "hidden" }}
+                          >
+                            <MoreVertOutlined />
+                          </IconButton>
+                        )}
 
                         <Menu
                           id="basic-menu"
@@ -388,6 +425,8 @@ export const Comment = ({ handleShare, data }) => {
                               display: "flex",
                               alignItems: "center",
                             }}
+                            // disabled={!check}
+                            // disabled={check ? check : false}
                           >
                             <ListItemIcon>
                               <Delete sx={{ fontSize: "2rem" }} />
@@ -407,7 +446,14 @@ export const Comment = ({ handleShare, data }) => {
                         {parse(comment)}
                       </Typography>
                       <Grid item container>
-                        <Details icons={icons} data={item} />
+                        <Details
+                          icons={icons}
+                          data={item}
+                          type="comments"
+                          // de={de}
+                          onClick={handleClick}
+                          setOpenComment={setOpenComment}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -446,6 +492,7 @@ export const Comment = ({ handleShare, data }) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
+                  {/* {user_id !=== profile?.id} */}
                   <MenuItem onClick={() => setEditPostModal(true)}>
                     Edit Topic
                   </MenuItem>
@@ -472,6 +519,34 @@ export const Comment = ({ handleShare, data }) => {
         data={data}
         type="edit"
       />
+
+      {/* <PopOvers
+        anchorRef={anchorRefs}
+        open={openComment}
+        setOpen={setOpenComment}
+      >
+        <Grid item container flexDirection="column" sx={{ px: 1 }}>
+          <Grid item container>
+            <Formik enableReinitialize initialValues={{ comment: "" }}>
+              {({ values }) => (
+                <Form style={{ width: "100%" }}>
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    sx={{ mb: 1 }}
+                    flexWrap={"nowrap"}
+                  >
+                    <Grid item sx={{ mr: -1 }}>
+                      <FormikControl control="input" name="notification" />
+                    </Grid>
+                  </Grid>
+                </Form>
+              )}
+            </Formik>
+          </Grid>
+        </Grid>
+      </PopOvers> */}
     </>
   );
 };

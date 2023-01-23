@@ -16,14 +16,14 @@ import {
   IconButton,
   Typography,
   Skeleton,
-  Menu,
-  MenuItem,
-  Paper,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import FormikControl from "validation/FormikControl";
+import UserProfile from "./UserProfile";
+import images from "assets";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
@@ -32,13 +32,16 @@ import Facebook from "assets/svgs/FacebookIcon";
 import Messenger from "assets/svgs/Messenger";
 import Twitter from "assets/svgs/Twitter";
 import WhatsApp from "assets/svgs/WhatsApp";
-
+import Copy from "assets/svgs/Copy";
+import Save from "assets/svgs/Save";
+import Share from "assets/svgs/Share";
+import Mail from "assets/svgs/Mail";
 import {
   useGetAPostQuery,
+  useDeleteAPostMutation,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,
   useGetViewsQuery,
-  useAddQuoteMutation,
 } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
@@ -46,7 +49,7 @@ import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
-import { useUserProfileQuery } from "redux/slices/authSlice";
+import { useGetAnnoucementQuery } from "redux/slices/annoucementSlice";
 
 const socialItems = [
   {
@@ -81,7 +84,9 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
     // gap={2}
     sx={{
       color,
-      cursor: "pointer",
+      "&:hover": {
+        cursor: "pointer",
+      },
     }}
   >
     <IconButton edge="start" size="small">
@@ -96,127 +101,51 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "1.2rem", xs: ".9rem" },
   fontWeight: 400,
 }));
-export const Details = ({ handleShare, type, data, setOpenComment }) => {
+export const Details = ({ handleShare, data }) => {
   const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
   const [likePost] = useLikeAndUnlikePostMutation();
-  const [open, setOpen] = useState(false);
-
   const { data: numberOfLikes } = useGetLikesQuery({
     type: "posts",
     parentId: data?.id,
   });
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const open = Boolean(anchorEl);
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+
   const handleLikePost = async () => {
     const { data: dt } = await likePost({
-      parent_type: type ? type : "posts",
+      parent_type: "posts",
       parent_id: data?.id,
     });
     console.log(dt);
-    if (dt) setLikeState(!likeState);
+    setLikeState(!likeState);
   };
-  const [quote, { isLoading }] = usePostCommentMutation();
-  const { data: dttt } = useGetAPostQuery(
-    "304505c29-6170-4ea6-9c01-96b46402835d"
-  );
-
-  const handleSubmit = async (values) => {
-    const { data: dt, error } = await quote({
-      parent_type: "comments",
-      parent_id: data?.id,
-      comment: values.comment,
-    });
-    console.log(dt, error);
-  };
-  // const de = {
-  //   id: "basic-button",
-  //   ariaControls: open ? "basic-menu" : undefined,
-  //   ariaHpopup: "true",
-  //   ariaExpanded: open ? "true" : undefined,
-  // };
-  const validationSchema = Yup.object({
-    comment: Yup.string("Enter Comment").required("Required"),
-  });
   return (
-    <>
-      <Grid item container justifyContent="space-between" flexWrap="nowrap">
-        <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
-          <StyledButton
-            text="Reply"
-            // {...de}
-            onClick={type === "comments" ? () => setOpen(true) : null}
-            Icon={<ReplyOutlined />}
-          />
-          {/* <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          sx={{ width: "100%" }}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <Grid item xs={4}>
-            <Paper>
-              <Formik initialValues={{ text: "" }}>
-                <Form>
-                  <Editor name="text" placeholder="Write comment" />
-                </Form>
-              </Formik>
-            </Paper>
-          </Grid>
-        </Menu> */}
-          <StyledButton
-            onClick={handleLikePost}
-            color={likeState ? "#f00" : ""}
-            Icon={
-              likeState ? (
-                <Favorite sx={{ fill: "#f00" }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )
-            }
-            text="Like"
-          />
+    <Grid item container justifyContent="space-between" flexWrap="nowrap">
+      <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
+        <StyledButton text="Reply" Icon={<ReplyOutlined />} />
+        <StyledButton
+          onClick={handleLikePost}
+          color={likeState ? "#f00" : ""}
+          Icon={
+            likeState ? (
+              <Favorite sx={{ fill: "#f00" }} />
+            ) : (
+              <FavoriteBorderOutlined />
+            )
+          }
+          text="Like"
+        />
 
-          <StyledButton text="Share" Icon={<IosShareOutlined />} />
-          <StyledButton text="Report" Icon={<ReportOutlined />} />
-        </Grid>
+        <StyledButton text="Share" Icon={<IosShareOutlined />} />
+        <StyledButton text="Report" Icon={<ReportOutlined />} />
       </Grid>
-
-      <NotificationModal isOpen={open} handleClose={() => setOpen(false)}>
-        <Formik
-          initialValues={{ comment: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form>
-            <Editor name="comment" placeholder={"Enter Comment.."} />
-            <Grid item sx={{ mt: 2 }}>
-              <CustomButton
-                isSubmitting={isLoading}
-                title="Reply"
-                type="submit"
-              />
-            </Grid>
-          </Form>
-        </Formik>
-      </NotificationModal>
-    </>
+    </Grid>
   );
 };
-const Post = () => {
-  const { postId } = useParams();
+const SingleAnnoucement = () => {
+  const { id } = useParams();
+
   const [state, setState] = useState(true);
-  const { data: profile } = useUserProfileQuery();
-  const { data, isLoading, error } = useGetAPostQuery(postId);
+  const { data, isLoading, error } = useGetAnnoucementQuery({ id });
+  console.log(data);
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
   });
@@ -431,4 +360,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default SingleAnnoucement;

@@ -7,9 +7,12 @@ import Modals from "components/Modal";
 import CreatePassword from "./CreatePassword";
 import { CustomButton } from "components";
 import NotificationModal from "./NotificationModal";
+import { useSearchParams } from "react-router-dom";
 
 const ConfirmMail = ({ isOpen, handleClose }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showCreatePassword, setShowCreatePassword] = useState(false);
+  const email = searchParams.get("email");
   return (
     <>
       <NotificationModal isOpen={isOpen} handleClose={handleClose}>
@@ -60,8 +63,13 @@ const ConfirmMail = ({ isOpen, handleClose }) => {
               sx={{ mt: 2 }}
             >
               <CustomButton
-                title=" Email confirmed"
-                onClick={() => setShowCreatePassword(true)}
+                title="Open Mail"
+                onClick={() => {
+                  window.open(`mailto:${email}`);
+                  handleClose();
+                  searchParams.delete(email);
+                  // setShowCreatePassword(true)}
+                }}
               />
             </Grid>
           </Grid>

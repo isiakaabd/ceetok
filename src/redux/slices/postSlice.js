@@ -102,6 +102,16 @@ export const postSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.views,
       // transformErrorResponse: (error) => error.data.message,
     }),
+    addQuote: builder.mutation({
+      query: (body) => ({
+        url: "quote",
+        method: "POST",
+        body,
+      }),
+      providesTags: ["post"],
+      // transformResponse: (response) => response.body.views,
+      // transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -110,6 +120,7 @@ export const {
   useGetPostQuery,
   useAddImageMutation,
   useGetAPostQuery,
+  useAddQuoteMutation,
   useDeleteAPostMutation,
   useEditAPostMutation,
   useGetCategoriesQuery,

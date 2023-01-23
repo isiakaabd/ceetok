@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getUserDetails, logOut } from "../reducers/authReducer";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://3.80.211.23:5050",
+  baseUrl: "https://api.ceetok.live",
 
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;

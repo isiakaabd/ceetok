@@ -12,15 +12,21 @@ import AllFriend from "pages/pages/components/AllFriend";
 import Entertainment from "pages/Entertainment";
 import CreatePost from "pages/pages/CreatePost";
 import CreateAnnoucement from "pages/pages/CreateAnnoucement";
+import SingleAnnoucement from "pages/pages/SingleAnnoucement";
+import ResetPassword from "components/modals/ResetPassword";
+import NewPassword from "components/modals/NewPassword";
 
 const App = () => {
   return (
     <ThemeProvider theme={muiTheme}>
-      <div className="container">
-        <BrowserRouter>
+      <BrowserRouter>
+        <div className="container">
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
+
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/new-password" element={<NewPassword />} />
             <Route path="/post" element={<PrivateRoute />}>
               <Route path=":postId" element={<Post />} />
               <Route path="" element={<Entertainment />} />
@@ -37,6 +43,7 @@ const App = () => {
                 element={<CreateAnnoucement />}
               />
               <Route path="annoucement" element={<Announcement />} />
+              <Route path="annoucement/:id" element={<SingleAnnoucement />} />
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
             </Route>
@@ -45,8 +52,8 @@ const App = () => {
           <div style={{ marginTop: "auto" }}>
             <Footer />
           </div>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     </ThemeProvider>
   );
 };

@@ -37,6 +37,7 @@ const Media = (props) => {
           .fill(undefined)
           .map((item, index) => (
             <Avatar
+              key={index}
               src={images.image04}
               sx={{ height: "8rem", width: "10rem", objectFit: "contain" }}
               variant="square"

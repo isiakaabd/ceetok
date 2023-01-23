@@ -21,7 +21,7 @@ const UserProfile = ({ data }) => {
     createdAt,
     likes_count,
     get_notifications,
-    user: { full_name, email, avatar },
+    user: { full_name, email, avatar, username },
   } = data;
   return (
     <>
@@ -38,7 +38,6 @@ const UserProfile = ({ data }) => {
         }}
       >
         <Grid item>
-          {/* <Grid container alignItems="center" justifyContent="center"> */}
           <Avatar sx={{ alignItems: "center" }} alt={avatar}>
             {full_name.slice(0, 1).toUpperCase()}
           </Avatar>
@@ -48,7 +47,7 @@ const UserProfile = ({ data }) => {
           <Grid
             container
             flexWrap="nowrap"
-            flexDirection={{ md: "column", xs: "row" }}
+            flexDirection={{ md: "column", xs: "row", sm: "column" }}
           >
             <Grid item>
               <Typography
@@ -59,7 +58,7 @@ const UserProfile = ({ data }) => {
                   fontWeight: 600,
                 }}
               >
-                Posted by {email.split("@")[0]}{" "}
+                Posted by {username || email.split("@")[0]}{" "}
               </Typography>
               <Typography
                 color="secondary"
@@ -70,7 +69,7 @@ const UserProfile = ({ data }) => {
               </Typography>
             </Grid>
             <Grid item flex={1}>
-              <Grid container gap={{ md: 2, sm: 1.5, xs: 1.2 }}>
+              <Grid container gap={{ md: 2, sm: 1, xs: 1.2 }}>
                 <Grid item>
                   <Grid container alignItems="center">
                     <IconButton>

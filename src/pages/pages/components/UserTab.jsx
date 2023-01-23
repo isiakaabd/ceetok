@@ -58,7 +58,12 @@ function UserTab() {
   };
 
   return (
-    <Box sx={{ width: "100%", background: "#fff", borderRadius: "2rem" }}>
+    <Box
+      sx={{
+        width: "100%",
+        borderRadius: "2rem",
+      }}
+    >
       <Box>
         <StyledTabs
           scrollButtons={true}

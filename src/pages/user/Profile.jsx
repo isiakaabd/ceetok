@@ -18,21 +18,37 @@ const Profile = () => {
       }}
     >
       <Grid item container flexDirection="column">
-        <Grid flex={1} sx={{ py: 1, display: { xs: "none", md: "block" } }}>
-          <IconButton>
-            <ArrowBack sx={{ fontSize: "3rem" }} />
-          </IconButton>
+        <Grid item>
+          <Grid container sx={{ py: 1, display: { xs: "none", md: "block" } }}>
+            <IconButton>
+              <ArrowBack sx={{ fontSize: "3rem" }} />
+            </IconButton>
+          </Grid>
         </Grid>
         <Grid
           item
           container
           justifyContent={"space-between"}
-          sx={{ mb: 3, flexDirection: { md: "row", xs: "column" } }}
+          sx={{
+            mb: 3,
+            flexDirection: { md: "row", xs: "column" },
+            // height: "100%",
+          }}
         >
-          <Grid item md={3} sx={{ mt: { xs: 2 } }} xs={12} flex={{ xs: 1 }}>
+          <Grid item md={3} xs={12} flex={{ xs: 1 }}>
             <ProfileDetails />
           </Grid>
-          <Grid item xs={12} md={8.5} flex={{ xs: 1 }}>
+          <Grid
+            item
+            xs={12}
+            md={8.5}
+            flex={{ xs: 1 }}
+            sx={{
+              height: "100%",
+              background: "#fff",
+              borderRadius: "0 0 2rem 2rem",
+            }}
+          >
             <UserTab />
           </Grid>
         </Grid>

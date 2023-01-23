@@ -1,14 +1,20 @@
 import { useEffect } from "react";
 import { Grid, Typography } from "@mui/material";
 import { useQuill } from "react-quilljs";
-
+import hljs from "highlight.js";
 import "quill/dist/quill.snow.css"; // Add css for snow theme
 // or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
 import { useFormikContext } from "formik/dist";
 import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
 const Editor = ({ theme, name, placeholder, value }) => {
+  hljs.configure({
+    languages: ["javascript", "ruby", "python", "rust"],
+  });
   const modules = {
+    syntax: {
+      highlight: (text) => hljs.highlightAuto(text).value,
+    },
     toolbar: [
       ["bold", "italic", "underline", "strike"],
       [{ align: [] }],
@@ -19,14 +25,13 @@ const Editor = ({ theme, name, placeholder, value }) => {
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
       ["link", "image", "video", "code-block", "script"],
       ["script", "underline", "align"],
-      [{ color: ["#fff", "#f00"] }, { background: [] }],
+      [{ color: ["#37D42A", "#fff", "#f00"] }, { background: [] }],
 
       ["clean"],
     ],
     clipboard: {
       matchVisual: false,
     },
-    syntax: true,
   };
 
   const formats = [
@@ -55,8 +60,8 @@ const Editor = ({ theme, name, placeholder, value }) => {
     modules,
     placeholder,
   });
-  console.log(quill);
-  const { setFieldValue, errors } = useFormikContext();
+
+  const { setFieldValue, errors, values } = useFormikContext();
   const [uploadImage, { isLoading }] = useAddImageMutation();
   // const theme = 'bubble';
 
@@ -106,6 +111,11 @@ const Editor = ({ theme, name, placeholder, value }) => {
       quill.clipboard.dangerouslyPasteHTML(value);
     }
   }, [value, quill]);
+  useEffect(() => {
+    if (quill && !values[name]) {
+      quill.setContents([{ insert: "\n" }]);
+    }
+  }, [values, quill, name]);
   useEffect(() => {
     if (quill) {
       // Add custom handler for Image Upload

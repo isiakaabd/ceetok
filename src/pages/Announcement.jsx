@@ -16,6 +16,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   ChatBubbleOutline,
   Delete,
+  Edit,
   FavoriteBorder,
   FavoriteBorderOutlined,
   FavoriteBorderRounded,
@@ -38,6 +39,7 @@ import {
 } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
+import { Link, useNavigate } from "react-router-dom";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -97,7 +99,7 @@ const Shares = ({ data: item }) => {
   };
 
   const [deleteAnnoucement, { isLoading }] = useDeleteAnnoucementsMutation();
-
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -113,6 +115,7 @@ const Shares = ({ data: item }) => {
     handleCloses();
     if (error) toast.error(error);
   };
+  const [editModal, setEditModal] = useState(false);
   return (
     <>
       <Grid
@@ -125,10 +128,13 @@ const Shares = ({ data: item }) => {
       >
         <Grid item>
           <Grid container alignItems="center" sx={{ cursor: "pointer" }}>
-            {/* <IconButton edge="start"> */}
-            <ChatBubbleOutline />
-            {/* </IconButton> */}
-            <Typography variant="span" sx={{ ml: 1 }}>
+            <IconButton
+              edge="start"
+              onClick={() => navigate(`/user/annoucement/${item.slug}`)}
+            >
+              <ChatBubbleOutline />
+            </IconButton>
+            <Typography variant="span" sx={{ fontSize: "2rem" }}>
               {item?.comments_count}
             </Typography>
           </Grid>
@@ -141,7 +147,7 @@ const Shares = ({ data: item }) => {
             sx={{ cursor: "pointer", color: item?.liked && "red" }}
           >
             {!item?.liked ? <FavoriteBorderOutlined /> : <FavoriteIcon />}
-            <Typography variant="span" sx={{ ml: 1 }}>
+            <Typography variant="span" sx={{ ml: 1, fontSize: "2rem" }}>
               {item?.likes_count}
             </Typography>
           </Grid>
@@ -189,11 +195,31 @@ const Shares = ({ data: item }) => {
               {isLoading ? "Deleting" : "Delete"}
             </ListItemText>
           </MenuItem>
+          <MenuItem
+            onClick={() => setEditModal(true)}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <ListItemIcon>
+              <Edit sx={{ fontSize: "2rem" }} />
+            </ListItemIcon>
+            <ListItemText sx={{ fontSize: "3rem" }}>
+              Edit Annoucement
+            </ListItemText>
+          </MenuItem>
         </Menu>
       </Grid>
+
       <SocialMedia
         open={openShareModal}
         handleClose={() => setOpenShareModal(false)}
+      />
+      <CreatePost
+        open={editModal}
+        postHeading={"Edit Annoucment"}
+        handleClose={() => setEditModal(true)}
       />
     </>
   );

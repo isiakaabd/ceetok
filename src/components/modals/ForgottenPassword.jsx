@@ -10,19 +10,24 @@ import NotificationModal from "./NotificationModal";
 import * as Yup from "yup";
 import { useForgotPasswordMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
+import { useNavigate, useSearchParams } from "react-router-dom";
 const ForgottenPassword = ({ isOpen, handleClose, handleParentModalClose }) => {
   const [showConfirmMail, setShowConfirmMail] = useState(false);
   const [resetPassword, { isLoading }] = useForgotPasswordMutation();
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const navigate= useNavigate()
   const handleSubmit = async (values) => {
     console.log(values);
 
     const { data, error } = await resetPassword({ email: values.email });
-    console.log(data, error);
-    //  onClick={() => {
-    // handleClose();
+
     if (data) {
+      toast.success(data);
+      // setSearchParams(`email=${values?.email.toString()}`);
       setTimeout(() => {
-        setShowConfirmMail(true);
+        // navigate("/auth/rese")
+        // setShowConfirmMail(true);
+        handleClose();
       }, 3000);
     }
     if (error) toast.error(error);
@@ -65,7 +70,19 @@ const ForgottenPassword = ({ isOpen, handleClose, handleParentModalClose }) => {
                 textAlign: "center",
               }}
             >
-              Enter the mail you used in creating this account
+              Enter the mail you used in creating this account.
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { md: "1.7rem", sm: "1.5rem" },
+                color: "#9B9A9A",
+                fontWeight: 500,
+                textAlign: "center",
+              }}
+            >
+              Please check your inbox to find the e-mail to complete the
+              process. Please check your spam folder if you cannot find it in
+              your inbox.{" "}
             </Typography>
             <Formik
               enableReinitialize

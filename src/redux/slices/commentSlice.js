@@ -30,8 +30,8 @@ export const commentSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["comment"],
-      transformResponse: (response) => response.message.data,
-      // transformErrorResponse: (error) => error.data.message,
+      // transformResponse: (response) => response.message.data,
+      transformErrorResponse: (error) => error.data.message,
     }),
   }),
 });

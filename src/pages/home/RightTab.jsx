@@ -1,4 +1,4 @@
-import { Grid, Button, List } from "@mui/material";
+import { Grid, Button, List, Skeleton, Typography } from "@mui/material";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useState } from "react";
 
@@ -15,8 +15,8 @@ const RightTab = ({ setCreatePost }) => {
   const [register, setRegister] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const loginStatus = useSelector((state) => state.auth.token);
-  const { data: posts, error } = useGetPostQuery("");
-  console.log(posts, error);
+  const { data: array, error, isLoading } = useGetPostQuery("");
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -31,15 +31,9 @@ const RightTab = ({ setCreatePost }) => {
       setCreatePost(true);
     }
   };
-  const array =
-    posts?.length > 0
-      ? posts
-      : Array(20).fill({
-          title:
-            "Obi campaign shutsdown Kaduna and path ways for North Eastern Collaboration",
-          category: "Politics",
-        });
 
+  if (isLoading) return <Skeleton />;
+  if (error) return <p>Something went wrong...</p>;
   return (
     <>
       <Grid
@@ -209,24 +203,28 @@ const RightTab = ({ setCreatePost }) => {
         </Select> */}
         </Grid>
         <Grid item container>
-          <List
-            sx={{
-              maxHeight: "100%",
-              overflowY: "scroll",
-              width: "100%",
-              "&::-webkit-scrollbar": {
-                width: ".85rem",
-                display: "none",
-                background: "green",
-              },
-            }}
-            xs={12}
-          >
-            {/* {posts.length > 0 ? ( */}
-            {array.map((post, index) => {
-              return <SinglePosts key={index} index={index} post={post} />;
-            })}
-          </List>
+          {array.length > 0 ? (
+            <List
+              sx={{
+                maxHeight: "100%",
+                overflowY: "scroll",
+                width: "100%",
+                "&::-webkit-scrollbar": {
+                  width: ".85rem",
+                  display: "none",
+                  background: "green",
+                },
+              }}
+              xs={12}
+            >
+              {/* {posts.length > 0 ? ( */}
+              {array.map((post, index) => {
+                return <SinglePosts key={index} index={index} post={post} />;
+              })}
+            </List>
+          ) : (
+            <Typography variant="h2">No Data yet</Typography>
+          )}
         </Grid>
       </Grid>
       {register && (

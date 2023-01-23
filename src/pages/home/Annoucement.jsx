@@ -8,12 +8,10 @@ import {
   ListItemButton,
 } from "@mui/material";
 import { useState } from "react";
-import images from "assets";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CreatePost from "pages/user/modals/CreatePost";
 import AnnoucementIcon from "assets/svgs/AnnoucementIcon";
 import { CustomButton } from "components";
-import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 import { useGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
 import { getDate, getTime } from "helpers";
 const Annoucement = () => {

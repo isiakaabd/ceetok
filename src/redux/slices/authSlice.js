@@ -23,6 +23,25 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    recoverToken: builder.mutation({
+      query: (body) => ({
+        url: "/auth/validate-recover-token",
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    resetPassword: builder.mutation({
+      query: (body) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+      transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
     userProfile: builder.query({
@@ -34,14 +53,25 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
+    otherUserProfile: builder.query({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "GET",
+      }),
+      transformResponse: (response) => response.body.user,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     userProfileUpdate: builder.mutation({
       query: (body) => ({
         url: "/user/edit",
         method: "PATCH",
-        body: JSON.stringify(body),
+        body,
+        headers: (headers) =>
+          headers.append("Content-type", "multipart/form-data"),
       }),
+
       // transformResponse: (response) => response.body.user,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
 
     logout: builder.mutation({
@@ -61,5 +91,8 @@ export const {
   useForgotPasswordMutation,
   useUserProfileQuery,
   useLogoutMutation,
+  useOtherUserProfileQuery,
+  useResetPasswordMutation,
   useUserProfileUpdateMutation,
+  useRecoverTokenMutation,
 } = authSlice;

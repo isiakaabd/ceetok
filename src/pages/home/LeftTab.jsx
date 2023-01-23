@@ -16,7 +16,6 @@ import { useGetCategoriesQuery } from "redux/slices/postSlice";
 const LeftTab = () => {
   const loginStatus = useSelector((state) => state.auth.token);
   const { data: categories } = useGetCategoriesQuery();
-  console.log(categories);
   const navigate = useNavigate();
   return (
     <Grid

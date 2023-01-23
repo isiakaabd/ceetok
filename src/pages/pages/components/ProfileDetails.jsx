@@ -7,16 +7,6 @@ import {
   Grid,
   IconButton,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemText,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
   Typography,
   Skeleton,
 } from "@mui/material";
@@ -26,13 +16,18 @@ import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
 import SettingsIcon from "assets/svgs/Settings";
 import { SettingsOutlined } from "@mui/icons-material";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
-import { useUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useOtherUserProfileQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 import { getDate } from "helpers";
 import VerifyPage from "components/modals/VerifyPage";
 
 const ProfileDetails = (props) => {
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
   const CustomTypography = styled(Typography)(({ theme }) => ({
     fontSize: "1.7rem",
     fontWeight: 700,
@@ -46,12 +41,26 @@ const ProfileDetails = (props) => {
       textAlign: "center",
     })
   );
-  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
-  if (isLoading) return <Skeleton />;
+  const [state, setState] = useState(userProfile);
+  const { data: dt, isLoading: loading } = useOtherUserProfileQuery(id);
+  console.log(dt);
+  const condition = !id || dt?.id === userProfile?.id;
+  // console.log(userProfile.id, dt.id);
+  useEffect(() => {
+    if (id) {
+      setState(dt);
+    } else {
+      setState(userProfile);
+    }
+    //eslint-disable-next-line
+  }, [userProfile, dt, id]);
+  console.log(state, "state");
+  if (isLoading && loading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
-  const { full_name, email, avatar, username, createdAt } = userProfile;
+  // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
     <>
       <Grid
@@ -69,10 +78,10 @@ const ProfileDetails = (props) => {
       >
         <Grid item container flexDirection="column">
           <Grid item container flexDirection="column" alignItems="center">
-            <ProfileImage avatar={avatar} name={full_name} />
+            <ProfileImage avatar={state?.avatar} name={state?.full_name} />
             <Grid item container justifyContent="center" alignItems="center">
-              <Typography fontWeight={700} fontSize="2.2rem" sx={{ mr: 1 }}>
-                {full_name}
+              <Typography fontWeight={700} fontSize="2.2rem">
+                {state?.full_name}
               </Typography>
               <div
                 style={{
@@ -84,28 +93,30 @@ const ProfileDetails = (props) => {
               />
             </Grid>
             <Typography color="#9B9A9A" fontWeight={500} fontSize="1.7rem">
-              {email}
+              {state?.email}
             </Typography>
             <Grid item>
               <Grid item container gap={2} alignItems="center">
                 <Typography color="#9B9A9A" fontWeight={500} fontSize="1rem">
-                  {username || "Not Available"}
+                  {state?.username || "Not Available"}
                 </Typography>
-                <Grid item>
-                  <Grid container alignItems="center">
-                    <Typography
-                      color="#9B9A9A"
-                      // variant="span"
-                      fontWeight={500}
-                      fontSize="1rem"
-                    >
-                      Edit
-                    </Typography>{" "}
-                    <IconButton onClick={() => setOpen(true)}>
-                      <Pen sx={{ color: "#9B9A9A", fontSize: "1rem" }} />
-                    </IconButton>
+                {condition && (
+                  <Grid item>
+                    <Grid container alignItems="center">
+                      <Typography
+                        color="#9B9A9A"
+                        // variant="span"
+                        fontWeight={500}
+                        fontSize="1rem"
+                      >
+                        Edit
+                      </Typography>{" "}
+                      <IconButton onClick={() => setOpen(true)}>
+                        <Pen sx={{ color: "#9B9A9A", fontSize: "1rem" }} />
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -139,49 +150,54 @@ const ProfileDetails = (props) => {
               Last Activity: Today, 03:04pm
             </CustomSubTypography>
             <CustomSubTypography fontSize="1.4rem !important">
-              Joined: {getDate(createdAt)}
+              Joined: {getDate(state?.createdAt)}
             </CustomSubTypography>
             <CustomSubTypography fontSize="1.4rem !important">
-              Location: Lagos Mainland
+              Location: {state?.location || "No Location yet"}
             </CustomSubTypography>
           </Grid>
 
-          <Grid
-            item
-            container
-            alignItems="center"
-            justifyContent="center"
-            sx={{ p: 2 }}
-          >
-            <CustomButton
-              component={Link}
-              width="12rem"
-              fontSize={{ md: "1.6rem", xs: "1.6rem" }}
-              title={" Update Settings"}
-              to={"/user/settings"}
-            />
-          </Grid>
+          {condition && (
+            <Grid
+              item
+              container
+              alignItems="center"
+              justifyContent="center"
+              sx={{ p: 2 }}
+            >
+              <CustomButton
+                component={Link}
+                width="12rem"
+                fontSize={{ md: "1.6rem", xs: "1.6rem" }}
+                title={" Update Settings"}
+                to={"/user/settings"}
+              />
+            </Grid>
+          )}
         </Grid>
         <Divider inset sx={{ border: "1px solid #9B9A9A" }} />
-
-        <Grid item container alignItems="center" sx={{ mt: 4, p: 2 }}>
-          <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
-            Friend List
-          </Typography>
-          <CustomButton
-            title={"See All"}
-            component={Link}
-            to="/user/all-friends"
-            fontSize={{ md: "1.6rem", xs: "1.6rem" }}
-          />
-        </Grid>
-        <List sx={{ wdith: "100%", p: 2 }}>
-          {Array(10)
-            .fill(undefined)
-            .map((item) => (
-              <ProfileItem profile={item} />
-            ))}
-        </List>
+        {condition && (
+          <>
+            <Grid item container alignItems="center" sx={{ mt: 4, p: 2 }}>
+              <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
+                Friend List
+              </Typography>
+              <CustomButton
+                title={"See All"}
+                component={Link}
+                to="/user/all-friends"
+                fontSize={{ md: "1.6rem", xs: "1.6rem" }}
+              />
+            </Grid>
+            <List sx={{ wdith: "100%", p: 2 }}>
+              {Array(10)
+                .fill(undefined)
+                .map((item) => (
+                  <ProfileItem profile={item} />
+                ))}
+            </List>
+          </>
+        )}
       </Grid>
 
       <VerifyPage isOpen={open} handleClose={() => setOpen(false)} />

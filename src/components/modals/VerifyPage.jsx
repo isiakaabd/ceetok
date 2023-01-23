@@ -19,6 +19,7 @@ import {
 } from "redux/slices/authSlice";
 import * as Yup from "yup";
 import { TextError } from "validation/TextError";
+import { toast } from "react-toastify";
 const VerifyPage = ({ isOpen, handleClose }) => {
   const likes = [
     "entertainment",
@@ -50,27 +51,30 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     color: "#37D42A",
   };
   const { data: profile, isLoading } = useUserProfileQuery();
+  console.log(profile);
   const [updateProfile, { isLoading: loading }] =
     useUserProfileUpdateMutation();
   const validationSchema = Yup.object({
-    username: Yup.string("Enter Username").required("Required"),
-    location: Yup.string("Enter location").required("Required"),
-    dob: Yup.string("Enter DOB").required("Required"),
-    gender: Yup.string("Enter DOB").required("Required"),
-    full_name: Yup.string("Enter  full Name").required("Required"),
+    username: Yup.string("Enter Username"),
+    location: Yup.string("Enter location"),
+    dob: Yup.string("Enter DOB"),
+    gender: Yup.string("Enter DOB"),
+    full_name: Yup.string("Enter  full Name"),
     interests: Yup.array().min(3, "At least 3").required("Required"),
   });
   const handleSubmit = async (values) => {
+    console.log(values);
     const { dob, location, interests, full_name, gender, username } = values;
-    const res = await updateProfile({
+    const { data, error } = await updateProfile({
       dob,
       location,
       interests,
       full_name,
       gender,
       username,
-    });
-    console.log(res);
+    }).unwrap();
+    if (error) toast.error(error);
+    console.log(data, error);
   };
 
   if (isLoading) return <Skeleton />;
@@ -146,13 +150,13 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                   <Grid
                     item
                     justifyContent="center"
-                    alignItems={{ xs: "flex-end" }}
+                    alignItems={{ xs: "flex-start" }}
                     container
                     // xs={2}
                     sx={{
                       height: "100%",
                       gridColumn: "1/2",
-                      gridRow: { md: "1/3", xs: "1/2" },
+                      gridRow: { md: "1/2", xs: "1/2" },
                     }}
                   >
                     <Grid item>
@@ -193,7 +197,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                       sx={{ color: "#464646" }}
                     >
                       <Typography
-                        sx={{ fontSize: { md: "2.8rem", xs: "1.5rem" } }}
+                        sx={{ fontSize: { md: "2rem", xs: "1.5rem" } }}
                       >
                         {full_name}
                       </Typography>
@@ -224,7 +228,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                     item
                     container
                     sx={{ mt: 2 }}
-                    gridColumn={{ md: "2/3", xs: "1/3" }}
+                    gridColumn={{ md: "1/3", xs: "1/3" }}
                     gridRow="2/3"
                   >
                     <Grid item container gap={2} flexDirection="column">

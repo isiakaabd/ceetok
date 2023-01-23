@@ -3,42 +3,23 @@ import {
   FavoriteBorderOutlined,
   Favorite,
   IosShareOutlined,
-  Instagram,
   ReplyOutlined,
-  ReportOutlined,
 } from "@mui/icons-material";
-import parse from "html-react-parser";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Grid,
-  IconButton,
-  Typography,
-  Skeleton,
-  Menu,
-  MenuItem,
-  Paper,
-} from "@mui/material";
+import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
 import NotificationModal from "components/modals/NotificationModal";
-import Facebook from "assets/svgs/FacebookIcon";
-import Messenger from "assets/svgs/Messenger";
-import Twitter from "assets/svgs/Twitter";
-import WhatsApp from "assets/svgs/WhatsApp";
 
 import {
   useGetAPostQuery,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,
   useGetViewsQuery,
-  useAddQuoteMutation,
 } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
@@ -82,26 +63,16 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
     type: "posts",
     parentId: data?.id,
   });
-  // const [anchorEl, setAnchorEl] = React.useState(null);
-  // const open = Boolean(anchorEl);
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+
   const handleLikePost = async () => {
     const { data: dt } = await likePost({
       parent_type: type ? type : "posts",
       parent_id: data?.id,
     });
-    console.log(dt);
+
     if (dt) setLikeState(!likeState);
   };
   const [quote, { isLoading }] = usePostCommentMutation();
-  const { data: dttt } = useGetAPostQuery(
-    "304505c29-6170-4ea6-9c01-96b46402835d"
-  );
 
   const handleSubmit = async (values) => {
     const { data: dt, error } = await quote({
@@ -111,12 +82,7 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
     });
     console.log(dt, error);
   };
-  // const de = {
-  //   id: "basic-button",
-  //   ariaControls: open ? "basic-menu" : undefined,
-  //   ariaHpopup: "true",
-  //   ariaExpanded: open ? "true" : undefined,
-  // };
+
   const validationSchema = Yup.object({
     comment: Yup.string("Enter Comment").required("Required"),
   });
@@ -130,26 +96,7 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
             onClick={type === "comments" ? () => setOpen(true) : null}
             Icon={<ReplyOutlined />}
           />
-          {/* <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          sx={{ width: "100%" }}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <Grid item xs={4}>
-            <Paper>
-              <Formik initialValues={{ text: "" }}>
-                <Form>
-                  <Editor name="text" placeholder="Write comment" />
-                </Form>
-              </Formik>
-            </Paper>
-          </Grid>
-        </Menu> */}
+
           <StyledButton
             onClick={handleLikePost}
             color={likeState ? "#f00" : ""}
@@ -164,7 +111,6 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
           />
 
           <StyledButton text="Share" Icon={<IosShareOutlined />} />
-          <StyledButton text="Report" Icon={<ReportOutlined />} />
         </Grid>
       </Grid>
 
@@ -192,7 +138,6 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
 const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
-  const navigate = useNavigate();
   const { data, isLoading, error } = useGetAPostQuery(postId);
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),

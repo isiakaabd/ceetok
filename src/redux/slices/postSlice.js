@@ -13,9 +13,11 @@ export const postSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     getPost: builder.query({
-      query: ({ category }) => ({
-        url: `post/${
-          category ? `?category=${category}&limit=10&offset=0` : ""
+      query: ({ category, offset }) => ({
+        url: `post${
+          category
+            ? `/?category=${category}&limit=10&offset=0`
+            : `?limit=20&offset=${offset ? offset : 0}`
         }`,
         method: "GET",
       }),
@@ -80,7 +82,7 @@ export const postSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["post", "announcement"],
+      invalidatesTags: ["post", "announcement", "comment"],
       // transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -100,7 +102,7 @@ export const postSlice = api.injectEndpoints({
       }),
       providesTags: ["post"],
       transformResponse: (response) => response.body.views,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
     addQuote: builder.mutation({
       query: (body) => ({

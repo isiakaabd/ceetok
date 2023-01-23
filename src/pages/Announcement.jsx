@@ -17,9 +17,7 @@ import {
   ChatBubbleOutline,
   Delete,
   Edit,
-  FavoriteBorder,
   FavoriteBorderOutlined,
-  FavoriteBorderRounded,
   FilterList,
   IosShareOutlined,
 } from "@mui/icons-material";
@@ -33,10 +31,7 @@ import {
   useDeleteAnnoucementsMutation,
   useGetAnnoucementsQuery,
 } from "redux/slices/annoucementSlice";
-import {
-  useDeleteAPostMutation,
-  useLikeAndUnlikePostMutation,
-} from "redux/slices/postSlice";
+import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
 import { Link, useNavigate } from "react-router-dom";

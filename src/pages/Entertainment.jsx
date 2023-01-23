@@ -33,7 +33,7 @@ const Entertainment = () => {
   const { data: array, isLoading } = useGetPostQuery({
     category: params.toLowerCase(),
   });
-  console.log(array);
+
   // const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const [createPostModal, setCreatePostModal] = useState(false);
   if (isLoading) return <Skeleton />;
@@ -145,9 +145,7 @@ const Entertainment = () => {
             {array?.length > 0 && (
               <Grid item container sx={{ p: 3 }}>
                 {array.slice(0, 50).map((item, index) => {
-                  console.log(item.recent_views);
                   return item.recent_views.map((numbers) => {
-                    console.log(numbers);
                     return (
                       //  numbers?.viewer.map((view) => (
                       <Typography

@@ -28,6 +28,7 @@ import {
   Typography,
   ListItemIcon,
   ListItemText,
+  List,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState, useEffect, useRef } from "react";
@@ -46,32 +47,21 @@ import {
 import { getDate, getTime } from "helpers";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import { Details } from "../Post";
-import PopOvers from "components/modals/PopOver";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import SingleComment from "./SingleComment";
 export const Comment = ({ handleShare, data }) => {
   const { id } = data;
   const navigate = useNavigate();
-  console.log(data);
+
   const { data: profile } = useUserProfileQuery();
-  const [open, setOpen] = useState(false);
   const checkUser = profile?.id === data?.user_id;
+  const [open, setOpen] = useState(false);
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
-  console.log(profile);
   const anchorRef = useRef(null);
-  const anchorRefs = useRef(null);
-  const [openComment, setOpenComment] = useState(false);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
-  };
-  const [anchorEl, setAnchorEl] = useState(null);
-  const opens = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloses = () => {
-    setAnchorEl(null);
   };
 
   const handleClose = (event) => {
@@ -105,7 +95,7 @@ export const Comment = ({ handleShare, data }) => {
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
-  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
@@ -140,25 +130,7 @@ export const Comment = ({ handleShare, data }) => {
       link: "",
     },
   ];
-  const handleDeleteComment = async (id) => {
-    const { data, error } = await deleteComment({ id });
-    console.log(data);
-    if (data) {
-      toast.success("comment deleted successfully");
-    }
-    if (error) {
-      toast.error(error);
-    }
-    handleCloses();
-    console.log(error);
-  };
 
-  const handleClicks = (id) => {
-    navigate({
-      pathname: "/user/profile",
-      search: `?id=${id}`,
-    });
-  };
   return (
     <>
       <Grid
@@ -345,125 +317,16 @@ export const Comment = ({ handleShare, data }) => {
           }}
         >
           {comments?.length > 0 ? (
-            comments?.map((item, index) => {
-              const { avatar, full_name, user_id, comment, createdAt, id } =
-                item;
-
-              const check = profile?.id === user_id;
-              console.log(check);
-              return (
-                <Grid
-                  item
-                  container
-                  key={index}
-                  sx={{ mb: 2 }}
-                  flexWrap="nowrap"
-                  gap={2}
-                >
-                  <Grid item alignSelf={{ xs: "center", md: "flex-start" }}>
-                    <Avatar
-                      alt={full_name}
-                      src={avatar}
-                      onClick={() => handleClicks(user_id)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      {full_name?.slice(0, 1).toUpperCase()}
-                    </Avatar>
-                  </Grid>
-                  <Grid item>
-                    <Grid container>
-                      <Grid
-                        item
-                        container
-                        alignItems="center"
-                        flexWrap="nowrap"
-                        justifyContent="space-between"
-                      >
-                        <Typography
-                          fontWeight={700}
-                          color="#9B9A9A"
-                          title={full_name}
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            maxWidth: "20ch",
-                          }}
-                          fontSize={{ md: "2rem", xs: "1.2rem" }}
-                        >
-                          {full_name}
-                        </Typography>
-                        <Typography
-                          // variant="span"
-                          color="#9B9A9A"
-                          fontWeight={400}
-                          fontSize={{ md: "1.6rem", xs: "1rem" }}
-                        >
-                          {getDate(createdAt)} - {getTime(createdAt)}
-                        </Typography>
-                        {check && (
-                          <IconButton
-                            id="basic-button"
-                            aria-controls={opens ? "basic-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={opens ? "true" : undefined}
-                            onClick={handleClick}
-                            // sx={{ visibility: !check && "hidden" }}
-                          >
-                            <MoreVertOutlined />
-                          </IconButton>
-                        )}
-
-                        <Menu
-                          id="basic-menu"
-                          anchorEl={anchorEl}
-                          open={opens}
-                          onClose={handleCloses}
-                          MenuListProps={{
-                            "aria-labelledby": "basic-button",
-                          }}
-                        >
-                          <MenuItem
-                            onClick={() => handleDeleteComment(id)}
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                            // disabled={!check}
-                            // disabled={check ? check : false}
-                          >
-                            <ListItemIcon>
-                              <Delete sx={{ fontSize: "2rem" }} />
-                            </ListItemIcon>
-                            <ListItemText sx={{ fontSize: "3rem" }}>
-                              {isLoading ? "Deleting" : "Delete"}
-                            </ListItemText>
-                          </MenuItem>
-                        </Menu>
-                      </Grid>
-                      <Typography
-                        color="secondary"
-                        fontWeight={600}
-                        sx={{ wordBreak: "break-all" }}
-                        fontSize={{ md: "1.8rem", sm: "1.4rem" }}
-                      >
-                        {parse(comment)}
-                      </Typography>
-                      <Grid item container>
-                        <Details
-                          icons={icons}
-                          data={item}
-                          type="comments"
-                          // de={de}
-                          onClick={handleClick}
-                          setOpenComment={setOpenComment}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              );
-            })
+            <List sx={{ width: "100%" }} dense>
+              {comments?.map((item) => (
+                <SingleComment
+                  icons={icons}
+                  key={item.id}
+                  item={item}
+                  profile={profile}
+                />
+              ))}
+            </List>
           ) : (
             <Grid item container>
               <Typography>No comments available</Typography>

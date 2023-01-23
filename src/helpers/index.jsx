@@ -6,3 +6,12 @@ export const getDate = (date) => {
 export const getTime = (date) => {
   return moment(date).format("HH:mm");
 };
+
+export const getAgo = (date) => {
+  return moment(date).fromNow(true);
+};
+// export const getExactTime=(date)=>{
+//   let moment.duration
+//  if ()
+//   moment.duration().hours();
+// }

@@ -3,10 +3,10 @@ import { api } from ".";
 export const commentSlice = api.injectEndpoints({
   endpoints: (builder) => ({
     getPostComments: builder.query({
-      query: ({ parentId, limit }) => ({
-        url: `/comment?parent_type=posts&parent_id=${parentId}&limit=${
-          limit ? limit : 2
-        }`,
+      query: ({ parentId, limit, type }) => ({
+        url: `/comment?parent_type=${
+          type ? type : "posts"
+        }&parent_id=${parentId}&limit=${limit ? limit : 10}`,
         method: "GET",
       }),
       providesTags: ["comment"],

@@ -15,6 +15,7 @@ import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 import SingleAnnoucement from "pages/pages/SingleAnnoucement";
 import ResetPassword from "components/modals/ResetPassword";
 import NewPassword from "components/modals/NewPassword";
+import ReplyComment from "pages/pages/components/ReplyComment";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="annoucement/:id" element={<SingleAnnoucement />} />
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
+              <Route path="comment" element={<ReplyComment />} />
             </Route>
             <Route path="/" element={<PrivateRoute />}></Route>
           </Routes>

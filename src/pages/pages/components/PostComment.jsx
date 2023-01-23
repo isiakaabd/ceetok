@@ -179,70 +179,74 @@ export const Comment = ({ handleShare, data }) => {
           justifyContent={{ md: "flex-end", xs: "flex-start" }}
         >
           <Grid item md={7} xs={12}>
-            <Formik initialValues={{ filter: "" }}>
-              <Form style={{ width: "100%" }}>
-                <Grid
-                  item
-                  container
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Grid item xs={6}>
-                    <FormikControl
-                      control="inputs"
-                      name="filter"
-                      borderRadius="1rem"
-                      // color="#fff"
-                      Icon={SearchOutlined}
-                      order={2}
-                      height="4rem"
-                      color={"#fff"}
-                      buttonStyle={{ color: "#fff" }}
-                      border="2px solid #fff"
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <FormikControl
-                      control="selects"
-                      name="filter"
-                      borderRadius="1rem"
-                      placeholder="filter"
-                      Icon={FilterList}
-                      order={2}
-                      height="4rem"
-                      buttonStyle={{ color: "#fff" }}
-                      border="2px solid #fff"
-                      options={[
-                        {
-                          label: "Male",
-                          value: "Male",
-                        },
-                        {
-                          label: "Female",
-                          value: "Female",
-                        },
-                      ]}
-                    />
-                  </Grid>
-                  {checkUser && (
-                    <Grid item>
-                      <IconButton
-                        ref={anchorRef}
-                        id="composition-avatar"
-                        aria-controls={open ? "composition-menu" : undefined}
-                        aria-expanded={open ? "true" : undefined}
-                        aria-haspopup="true"
-                        onClick={handleToggle}
-                      >
-                        <TuneOutlined
-                          sx={{ fontSize: "2.5rem", color: "#fff" }}
-                        />
-                      </IconButton>
+            <Grid item container>
+              <Formik initialValues={{ filter: "" }}>
+                <Form style={{ width: "100%" }}>
+                  <Grid
+                    item
+                    container
+                    justifyContent="space-between"
+                    alignItems="center"
+                    flexWrap="nowrap"
+                    gap={2}
+                  >
+                    <Grid item flex={{ md: 0.8, xs: 1 }}>
+                      <FormikControl
+                        control="inputs"
+                        name="filter"
+                        borderRadius="1rem"
+                        // color="#fff"
+                        Icon={SearchOutlined}
+                        order={2}
+                        height="4rem"
+                        color={"#fff"}
+                        buttonStyle={{ color: "#fff" }}
+                        border="2px solid #fff"
+                      />
                     </Grid>
-                  )}
-                </Grid>
-              </Form>
-            </Formik>
+                    <Grid item>
+                      <FormikControl
+                        control="selects"
+                        name="filter"
+                        borderRadius="1rem"
+                        placeholder="filter"
+                        Icon={FilterList}
+                        order={2}
+                        height="4rem"
+                        buttonStyle={{ color: "#fff" }}
+                        border="2px solid #fff"
+                        options={[
+                          {
+                            label: "Male",
+                            value: "Male",
+                          },
+                          {
+                            label: "Female",
+                            value: "Female",
+                          },
+                        ]}
+                      />
+                    </Grid>
+                    {checkUser && (
+                      <Grid item>
+                        <IconButton
+                          ref={anchorRef}
+                          id="composition-avatar"
+                          aria-controls={open ? "composition-menu" : undefined}
+                          aria-expanded={open ? "true" : undefined}
+                          aria-haspopup="true"
+                          onClick={handleToggle}
+                        >
+                          <TuneOutlined
+                            sx={{ fontSize: "2.5rem", color: "#fff" }}
+                          />
+                        </IconButton>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Form>
+              </Formik>
+            </Grid>
           </Grid>
         </Grid>
         {/* user Profile */}

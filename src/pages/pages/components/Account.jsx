@@ -24,7 +24,7 @@ const Account = (props) => {
 
   return (
     <Grid item container>
-      <Grid item md={10} xs={12} sx={{ p: 3 }}>
+      <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           initialValues={{
             title: "",
@@ -47,7 +47,7 @@ const Account = (props) => {
           {({ values }) => {
             return (
               <Form style={{ width: "100%" }}>
-                <Grid item container gap={2}>
+                <Grid item container gap={2} sx={{ p: { md: 3, xs: 1 } }}>
                   <Grid item container alignItems="center">
                     <Grid item md={3} display={{ xs: "none", md: "block" }}>
                       <CustomSubTypography
@@ -353,14 +353,27 @@ const Account = (props) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <CustomButton>Save</CustomButton>
-                  <Button
-                    variant="outlined"
-                    sx={{ padding: "1rem 4em", borderRadius: "5rem" }}
-                    color="success"
+                  <Grid
+                    item
+                    container
+                    flexWrap="nowrap"
+                    gap={2}
+                    justifyContent={{ md: "flex-start", xs: "space-between" }}
                   >
-                    Reset
-                  </Button>
+                    <CustomButton title={"Save"} />
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        padding: "1rem 4em",
+                        fontSize: "1.6rem",
+                        fontWeight: 700,
+                        borderRadius: "5rem",
+                      }}
+                      color="success"
+                    >
+                      Reset
+                    </Button>
+                  </Grid>
                 </Grid>
               </Form>
             );

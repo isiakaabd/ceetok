@@ -167,8 +167,9 @@ const ProfileDetails = (props) => {
             >
               <CustomButton
                 component={Link}
-                width="12rem"
-                fontSize={{ md: "1.6rem", xs: "1.6rem" }}
+                width="10rem"
+                fontSize={{ md: "2.5rem", xs: "1.8rem" }}
+                // fontSize={{ md: "20rem", xs: "1.6rem" }}
                 title={" Update Settings"}
                 to={"/user/settings"}
               />
@@ -186,7 +187,7 @@ const ProfileDetails = (props) => {
                 title={"See All"}
                 component={Link}
                 to="/user/all-friends"
-                fontSize={{ md: "1.6rem", xs: "1.6rem" }}
+                fontSize={{ md: "1.6rem", xs: "1.4rem" }}
               />
             </Grid>
             <List sx={{ wdith: "100%", p: 2 }}>

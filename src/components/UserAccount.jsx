@@ -9,12 +9,14 @@ import {
   Grid,
   IconButton,
   Typography,
+  Zoom,
 } from "@mui/material";
 import { useState, useRef } from "react";
 import Notifications from "./Notifications";
 import { useSelector } from "react-redux";
 import NotificationIcon from "assets/svgs/NotificationIcon";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import Tooltips from "./ToolTips";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
@@ -57,21 +59,23 @@ const UserAccount = () => {
         flexWrap="nowrap"
         alignItems="center"
       >
-        <IconButton
-          onClick={handleToggle}
-          ref={anchorRef}
-          id="composition-button"
-          aria-controls={open ? "composition-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-        >
-          <NotificationIcon
-            sx={{
-              fontSize: { md: "3rem", xs: "2.5rem" },
-              fill: "#9B9A9A",
-            }}
-          />
-        </IconButton>
+        <Tooltips title={"Notifications"}>
+          <IconButton
+            onClick={handleToggle}
+            ref={anchorRef}
+            id="composition-button"
+            aria-controls={open ? "composition-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+          >
+            <NotificationIcon
+              sx={{
+                fontSize: { md: "3rem", xs: "2.5rem" },
+                fill: "#9B9A9A",
+              }}
+            />
+          </IconButton>
+        </Tooltips>
         <Notifications
           open={open}
           setOpen={setOpen}
@@ -88,7 +92,7 @@ const UserAccount = () => {
           alignItems="center"
           flexWrap="nowrap"
         >
-          <Tooltip title="Account settings">
+          <Tooltips title="Account settings">
             <IconButton
               ref={anchorRefs}
               id="account"
@@ -110,7 +114,7 @@ const UserAccount = () => {
                 {userProfile?.full_name?.slice(0, 1).toUpperCase()}
               </Avatar>
             </IconButton>
-          </Tooltip>
+          </Tooltips>
           <Notifications
             opens={opens}
             setOpens={setOpens}
@@ -118,14 +122,22 @@ const UserAccount = () => {
             handleCloses={handleCloses}
             handleToggles={handleToggles}
           />
-          <Typography
-            variant="h5"
-            fontWeight={700}
-            color="#9B9A9A"
-            fontSize={{ md: "2rem", xs: "1.4rem", sm: "1.8rem" }}
-          >
-            {userProfile?.full_name}
-          </Typography>
+          <Tooltips title={userProfile?.full_name}>
+            <Typography
+              variant="h5"
+              fontWeight={700}
+              color="#9B9A9A"
+              fontSize={{ md: "2rem", xs: "1.4rem", sm: "1.8rem" }}
+              sx={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: { xs: "12ch", sm: "100%" },
+              }}
+            >
+              {userProfile?.full_name}
+            </Typography>
+          </Tooltips>
         </Grid>
       </Grid>
     </Grid>

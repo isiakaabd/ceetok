@@ -56,12 +56,15 @@ const Activities = (props) => {
   }, [open]);
   const { data: posts, error } = useGetPostQuery("");
   const { data: annoucement } = useGetAnnoucementsQuery();
-  console.log(annoucement);
+
   const [state, setState] = useState({
     data: posts,
     type: "post",
   });
-  console.log(state);
+  console.log(posts);
+  useEffect(() => {
+    if (posts) setState({ data: posts, type: "post" });
+  }, [posts]);
   const handleAnnoucement = (e) => {
     setState({
       type: "annoucement",
@@ -143,6 +146,7 @@ const Activities = (props) => {
           role={undefined}
           placement="bottom-start"
           transition
+          sx={{ zIndex: 900 }}
           disablePortal
         >
           {({ TransitionProps, placement }) => (
@@ -172,7 +176,7 @@ const Activities = (props) => {
           )}
         </Popper>
         {state.type === "post" ? (
-          posts?.length > 0 ? (
+          state?.data?.length > 0 ? (
             <List
               sx={{
                 maxHeight: "80rem",
@@ -184,7 +188,7 @@ const Activities = (props) => {
               }}
               xs={12}
             >
-              {posts?.map((post, index) => {
+              {state?.data?.map((post, index) => {
                 return <SinglePosts key={index} post={post} />;
               })}
             </List>
@@ -207,8 +211,8 @@ const Activities = (props) => {
               },
             }}
           >
-            {state.data.length > 0 ? (
-              state.data.map((item, index) => (
+            {state?.data?.length > 0 ? (
+              state?.data?.map((item, index) => (
                 <SingleAnnoucements annoucements={item} key={index} />
               ))
             ) : (

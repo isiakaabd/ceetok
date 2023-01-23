@@ -37,6 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "redux/reducers/authReducer";
 import { useLogoutMutation } from "redux/slices/authSlice";
+import { toast } from "react-toastify";
 
 export default function Notifications({
   open,
@@ -145,12 +146,11 @@ export default function Notifications({
   };
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    console.log(123);
     const { data, error } = await logoutUser();
-    console.log(data, error);
     if (data) {
       dispatch(logoutAction());
     }
+    if (error) toast.error(error);
   };
   return (
     <>

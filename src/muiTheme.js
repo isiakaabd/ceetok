@@ -102,5 +102,12 @@ export const muiTheme = createTheme({
           "0px 5px 5px -3px rgba(0,0,0,.5),0px 8px 10px 1px rgba(0,0,0,0.01),0px 3px 14px 2px rgba(0,0,0,0.01)",
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        backgroundColor: "#FF9B04",
+        color: "#fff",
+        fontSize: { md: "1.5rem", xs: "1rem" },
+      },
+    },
   },
 });

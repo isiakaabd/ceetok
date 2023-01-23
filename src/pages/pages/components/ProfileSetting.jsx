@@ -16,7 +16,7 @@ const ProfileSetting = (props) => {
   }));
   return (
     <Grid item container>
-      <Grid item md={10} xs={12} sx={{ p: 3 }}>
+      <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           initialValues={{
             title: "",

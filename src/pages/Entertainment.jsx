@@ -50,16 +50,16 @@ const Entertainment = () => {
             borderRadius: "2rem",
           }}
         >
-          <Grid item container sx={{ p: 3 }} alignItems={"center"}>
+          <Grid item container sx={{ p: 3 }} alignItems="center">
             <Typography
               fontWeight={600}
-              fontSize={{ md: "3.3rem" }}
+              fontSize={{ md: "3rem", xs: "2.5rem" }}
               color="#9B9A9A"
               sx={{ mr: 2 }}
             >
               {params}
             </Typography>
-            <Typography fontWeight={600} fontSize="2.3rem" color="#FF9B04">
+            <Typography fontWeight={500} fontSize="2rem" color="#FF9B04">
               Follow
             </Typography>
           </Grid>

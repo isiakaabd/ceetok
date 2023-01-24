@@ -30,11 +30,8 @@ const App = () => {
             <Route path="/auth/new-password" element={<NewPassword />} />
             <Route path="/post" element={<PrivateRoute />}>
               <Route path=":postId" element={<Post />} />
-              <Route path="" element={<Entertainment />} />
             </Route>
-            <Route path="/posts" element={<PrivateRoute />}>
-              <Route path="" element={<Entertainment />} />
-            </Route>
+            <Route path="/posts" element={<Entertainment />} />
 
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />

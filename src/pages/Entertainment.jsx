@@ -14,7 +14,7 @@ import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
 
 const Entertainment = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const params = searchParams.get("category");
   const loginStatus = useSelector((state) => state.auth.token);
   const [anchorEl, setAnchorEl] = useState(null);

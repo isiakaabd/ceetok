@@ -1,8 +1,4 @@
-import {
-  FavoriteBorderOutlined,
-  NotificationAddOutlined,
-  PersonAddOutlined,
-} from "@mui/icons-material";
+import { FavoriteBorderOutlined, PersonAddOutlined } from "@mui/icons-material";
 import { Avatar, Grid, IconButton, Typography } from "@mui/material";
 import NotificationIcon from "assets/svgs/NotificationIcon";
 import PopOvers from "components/modals/PopOver";

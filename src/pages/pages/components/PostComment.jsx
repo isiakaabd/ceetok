@@ -1,20 +1,14 @@
 import {
-  ArrowBackOutlined,
-  FavoriteBorderOutlined,
   Favorite,
   FilterList,
   IosShareOutlined,
-  MoreVertOutlined,
-  Instagram,
   ReplyOutlined,
   ReportOutlined,
   SearchOutlined,
   TuneOutlined,
-  Delete,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import {
-  Avatar,
   Divider,
   Grid,
   Paper,
@@ -23,11 +17,8 @@ import {
   IconButton,
   Popper,
   ClickAwayListener,
-  Menu,
   MenuList,
   Typography,
-  ListItemIcon,
-  ListItemText,
   List,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
@@ -40,12 +31,7 @@ import { useDeleteAPostMutation } from "redux/slices/postSlice";
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
-import {
-  useDeleteCommentMutation,
-  useGetPostCommentsQuery,
-} from "redux/slices/commentSlice";
-import { getDate, getTime } from "helpers";
-import DeleteIcon from "assets/svgs/DeleteIcon";
+import { useGetPostCommentsQuery } from "redux/slices/commentSlice";
 import { Details } from "../Post";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";

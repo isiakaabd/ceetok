@@ -37,7 +37,7 @@ import FormikControl from "validation/FormikControl";
 import UserProfile from "../UserProfile";
 import images from "assets";
 import { useDeleteAPostMutation } from "redux/slices/postSlice";
-
+import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import {
@@ -50,11 +50,13 @@ import { Details } from "../Post";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
 export const Comment = ({ handleShare, data }) => {
-  const { id } = data;
+  const { id, category, user_id, body } = data;
   const navigate = useNavigate();
 
   const { data: profile } = useUserProfileQuery();
-  const checkUser = profile?.id === data?.user_id;
+  const { interests } = profile;
+  const check = interests?.includes(category.toLowerCase());
+  const checkUser = profile?.id === user_id;
   const [open, setOpen] = useState(false);
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
@@ -105,7 +107,7 @@ export const Comment = ({ handleShare, data }) => {
   }, [open]);
 
   const { data: comments } = useGetPostCommentsQuery({
-    parentId: data?.id,
+    parentId: id,
     limit: 5,
   });
   const icons = [
@@ -226,17 +228,9 @@ export const Comment = ({ handleShare, data }) => {
           <UserProfile data={data} />
         </Grid>
       </Grid>
-      <Grid
-        item
-        md={8}
-        xs={12}
-        // sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
-      >
+      <Grid item md={8} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
         <Grid
           container
-          sx={{
-            mb: 2,
-          }}
           alignItems="center"
           justifyContent="space-between"
           flexWrap="nowrap"
@@ -247,20 +241,21 @@ export const Comment = ({ handleShare, data }) => {
             sx={{ whiteSpace: "nowrap" }}
             fontWeight="700"
           >
-            {data?.title}
+            {category}
           </Typography>
-
-          <Typography sx={{ color: "#FF9B04" }}>Follow</Typography>
+          <Typography
+            fontWeight={500}
+            component="div"
+            sx={{ display: "flex", alignItems: "center" }}
+            fontSize="2rem"
+            color={check ? "#37D42A" : "#FF9B04"}
+          >
+            {check ? "Followed" : "Follow"}
+            {check && <VerifiedOutlined />}
+          </Typography>{" "}
         </Grid>
         <img src={images.obi2} style={{ width: "100%" }} alt="peter obi" />
         <Grid container item flexDirection="column" rowGap={2}>
-          <Typography
-            color="secondary"
-            fontSize={{ md: "2.5rem", sm: "1.5rem" }}
-            fontWeight={700}
-          >
-            {data?.category}
-          </Typography>
           <Typography
             color="secondary"
             sx={{
@@ -270,7 +265,7 @@ export const Comment = ({ handleShare, data }) => {
               pl: 3,
             }}
           >
-            {parse(data?.body)}
+            {parse(body)}
           </Typography>
         </Grid>
         <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
@@ -278,12 +273,7 @@ export const Comment = ({ handleShare, data }) => {
         </Grid>
         <Divider flexItem sx={{ pb: 2 }} />
       </Grid>
-      <Grid
-        item
-        md={7}
-        xs={12}
-        // sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
-      >
+      <Grid item md={7} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
         <Typography
           color="secondary"
           sx={{ my: 1 }}

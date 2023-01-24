@@ -1,17 +1,21 @@
-import { AddCircleOutline, SearchOutlined } from "@mui/icons-material";
+import {
+  AddCircleOutline,
+  SearchOutlined,
+  VerifiedOutlined,
+} from "@mui/icons-material";
 import { Button, Grid, List, Skeleton, Typography } from "@mui/material";
 import Filters from "components/modals/Filters";
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
-// import {  } from "react-router-dom";
 import FormikControl from "validation/FormikControl";
 
 import SinglePosts from "pages/home/SinglePosts";
 import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import { useGetPostQuery, useGetViewsQuery } from "redux/slices/postSlice";
+import { useGetPostQuery } from "redux/slices/postSlice";
 import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 
 const Entertainment = () => {
   const [searchParams] = useSearchParams();
@@ -34,11 +38,13 @@ const Entertainment = () => {
   const { data: array, isLoading } = useGetPostQuery({
     category: params.toLowerCase(),
   });
+  const { data: profile, isLoading: loading } = useUserProfileQuery();
   const [opens, setOpens] = useState(false);
-
-  // const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const [createPostModal, setCreatePostModal] = useState(false);
-  if (isLoading) return <Skeleton />;
+  if (isLoading || loading) return <Skeleton />;
+  const { interests } = profile;
+  const check = interests?.includes(params.toLowerCase());
+
   return (
     <>
       <Grid item container sx={{ py: 2, background: "#fafafa" }}>
@@ -61,8 +67,15 @@ const Entertainment = () => {
             >
               {params}
             </Typography>
-            <Typography fontWeight={500} fontSize="2rem" color="#FF9B04">
-              Follow
+            <Typography
+              fontWeight={500}
+              component="div"
+              sx={{ display: "flex", alignItems: "center" }}
+              fontSize="2rem"
+              color={check ? "#37D42A" : "#FF9B04"}
+            >
+              {check ? "Followed" : "Follow"}
+              {check && <VerifiedOutlined />}
             </Typography>
           </Grid>
           <Grid item container>

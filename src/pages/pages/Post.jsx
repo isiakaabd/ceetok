@@ -64,7 +64,6 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
   const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const [open, setOpen] = useState(false);
-  console.log(data);
   const { data: numberOfLikes } = useGetLikesQuery({
     type: "posts",
     parentId: data?.id,
@@ -86,7 +85,6 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
       parent_id: data?.id,
       comment: values.comment,
     });
-    console.log(dt, error);
   };
 
   const validationSchema = Yup.object({
@@ -268,7 +266,7 @@ const Post = () => {
           <Grid
             sx={{
               mt: { md: 3, xs: 1.5 },
-              // paddingInline: { xs: "1rem", md: "4rem" },
+              paddingInline: { xs: "1rem" },
             }}
           >
             <Formik
@@ -321,7 +319,7 @@ const Post = () => {
             item
             container
             alignItems="center"
-            // sx={{ mt: 2, paddingInline: { xs: "3rem", md: "4rem" } }}
+            sx={{ paddingInline: { xs: "1rem" } }}
           >
             <Typography
               variant="span"

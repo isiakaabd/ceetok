@@ -50,18 +50,19 @@ const LeftTab = () => {
             />
           </Form>
         </Formik>
-        <List sx={{ width: "100%" }}>
+        <List sx={{ width: "100%" }} dense>
           {categories?.map((item, index) => {
             return (
               <ListItemButton
                 key={index}
                 component={Link}
+                alignItems="flex-start"
                 to={`/posts/?category=${item.name}`}
               >
                 <ListItemText
                   primary={item?.name}
                   primaryTypographyProps={{
-                    color: "#9B9A9A",
+                    color: "text.primary",
                     fontWeight: 600,
                   }}
                 />

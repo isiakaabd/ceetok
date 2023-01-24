@@ -10,7 +10,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getDate, getTime } from "helpers";
 import { useGetViewsQuery } from "redux/slices/postSlice";
 import { useSelector } from "react-redux";
@@ -21,11 +21,19 @@ const AllPosts = ({ post, index }) => {
   const { slug, id, user, title, category, views_count, updatedAt } = post;
   const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const loginStatus = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleLogin = () => setOpen(true);
+
   return (
     <>
-      <ListItemButton button component={Link} to={`/post/${slug}`}>
+      <ListItemButton
+        button
+        // component={Link}
+        onClick={() =>
+          loginStatus ? navigate(`/post/${slug}`) : setOpen(true)
+        }
+      >
         <ListItemText
           primary={index}
           primaryTypographyProps={{

@@ -11,11 +11,12 @@ import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { useGetPostQuery, useGetViewsQuery } from "redux/slices/postSlice";
 import CreatePost from "./user/modals/CreatePost";
+import LoginModal from "components/modals/LoginModal";
 
 const Entertainment = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = searchParams.get("category");
-
+  const loginStatus = useSelector((state) => state.auth.token);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
@@ -33,6 +34,7 @@ const Entertainment = () => {
   const { data: array, isLoading } = useGetPostQuery({
     category: params.toLowerCase(),
   });
+  const [opens, setOpens] = useState(false);
 
   // const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const [createPostModal, setCreatePostModal] = useState(false);
@@ -86,7 +88,9 @@ const Entertainment = () => {
                   variant="contained"
                   disableElevation
                   startIcon={<AddCircleOutline />}
-                  onClick={() => setCreatePostModal(true)}
+                  onClick={() =>
+                    loginStatus ? setCreatePostModal(true) : setOpens(true)
+                  }
                 >
                   Create Post
                 </Button>
@@ -186,6 +190,8 @@ const Entertainment = () => {
         initialValues={initialValues}
         open={createPostModal}
       />
+
+      <LoginModal isLogin={opens} handleClose={() => setOpens(false)} />
     </>
   );
 };

@@ -222,7 +222,7 @@ export const Comment = ({ handleShare, data }) => {
           </Grid>
         </Grid>
         {/* user Profile */}
-        <Grid item md={6} xs={12} sm={6} sx={{ my: 3 }}>
+        <Grid item md={12} xs={12} sm={12} sx={{ my: 3 }}>
           <UserProfile data={data} />
         </Grid>
       </Grid>
@@ -230,7 +230,7 @@ export const Comment = ({ handleShare, data }) => {
         item
         md={8}
         xs={12}
-        sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
+        // sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
       >
         <Grid
           container
@@ -256,16 +256,6 @@ export const Comment = ({ handleShare, data }) => {
         <Grid container item flexDirection="column" rowGap={2}>
           <Typography
             color="secondary"
-            sx={{
-              fontWeight: 400,
-              fontSize: { md: "2rem", sm: "1rem" },
-              textAlign: "justify",
-            }}
-          >
-            {parse(data?.body)}
-          </Typography>
-          <Typography
-            color="secondary"
             fontSize={{ md: "2.5rem", sm: "1.5rem" }}
             fontWeight={700}
           >
@@ -277,29 +267,27 @@ export const Comment = ({ handleShare, data }) => {
               fontWeight: 400,
               fontSize: { md: "2rem", sm: "1rem" },
               textAlign: "justify",
+              pl: 3,
             }}
           >
-            dignissim nec scelerisque ullamcorper eu neque, augue quam quis
-            lacus pretium eros est amet turpis nunc in turpis massa et eget
-            facilisis ante molestie penatibus dolor volutpat, porta pellentesque
-            scelerisque at ornare dui tincidunt cras feugiat tempor lectus
+            {parse(data?.body)}
           </Typography>
         </Grid>
         <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
           <Details handleShare={handleShare} icons={icons} data={data} />
         </Grid>
-        <Divider flexItem sx={{ py: 2 }} />
+        <Divider flexItem sx={{ pb: 2 }} />
       </Grid>
       <Grid
         item
         md={7}
         xs={12}
-        sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
+        // sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
       >
         <Typography
           color="secondary"
           sx={{ my: 1 }}
-          fontSize={{ md: "2.5rem", xs: "1.5rem" }}
+          fontSize={{ md: "3rem", xs: "2rem" }}
           fontWeight={700}
         >
           Comment

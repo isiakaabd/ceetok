@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemIcon,
+  ListItemButton,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -24,154 +25,166 @@ const AllPosts = ({ post, index }) => {
   const handleLogin = () => setOpen(true);
   return (
     <>
-      <li style={{ marginBottom: "1rem" }}>
-        <ListItem
-          button
-          component={Link}
-          to={loginStatus ? `/post/${slug}` : null}
-          onClick={() => (!loginStatus ? handleLogin : null)}
+      <ListItemButton button component={Link} to={`/post/${slug}`}>
+        <ListItemText
+          primary={index}
+          primaryTypographyProps={{
+            mr: "3rem !important",
+            color: "#000",
+            fontSize: "1.5rem",
+            fontWeight: 700,
+            display: {
+              md: "block",
+              xs: "none",
+            },
+          }}
+          sx={{
+            maxWidth: "max-content",
+          }}
+        />
+
+        <ListItemAvatar
+          sx={{
+            height: { md: "12rem", xs: "100%" },
+            width: { md: "11rem", xs: "5.3rem" },
+          }}
+        >
+          <Avatar
+            src={images.obi}
+            alt="obi"
+            variant="rounded"
+            sx={{ height: "100%", width: "100%" }}
+          />
+        </ListItemAvatar>
+
+        <List
+          item
+          container
+          direction="column"
+          sx={{
+            flex: { md: 3, xs: 1 },
+            mx: { md: 3, xs: 1 },
+          }}
+          dense
+          disablePadding
         >
           <ListItemText
-            primary={index}
+            primary={category}
             primaryTypographyProps={{
-              mr: "3rem !important",
-              color: "#000",
-              fontSize: "1.5rem",
+              backgroundColor: "#FF9B04",
+              padding: ".5rem 1.4rem",
+              borderRadius: "2rem",
               fontWeight: 700,
+              width: "max-content",
+              color: "#fff",
               display: {
                 md: "block",
-                xs: "none",
+                // xs: "none",
+                maxWidth: "max-content",
               },
             }}
-            sx={{
-              maxWidth: "max-content",
+            secondary={title}
+            secondaryTypographyProps={{
+              color: "#5F5C5C",
+              // mt: { md: 2, xs: 1 },
+              fontSize: { md: "2rem", xs: "1.2rem" },
+              fontWeight: { md: 700, xs: 600 },
+              width: "calc(98%)",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              display: "inlineBlock",
             }}
           />
 
-          <ListItemAvatar
-            sx={{
-              height: { md: "12rem", xs: "100%" },
-              width: { md: "11rem", xs: "5.3rem" },
-            }}
-          >
-            <Avatar
-              src={images.obi}
-              alt="obi"
-              variant="rounded"
-              sx={{ marginTop: 2, height: "100%", width: "100%" }}
-            />
-          </ListItemAvatar>
-
           <List
             item
-            container
-            direction="column"
             sx={{
-              flex: { md: 3, xs: 1 },
-              mx: { md: 3, xs: 1 },
+              display: { xs: "flex" },
+              fontSize: { md: "1.2rem", xs: "1rem" },
+              fontWeight: 400,
             }}
+            disablePadding
+            dense
           >
-            <ListItemText
-              primary={category}
-              primaryTypographyProps={{
-                backgroundColor: "#FF9B04",
-                padding: ".5rem 1.4rem",
-                borderRadius: "2rem",
-                fontWeight: 700,
-                width: "max-content",
-                color: "#fff",
-                display: {
-                  md: "block",
-                  // xs: "none",
-                  maxWidth: "max-content",
-                },
-              }}
-              secondary={title}
-              secondaryTypographyProps={{
-                color: "#5F5C5C",
-                mt: { md: 2, xs: 1 },
-                fontSize: { md: "2rem", xs: "1.1rem" },
-                fontWeight: { md: 700, xs: 600 },
-              }}
-            />
-
-            <List
-              item
-              sx={{
-                display: { xs: "flex" },
-
-                // justifyContent: "space-between",
-                fontSize: { md: "1.2rem", xs: ".8rem" },
-                fontWeight: 400,
-              }}
+            <ListItem
+              disableGutters
+              // disablePadding
+              sx={{ gap: { md: "2rem", xs: "1rem" } }}
             >
-              <ListItem
-                disableGutters
-                disablePadding
-                sx={{ gap: { md: "2rem", xs: "1rem" } }}
-              >
-                <ListItemText
-                  disableTypography
-                  sx={{ fontSize: "1rem", maxWidth: "max-content" }}
-                >
-                  {user?.email?.split("@")[0]}
-                </ListItemText>
-                <ListItemText
-                  disableTypography
-                  sx={{ fontSize: "1rem", maxWidth: "max-content" }}
-                >
-                  {getDate(updatedAt)}
-                </ListItemText>
-                <ListItemText
-                  disableTypography
-                  sx={{ fontSize: "1rem", maxWidth: "max-content" }}
-                >
-                  {getTime(updatedAt)}
-                </ListItemText>
-              </ListItem>
-              {/* <ListItem> */}
-              <Grid
-                item
+              <ListItemText
+                disableTypography
                 sx={{
-                  flexWrap: "nowrap",
-                  alignItems: "center",
-                  gap: 1,
-                  display: { md: "none", xs: "flex" },
+                  fontSize: { md: "2rem", xs: "1.2rem" },
+                  maxWidth: "max-content",
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 0 }}>
-                  <RemoveRedEyeOutlined />
-                </ListItemIcon>
-                <ListItemText disableTypography primary={data?.length} />
-              </Grid>
-              {/* </ListItem> */}
-            </List>
-          </List>
-          <Grid
-            sx={{
-              flex: { sm: 0, md: 1 },
-              alignItems: "center",
-              display: { md: "flex", xs: "none" },
-              justifyContent: "center",
-              marginLeft: "auto",
-            }}
-          >
-            <div
-              style={{
-                width: "2.4rem",
-                height: "2.4rem",
-                borderRadius: "50%",
-                backgroundColor: "#D3D3D3",
-                display: "flex",
-                justifyContent: "center",
+                {user?.username || user?.email?.split("@")[0]}
+              </ListItemText>
+              <ListItemText
+                disableTypography
+                sx={{
+                  fontSize: { md: "2rem", xs: "1.2rem" },
+                  maxWidth: "max-content",
+                }}
+              >
+                {getDate(updatedAt)}
+              </ListItemText>
+              <ListItemText
+                disableTypography
+                sx={{
+                  fontSize: { md: "2rem", xs: "1.2rem" },
+                  maxWidth: "max-content",
+                }}
+              >
+                {getTime(updatedAt)}
+              </ListItemText>
+            </ListItem>
+            {/* <ListItem> */}
+            <Grid
+              item
+              sx={{
+                flexWrap: "nowrap",
                 alignItems: "center",
+                gap: 1,
+                display: { md: "none", xs: "flex" },
               }}
             >
-              {views_count}
-            </div>
-          </Grid>
-        </ListItem>
-      </li>
+              <ListItemIcon sx={{ minWidth: 0 }}>
+                <RemoveRedEyeOutlined />
+              </ListItemIcon>
+              <ListItemText disableTypography primary={data?.length} />
+            </Grid>
+            {/* </ListItem> */}
+          </List>
+        </List>
+        <Grid
+          sx={{
+            flex: { sm: 0, md: 1 },
+            alignItems: "center",
+            display: { md: "flex", xs: "none" },
+            justifyContent: "center",
+            marginLeft: "auto",
+          }}
+        >
+          <div
+            style={{
+              width: "2.4rem",
+              height: "2.4rem",
+              borderRadius: "50%",
+              backgroundColor: "#D3D3D3",
+              display: "flex",
+              fontWeight: 700,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {views_count}
+          </div>
+        </Grid>
+      </ListItemButton>
+
       {open && (
         <LoginModal
           handleClose={() => setOpen(false)}

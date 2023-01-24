@@ -10,7 +10,7 @@ import { SearchOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CustomButton } from "components";
 import { useGetCategoriesQuery } from "redux/slices/postSlice";
 const LeftTab = () => {
@@ -55,16 +55,8 @@ const LeftTab = () => {
             return (
               <ListItemButton
                 key={index}
-                onClick={() =>
-                  loginStatus
-                    ? navigate({
-                        pathname: "/posts",
-                        search: `?category=${item.name}`,
-                      })
-                    : null
-                }
-                // component={loginStatus ? Link : "li"}
-                // to={`/post/`}
+                component={Link}
+                to={`/posts/?category=${item.name}`}
               >
                 <ListItemText
                   primary={item?.name}

@@ -4,6 +4,7 @@ import {
   Favorite,
   IosShareOutlined,
   ReplyOutlined,
+  ChatBubbleOutline,
 } from "@mui/icons-material";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -35,8 +36,8 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
     container
     alignItems="center"
     flexWrap="nowrap"
+    justifyContent="center"
     {...rest}
-    // gap={2}
     sx={{
       color,
       cursor: "pointer",
@@ -45,20 +46,25 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
     <IconButton edge="start" size="small">
       {Icon}
     </IconButton>
-    <Typography sx={{ display: { sm: "block", xs: "block" } }}>
+    <Typography
+      sx={{
+        fontSize: { xs: "2rem" },
+        fontWeight: 600,
+      }}
+    >
       {text}
     </Typography>
   </Grid>
 ))(({ theme }) => ({
   textTransform: "none",
-  fontSize: { md: "1.2rem", xs: ".9rem" },
+  fontSize: { md: "2rem", xs: "1.rem" },
   fontWeight: 400,
 }));
 export const Details = ({ handleShare, type, data, setOpenComment }) => {
   const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const [open, setOpen] = useState(false);
-
+  console.log(data);
   const { data: numberOfLikes } = useGetLikesQuery({
     type: "posts",
     parentId: data?.id,
@@ -89,12 +95,18 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
   return (
     <>
       <Grid item container justifyContent="space-between" flexWrap="nowrap">
-        <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
+        <Grid
+          item
+          container
+          flexWrap="nowrap"
+          alignItems="center"
+          justifyContent={"space-around"}
+        >
           <StyledButton
-            text="Reply"
+            text={data?.comments_count}
             // {...de}
             onClick={type === "comments" ? () => setOpen(true) : null}
-            Icon={<ReplyOutlined />}
+            Icon={<ChatBubbleOutline />}
           />
 
           <StyledButton
@@ -107,10 +119,10 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
                 <FavoriteBorderOutlined />
               )
             }
-            text="Like"
+            text={data?.likes_count}
           />
 
-          <StyledButton text="Share" Icon={<IosShareOutlined />} />
+          <StyledButton Icon={<IosShareOutlined />} />
         </Grid>
       </Grid>
 
@@ -122,6 +134,7 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
         >
           <Form>
             <Editor name="comment" placeholder={"Enter Comment.."} />
+
             <Grid item sx={{ mt: 2 }}>
               <CustomButton
                 isSubmitting={isLoading}
@@ -255,7 +268,7 @@ const Post = () => {
           <Grid
             sx={{
               mt: { md: 3, xs: 1.5 },
-              paddingInline: { xs: "1rem", md: "4rem" },
+              // paddingInline: { xs: "1rem", md: "4rem" },
             }}
           >
             <Formik
@@ -264,6 +277,7 @@ const Post = () => {
               validationSchema={validationSchema}
             >
               <Form>
+                {/* <Grid item container sx={{ background: "red" }}> */}
                 <Editor
                   theme="snow"
                   name="comment"
@@ -307,7 +321,7 @@ const Post = () => {
             item
             container
             alignItems="center"
-            sx={{ mt: 2, paddingInline: { xs: "3rem", md: "4rem" } }}
+            // sx={{ mt: 2, paddingInline: { xs: "3rem", md: "4rem" } }}
           >
             <Typography
               variant="span"

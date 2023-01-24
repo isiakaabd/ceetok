@@ -46,7 +46,7 @@ const RightTab = ({ setCreatePost }) => {
     }
   };
 
-  if (isLoading) return <Skeleton />;
+  // if (isLoading) return <Skeleton />;
   if (error) return <p>Something went wrong...</p>;
   return (
     <>
@@ -54,7 +54,7 @@ const RightTab = ({ setCreatePost }) => {
         item
         container
         md={9}
-        xs={11}
+        xs={12}
         sx={{
           borderRadius: "2rem ",
           padding: { md: "0", xs: "1rem" },
@@ -116,9 +116,10 @@ const RightTab = ({ setCreatePost }) => {
           )}
         </Grid>
         <Grid item container>
-          {array.length > 0 ? (
+          {array?.length > 0 ? (
             <>
               <List
+                dense
                 sx={{
                   maxHeight: "120rem",
                   overflowY: "scroll",
@@ -126,7 +127,6 @@ const RightTab = ({ setCreatePost }) => {
                   "&::-webkit-scrollbar": {
                     width: ".85rem",
                     display: "none",
-                    background: "green",
                   },
                 }}
                 xs={12}

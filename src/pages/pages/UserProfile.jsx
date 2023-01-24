@@ -37,7 +37,7 @@ const UserProfile = ({ data }) => {
           background: "#fafafa",
         }}
       >
-        <Grid item>
+        <Grid item sx={{ alignSelf: "center" }}>
           <Avatar sx={{ alignItems: "center" }} alt={avatar}>
             {full_name.slice(0, 1).toUpperCase()}
           </Avatar>
@@ -47,13 +47,13 @@ const UserProfile = ({ data }) => {
           <Grid
             container
             flexWrap="nowrap"
-            flexDirection={{ md: "column", xs: "row", sm: "column" }}
+            justifyContent={{ sm: "space-between" }}
+            flexDirection={{ md: "column", xs: "column", sm: "row" }}
           >
             <Grid item>
               <Typography
                 sx={{
-                  fontSize: { md: "2rem", xs: "1.2rem" },
-                  // whiteSpace: "nowrap",
+                  fontSize: { md: "2.5rem", xs: "2rem" },
                   color: "#5F5C5C",
                   fontWeight: 600,
                 }}
@@ -63,29 +63,39 @@ const UserProfile = ({ data }) => {
               <Typography
                 color="secondary"
                 variant="span"
-                sx={{ fontWeight: 400, fontSize: { md: "1.4rem", xs: "1rem" } }}
+                sx={{ fontWeight: 400, fontSize: { md: "2rem", xs: "1.6rem" } }}
               >
-                {getDate(createdAt)} {getTime(createdAt)}
+                {getDate(createdAt)} | {getTime(createdAt)}
               </Typography>
             </Grid>
             <Grid item flex={1}>
-              <Grid container gap={{ md: 2, sm: 1, xs: 1.2 }}>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent={{
+                  xs: "flex-start",
+                  sm: "flex-end",
+                  md: "flex-start",
+                }}
+                gap={2}
+              >
                 <Grid item>
                   <Grid container alignItems="center">
-                    <IconButton>
-                      <PersonAddOutlined sx={{ color: "secondary" }} />
-                    </IconButton>
-                    <Typography variant="span" fontSize="1rem" color="#5F5C5C">
+                    <PersonAddOutlined
+                      sx={{ color: "secondary", fontSize: "2rem" }}
+                    />
+
+                    <Typography variant="span" fontSize="2rem" color="#5F5C5C">
                       1.2k
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item>
                   <Grid container alignItems="center">
-                    <IconButton>
-                      <FavoriteBorderOutlined sx={{ color: "secondary" }} />
-                    </IconButton>
-                    <Typography variant="span" fontSize="1rem" color="#5F5C5C">
+                    <FavoriteBorderOutlined
+                      sx={{ color: "secondary", fontSize: "2rem" }}
+                    />
+                    <Typography variant="span" fontSize="2rem" color="#5F5C5C">
                       {likes_count}
                     </Typography>
                   </Grid>

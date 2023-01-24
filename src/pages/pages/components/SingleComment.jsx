@@ -2,27 +2,19 @@ import {
   FavoriteBorderOutlined,
   Favorite,
   IosShareOutlined,
-  Instagram,
-  ReplyOutlined,
   ReportOutlined,
   Delete,
   MoreVertOutlined,
-  ChatOutlined,
-  EmailOutlined,
   ChatBubbleOutline,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import {
   Avatar,
-  Button,
-  Divider,
   Grid,
   IconButton,
   Typography,
-  Skeleton,
   Menu,
   MenuItem,
-  Paper,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -30,24 +22,18 @@ import {
   ListItemAvatar,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
-  useGetAPostQuery,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,
-  useGetViewsQuery,
-  useAddQuoteMutation,
 } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
-import * as Yup from "yup";
 import {
   useDeleteCommentMutation,
   useGetPostCommentsQuery,
-  usePostCommentMutation,
 } from "redux/slices/commentSlice";
 // import { Comment } from "./components/PostComment";
 // import SocialMedia from "components/modals/SocialMedia";
@@ -81,101 +67,31 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile }) => {
-  const { user_id, id } = item;
-
-  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const { id } = item;
+  // const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  // const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const handleCloses = () => {
-    setAnchorEl(null);
-  };
-  const opens = Boolean(anchorEl);
-  const handleClick = (event) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  };
-  const check = profile?.id === user_id;
-  const handleDeleteComment = async (e, id) => {
-    console.log(e);
-    e.stopPropagation();
-    const { data, error } = await deleteComment({ id });
-    if (data) {
-      toast.success("comment deleted successfully");
-    }
-    if (error) {
-      toast.error(error);
-    }
-    handleCloses();
-  };
+
   return (
     <ListItem
       disablePadding
       onClick={(e) => {
+        e.stopPropagation();
         navigate(`/user/comment/?id=${id}`);
       }}
       sx={{
-        "& .MuiListItemSecondaryAction-root": {
-          top: "20",
+        "& .MuiListItemText-root": {
+          m: 0,
         },
         textDecoration: "none",
         color: "text.primary",
       }}
-      secondaryAction={
-        <>
-          <IconButton
-            id="basic-button"
-            aria-controls={opens ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={opens ? "true" : undefined}
-            onClick={handleClick}
-            //  sx={{ visibility: !check && "hidden" }}
-            sx={{ flex: 1 }}
-          >
-            <MoreVertOutlined />
-          </IconButton>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={opens}
-            onClose={handleCloses}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              onClick={(e) => handleDeleteComment(e, id)}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <ListItemIcon>
-                <Delete sx={{ fontSize: "2rem" }} />
-              </ListItemIcon>
-              <ListItemText sx={{ fontSize: "3rem" }}>
-                {isLoading ? "Deleting" : "Delete"}
-              </ListItemText>
-            </MenuItem>
-            <MenuItem
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <ListItemIcon>
-                <ReportOutlined sx={{ fontSize: "2rem" }} />
-              </ListItemIcon>
-              <ListItemText>Report</ListItemText>
-            </MenuItem>
-          </Menu>
-        </>
-      }
-
-      //   component={Link}
     >
       <ListItemButton>
-        <Image person={item} />
-        <Text item={item} profile={profile} icons={icons} />
+        <div style={{ width: "100%", display: "flex" }}>
+          <Image person={item} />
+          <Text item={item} profile={profile} icons={icons} />{" "}
+        </div>
       </ListItemButton>
     </ListItem>
   );
@@ -203,121 +119,125 @@ export function Image({ person }) {
   );
 }
 
-export function Text({ item }) {
+export function Text({ item, profile }) {
   const { full_name, comment, createdAt } = item;
+  const { user_id, id } = item;
+  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleCloses = (e) => {
+    e.stopPropagation();
+    setAnchorEl(null);
+  };
+  const opens = Boolean(anchorEl);
+  const handleClick = (event) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  };
+  const check = profile?.id !== user_id;
 
+  const handleDeleteComment = async (e, id) => {
+    e.stopPropagation();
+    const { data, error } = await deleteComment({ id });
+    if (data) {
+      toast.success("comment deleted successfully");
+    }
+    if (error) {
+      toast.error(error);
+    }
+    handleCloses();
+  };
   return (
-    // <Grid container>
-    //   <Grid
-    //     item
-    //     container
-    //     alignItems="center"
-    //     flexWrap="nowrap"
-    //     // justifyContent="space-between"
-    //   >
-    //     <Typography
-    //       fontWeight={700}
-    //       color="#9B9A9A"
-    //       title={full_name}
-    //       sx={{
-    // whiteSpace: "nowrap",
-    // overflow: "hidden",
-    // textOverflow: "ellipsis",
-    // maxWidth: "20ch",
-    //         mr: 1,
-    //       }}
-    //       fontSize={{ md: "2rem", xs: "1.2rem" }}
-    //     >
-    //       {full_name}
-    //     </Typography>
-    //     <Typography
-    //       color="#9B9A9A"
-    //       fontWeight={400}
-    //       fontSize={{ md: "1.6rem", xs: "1rem" }}
-    //     >
-    //       {getAgo(createdAt)}
-    //     </Typography>
-    // {check && (
-    //   <IconButton
-    //     id="basic-button"
-    //     aria-controls={opens ? "basic-menu" : undefined}
-    //     aria-haspopup="true"
-    //     aria-expanded={opens ? "true" : undefined}
-    //     onClick={handleClick}
-    //     //  sx={{ visibility: !check && "hidden" }}
-    //     sx={{ flex: 1 }}
-    //   >
-    //     <MoreVertOutlined />
-    //   </IconButton>
-    // )}
-
-    // <Menu
-    //   id="basic-menu"
-    //   anchorEl={anchorEl}
-    //   open={opens}
-    //   onClose={handleCloses}
-    //   MenuListProps={{
-    //     "aria-labelledby": "basic-button",
-    //   }}
-    // >
-    //   <MenuItem
-    //     onClick={() => handleDeleteComment(id)}
-    //     sx={{
-    //       display: "flex",
-    //       alignItems: "center",
-    //     }}
-    //   >
-    //     <ListItemIcon>
-    //       <Delete sx={{ fontSize: "2rem" }} />
-    //     </ListItemIcon>
-    //     <ListItemText sx={{ fontSize: "3rem" }}>
-    //       {isLoading ? "Deleting" : "Delete"}
-    //     </ListItemText>
-    //   </MenuItem>
-    // </Menu>
-    //   </Grid>
-    //   <Typography
-    //     color="secondary"
-    //     fontWeight={600}
-    //     sx={{ wordBreak: "break-all" }}
-    //     fontSize={{ md: "1.8rem", sm: "1.4rem" }}
-    //   >
-    //     {parse(comment)}
-    //   </Typography>
-    //   <Grid item container>
-    // <Details
-    //   icons={icons}
-    //   data={item}
-    //   type="comments"
-    //   // de={de}
-    //   onClick={handleClick}
-    // />
-    //   </Grid>
-    // </Grid>
     <>
       <ListItemText
         primary={
-          <Grid container flexDirection="column">
-            <Typography fontWeight={700}>
-              {full_name}{" "}
-              <Typography variant="span" fontWeight={500}>
-                {getAgo(createdAt)}
-              </Typography>{" "}
-            </Typography>
-            <Typography
-              sx={{
-                // display: "inline",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "50ch",
-              }}
-              //   component="span"
-              variant="body2"
-              color="text.primary"
+          <Grid item container flexDirection="column" alignItems="center">
+            <Grid
+              item
+              container
+              justifyContent={"space-between"}
+              flexWrap="nowrap"
+              sx={{ overflow: "hidden" }}
             >
-              {parse(comment)}
-            </Typography>
+              <Grid item container flexWrap="nowrap">
+                <Typography
+                  fontWeight={700}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    // flex: 0.5,
+                  }}
+                >
+                  {full_name}
+                </Typography>
+                <Typography
+                  fontWeight={500}
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "visible",
+                    ml: ".4rem",
+                  }}
+                >
+                  {getAgo(createdAt)}
+                </Typography>
+                <Grid item sx={{ ml: "auto" }}>
+                  <IconButton
+                    edge="start"
+                    id="basic-button"
+                    aria-controls={opens ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={opens ? "true" : undefined}
+                    onClick={handleClick}
+                    //  sx={{ visibility: !check && "hidden" }}
+                  >
+                    <MoreVertOutlined />
+                  </IconButton>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={opens}
+                    onClose={handleCloses}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    {!check && (
+                      <MenuItem
+                        onClick={(e) => handleDeleteComment(e, id)}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        disabled={check}
+                      >
+                        <ListItemIcon>
+                          <Delete sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+
+                        <ListItemText sx={{ fontSize: "3rem" }}>
+                          {isLoading ? "Deleting" : "Delete"}
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <ListItemIcon>
+                          <ReportOutlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>Report</ListItemText>
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <div className="ql-text">{parse(comment)}</div>
           </Grid>
         }
         secondary={<Detail item={item} />}
@@ -342,7 +262,8 @@ function Detail({ item }) {
     parentId: item?.id,
   });
   //   console.log(body, "numberOfLikes");
-  const handleLikePost = async () => {
+  const handleLikePost = async (e) => {
+    e.stopPropagation();
     const { data: dt } = await likePost({
       parent_type: "comments",
       parent_id: item?.id,
@@ -373,7 +294,11 @@ function Detail({ item }) {
           text={data?.body?.likes?.length}
         />
 
-        <StyledButton text="Share" Icon={<IosShareOutlined />} />
+        <StyledButton
+          text="Share"
+          Icon={<IosShareOutlined />}
+          onClick={(e) => e.stopPropagation()}
+        />
       </Grid>
     </Grid>
   );

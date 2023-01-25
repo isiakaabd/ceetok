@@ -51,29 +51,37 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     color: "#37D42A",
   };
   const { data: profile, isLoading } = useUserProfileQuery();
-  console.log(profile);
+
   const [updateProfile, { isLoading: loading }] =
     useUserProfileUpdateMutation();
   const validationSchema = Yup.object({
-    username: Yup.string("Enter Username"),
-    location: Yup.string("Enter location"),
-    dob: Yup.string("Enter DOB"),
-    gender: Yup.string("Enter DOB"),
-    full_name: Yup.string("Enter  full Name"),
+    username: Yup.string("Enter Username").required("Required"),
+    location: Yup.string("Enter location").required("Required"),
+    // phone: Yup.number("Enter Phone Number").required("Required"),
+    dob: Yup.string("Enter DOB").required("Required"),
+    gender: Yup.string("Enter DOB").required("Required"),
+    full_name: Yup.string("Enter  full Name").required("Required"),
     interests: Yup.array().min(3, "At least 3").required("Required"),
   });
   const handleSubmit = async (values) => {
-    console.log(values);
-    const { dob, location, interests, full_name, gender, username } = values;
-    const { data, error } = await updateProfile({
+    const { dob, location, interests, full_name, gender, username, phone } =
+      values;
+    let realGender = gender === "Male" ? "m" : "f";
+    const body = {
       dob,
       location,
       interests,
       full_name,
-      gender,
+      // phone,
+      gender: realGender,
       username,
-    }).unwrap();
+    };
+    const { data, error } = await updateProfile(body);
     if (error) toast.error(error);
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleClose(), 3000);
+    }
     console.log(data, error);
   };
 
@@ -89,13 +97,15 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     gender,
     username,
   } = profile;
+  console.log(profile);
   const initialValues = {
     username: username || "",
     dob: dob || "",
     interests: interests || [],
-    gender: gender || "",
+    gender: gender === "m" ? "Male" : "Female" || "",
     location: location || "",
     full_name: full_name || "",
+    phone: phone || "",
   };
   return (
     <Dialogs
@@ -271,11 +281,11 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                             options={[
                               {
                                 label: "Male",
-                                value: "m",
+                                value: "Male",
                               },
                               {
                                 label: "Female",
-                                value: "f",
+                                value: "Female",
                               },
                             ]}
                             Icon={FemaleOutlined}
@@ -298,13 +308,24 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                         // gap={2}
                         flexWrap={{ md: "nowrap", xs: "wrap" }}
                       >
-                        <FormikControl
-                          buttonStyle={{ background: "inherit" }}
-                          control="inputs"
-                          name="full_name"
-                          Icon={RoomOutlined}
-                          placeholder="Full Name"
-                        />
+                        <Grid item xs={12}>
+                          <FormikControl
+                            buttonStyle={{ background: "inherit" }}
+                            control="inputs"
+                            name="full_name"
+                            Icon={RoomOutlined}
+                            placeholder="Full Name"
+                          />
+                        </Grid>
+                        {/* <Grid item xs={12} md={6}>
+                          <FormikControl
+                            buttonStyle={{ background: "inherit" }}
+                            control="inputs"
+                            name="phone"
+                            Icon={RoomOutlined}
+                            placeholder="Phone Number"
+                          />
+                        </Grid> */}
                       </Grid>
                     </Grid>
                   </Grid>

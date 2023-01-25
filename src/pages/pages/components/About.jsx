@@ -36,7 +36,7 @@ const About = (props) => {
               >
                 Gender:
                 <Typography sx={{ ml: 1 }} variant="span">
-                  {gender || "No Data yet"}
+                  {gender === "m" ? "Male" : "Female" || "No Data yet"}
                 </Typography>
               </Typography>
               <Typography
@@ -191,16 +191,23 @@ const About = (props) => {
             </Typography>
 
             <Divider />
-            {interests.map((interest) => (
-              <Typography
-                color={"secondary"}
-                key={interest}
-                fontWeight={600}
-                fontSize={{ md: "1.7rem", xs: "1.4rem" }}
-              >
-                {interest?.slice(0, 1).toUpperCase() + interest?.slice(1)}
-              </Typography>
-            ))}
+            <Grid
+              item
+              container
+              display={"grid"}
+              gridTemplateColumns={"repeat(2,1fr)"}
+            >
+              {interests.map((interest) => (
+                <Typography
+                  color={"secondary"}
+                  key={interest}
+                  fontWeight={600}
+                  fontSize={{ md: "1.7rem", xs: "1.4rem" }}
+                >
+                  {interest?.slice(0, 1).toUpperCase() + interest?.slice(1)}
+                </Typography>
+              ))}
+            </Grid>
 
             <Divider />
           </Grid>

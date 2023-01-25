@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getUserDetails, logOut } from "../reducers/authReducer";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://api.ceetok.live",
@@ -34,6 +33,6 @@ const baseQuerywithAuth = async (args, api, extraOptions) => {
 export const api = createApi({
   // reducerPath: "api",
   baseQuery: baseQuerywithAuth,
-  tagTypes: ["post", "comment", "announcement"],
+  tagTypes: ["post", "comment", "announcement", "user"],
   endpoints: () => ({}),
 });

@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 
-const AllPosts = ({ post, index }) => {
+const AllPosts = ({ post, index, showUser }) => {
   const { slug, id, user, title, category, views_count, updatedAt } = post;
   const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const loginStatus = useSelector((state) => state.auth.token);
@@ -121,15 +121,17 @@ const AllPosts = ({ post, index }) => {
               // disablePadding
               sx={{ gap: { md: "2rem", xs: "1rem" } }}
             >
-              <ListItemText
-                disableTypography
-                sx={{
-                  fontSize: { md: "2rem", xs: "1.2rem" },
-                  maxWidth: "max-content",
-                }}
-              >
-                {user?.username || user?.email?.split("@")[0]}
-              </ListItemText>
+              {showUser ? (
+                <ListItemText
+                  disableTypography
+                  sx={{
+                    fontSize: { md: "2rem", xs: "1.2rem" },
+                    maxWidth: "max-content",
+                  }}
+                >
+                  {user?.username || user?.email?.split("@")[0]}
+                </ListItemText>
+              ) : null}
               <ListItemText
                 disableTypography
                 sx={{
@@ -205,4 +207,7 @@ const AllPosts = ({ post, index }) => {
   );
 };
 
+AllPosts.defaultProps = {
+  showUser: true,
+};
 export default AllPosts;

@@ -13,10 +13,12 @@ export const postSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     getPost: builder.query({
-      query: ({ category, offset }) => ({
+      query: ({ category, userId, offset }) => ({
         url: `post${
           category
             ? `/?category=${category}&limit=10&offset=0`
+            : userId
+            ? `/?limit=10&offset=${offset ? offset : 0}&user_id=${userId}`
             : `?limit=20&offset=${offset ? offset : 0}`
         }`,
         method: "GET",
@@ -127,6 +129,7 @@ export const {
   useEditAPostMutation,
   useGetCategoriesQuery,
   useGetViewsQuery,
+  useLazyGetPostQuery,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,
 } = postSlice;

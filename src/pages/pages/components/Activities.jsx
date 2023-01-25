@@ -16,9 +16,10 @@ import {
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import SinglePosts from "pages/home/SinglePosts";
 import PrivateMessage from "./PrivateMessage";
-import { useGetPostQuery } from "redux/slices/postSlice";
+import { useGetPostQuery, useLazyGetPostQuery } from "redux/slices/postSlice";
 import { useGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
 import SingleAnnoucements from "./SingleAnnoucements";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 
 const Activities = (props) => {
   const [open, setOpen] = useState(false);
@@ -54,14 +55,25 @@ const Activities = (props) => {
 
     prevOpen.current = open;
   }, [open]);
-  const { data: posts, error } = useGetPostQuery("");
+  const [getPost, { data: posts }] = useLazyGetPostQuery();
+  const { data: profile } = useUserProfileQuery();
   const { data: annoucement } = useGetAnnoucementsQuery();
 
+  useEffect(() => {
+    if (profile?.id) {
+      const fetchdata = async () => {
+        await getPost({ userId: profile?.id });
+        if (posts) setState({ data: posts, type: "post" });
+      };
+      fetchdata();
+    }
+    //eslint-disable-next-line
+  }, [profile?.id, posts]);
   const [state, setState] = useState({
     data: posts,
     type: "post",
   });
-  console.log(posts);
+
   useEffect(() => {
     if (posts) setState({ data: posts, type: "post" });
   }, [posts]);
@@ -189,7 +201,7 @@ const Activities = (props) => {
               xs={12}
             >
               {state?.data?.map((post, index) => {
-                return <SinglePosts key={index} post={post} />;
+                return <SinglePosts key={index} post={post} showUser={false} />;
               })}
             </List>
           ) : (

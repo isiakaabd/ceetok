@@ -50,6 +50,7 @@ export const authSlice = api.injectEndpoints({
         method: "GET",
         body: JSON.stringify(body),
       }),
+      providesTags: ["user"],
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -65,12 +66,12 @@ export const authSlice = api.injectEndpoints({
       query: (body) => ({
         url: "/user/edit",
         method: "PATCH",
-        body,
+        body: JSON.stringify(body),
         headers: (headers) =>
           headers.append("Content-type", "multipart/form-data"),
       }),
-
-      // transformResponse: (response) => response.body.user,
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
 
@@ -79,6 +80,7 @@ export const authSlice = api.injectEndpoints({
         url: "user/logout",
         method: "POST",
       }),
+
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),

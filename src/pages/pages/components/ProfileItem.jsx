@@ -17,11 +17,12 @@ import {
   Popper,
   Typography,
 } from "@mui/material";
+import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 
 const ProfileItem = ({ profile }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-
+  const [uploadImage] = useUserProfileUpdateMutation();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -52,6 +53,27 @@ const ProfileItem = ({ profile }) => {
 
     prevOpen.current = open;
   }, [open]);
+  const handleChangeImage = (e) => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = (e) => {
+      const file = e.currentTarget.files[0];
+      saveToServer(file);
+    };
+    //
+  };
+
+  async function saveToServer(file) {
+    const form = new FormData();
+    form.append("profile_pic", file);
+    console.log(form);
+    const { data, error } = await uploadImage(form);
+    console.log(data, error);
+    // handleClose(e);
+  }
   return (
     <>
       <ListItem
@@ -120,14 +142,16 @@ const ProfileItem = ({ profile }) => {
             }}
           >
             <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
+              <ClickAwayListener>
+                {" "}
+                {/* // onClickAway={handleClose} */}
                 <MenuList
                   autoFocusItem={open}
                   id="composition-menu"
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem onClick={handleClose}>Change Avatar</MenuItem>
+                  <MenuItem onClick={handleChangeImage}>Change Avatar</MenuItem>
                   <MenuItem onClick={handleClose}>Remove Avatar</MenuItem>
                   <MenuItem onClick={handleClose}>Save Avatar</MenuItem>
                 </MenuList>

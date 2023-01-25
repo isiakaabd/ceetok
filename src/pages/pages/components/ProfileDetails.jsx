@@ -46,7 +46,6 @@ const ProfileDetails = (props) => {
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
   const { data: dt, isLoading: loading } = useOtherUserProfileQuery(id);
-  console.log(dt);
   const condition = !id || dt?.id === userProfile?.id;
   // console.log(userProfile.id, dt.id);
   useEffect(() => {
@@ -57,7 +56,6 @@ const ProfileDetails = (props) => {
     }
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
-  console.log(state, "state");
   if (isLoading && loading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
   // const { full_name, location, email, avatar, username, createdAt } = state;

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCreateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import CreateAnnoucement from "pages/pages/CreateAnnoucement";
+import PaymentModal from "components/modals/PaymentModal";
 
 const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
@@ -41,7 +42,8 @@ const CreatePost = ({
   const [openCreateAnnoucement, setCreateAnnoucement] = useState(false);
   const handleCreateAnnoucementClose = () => setCreateAnnoucement(false);
   const [editPost] = useEditAPostMutation();
-  const [createAnnouncement] = useCreateAnnoucementMutation();
+  const [createAnnouncement, { data: annoucementData }] =
+    useCreateAnnoucementMutation();
   const navigate = useNavigate();
   // const { id, title, category, body } = data;
   const editState = {
@@ -91,7 +93,6 @@ const CreatePost = ({
 
     if (error) toast.error(error);
     if (data) {
-      console.log(data);
       toast.success(data.message);
       onSubmitProps.resetForm();
       onSubmitProps.setFieldValue("text", "");
@@ -271,9 +272,10 @@ const CreatePost = ({
           </Formik>
         </Grid>
       </NotificationModal>
-      <CreateAnnoucement
+      <PaymentModal
         open={openCreateAnnoucement}
         handleClose={handleCreateAnnoucementClose}
+        data={annoucementData?.body?.announcement}
       />
     </>
   );

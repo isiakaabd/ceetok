@@ -10,7 +10,7 @@ export const annoucementSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["announcement"],
       //   transformResponse: (response) => response.body.views,
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data,
     }),
     getAnnoucements: builder.query({
       query: (body) => ({
@@ -41,6 +41,16 @@ export const annoucementSlice = api.injectEndpoints({
       // transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    validateAnnoucement: builder.mutation({
+      query: (body) => ({
+        url: `/announcement/validate`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["announcement"],
+      // transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -49,4 +59,5 @@ export const {
   useGetAnnoucementsQuery,
   useDeleteAnnoucementsMutation,
   useGetAnnoucementQuery,
+  useValidateAnnoucementMutation,
 } = annoucementSlice;

@@ -39,14 +39,28 @@ body {
 }
 .ql-text > * {
   color: rgba(0, 0, 0, 0.87);
-  /* white-space: nowrap;
-  overflow: hidden;
-  width: 50ch;
-  text-overflow: ellipsis; */
+
   width: calc(95%);
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
+}
+.payment_btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  background: teal;
+  cursor: pointer;
+  color: #fff;
+}
+
+.payment_btn:hover {
+  background: #333;
 }

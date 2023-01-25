@@ -1,7 +1,44 @@
 import NotificationModal from "./NotificationModal";
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Skeleton } from "@mui/material";
 import images from "assets";
-const PaymentModal = ({ open, handleClose, state }) => {
+import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
+import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
+import { useUserProfileQuery } from "redux/slices/authSlice";
+const PaymentModal = ({ open, handleClose, data }) => {
+  const { data: profile, isLoading } = useUserProfileQuery();
+  const [validatePayment] = useValidateAnnoucementMutation();
+  const config = {
+    public_key: "FLWPUBK_TEST-692e93515a83fe4c4ca8bd1dcc3e3b14-X",
+    tx_ref: data?.payment?.id,
+    amount: data?.payment?.amount,
+    currency: "NGN",
+    payment_options: "card",
+    customer: {
+      email: profile?.email,
+      phone_number: profile?.phone,
+      name: profile?.full_name,
+    },
+    customizations: {
+      title: "CeeTook",
+      description: "Payment for Annoucement",
+      logo: images.logo,
+    },
+  };
+
+  const fwConfig = {
+    ...config,
+    text: "Pay with Flutterwave!",
+    callback: async (response) => {
+      console.log(response);
+      const dt = await validatePayment({
+        payment_id: data?.payment?.id,
+      });
+      console.log(dt);
+      closePaymentModal(); // this will close the modal programmatically
+    },
+    onClose: () => {},
+  };
+  if (isLoading) return <Skeleton />;
   return (
     <NotificationModal
       isOpen={open}
@@ -42,7 +79,7 @@ const PaymentModal = ({ open, handleClose, state }) => {
         >
           Duration:{" "}
           <Typography variant="span" fontWeight={400}>
-            {state?.annoucement && state?.annoucement[0]}
+            {`${data?.duration} days`}
           </Typography>
         </Typography>
         <Typography
@@ -52,7 +89,7 @@ const PaymentModal = ({ open, handleClose, state }) => {
         >
           Budget:{" "}
           <Typography variant="span" fontWeight={400}>
-            N{(+state?.slide * 50).toLocaleString()}
+            N{data?.payment?.amount}
           </Typography>
         </Typography>
       </Grid>
@@ -63,11 +100,10 @@ const PaymentModal = ({ open, handleClose, state }) => {
         >
           Payment Option
         </Typography>
-        <img
-          src={images.payment}
-          style={{ objectFit: "contain", width: "100%", cursor: "pointer" }}
-          alt="payment"
-        />
+
+        <Grid item container>
+          <FlutterWaveButton className="payment_btn" {...fwConfig} />
+        </Grid>
       </Grid>
     </NotificationModal>
   );

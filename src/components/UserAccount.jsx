@@ -23,8 +23,6 @@ const UserAccount = () => {
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const { data: userProfile } = useUserProfileQuery();
-  // const userProfile = JSON.parse(localStorage.getItem("user"));
-  console.log(userProfile);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };

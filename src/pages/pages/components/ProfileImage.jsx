@@ -13,8 +13,10 @@ import {
 import images from "assets";
 import Pen from "assets/svgs/Pen";
 import { useState, useRef, useEffect } from "react";
+import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 
 export default function ProfileImage({ avatar, name }) {
+  const [uploadImage] = useUserProfileUpdateMutation();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -48,7 +50,26 @@ export default function ProfileImage({ avatar, name }) {
 
     prevOpen.current = open;
   }, [open]);
+  const handleChangeImage = (e) => {
+    const input = document.createElement("input");
 
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = (e) => {
+      const file = e.currentTarget.files[0];
+      saveToServer(file);
+    };
+    // handleClose(e);
+  };
+  async function saveToServer(file) {
+    const form = new FormData();
+    form.append("profile_pic", file);
+    console.log(form);
+    const { data, error } = await uploadImage(form);
+    console.log(data, error);
+  }
   return (
     <>
       <Badge
@@ -104,7 +125,7 @@ export default function ProfileImage({ avatar, name }) {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem onClick={handleClose}>Change Avatar</MenuItem>
+                  <MenuItem onClick={handleChangeImage}>Change Avatar</MenuItem>
                   <MenuItem onClick={handleClose}>Remove Avatar</MenuItem>
                   <MenuItem onClick={handleClose}>Save Avatar</MenuItem>
                 </MenuList>

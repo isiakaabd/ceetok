@@ -20,6 +20,7 @@ import {
   FavoriteBorderOutlined,
   FilterList,
   IosShareOutlined,
+  Payment,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
@@ -35,6 +36,7 @@ import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
 import { Link, useNavigate } from "react-router-dom";
+import PaymentModal from "components/modals/PaymentModal";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -83,6 +85,7 @@ const Shares = ({ data: item }) => {
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
+  console.log(item);
   const handleLikePost = async () => {
     const { error } = await likePost({
       parent_type: "announcements",
@@ -111,6 +114,7 @@ const Shares = ({ data: item }) => {
     if (error) toast.error(error);
   };
   const [editModal, setEditModal] = useState(false);
+  const [paymentModal, setPaymentModal] = useState(false);
   return (
     <>
       <Grid
@@ -192,7 +196,9 @@ const Shares = ({ data: item }) => {
             </ListItemText>
           </MenuItem>
           <MenuItem
-            onClick={() => setEditModal(true)}
+            onClick={() => {
+              setEditModal(true);
+            }}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -205,6 +211,18 @@ const Shares = ({ data: item }) => {
               Edit Annoucement
             </ListItemText>
           </MenuItem>
+          <MenuItem
+            onClick={() => setPaymentModal(true)}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <ListItemIcon>
+              <Payment sx={{ fontSize: "2rem" }} />
+            </ListItemIcon>
+            <ListItemText sx={{ fontSize: "3rem" }}>Make Payment</ListItemText>
+          </MenuItem>
         </Menu>
       </Grid>
 
@@ -216,6 +234,11 @@ const Shares = ({ data: item }) => {
         open={editModal}
         postHeading={"Edit Annoucment"}
         handleClose={() => setEditModal(true)}
+      />
+      <PaymentModal
+        open={paymentModal}
+        handleClose={() => setPaymentModal(false)}
+        // data={annoucementData?.body?.announcement}
       />
     </>
   );
@@ -368,6 +391,7 @@ const Announcement = () => {
           >
             {annoucements?.map((item, index) => (
               <Grid item container key={index} flexWrap="nowrap">
+                {console.log(item)}
                 <Grid
                   item
                   container

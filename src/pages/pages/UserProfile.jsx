@@ -49,7 +49,7 @@ const UserProfile = ({ data }) => {
             <Grid item>
               <Typography
                 sx={{
-                  fontSize: { md: "2.5rem", xs: "2rem" },
+                  fontSize: { md: "2.5rem", sm: "2rem", xs: "1.6rem" },
                   color: "#5F5C5C",
                   fontWeight: 600,
                 }}

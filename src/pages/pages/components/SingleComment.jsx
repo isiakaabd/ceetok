@@ -158,7 +158,7 @@ export function Text({ item, profile }) {
               flexWrap="nowrap"
               sx={{ overflow: "hidden" }}
             >
-              <Grid item container flexWrap="nowrap">
+              <Grid item container alignItems="center" flexWrap="nowrap">
                 <Typography
                   fontWeight={700}
                   sx={{
@@ -188,6 +188,7 @@ export function Text({ item, profile }) {
                     aria-haspopup="true"
                     aria-expanded={opens ? "true" : undefined}
                     onClick={handleClick}
+                    sx={{ ml: { xs: "1rem" } }}
                     //  sx={{ visibility: !check && "hidden" }}
                   >
                     <MoreVertOutlined />

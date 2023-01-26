@@ -16,18 +16,22 @@ import annoucement from "./images/annoucement.png";
 import instagram from "./images/instagram.png";
 import davido from "./images/davido.png";
 import fb from "./images/fb.png";
+import live from "./images/live.jpg";
 import dp from "./images/dp.png";
 import gmail from "./images/gmail.png";
 import placeholder from "./images/placeholder.png";
+import adeleke from "./images/adeleke.png";
 //eslint-disable-next-line
 export default {
   image04,
   dp,
+  adeleke,
   gmail,
   payment,
   obi2,
   placeholder,
   logo,
+  live,
   fb,
   davido,
   facebook,

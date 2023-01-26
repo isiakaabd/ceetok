@@ -16,6 +16,7 @@ import SingleAnnoucement from "pages/pages/SingleAnnoucement";
 import ResetPassword from "components/modals/ResetPassword";
 import NewPassword from "components/modals/NewPassword";
 import ReplyComment from "pages/pages/components/ReplyComment";
+import Live from "pages/home/live";
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-
+            <Route path="/live" element={<Live />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/auth/new-password" element={<NewPassword />} />
             <Route path="/post" element={<PrivateRoute />}>

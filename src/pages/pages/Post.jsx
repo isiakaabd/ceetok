@@ -3,7 +3,6 @@ import {
   FavoriteBorderOutlined,
   Favorite,
   IosShareOutlined,
-  ReplyOutlined,
   ChatBubbleOutline,
 } from "@mui/icons-material";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";

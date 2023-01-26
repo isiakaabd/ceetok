@@ -21,11 +21,13 @@ import dp from "./images/dp.png";
 import gmail from "./images/gmail.png";
 import placeholder from "./images/placeholder.png";
 import adeleke from "./images/adeleke.png";
+import bitcoin from "./images/bitcoin.png";
 //eslint-disable-next-line
 export default {
   image04,
   dp,
   adeleke,
+  bitcoin,
   gmail,
   payment,
   obi2,

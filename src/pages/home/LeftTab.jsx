@@ -6,13 +6,12 @@ import {
   ListItemText,
   ListItemButton,
 } from "@mui/material";
-import { SearchOutlined } from "@mui/icons-material";
-import { Form, Formik } from "formik/dist";
-import FormikControl from "validation/FormikControl";
+
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { CustomButton } from "components";
 import { useGetCategoriesQuery } from "redux/slices/postSlice";
+import SearchComponent from "components/modals/SearchComponent";
 const LeftTab = () => {
   const loginStatus = useSelector((state) => state.auth.token);
   const { data: categories } = useGetCategoriesQuery();
@@ -35,21 +34,7 @@ const LeftTab = () => {
           padding: { xs: "1rem", md: "2rem 2rem 2rem 4rem" },
         }}
       >
-        <Formik initialValues={{ name: "" }}>
-          <Form style={{ width: "100%" }}>
-            <FormikControl
-              control="inputs"
-              name="name"
-              placeholder="Search..."
-              Icon={SearchOutlined}
-              order={1}
-              buttonStyle={{
-                background: "#37D42A",
-                color: "#fff",
-              }}
-            />
-          </Form>
-        </Formik>
+        <SearchComponent />
         <List sx={{ width: "100%" }} dense>
           {categories?.map((item, index) => {
             return (

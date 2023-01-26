@@ -27,28 +27,28 @@ import { useSelector } from "react-redux";
 import UserAccount from "./UserAccount";
 const pages = [
   {
-    id: 0,
-    path: "/",
+    id: 1,
+    path: "/trending",
     title: "Trending",
     icon: "home",
   },
   {
-    id: 1,
+    id: 2,
     path: "/live",
     title: "Live",
   },
   {
-    id: 2,
+    id: 3,
     path: "/new",
     title: "New",
   },
   {
-    id: 3,
+    id: 4,
     path: "/recent",
     title: "Recent",
   },
   {
-    id: 4,
+    id: 5,
     path: "#",
     title: "Contact Us",
   },
@@ -96,7 +96,7 @@ function Header() {
 
     prevOpen.current = open;
   }, [open]);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
   const [modal, setModal] = useState(false);
   const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
   const [isLogin, setIsLogin] = useState(false);
@@ -156,6 +156,8 @@ function Header() {
           <Container maxWidth="xl" sx={{ p: "0 !important" }}>
             <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
               <Link to="/">
+                {" "}
+                {/* onClick={() => setActive(0)} */}
                 <img
                   src={images.logo}
                   variant="square"
@@ -173,14 +175,14 @@ function Header() {
                 {pages.map((page, index) => (
                   <Link
                     to={page.path}
-                    key={index}
+                    key={page.id}
                     style={{
                       textDecoration: "none",
                       paddingInline: "2.5rem",
                     }}
-                    onClick={() => setActive(index)}
+                    onClick={() => setActive(page.id)}
                   >
-                    <ListItem key={page.path} selected={index === active}>
+                    <ListItem key={page.path} selected={page.id === active}>
                       <ListItemText disableTypography>
                         {page.title}
                       </ListItemText>

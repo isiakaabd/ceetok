@@ -22,7 +22,7 @@ const Home = () => {
           sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
         >
           <Headings />
-          <Movie />
+          {/* <Movie /> */}
         </Grid>
         <Grid
           container

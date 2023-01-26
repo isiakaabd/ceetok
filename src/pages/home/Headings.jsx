@@ -8,7 +8,7 @@ const Headings = () => {
       sx={{
         borderRadius: "1.5rem",
         mt: "4rem",
-        p: { md: "4rem", xs: "1.5rem" },
+        p: { md: " 2rem 4rem", xs: "1.5rem" },
         color: "#fff",
         backgroundColor: "#044402",
         alignItems: "center",
@@ -16,11 +16,11 @@ const Headings = () => {
       }}
     >
       <Typography variant="h1">Welcome to Ceetok</Typography>
-      <Typography variant="h2" sx={{ mt: "2rem" }}>
+      <Typography variant="h2" sx={{ mt: "1rem" }}>
         As e dey hot...
       </Typography>
 
-      <Grid item sx={{ mt: 4 }}>
+      <Grid item sx={{ mt: 2 }}>
         <Grid
           container
           justifyContent={"center"}

@@ -16,7 +16,8 @@ import SingleAnnoucement from "pages/pages/SingleAnnoucement";
 import ResetPassword from "components/modals/ResetPassword";
 import NewPassword from "components/modals/NewPassword";
 import ReplyComment from "pages/pages/components/ReplyComment";
-import Live from "pages/home/live";
+import Live from "pages/live";
+import Trending from "pages/trending";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/live" element={<Live />} />
+            <Route path="/trending" element={<Trending />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/auth/new-password" element={<NewPassword />} />
             <Route path="/post" element={<PrivateRoute />}>

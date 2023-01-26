@@ -36,7 +36,7 @@ const NotificationModal = ({
               <Typography
                 sx={{
                   color: "#5F5C5C",
-                  fontSize: { md: "1.6rem", xs: "1.4rem" },
+                  fontSize: { md: "2.5rem", xs: "1.8rem" },
                 }}
                 fontWeight={700}
               >

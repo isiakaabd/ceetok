@@ -2,6 +2,7 @@ import NotificationModal from "./NotificationModal";
 import { Typography, Grid, Skeleton } from "@mui/material";
 import images from "assets";
 import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
+import { toast } from "react-toastify";
 import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 const PaymentModal = ({ open, handleClose, data }) => {
@@ -30,9 +31,12 @@ const PaymentModal = ({ open, handleClose, data }) => {
     text: "Pay with Flutterwave!",
     callback: async (response) => {
       console.log(response);
-      const dt = await validatePayment({
+      const { data: dt, error } = await validatePayment({
         payment_id: data?.payment?.id,
       });
+      if (error) {
+        toast.error(error);
+      }
       console.log(dt);
       closePaymentModal(); // this will close the modal programmatically
     },
@@ -46,11 +50,11 @@ const PaymentModal = ({ open, handleClose, data }) => {
       width={{ md: "40vw", xs: "95vw", sm: "60vw" }}
     >
       <Typography
-        color="#9B9A9A"
+        // color="#9B9A9A"
         fontWeight={700}
         width="100%"
-        sx={{ my: 1, textAlign: "center" }}
-        fontSize={{ md: "1.7rem", xs: "1.3rem" }}
+        sx={{ textAlign: "center" }}
+        fontSize={{ md: "2.5rem", xs: "2rem" }}
       >
         Payment
       </Typography>
@@ -58,8 +62,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
         width="100%"
         textAlign="center"
         color="#FF9B04"
-        sx={{ my: 3 }}
-        fontSize={{ md: "2rem", xs: "1.6rem" }}
+        fontSize={{ md: "2rem", xs: "1.8rem" }}
       >
         Announcement Summary
       </Typography>
@@ -71,6 +74,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
         alignItems="center"
         justifyContent={"center"}
         gap={2}
+        sx={{ mt: 2 }}
       >
         <Typography
           color="#636262"
@@ -78,7 +82,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
           fontSize={{ md: "1.7rem", xs: "1.2rem" }}
         >
           Duration:{" "}
-          <Typography variant="span" fontWeight={400}>
+          <Typography variant="span" fontWeight={600}>
             {`${data?.duration} days`}
           </Typography>
         </Typography>
@@ -88,7 +92,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
           fontSize={{ md: "1.7rem", xs: "1.2rem" }}
         >
           Budget:{" "}
-          <Typography variant="span" fontWeight={400}>
+          <Typography variant="span" fontWeight={600}>
             N{data?.payment?.amount}
           </Typography>
         </Typography>
@@ -101,7 +105,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
           Payment Option
         </Typography>
 
-        <Grid item container>
+        <Grid item container sx={{ mt: 2 }}>
           <FlutterWaveButton className="payment_btn" {...fwConfig} />
         </Grid>
       </Grid>

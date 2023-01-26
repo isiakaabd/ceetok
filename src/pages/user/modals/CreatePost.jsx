@@ -14,7 +14,10 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useCreateAnnoucementMutation } from "redux/slices/annoucementSlice";
+import {
+  useCreateAnnoucementMutation,
+  useEditAnnoucementMutation,
+} from "redux/slices/annoucementSlice";
 import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 import PaymentModal from "components/modals/PaymentModal";
 
@@ -44,6 +47,7 @@ const CreatePost = ({
   const [editPost] = useEditAPostMutation();
   const [createAnnouncement, { data: annoucementData }] =
     useCreateAnnoucementMutation();
+  const [editAnnoucement] = useEditAnnoucementMutation();
   const navigate = useNavigate();
   // const { id, title, category, body } = data;
   const editState = {
@@ -100,6 +104,24 @@ const CreatePost = ({
     }
     if (error) toast.error(error);
   };
+  const handEditAnnoucement = async (values, { resetForm, setFieldValue }) => {
+    const { id } = initialValues;
+    const { title, text } = values;
+    const body = {
+      id,
+      title,
+      body: text,
+    };
+    const { data, error } = await editAnnoucement(body);
+    if (data) {
+      resetForm();
+      toast.success(data);
+      setFieldValue("text", "");
+      setTimeout(() => handleClose(), 3000);
+    }
+    if (error) toast.success(error);
+  };
+
   const handleCreatePost = async (values, onSubmitProps) => {
     const { title, category, text } = values;
     const { data, error } = await create({ title, category, body: text });
@@ -148,14 +170,18 @@ const CreatePost = ({
           <Formik
             validationSchema={postHeading ? annoucementValidation : validation}
             onSubmit={
-              type === "edit"
+              type === "annoucement"
+                ? handEditAnnoucement
+                : type === "edit"
                 ? handleEditPost
                 : postHeading
                 ? handleCreateAnnoucement
                 : handleCreatePost
             }
             initialValues={
-              type === "edit"
+              type === "annoucement"
+                ? initialValues
+                : type === "edit"
                 ? editState
                 : initialValues
                 ? initialValues
@@ -185,6 +211,7 @@ const CreatePost = ({
                           control="input"
                           name="duration"
                           placeholder="Duration"
+                          disabled={type === "annoucement"}
                           Duration="Duration should be in minutes"
                           options={categories}
                         />
@@ -261,7 +288,13 @@ const CreatePost = ({
                       </Button>
                       <CustomButton
                         isSubmitting={isSubmitting}
-                        title={type !== "edit" ? " Post" : "Update"}
+                        title={
+                          type !== "edit"
+                            ? " Post"
+                            : type === "annoucement"
+                            ? "Edit"
+                            : "Update"
+                        }
                         type="submit"
                       />
                     </Grid>

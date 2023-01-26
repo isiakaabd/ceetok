@@ -266,7 +266,7 @@ export const Comment = ({ handleShare, data }) => {
           fontSize={{ md: "3rem", xs: "2rem" }}
           fontWeight={700}
         >
-          Comment
+          Comments
         </Typography>
         <Grid
           item

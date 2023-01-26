@@ -101,6 +101,7 @@ const Editor = ({ theme, name, placeholder, value }) => {
   useEffect(() => {
     if (quill) {
       quill.on("text-change", (delta, oldDelta, source) => {
+        console.log(delta, oldDelta, source);
         //
         setFieldValue(name, quill.root.innerHTML);
       });
@@ -137,6 +138,7 @@ const Editor = ({ theme, name, placeholder, value }) => {
 
         <Typography
           color="#9B9A9A"
+          component="div"
           sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
         >
           Message

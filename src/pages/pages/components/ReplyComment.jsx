@@ -1,4 +1,9 @@
-import { MoreVertOutlined, Delete, ReportOutlined } from "@mui/icons-material";
+import {
+  MoreVertOutlined,
+  Delete,
+  ReportOutlined,
+  Edit,
+} from "@mui/icons-material";
 import {
   Button,
   Grid,
@@ -177,7 +182,7 @@ function Single({ comments }) {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
 
   //   const check = profile?.id === user_id;
-  const handleDeleteComment = async (e, id) => {
+  const handleDeleteComment = async (e) => {
     const { data, error } = await deleteComment({ id });
     if (data) {
       toast.success("comment deleted successfully");
@@ -256,7 +261,7 @@ function Single({ comments }) {
                     >
                       {!check && (
                         <MenuItem
-                          onClick={(e) => handleDeleteComment(e, id)}
+                          // onClick={ handleDeleteComment}
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -272,6 +277,27 @@ function Single({ comments }) {
                           </ListItemText>
                         </MenuItem>
                       )}
+
+                      {!check && (
+                        <MenuItem
+                          // onClick={ handleEditComment}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          disabled={check}
+                        >
+                          <ListItemIcon>
+                            <Edit sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
+
+                          <ListItemText sx={{ fontSize: "3rem" }}>
+                            {/* {isLoading ? "Editing" : "Delete"} */}
+                            Edit
+                          </ListItemText>
+                        </MenuItem>
+                      )}
+
                       {check && (
                         <MenuItem
                           sx={{

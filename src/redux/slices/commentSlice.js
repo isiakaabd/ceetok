@@ -23,6 +23,16 @@ export const commentSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       // transformErrorResponse: (error) => error.data.message,
     }),
+    editComment: builder.mutation({
+      query: (body) => ({
+        url: `/comment`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["comment", "post"],
+      transformResponse: (response) => response.message,
+      // transformErrorResponse: (error) => error.data.message,
+    }),
     deleteComment: builder.mutation({
       query: (body) => ({
         url: `/comment`,
@@ -40,4 +50,5 @@ export const {
   useGetPostCommentsQuery,
   usePostCommentMutation,
   useDeleteCommentMutation,
+  useEditCommentMutation,
 } = commentSlice;

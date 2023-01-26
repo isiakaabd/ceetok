@@ -13,7 +13,7 @@ import DiscreteSliderMarks from "components/modals/LinearProgress";
 import ChipItems from "components/ChipItems";
 import PaymentModal from "components/modals/PaymentModal";
 
-const CreateAnnoucement = ({ handleClose, open, title }) => {
+const CreateAnnoucement = ({ handleClose, open, title, data }) => {
   const validation = Yup.object({
     title: Yup.string("Enter Title").required("Required"),
     category: Yup.string("Enter Category").required("Required"),

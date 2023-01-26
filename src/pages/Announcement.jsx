@@ -83,6 +83,7 @@ export const StyledMenu = styled((props) => (
 
 const Shares = ({ data: item }) => {
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
+  console.log(item);
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
   console.log(item);
@@ -196,9 +197,7 @@ const Shares = ({ data: item }) => {
             </ListItemText>
           </MenuItem>
           <MenuItem
-            onClick={() => {
-              setEditModal(true);
-            }}
+            onClick={() => setEditModal(true)}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -233,7 +232,17 @@ const Shares = ({ data: item }) => {
       <CreatePost
         open={editModal}
         postHeading={"Edit Annoucment"}
-        handleClose={() => setEditModal(true)}
+        handleClose={() => {
+          setEditModal(false);
+          handleCloses();
+        }}
+        type="annoucement"
+        initialValues={{
+          id: item?.id,
+          text: item?.body,
+          title: item?.title,
+          duration: item?.duration,
+        }}
       />
       <PaymentModal
         open={paymentModal}
@@ -391,7 +400,6 @@ const Announcement = () => {
           >
             {annoucements?.map((item, index) => (
               <Grid item container key={index} flexWrap="nowrap">
-                {console.log(item)}
                 <Grid
                   item
                   container

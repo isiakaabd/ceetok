@@ -19,8 +19,8 @@ export const annoucementSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["announcement"],
-      transformResponse: (response) => response.body.message,
-      transformErrorResponse: (error) => error.data,
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
     getAnnoucements: builder.query({
       query: (body) => ({

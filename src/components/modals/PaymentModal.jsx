@@ -5,13 +5,13 @@ import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
 import { toast } from "react-toastify";
 import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { useUserProfileQuery } from "redux/slices/authSlice";
-const PaymentModal = ({ open, handleClose, data }) => {
+const PaymentModal = ({ open, handleClose, data, duration }) => {
   const { data: profile, isLoading } = useUserProfileQuery();
   const [validatePayment] = useValidateAnnoucementMutation();
   const config = {
     public_key: "FLWPUBK_TEST-692e93515a83fe4c4ca8bd1dcc3e3b14-X",
-    tx_ref: data?.payment?.id,
-    amount: data?.payment?.amount,
+    tx_ref: data?.payment?.id || data?.id,
+    amount: data?.payment?.amount || data?.amount,
     currency: "NGN",
     payment_options: "card",
     customer: {
@@ -32,13 +32,14 @@ const PaymentModal = ({ open, handleClose, data }) => {
     callback: async (response) => {
       console.log(response);
       const { data: dt, error } = await validatePayment({
-        payment_id: data?.payment?.id,
+        payment_id: data?.payment?.id || data?.id,
       });
       if (error) {
         toast.error(error);
       }
       console.log(dt);
       closePaymentModal(); // this will close the modal programmatically
+      handleClose();
     },
     onClose: () => {},
   };
@@ -83,7 +84,7 @@ const PaymentModal = ({ open, handleClose, data }) => {
         >
           Duration:{" "}
           <Typography variant="span" fontWeight={600}>
-            {`${data?.duration} days`}
+            {`${data?.duration || duration} days`}
           </Typography>
         </Typography>
         <Typography
@@ -93,7 +94,9 @@ const PaymentModal = ({ open, handleClose, data }) => {
         >
           Budget:{" "}
           <Typography variant="span" fontWeight={600}>
-            N{data?.payment?.amount}
+            N
+            {data?.payment?.amount?.toLocaleString() ||
+              data?.amount?.toLocaleString()}
           </Typography>
         </Typography>
       </Grid>

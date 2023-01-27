@@ -85,13 +85,13 @@ export const StyledMenu = styled((props) => (
 }));
 
 const Shares = ({ data: item }) => {
+  console.log(item);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const { data: profile } = useUserProfileQuery();
-  console.log(profile);
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const check = profile?.id === item?.user_id;
-  console.log(check);
+
   const handleLikePost = async () => {
     const { error } = await likePost({
       parent_type: "announcements",
@@ -188,64 +188,52 @@ const Shares = ({ data: item }) => {
           }}
         >
           {check && (
-            <>
-              <MenuItem
-                onClick={() => handleDeleteComment(item.id)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Delete sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  {isLoading ? "Deleting" : "Delete"}
-                </ListItemText>
-              </MenuItem>
-              <MenuItem
-                onClick={() => setEditModal(true)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Edit sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  Edit Annoucement
-                </ListItemText>
-              </MenuItem>
-              <MenuItem
-                onClick={() => setPaymentModal(true)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Payment sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  Make Payment
-                </ListItemText>
-              </MenuItem>
-              {/* <MenuItem
-                onClick={() => setPaymentModal(true)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Payment sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  Make Payment
-                </ListItemText>
-              </MenuItem> */}
-            </>
+            <MenuItem
+              onClick={() => handleDeleteComment(item.id)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <Delete sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                {isLoading ? "Deleting" : "Delete"}
+              </ListItemText>
+            </MenuItem>
+          )}
+          {check && (
+            <MenuItem
+              onClick={() => setEditModal(true)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <Edit sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                {item?.edited ? "Edit Again" : "Edit Annoucement"}
+              </ListItemText>
+            </MenuItem>
+          )}
+          {check && (
+            <MenuItem
+              onClick={() => setPaymentModal(true)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <Payment sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                Make Payment
+              </ListItemText>
+            </MenuItem>
           )}
           {!check && (
             <MenuItem
@@ -285,8 +273,12 @@ const Shares = ({ data: item }) => {
       />
       <PaymentModal
         open={paymentModal}
-        handleClose={() => setPaymentModal(false)}
-        // data={annoucementData?.body?.announcement}
+        handleClose={() => {
+          handleCloses();
+          setPaymentModal(false);
+        }}
+        data={item?.payment}
+        duration={item?.duration}
       />
     </>
   );
@@ -439,6 +431,7 @@ const Announcement = () => {
           >
             {annoucements?.map((item, index) => (
               <Grid item container key={index} flexWrap="nowrap">
+                {console.log(item)}
                 <Grid
                   item
                   container

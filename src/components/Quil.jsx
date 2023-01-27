@@ -100,8 +100,8 @@ const Editor = ({ theme, name, placeholder, value }) => {
 
   useEffect(() => {
     if (quill) {
-      quill.on("text-change", (delta, oldDelta, source) => {
-        console.log(delta, oldDelta, source);
+      quill.on("text-change", (e) => {
+        console.log(e);
         //
         setFieldValue(name, quill.root.innerHTML);
       });

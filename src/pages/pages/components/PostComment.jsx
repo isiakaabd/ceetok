@@ -20,6 +20,7 @@ import {
   MenuList,
   Typography,
   List,
+  Skeleton,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState, useEffect, useRef } from "react";
@@ -33,20 +34,25 @@ import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import { useGetPostCommentsQuery } from "redux/slices/commentSlice";
 import { Details } from "../Post";
-import { useUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useUserProfileQuery,
+  useUserProfileUpdateMutation,
+} from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
+import Tooltips from "components/ToolTips";
 export const Comment = ({ handleShare, data }) => {
   const { id, category, user_id, body } = data;
   const navigate = useNavigate();
 
-  const { data: profile } = useUserProfileQuery();
+  const { data: profile, isLoading } = useUserProfileQuery();
+
   const { interests } = profile;
-  const check = interests?.includes(category.toLowerCase());
-  const checkUser = profile?.id === user_id;
+
   const [open, setOpen] = useState(false);
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
   const anchorRef = useRef(null);
+  const [update, { isLoading: updating }] = useUserProfileUpdateMutation();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -118,7 +124,27 @@ export const Comment = ({ handleShare, data }) => {
       link: "",
     },
   ];
+  if (isLoading) return <Skeleton />;
+  const check = interests?.includes(category.toLowerCase());
+  const checkUser = profile?.id === user_id;
 
+  async function handleCheck() {
+    const { interests } = profile;
+    if (!check) {
+      const data = await update({
+        interests: [...interests, category.toLowerCase()],
+      });
+      if (data) toast.success(data);
+      console.log(data);
+    } else {
+      const newArr = interests.filter((ite) => ite !== category.toLowerCase());
+      const data = await update({
+        interests: [...newArr],
+      });
+      if (data) toast.success(data);
+      console.log(data);
+    }
+  }
   return (
     <>
       <Grid
@@ -229,16 +255,19 @@ export const Comment = ({ handleShare, data }) => {
           >
             {category}
           </Typography>
-          <Typography
-            fontWeight={500}
-            component="div"
-            sx={{ display: "flex", alignItems: "center" }}
-            fontSize="2rem"
-            color={check ? "#37D42A" : "#FF9B04"}
-          >
-            {check ? "Followed" : "Follow"}
-            {check && <VerifiedOutlined />}
-          </Typography>{" "}
+          <Tooltips title={check ? "unfollow" : "Follow"}>
+            <Typography
+              fontWeight={500}
+              component="a"
+              onClick={handleCheck}
+              sx={{ display: "flex", cursor: "pointer", alignItems: "center" }}
+              fontSize="2rem"
+              color={check ? "#37D42A" : "#FF9B04"}
+            >
+              {updating ? "Updating..." : check ? "Followed" : "Follow"}
+              {check && <VerifiedOutlined />}
+            </Typography>
+          </Tooltips>
         </Grid>
         <img src={images.obi2} style={{ width: "100%" }} alt="peter obi" />
         <Grid container item flexDirection="column" rowGap={2}>

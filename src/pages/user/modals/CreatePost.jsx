@@ -18,7 +18,6 @@ import {
   useCreateAnnoucementMutation,
   useEditAnnoucementMutation,
 } from "redux/slices/annoucementSlice";
-import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 import PaymentModal from "components/modals/PaymentModal";
 
 const validation = Yup.object({

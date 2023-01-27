@@ -15,8 +15,12 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useGetPostQuery } from "redux/slices/postSlice";
 import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
-import { useUserProfileQuery } from "redux/slices/authSlice";
-
+import {
+  useUserProfileQuery,
+  useUserProfileUpdateMutation,
+} from "redux/slices/authSlice";
+import { toast } from "react-toastify";
+import Tooltips from "components/ToolTips";
 const Entertainment = () => {
   const [searchParams] = useSearchParams();
   const params = searchParams.get("category");
@@ -30,6 +34,7 @@ const Entertainment = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [update, { loading: updating }] = useUserProfileUpdateMutation();
   const initialValues = {
     title: "",
     category: params.toLowerCase(),
@@ -44,7 +49,23 @@ const Entertainment = () => {
   if (isLoading || loading) return <Skeleton />;
   const { interests } = profile;
   const check = interests?.includes(params.toLowerCase());
-
+  async function handleCheck() {
+    const { interests } = profile;
+    if (!check) {
+      const { data, error } = await update({
+        interests: [...interests, params.toLowerCase()],
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+    } else {
+      const newArr = interests.filter((ite) => ite !== params.toLowerCase());
+      const { data, error } = await update({
+        interests: [...newArr],
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+    }
+  }
   return (
     <>
       <Grid item container sx={{ py: 2, background: "#fafafa" }}>
@@ -67,16 +88,24 @@ const Entertainment = () => {
             >
               {params}
             </Typography>
-            <Typography
-              fontWeight={500}
-              component="div"
-              sx={{ display: "flex", alignItems: "center" }}
-              fontSize="2rem"
-              color={check ? "#37D42A" : "#FF9B04"}
-            >
-              {check ? "Followed" : "Follow"}
-              {check && <VerifiedOutlined />}
-            </Typography>
+            <Tooltips title={check ? "unfollow" : "Follow"}>
+              <Typography
+                fontWeight={500}
+                component="button"
+                sx={{
+                  display: "flex",
+                  cursor: "pointer",
+                  alignItems: "center",
+                }}
+                fontSize="2rem"
+                onClick={handleCheck}
+                role="button"
+                color={check ? "#37D42A" : "#FF9B04"}
+              >
+                {check ? "Followed" : updating ? "Following" : "Follow"}
+                {check && <VerifiedOutlined />}
+              </Typography>
+            </Tooltips>
           </Grid>
           <Grid item container>
             <Grid

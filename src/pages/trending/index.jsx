@@ -88,7 +88,11 @@ const Trending = () => {
                 // onClick={}
               />
             </Grid>
-            <Grid item display={{ md: "block", xs: "none" }}>
+            <Grid
+              item
+              sx={{ minWidth: "40rem" }}
+              display={{ md: "block", xs: "none" }}
+            >
               <SearchComponent handleSubmit={{}} />
             </Grid>
             <Grid item>

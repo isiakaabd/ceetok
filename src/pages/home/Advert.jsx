@@ -2,6 +2,7 @@ import images from "assets";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetAdsQuery } from "redux/slices/adsSlice";
+import { link } from "helpers";
 const Advert = () => {
   const { image01, image02, image03 } = images;
   const { data: allAds, isLoading } = useGetAdsQuery();
@@ -41,9 +42,10 @@ const Advert = () => {
         >
           {allAds?.ads?.map((item) => (
             <Grid item xs={3.8}>
+              {console.log(item)}
               <img
-                src={item}
-                alt="obi"
+                src={`${link}${item.media[0]?.storage_path}`}
+                alt={item.title}
                 style={{ objectFit: "contain", height: "100%", width: "100%" }}
               />
             </Grid>

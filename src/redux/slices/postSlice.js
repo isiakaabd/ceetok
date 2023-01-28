@@ -19,7 +19,7 @@ export const postSlice = api.injectEndpoints({
             ? `/?category=${category}&limit=10&offset=0`
             : userId
             ? `/?limit=10&offset=${offset ? offset : 0}&user_id=${userId}`
-            : `?limit=20&offset=${offset ? offset : 0}`
+            : `?limit=10&offset=${offset ? offset : 0}`
         }`,
         method: "GET",
       }),
@@ -37,6 +37,8 @@ export const postSlice = api.injectEndpoints({
         //   headers.append("Content-type", "multipart/form-data");
         // },
       }),
+      invalidatesTags: ["post"],
+      transformErrorResponse: (error) => error.data.message,
     }),
     getAPost: builder.query({
       query: (postId) => ({
@@ -46,7 +48,7 @@ export const postSlice = api.injectEndpoints({
       providesTags: ["post"],
       // invalidatesTags: ["post"],
       transformResponse: (response) => response.body.post,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
     getCategories: builder.query({
       query: () => ({
@@ -129,6 +131,7 @@ export const {
   useEditAPostMutation,
   useGetCategoriesQuery,
   useGetViewsQuery,
+
   useLazyGetPostQuery,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,

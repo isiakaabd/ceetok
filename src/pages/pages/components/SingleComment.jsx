@@ -41,7 +41,7 @@ import {
 // import { Comment } from "./components/PostComment";
 // import SocialMedia from "components/modals/SocialMedia";
 // import { useUserProfileQuery } from "redux/slices/authSlice";
-import { getAgo } from "helpers";
+import { getAgo, link } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quil";
@@ -74,12 +74,6 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile }) => {
-  const { id } = item;
-  // const [deleteComment, { isLoading }] = useDeleteCommentMutation();
-  // const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
-  console.log(item);
-
   return (
     <ListItem
       disablePadding
@@ -112,12 +106,13 @@ export function Image({ person }) {
       pathname: "/user/profile",
       search: `?id=${id}`,
     });
+    console.log(avatar);
   };
   return (
     <ListItemAvatar>
       <Avatar
         alt={full_name}
-        src={avatar}
+        src={`${link}${avatar}`}
         onClick={() => handleClicks(user_id)}
         sx={{ cursor: "pointer" }}
       >
@@ -308,26 +303,23 @@ function Detail({ item }) {
   const { id } = item;
   const [likeState, setLikeState] = useState(item?.liked === 1 ? true : false);
   const [likePost] = useLikeAndUnlikePostMutation();
-  console.log(item);
+
   const { data: repliedComment } = useGetPostCommentsQuery({
     type: "comments",
     parentId: id,
   });
 
-  const [open, setOpen] = useState(false);
-
   const { data } = useGetLikesQuery({
     type: "comments",
     parentId: item?.id,
   });
-  console.log(data);
+
   //   console.log(body, "numberOfLikes");
   const handleLikePost = async (e) => {
     const { data: dt } = await likePost({
       parent_type: "comments",
       parent_id: item?.id,
     });
-    console.log(dt);
     if (dt) setLikeState(!likeState);
   };
   const navigate = useNavigate();
@@ -338,8 +330,6 @@ function Detail({ item }) {
           <StyledButton
             text={repliedComment?.length}
             onClick={(e) => {
-              // onClick={(e) => {
-              //   e.stopImmediatePropagation();
               navigate(`/user/comment/?id=${id}`);
               // }}
             }}

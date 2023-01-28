@@ -75,6 +75,8 @@ const LeftTab = () => {
             background="#636262"
             width="10rem"
             color="#fff"
+            component={Link}
+            to="/categories"
             fontWeight={700}
             fontSize={"1.2rem"}
             title="See More"

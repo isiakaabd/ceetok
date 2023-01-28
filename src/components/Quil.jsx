@@ -7,7 +7,9 @@ import "quill/dist/quill.snow.css"; // Add css for snow theme
 import { useFormikContext } from "formik/dist";
 import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
-const Editor = ({ theme, name, placeholder, value }) => {
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+const Editor = ({ theme, name, placeholder, value, upload_id }) => {
   hljs.configure({
     languages: ["javascript", "ruby", "python", "rust"],
   });
@@ -28,6 +30,7 @@ const Editor = ({ theme, name, placeholder, value }) => {
       [{ color: ["#37D42A", "#fff", "#f00"] }, { background: [] }],
 
       ["clean"],
+      ["code-block"],
     ],
     clipboard: {
       matchVisual: false,
@@ -60,7 +63,7 @@ const Editor = ({ theme, name, placeholder, value }) => {
     modules,
     placeholder,
   });
-
+  const token = useSelector((state) => state.auth.token);
   const { setFieldValue, errors, values } = useFormikContext();
   const [uploadImage, { isLoading }] = useAddImageMutation();
   // const theme = 'bubble';
@@ -75,11 +78,26 @@ const Editor = ({ theme, name, placeholder, value }) => {
   const saveToServer = async (file) => {
     const form = new FormData();
     form.append("type", "posts");
-    form.append("file", file);
-    console.log(file);
+    form.append("media", file);
+    console.log(form);
 
-    const res = await uploadImage(form);
-    console.log(res);
+    // const res = await uploadImage(form);
+    fetch("https://api.ceetok.live/post/upload-media", {
+      method: "POST",
+      body: form,
+      headers: {
+        // 👇 Set headers manually for single file upload
+        AUTHORIZATION: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      // .then((data) => console.log(data))
+      .then((data) => {
+        toast.success(data.message);
+        setFieldValue(upload_id, data.body.post_id);
+      })
+      .catch((err) => toast.error(err));
+
     // insertToEditor(res.uploadedImageUrl);
   };
 
@@ -91,8 +109,6 @@ const Editor = ({ theme, name, placeholder, value }) => {
     input.click();
 
     input.onchange = (e) => {
-      console.log(e.currentTarget.files[0]);
-
       const file = input.files[0];
       saveToServer(file);
     };
@@ -101,8 +117,6 @@ const Editor = ({ theme, name, placeholder, value }) => {
   useEffect(() => {
     if (quill) {
       quill.on("text-change", (e) => {
-        console.log(e);
-        //
         setFieldValue(name, quill.root.innerHTML);
       });
     }

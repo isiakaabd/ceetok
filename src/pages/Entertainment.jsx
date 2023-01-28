@@ -91,15 +91,15 @@ const Entertainment = () => {
             <Tooltips title={check ? "unfollow" : "Follow"}>
               <Typography
                 fontWeight={500}
-                component="button"
+                component="a"
                 sx={{
                   display: "flex",
                   cursor: "pointer",
                   alignItems: "center",
                 }}
                 fontSize="2rem"
-                onClick={handleCheck}
                 role="button"
+                onClick={handleCheck}
                 color={check ? "#37D42A" : "#FF9B04"}
               >
                 {check ? "Followed" : updating ? "Following" : "Follow"}

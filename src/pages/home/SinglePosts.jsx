@@ -18,7 +18,8 @@ import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 
 const AllPosts = ({ post, index, showUser }) => {
-  const { slug, id, user, title, category, views_count, updatedAt } = post;
+  const { slug, id, user, media, title, category, views_count, updatedAt } =
+    post;
   const { data } = useGetViewsQuery({ type: "posts", parentId: id });
   const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const AllPosts = ({ post, index, showUser }) => {
           }}
         >
           <Avatar
-            src={images.obi}
+            src={media[0]?.storage_path || images.obi}
             alt="obi"
             variant="rounded"
             sx={{ height: "100%", width: "100%" }}

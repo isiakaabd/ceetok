@@ -37,7 +37,7 @@ import {
 import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PaymentModal from "components/modals/PaymentModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 
@@ -85,7 +85,6 @@ export const StyledMenu = styled((props) => (
 }));
 
 const Shares = ({ data: item }) => {
-  console.log(item);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const { data: profile } = useUserProfileQuery();
   const [openShareModal, setOpenShareModal] = useState(false);

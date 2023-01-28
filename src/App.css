@@ -33,18 +33,19 @@ body {
 }
 
 .ql-text {
-  max-height: 10rem;
-  overflow: clip;
+  /* max-height: 10rem; */
+  /* overflow: clip; */
   width: 100%;
 }
 .ql-text > * {
   color: rgba(0, 0, 0, 0.87);
 
-  width: calc(95%);
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* width: calc(95%); */
+  max-width: 95%;
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
+  word-break: break-all;
   display: inline-block;
 }
 .payment_btn {

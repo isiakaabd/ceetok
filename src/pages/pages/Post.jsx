@@ -149,6 +149,7 @@ const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
   const { data, isLoading, error } = useGetAPostQuery(postId);
+  console.log(data);
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
   });

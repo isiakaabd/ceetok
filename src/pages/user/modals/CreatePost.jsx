@@ -122,8 +122,13 @@ const CreatePost = ({
   };
 
   const handleCreatePost = async (values, onSubmitProps) => {
-    const { title, category, text } = values;
-    const { data, error } = await create({ title, category, body: text });
+    const { title, category, text, post_id } = values;
+    const { data, error } = await create({
+      title,
+      category,
+      body: text,
+      post_id,
+    });
     if (error) toast.error(error);
     if (data) {
       toast.success(data);
@@ -131,7 +136,7 @@ const CreatePost = ({
       setTimeout(() => handleClose(), 3000);
     }
   };
-  const initialValue = { title: "", category: "", text: "" };
+  const initialValue = { title: "", category: "", text: "", post_id: "" };
   return (
     <>
       <NotificationModal
@@ -187,7 +192,8 @@ const CreatePost = ({
                 : initialValue
             }
           >
-            {({ initialValues, isSubmitting, errors }) => {
+            {({ initialValues, isSubmitting, errors, values }) => {
+              console.log(values);
               return (
                 <Form style={{ width: "100%" }}>
                   <Grid
@@ -229,6 +235,7 @@ const CreatePost = ({
                       name="text"
                       placeholder="write something..."
                       value={initialValues.text}
+                      upload_id={"post_id"}
                     />
 
                     <Typography

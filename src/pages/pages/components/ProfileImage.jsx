@@ -9,17 +9,17 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
-
-import images from "assets";
 import Pen from "assets/svgs/Pen";
+import { link } from "helpers";
 import { useState, useRef, useEffect } from "react";
-import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function ProfileImage({ avatar, name }) {
-  const [uploadImage] = useUserProfileUpdateMutation();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-
+  const token = useSelector((state) => state.auth.token);
+  // /user/edit
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -61,15 +61,51 @@ export default function ProfileImage({ avatar, name }) {
       const file = e.currentTarget.files[0];
       saveToServer(file);
     };
-    // handleClose(e);
+    handleClose(e);
   };
   async function saveToServer(file) {
     const form = new FormData();
     form.append("profile_pic", file);
-    console.log(form);
-    const { data, error } = await uploadImage(form);
-    console.log(data, error);
+    fetch("https://api.ceetok.live/user/edit", {
+      method: "PATCH",
+      body: form,
+      headers: {
+        // 👇 Set headers manually for single file upload
+        AUTHORIZATION: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      // .then((data) => console.log(data))
+      .then((data) => {
+        toast.success(data.message);
+      })
+      .catch((err) => toast.error(err));
+    setTimeout(() => handleClose(), 500);
   }
+  const handleRemoveImage = (e) => {
+    const body = {
+      profile_pic: null,
+    };
+    fetch("https://api.ceetok.live/user/edit", {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        // 👇 Set headers manually for single file upload
+        AUTHORIZATION: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      // .then((data) => console.log(data))
+      .then((data) => {
+        toast.success("Image Removed Successfully");
+        setTimeout(() => handleClose(e), 500);
+      })
+      .catch((err) => toast.error(err));
+  };
+  // console.log(form);
+  // const { data, error } = await uploadImage(form);
+  // console.log(data, error);
+
   return (
     <>
       <Badge
@@ -89,7 +125,7 @@ export default function ProfileImage({ avatar, name }) {
       >
         <Avatar
           alt={name}
-          src={avatar}
+          src={`${link}${avatar}`}
           sx={{
             width: "10rem",
             fontSize: { md: "3rem", xs: "2.5rem" },
@@ -126,8 +162,7 @@ export default function ProfileImage({ avatar, name }) {
                   onKeyDown={handleListKeyDown}
                 >
                   <MenuItem onClick={handleChangeImage}>Change Avatar</MenuItem>
-                  <MenuItem onClick={handleClose}>Remove Avatar</MenuItem>
-                  <MenuItem onClick={handleClose}>Save Avatar</MenuItem>
+                  <MenuItem onClick={handleRemoveImage}>Remove Avatar</MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

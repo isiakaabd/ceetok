@@ -15,6 +15,7 @@ import SinglePosts from "./SinglePosts";
 import Filters from "components/modals/Filters";
 import LoginModal from "components/modals/LoginModal";
 import { useGetPostQuery } from "redux/slices/postSlice";
+import Paginations from "components/modals/Paginations";
 
 const RightTab = ({ setCreatePost }) => {
   // const posts = useSelector((state) => state.posts.posts);
@@ -137,19 +138,13 @@ const RightTab = ({ setCreatePost }) => {
                 })}
               </List>
               {/* <Grid item container justifyContent={"center"}> */}
-              <Pagination
-                page={page}
-                count={count}
-                hidePrevButton={true}
-                hideNextButton={true}
-                sx={{ margin: "auto", py: 2 }}
-                // boundaryCount={0}
-                onChange={handleChange}
-              />
+              <Paginations page={page} setPage={setPage} />
               {/* </Grid> */}
             </>
           ) : (
-            <Typography variant="h2">No Data yet</Typography>
+            <Typography variant="h2" sx={{ width: "100%" }} textAlign="center">
+              No Data yet
+            </Typography>
           )}
         </Grid>
       </Grid>

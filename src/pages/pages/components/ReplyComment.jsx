@@ -36,7 +36,7 @@ import {
   useGetPostCommentsQuery,
   usePostCommentMutation,
 } from "redux/slices/commentSlice";
-import { getAgo } from "helpers";
+import { getAgo, link } from "helpers";
 
 const validationSchema = Yup.object({
   comment: Yup.string().required("Enter your Comment"),
@@ -199,7 +199,7 @@ function Single({ comments }) {
         <ListItemAvatar>
           <Avatar
             alt={full_name}
-            src={avatar}
+            src={`${link}${avatar}`}
             onClick={() => handleClicks(user_id)}
             sx={{ cursor: "pointer" }}
           >

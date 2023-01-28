@@ -19,6 +19,7 @@ const UserProfile = ({ data }) => {
     get_notifications,
     user: { full_name, email, avatar, username },
   } = data;
+  console.log(avatar);
   return (
     <>
       <Grid

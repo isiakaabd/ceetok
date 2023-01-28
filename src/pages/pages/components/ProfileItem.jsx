@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
+import { link } from "helpers";
 
 const ProfileItem = ({ profile }) => {
   const [open, setOpen] = useState(false);
@@ -85,7 +86,9 @@ const ProfileItem = ({ profile }) => {
       >
         <ListItemAvatar alignItems="flex-start">
           <IconButton>
-            <Avatar alt="Remy Sharp">R</Avatar>
+            <Avatar alt={profile?.full_name} src={`${link}${profile?.avatar}`}>
+              {profile?.full_name?.slice(0, 1).toUpperCase()}
+            </Avatar>
           </IconButton>
         </ListItemAvatar>
         <ListItemText

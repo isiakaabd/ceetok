@@ -10,8 +10,5 @@ export const getTime = (date) => {
 export const getAgo = (date) => {
   return moment(date).fromNow(true);
 };
-// export const getExactTime=(date)=>{
-//   let moment.duration
-//  if ()
-//   moment.duration().hours();
-// }
+
+export const link = "https://ceetok-8f448.appspot.com/";

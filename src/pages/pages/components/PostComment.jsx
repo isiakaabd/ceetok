@@ -41,12 +41,10 @@ import {
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
 export const Comment = ({ handleShare, data }) => {
-  const { id, category, user_id, body } = data;
+  const { id, category, user_id, body, media } = data;
   const navigate = useNavigate();
 
   const { data: profile, isLoading } = useUserProfileQuery();
-
-  const { interests } = profile;
 
   const [open, setOpen] = useState(false);
   const [editPostModal, setEditPostModal] = useState(false);
@@ -125,6 +123,7 @@ export const Comment = ({ handleShare, data }) => {
     },
   ];
   if (isLoading) return <Skeleton />;
+  const { interests } = profile;
   const check = interests?.includes(category.toLowerCase());
   const checkUser = profile?.id === user_id;
 
@@ -269,7 +268,11 @@ export const Comment = ({ handleShare, data }) => {
             </Typography>
           </Tooltips>
         </Grid>
-        <img src={images.obi2} style={{ width: "100%" }} alt="peter obi" />
+        <img
+          src={media[0]?.storage_path || images.obi2}
+          style={{ width: "100%" }}
+          alt="peter obi"
+        />
         <Grid container item flexDirection="column" rowGap={2}>
           <Typography
             color="secondary"

@@ -44,7 +44,6 @@ import { getImage } from "helpers";
 export const Comment = ({ handleShare, data }) => {
   const { id, category, user_id, body, media } = data;
   const navigate = useNavigate();
-  console.log(data);
   const { data: profile, isLoading } = useUserProfileQuery();
 
   const [open, setOpen] = useState(false);

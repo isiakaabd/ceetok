@@ -49,7 +49,7 @@ const ReplyComment = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const { data: mainComment, isLoading } = useGetSingleCommentQuery(id);
-  console.log(mainComment);
+
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
 
@@ -194,16 +194,9 @@ const ReplyComment = () => {
 };
 
 function Single({ comments }) {
-  const {
-    full_name,
-    avatar,
-    edited,
-    updatedAt,
-    createdAt,
-    user_id,
-    comment,
-    id,
-  } = comments;
+  console.log(comments);
+  const { edited, updatedAt, createdAt, user, user_id, comment, id } = comments;
+  const { full_name, avatar } = user;
   // const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const handleClicks = (id) => {

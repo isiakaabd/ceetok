@@ -71,6 +71,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 
 const SingleComment = ({ item, icons, profile }) => {
   const navigate = useNavigate();
+  console.log(item, "item");
   return (
     <ListItem
       disablePadding
@@ -95,8 +96,9 @@ const SingleComment = ({ item, icons, profile }) => {
     </ListItem>
   );
 };
-export function Image({ person }) {
-  const { full_name, avatar, user_id } = person;
+export function Image({ person: { user } }) {
+  // console.log(person, "person");
+  const { full_name, avatar, user_id } = user;
   const navigate = useNavigate();
   const handleClicks = (id) => {
     navigate({
@@ -119,9 +121,8 @@ export function Image({ person }) {
 }
 
 export function Text({ item, profile }) {
-  const { full_name, comment, createdAt, updatedAt, edited, user_id, id } =
-    item;
-
+  const { user, comment, createdAt, updatedAt, edited, user_id, id } = item;
+  const { full_name } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const handleCloses = (e) => {
@@ -136,7 +137,8 @@ export function Text({ item, profile }) {
   };
   const check = profile?.id !== user_id;
 
-  const handleDeleteComment = async () => {
+  const handleDeleteComment = async (e) => {
+    e.stopPropagation();
     const { data, error } = await deleteComment({ id });
     if (data) toast.success("comment deleted successfully");
     if (error) toast.error(error);

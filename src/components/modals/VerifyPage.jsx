@@ -20,7 +20,8 @@ import {
 import * as Yup from "yup";
 import { TextError } from "validation/TextError";
 import { toast } from "react-toastify";
-import { getImage, link } from "helpers";
+import { getDate, getDates, getImage, link } from "helpers";
+import { useRef } from "react";
 const VerifyPage = ({ isOpen, handleClose }) => {
   const likes = [
     "entertainment",
@@ -65,9 +66,29 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     interests: Yup.array().min(3, "At least 3").required("Required"),
   });
   const handleSubmit = async (values) => {
-    const { dob, location, interests, full_name, gender, username, phone } =
-      values;
+    const {
+      dob,
+      location,
+      interests,
+      profile_pic,
+      full_name,
+      gender,
+      username,
+      phone,
+    } = values;
+    const form = new FormData();
     let realGender = gender === "Male" ? "m" : "f";
+    form.append("gender", realGender);
+    form.append("dob", dob);
+    form.append("full_name", full_name);
+    if (profile_pic) {
+      form.append("profile_pic", profile_pic);
+    }
+    form.append("username", username);
+    // form.append("interests[]", JSON.stringify(interests));
+    interests.forEach((item, index) => {
+      form.append(`interests[${index}]`, item);
+    });
     const body = {
       dob,
       location,
@@ -77,7 +98,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
       gender: realGender,
       username,
     };
-    const { data, error } = await updateProfile(body);
+    const { data, error } = await updateProfile(form);
     if (error) toast.error(error);
     if (data) {
       toast.success(data);
@@ -85,6 +106,9 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     }
     console.log(data, error);
   };
+  const ref = useRef();
+
+  const handleChangeImage = () => ref.current.click();
 
   if (isLoading) return <Skeleton />;
   const {
@@ -101,13 +125,15 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   console.log(profile);
   const initialValues = {
     username: username || "",
-    dob: dob || "",
+    dob: getDates(new Date(dob)) || "",
+    profile_pic: "",
     interests: interests || [],
     gender: gender === "m" ? "Male" : "Female" || "",
     location: location || "",
     full_name: full_name || "",
     phone: phone || "",
   };
+
   return (
     <Dialogs
       height="90vh"
@@ -123,7 +149,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
         enableReinitialize
         onSubmit={handleSubmit}
       >
-        {({ values, errors }) => {
+        {({ values, errors, setFieldValue }) => {
           return (
             <Form>
               <Grid
@@ -220,9 +246,19 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                       </Typography>
                     </Grid>
                     <Grid item>
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        accept="image/*"
+                        ref={ref}
+                        onChange={(e) =>
+                          setFieldValue("profile_pic", e.target.files[0])
+                        }
+                      />
                       <CustomButton
                         variant="contained"
                         title="change"
+                        onClick={handleChangeImage}
                         sx={{
                           padding: { md: ".2rem 2rem", xs: ".2rem 1rem" },
                           borderRadius: 50,

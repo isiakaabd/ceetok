@@ -206,8 +206,7 @@ const CreatePost = ({
                 : initialValue
             }
           >
-            {({ initialValues, isSubmitting, errors, values }) => {
-              console.log(values);
+            {({ initialValues, isSubmitting, values }) => {
               return (
                 <Form style={{ width: "100%" }}>
                   <Grid
@@ -229,9 +228,8 @@ const CreatePost = ({
                         <FormikControl
                           control="input"
                           name="duration"
-                          placeholder="Duration"
                           disabled={type === "annoucement"}
-                          Duration="Duration should be in minutes"
+                          placeholder="Duration should be in days"
                           options={categories}
                         />
                       ) : (

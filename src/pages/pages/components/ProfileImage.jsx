@@ -14,6 +14,10 @@ import { getImage, link } from "helpers";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import {
+  useUserProfileQuery,
+  useUserProfileUpdateMutation,
+} from "redux/slices/authSlice";
 
 export default function ProfileImage({ avatar, name }) {
   const [open, setOpen] = useState(false);
@@ -40,7 +44,8 @@ export default function ProfileImage({ avatar, name }) {
       setOpen(false);
     }
   }
-
+  const [updateProfile] = useUserProfileUpdateMutation();
+  const { refetch } = useUserProfileQuery();
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {
@@ -66,29 +71,32 @@ export default function ProfileImage({ avatar, name }) {
   async function saveToServer(file) {
     const form = new FormData();
     form.append("profile_pic", file);
-    fetch("https://api.ceetok.live/user/edit", {
-      method: "PATCH",
-      body: form,
-      headers: {
-        // 👇 Set headers manually for single file upload
-        AUTHORIZATION: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      // .then((data) => console.log(data))
-      .then((data) => {
-        toast.success(data.message);
-      })
-      .catch((err) => toast.error(err));
+    const dat = await updateProfile(form);
+
+    toast.success(dat);
+    // C("https://api.ceetok.live/user/edit", {
+    //   method: "PATCH",
+    //   body: form,
+    //   headers: {
+    //     // 👇 Set headers manually for single file upload
+    //     AUTHORIZATION: `Bearer ${token}`,
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   // .then((data) => console.log(data))
+    //   .then((data) => {
+    //     refetch();
+    //     toast.success(data.message);
+    //   })
+    //   .catch((err) => toast.error(err));
     setTimeout(() => handleClose(), 500);
   }
   const handleRemoveImage = (e) => {
-    const body = {
-      profile_pic: null,
-    };
+    const form = new FormData();
+    form.append("profile_pic", null);
     fetch("https://api.ceetok.live/user/edit", {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: JSON.stringify(form),
       headers: {
         // 👇 Set headers manually for single file upload
         AUTHORIZATION: `Bearer ${token}`,

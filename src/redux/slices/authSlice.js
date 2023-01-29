@@ -63,17 +63,18 @@ export const authSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     userProfileUpdate: builder.mutation({
-      query: (data) => ({
+      query: (form) => ({
         url: "/user/edit",
         method: "PATCH",
-        body: JSON.stringify(data),
-        // credentials: "include",
-        //   headers: (headers) =>
-        //     headers.append("Content-type", "multipart/form-data"),
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+
+        body: form,
       }),
       invalidatesTags: ["user"],
       transformResponse: (response) => response.message,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
 
     logout: builder.mutation({

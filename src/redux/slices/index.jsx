@@ -3,9 +3,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://api.ceetok.live",
 
-  prepareHeaders: (headers, { getState }) => {
+  prepareHeaders: (headers, { getState, type, endpoint }) => {
     const token = getState().auth.token;
-    headers.append("Content-Type", "application/json");
+
+    if (endpoint !== "userProfileUpdate") {
+      headers.append("Content-Type", "application/json");
+
+      // } else {
+    }
 
     if (token) {
       headers.append("AUTHORIZATION", `Bearer ${token}`);

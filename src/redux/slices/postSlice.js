@@ -18,13 +18,6 @@ export const postSlice = api.injectEndpoints({
           offset ? `&offset=${offset}` : "&offset=0"
         }&limit=10${userId ? `&user_id=${userId}` : ""}`,
 
-        // `post${
-        //   category
-        //     ? `/?category=${category}&limit=10&offset=0`
-        //     : userId
-        //     ? `/?limit=10&offset=${offset ? offset : 0}&user_id=${userId}`
-        //     : `?limit=10&offset=${offset ? offset : 0}`
-        // }`,
         method: "GET",
       }),
       providesTags: ["post"],
@@ -36,10 +29,6 @@ export const postSlice = api.injectEndpoints({
         url: "/post/upload-media",
         method: "POST",
         body: JSON.stringify(body),
-        // headers: (headers) => {
-        //   headers.delete("Content-Type", "application/json");
-        //   headers.append("Content-type", "multipart/form-data");
-        // },
       }),
       invalidatesTags: ["post"],
       transformErrorResponse: (error) => error.data.message,

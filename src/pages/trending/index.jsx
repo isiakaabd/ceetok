@@ -15,10 +15,10 @@ import {
   AddCircleOutline,
   MenuOutlined,
   SettingsOutlined,
+  TuneOutlined,
 } from "@mui/icons-material";
 import { CustomButton } from "components";
 import Filters from "components/modals/Filters";
-import { useSelector } from "react-redux";
 import { useGetPostQuery } from "redux/slices/postSlice";
 const Trending = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -30,13 +30,12 @@ const Trending = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const loginStatus = useSelector((state) => state.auth.token);
+
   const [page, setPage] = useState(1);
-  const {
-    data: array,
-    error,
-    isLoading,
-  } = useGetPostQuery({ offset: page - 1 });
+  const { data: array, isLoading } = useGetPostQuery({
+    offset: page - 1,
+    category: "trending",
+  });
   const handleChange = (e, value) => {
     setPage(value);
   };
@@ -105,7 +104,7 @@ const Trending = () => {
                   handleClose={handleClose}
                 />
                 <IconButton edge="start" size="small">
-                  <MenuOutlined sx={{ fontSize: { md: "4rem", xs: "2rem" } }} />
+                  <TuneOutlined sx={{ fontSize: { md: "4rem", xs: "2rem" } }} />
                 </IconButton>
                 <IconButton edge="start" size="small">
                   <SettingsOutlined
@@ -152,7 +151,9 @@ const Trending = () => {
               {/* </Grid> */}
             </>
           ) : (
-            <Typography variant="h2">No Data yet</Typography>
+            <Typography variant="h2" width="100%" textAlign="center">
+              No Data yet
+            </Typography>
           )}
         </Grid>
       </Grid>

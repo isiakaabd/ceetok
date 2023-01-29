@@ -21,7 +21,7 @@ export const commentSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["comment", "post"],
       transformResponse: (response) => response.message,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
     editComment: builder.mutation({
       query: (body) => ({
@@ -31,7 +31,7 @@ export const commentSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["comment", "post"],
       transformResponse: (response) => response.message,
-      // transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
     deleteComment: builder.mutation({
       query: (body) => ({
@@ -40,8 +40,27 @@ export const commentSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["comment", "post"],
-      // transformResponse: (response) => response.message.data,
       transformErrorResponse: (error) => error.data.message,
+    }),
+    updateComment: builder.mutation({
+      query: (body) => ({
+        url: `/comment`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["comment", "post"],
+      transformErrorResponse: (error) => error.data.message,
+      transformResponse: (response) => response.message,
+    }),
+    getSingleComment: builder.query({
+      query: (id) => ({
+        url: `/comment/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["comment", "post"],
+
+      transformErrorResponse: (error) => error.data.message,
+      transformResponse: (response) => response.body.comment,
     }),
   }),
 });
@@ -51,4 +70,6 @@ export const {
   usePostCommentMutation,
   useDeleteCommentMutation,
   useEditCommentMutation,
+  useUpdateCommentMutation,
+  useGetSingleCommentQuery,
 } = commentSlice;

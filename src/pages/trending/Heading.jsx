@@ -24,16 +24,19 @@ const Heading = () => {
           BITCOIN FALLS BACK TO $10,000
         </Typography>
       </Grid>
-      <Grid item flex={{ md: 1, xs: 1 }}>
-        <img
-          src={images.bitcoin}
-          style={{
-            width: "100%",
-            objectFit: "contain",
-            height: { md: "20rem", xs: "10rem" },
-          }}
-          alt="bitcoin"
-        />
+      <Grid item flex={{ md: 1, xs: 1, height: "100%" }}>
+        <Grid container sx={{ height: "100%" }}>
+          <img
+            src={images.bitcoin}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              // height: { md: "20rem", xs: "10rem" },
+            }}
+            alt="bitcoin"
+          />
+        </Grid>
       </Grid>
     </Grid>
   );

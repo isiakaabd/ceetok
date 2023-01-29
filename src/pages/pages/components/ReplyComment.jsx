@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
 
@@ -34,16 +34,22 @@ import SocialMedia from "components/modals/SocialMedia";
 import {
   useDeleteCommentMutation,
   useGetPostCommentsQuery,
+  useGetSingleCommentQuery,
   usePostCommentMutation,
+  useUpdateCommentMutation,
 } from "redux/slices/commentSlice";
 import { getAgo, link } from "helpers";
-
+import NotificationModal from "components/modals/NotificationModal";
+import { useSelector } from "react-redux";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 const validationSchema = Yup.object({
   comment: Yup.string().required("Enter your Comment"),
 });
 const ReplyComment = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
+  const { data: mainComment, isLoading } = useGetSingleCommentQuery(id);
+  console.log(mainComment);
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
 
@@ -55,6 +61,7 @@ const ReplyComment = () => {
     type: "comments",
     parentId: id,
   });
+
   const [openShareModal, setOpenShareModal] = useState(false);
   const handleSubmit = async (values, { setFieldValue }) => {
     const { data: dt, error } = await postAComment({
@@ -70,18 +77,19 @@ const ReplyComment = () => {
       toast.error("something went wrong, try again...");
     }
   };
-  if (loadingComment)
+  if (loadingComment || isLoading)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
   if (err) return <p>Soemthing went wrong...</p>;
 
   return (
     <>
-      <Grid item container sx={{ my: 6 }}>
+      <Grid item container sx={{ mt: 6, background: "#E5E5E5" }}>
         <Grid
           sx={{
             mx: "auto",
-            background: "#f2f2f2",
+            background: "#fff",
             padding: { md: "3rem", xs: "1rem" },
+            my: "4rem",
             borderRadius: "2rem",
           }}
           item
@@ -90,7 +98,26 @@ const ReplyComment = () => {
           xs={11}
         >
           <Grid item container flexDirection={"column"}>
-            <Typography fontWeight={700}>Replying to</Typography>
+            <Grid item container flexDirection={"column"} gap={2}>
+              <Typography
+                fontWeight={700}
+                fontSize={{ md: "2rem", xs: "1.6rem", sm: "1.8rem" }}
+              >
+                Comment
+              </Typography>
+              <Typography>{parse(mainComment?.comment)}</Typography>
+            </Grid>
+            <Typography fontWeight={700} sx={{ my: 2 }}>
+              Replying to
+              <Typography
+                variant="span"
+                component={Link}
+                sx={{ ml: 1, color: "#FF9B04" }}
+                to={`/user/profile/?id=${mainComment?.user_id}`}
+              >
+                {`@${mainComment?.user?.username || mainComment?.user?.email}`}
+              </Typography>
+            </Typography>
             <Grid item container>
               {repliedComment?.length > 0 ? (
                 <List dense sx={{ width: "100%" }}>
@@ -167,7 +194,17 @@ const ReplyComment = () => {
 };
 
 function Single({ comments }) {
-  const { full_name, avatar, createdAt, user_id, comment, id } = comments;
+  const {
+    full_name,
+    avatar,
+    edited,
+    updatedAt,
+    createdAt,
+    user_id,
+    comment,
+    id,
+  } = comments;
+  // const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const handleClicks = (id) => {
     navigate({
@@ -175,6 +212,8 @@ function Single({ comments }) {
       search: `?id=${id}`,
     });
   };
+  const { data: profile } = useUserProfileQuery();
+  console.log(comments);
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const handleCloses = () => setAnchorEl(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -192,138 +231,209 @@ function Single({ comments }) {
     }
     handleCloses();
   };
-  let check;
+  const [editComment, setEditComment] = useState(false);
+  const [updateComment, { isLoading: submitting }] = useUpdateCommentMutation();
+  let check = profile?.id !== user_id;
+
+  const handleSubmit = async (values) => {
+    const { comment } = values;
+
+    const data = await updateComment({
+      id,
+      comment,
+    });
+    setTimeout(() => {
+      handleCloses();
+    }, 500);
+    setEditComment(false);
+    console.log(data);
+    // const form = new FormData();
+    // form.append("profile_pic", file);
+    // fetch("https://api.ceetok.live/user/edit", {
+    //   method: "PATCH",
+    //   body: form,
+    //   headers: {
+    //     // 👇 Set headers manually for single file upload
+    //     AUTHORIZATION: `Bearer ${token}`,
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   // .then((data) => console.log(data))
+    //   .then((data) => {
+    //     toast.success(data.message);
+    //   })
+    //   .catch((err) => toast.error(err));
+    // setTimeout(() => handleClose(), 500);
+  };
   return (
-    <ListItemButton>
-      <div style={{ width: "100%", display: "flex" }}>
-        <ListItemAvatar>
-          <Avatar
-            alt={full_name}
-            src={`${link}${avatar}`}
-            onClick={() => handleClicks(user_id)}
-            sx={{ cursor: "pointer" }}
-          >
-            {full_name?.slice(0, 1).toUpperCase()}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            <Grid item container flexDirection="column" alignItems="center">
-              <Grid
-                item
-                container
-                justifyContent={"space-between"}
-                flexWrap="nowrap"
-                sx={{ overflow: "hidden" }}
-              >
-                <Grid item container flexWrap="nowrap">
-                  <Typography
-                    fontWeight={700}
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      // flex: 0.5,
-                    }}
-                  >
-                    {full_name}
-                  </Typography>
-                  <Typography
-                    fontWeight={500}
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "visible",
-                      ml: ".4rem",
-                    }}
-                  >
-                    {getAgo(createdAt)}
-                  </Typography>
-                  <Grid item sx={{ ml: "auto" }}>
-                    <IconButton
-                      edge="start"
-                      id="basic-button"
-                      aria-controls={opens ? "basic-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={opens ? "true" : undefined}
-                      onClick={handleClick}
-                      //  sx={{ visibility: !check && "hidden" }}
-                    >
-                      <MoreVertOutlined />
-                    </IconButton>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={opens}
-                      onClose={handleCloses}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
+    <>
+      <ListItemButton>
+        <div style={{ width: "100%", display: "flex" }}>
+          <ListItemAvatar>
+            <Avatar
+              alt={full_name}
+              src={`${link}${avatar}`}
+              onClick={() => handleClicks(user_id)}
+              sx={{ cursor: "pointer" }}
+            >
+              {full_name?.slice(0, 1).toUpperCase()}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Grid item container flexDirection="column" alignItems="center">
+                <Grid
+                  item
+                  container
+                  justifyContent={"space-between"}
+                  flexWrap="nowrap"
+                  sx={{ overflow: "hidden" }}
+                >
+                  <Grid item container flexWrap="nowrap" alignItems="center">
+                    <Typography
+                      fontWeight={700}
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        // flex: 0.5,
                       }}
                     >
-                      {!check && (
-                        <MenuItem
-                          // onClick={ handleDeleteComment}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          disabled={check}
-                        >
-                          <ListItemIcon>
-                            <Delete sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
+                      {full_name}
+                    </Typography>
+                    <Typography
+                      fontWeight={500}
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "visible",
+                        ml: ".4rem",
+                      }}
+                    >
+                      {edited ? getAgo(updatedAt) : getAgo(createdAt)}
+                    </Typography>
+                    {edited && (
+                      <Typography
+                        fontWeight={700}
+                        color="success"
+                        fontSize={{ md: "1.2rem", xs: "1rem" }}
+                        sx={{
+                          ml: ".4rem",
+                          alignSelf: "center",
+                          color: "#37D42A",
+                          whiteSpace: "nowrap",
+                          overflow: "visible",
+                        }}
+                      >
+                        Edited
+                      </Typography>
+                    )}
+                    <Grid item sx={{ ml: "auto" }}>
+                      <IconButton
+                        edge="start"
+                        id="basic-button"
+                        aria-controls={opens ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={opens ? "true" : undefined}
+                        onClick={handleClick}
+                        //  sx={{ visibility: !check && "hidden" }}
+                      >
+                        <MoreVertOutlined />
+                      </IconButton>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={opens}
+                        onClose={handleCloses}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                        {!check && (
+                          <MenuItem
+                            onClick={handleDeleteComment}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                            disabled={check}
+                          >
+                            <ListItemIcon>
+                              <Delete sx={{ fontSize: "2rem" }} />
+                            </ListItemIcon>
 
-                          <ListItemText sx={{ fontSize: "3rem" }}>
-                            {isLoading ? "Deleting" : "Delete"}
-                          </ListItemText>
-                        </MenuItem>
-                      )}
+                            <ListItemText sx={{ fontSize: "3rem" }}>
+                              {isLoading ? "Deleting" : "Delete"}
+                            </ListItemText>
+                          </MenuItem>
+                        )}
 
-                      {!check && (
-                        <MenuItem
-                          // onClick={ handleEditComment}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          disabled={check}
-                        >
-                          <ListItemIcon>
-                            <Edit sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
+                        {!check && (
+                          <MenuItem
+                            onClick={() => setEditComment(true)}
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                            disabled={check}
+                          >
+                            <ListItemIcon>
+                              <Edit sx={{ fontSize: "2rem" }} />
+                            </ListItemIcon>
 
-                          <ListItemText sx={{ fontSize: "3rem" }}>
-                            {/* {isLoading ? "Editing" : "Delete"} */}
-                            Edit
-                          </ListItemText>
-                        </MenuItem>
-                      )}
+                            <ListItemText sx={{ fontSize: "3rem" }}>
+                              {/* {isLoading ? "Editing" : "Delete"} */}
+                              Edit
+                            </ListItemText>
+                          </MenuItem>
+                        )}
 
-                      {check && (
-                        <MenuItem
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <ListItemIcon>
-                            <ReportOutlined sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-                          <ListItemText>Report</ListItemText>
-                        </MenuItem>
-                      )}
-                    </Menu>
+                        {check && (
+                          <MenuItem
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <ListItemIcon>
+                              <ReportOutlined sx={{ fontSize: "2rem" }} />
+                            </ListItemIcon>
+                            <ListItemText>Report</ListItemText>
+                          </MenuItem>
+                        )}
+                      </Menu>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
 
-              <Typography variant="h5" sx={{ textAlign: "left", width: "98%" }}>
-                {parse(comment)}
-              </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "left", width: "98%" }}
+                >
+                  {parse(comment)}
+                </Typography>
+              </Grid>
+            }
+          />
+        </div>
+      </ListItemButton>
+      <NotificationModal
+        isOpen={editComment}
+        handleClose={() => setEditComment(false)}
+      >
+        <Formik initialValues={{ comment }} onSubmit={handleSubmit}>
+          <Form>
+            <Editor value={comment} name="comment" />
+            <Grid item container sx={{ mt: 2 }}>
+              <CustomButton
+                title="submit"
+                type="submit"
+                isSubmitting={submitting}
+              />
             </Grid>
-          }
-        />
-      </div>
-    </ListItemButton>
+          </Form>
+        </Formik>
+      </NotificationModal>
+    </>
   );
 }
 export default ReplyComment;

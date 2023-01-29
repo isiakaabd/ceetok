@@ -14,13 +14,17 @@ export const postSlice = api.injectEndpoints({
     }),
     getPost: builder.query({
       query: ({ category, userId, offset }) => ({
-        url: `post${
-          category
-            ? `/?category=${category}&limit=10&offset=0`
-            : userId
-            ? `/?limit=10&offset=${offset ? offset : 0}&user_id=${userId}`
-            : `?limit=10&offset=${offset ? offset : 0}`
-        }`,
+        url: `post/?${category ? `category=${category}` : ""}${
+          offset ? `&offset=${offset}` : "&offset=0"
+        }&limit=10${userId ? `&${userId}` : ""}`,
+
+        // `post${
+        //   category
+        //     ? `/?category=${category}&limit=10&offset=0`
+        //     : userId
+        //     ? `/?limit=10&offset=${offset ? offset : 0}&user_id=${userId}`
+        //     : `?limit=10&offset=${offset ? offset : 0}`
+        // }`,
         method: "GET",
       }),
       providesTags: ["post"],
@@ -87,7 +91,6 @@ export const postSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["post", "announcement", "comment"],
-      // transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
     getLikes: builder.query({
@@ -95,9 +98,9 @@ export const postSlice = api.injectEndpoints({
         url: `/like?parent_type=${type}&parent_id=${parentId}`,
         method: "GET",
       }),
-      invalidatesTags: ["post"],
-      // transformResponse: (response) => response.message,
-      // transformErrorResponse: (error) => error.data.message,
+      providesTags: ["post", "comment", "announcement"],
+      transformResponse: (response) => response.body.likes,
+      transformErrorResponse: (error) => error.data.message,
     }),
     getViews: builder.query({
       query: ({ type, parentId }) => ({

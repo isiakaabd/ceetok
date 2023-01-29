@@ -11,4 +11,4 @@ export const getAgo = (date) => {
   return moment(date).fromNow(true);
 };
 
-export const link = "https://ceetok-8f448.appspot.com/";
+export const link = "gs://ceetok-8f448.appspot.com/";

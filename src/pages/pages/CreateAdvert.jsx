@@ -30,20 +30,31 @@ const CreateAdvert = ({ handleClose, title }) => {
   const token = useSelector((state) => state.auth.token);
   const [createAds, { isLoading }] = useCreateAdsMutation();
   const handleCreateAdvert = (values) => {
-    const { title, action, file, actionType, duration, format } = values;
+    const { title, actions, files, actionType, duration, format } = values;
     const form = new FormData();
     const body = {
       title,
-      files: file,
+      files: files,
       format,
       duration,
-      action: [{ value: actionType, name: action }],
+      actions,
     };
+    // const actn = actions.map((i) => JSON.stringify(i));
+    // console.log(actn, 1233);
     form.append("title", title);
-    form.append("files", file);
+    form.append("files", files);
     form.append("format", format);
     form.append("duration", duration);
-    form.append("action", [{ value: actionType, name: action }]);
+    for (let x = 0; x < files.length; x++) {
+      form.append("files[]", files[x]);
+    }
+    // form.append("actions", JSON.stringify(actions));
+    actions.forEach((item, index) => {
+      form.append(`actions[${[index]}][name]`, item.name);
+    });
+    actions.forEach((item, index) => {
+      form.append(`actions[${[index]}][value]`, item.value);
+    });
     console.log(form);
     fetch("https://api.ceetok.live/ad", {
       method: "POST",
@@ -57,8 +68,6 @@ const CreateAdvert = ({ handleClose, title }) => {
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-
-    console.log(values);
 
     // const { data, error } = await createAds(form);
     // console.log(data, error);

@@ -7,7 +7,6 @@ import {
   MoreVertOutlined,
   ChatBubbleOutline,
   Edit,
-  CloseOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import {
@@ -42,10 +41,7 @@ import {
 // import SocialMedia from "components/modals/SocialMedia";
 // import { useUserProfileQuery } from "redux/slices/authSlice";
 import { getAgo, link } from "helpers";
-import NotificationModal from "components/modals/NotificationModal";
-import { Formik, Form } from "formik/dist";
-import Editor from "components/Quil";
-import { CustomButton } from "components";
+import EditModal from "./EditPost";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -74,13 +70,14 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile }) => {
+  const navigate = useNavigate();
   return (
     <ListItem
       disablePadding
-      // onClick={(e) => {
-      //   e.stopImmediatePropagation();
-      //   navigate(`/user/comment/?id=${id}`);
-      // }}
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/user/comment/?id=${item?.id}`);
+      }}
       sx={{
         "& .MuiListItemText-root": {
           m: 0,
@@ -89,7 +86,7 @@ const SingleComment = ({ item, icons, profile }) => {
         color: "text.primary",
       }}
     >
-      <ListItemButton>
+      <ListItemButton component="div">
         <div style={{ width: "100%", display: "flex" }}>
           <Image person={item} />
           <Text item={item} profile={profile} icons={icons} />{" "}
@@ -106,7 +103,6 @@ export function Image({ person }) {
       pathname: "/user/profile",
       search: `?id=${id}`,
     });
-    console.log(avatar);
   };
   return (
     <ListItemAvatar>
@@ -128,35 +124,28 @@ export function Text({ item, profile }) {
 
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [editCommentModal, setEditCommentModal] = useState(false);
   const handleCloses = (e) => {
+    e.stopPropagation();
     setAnchorEl(null);
   };
+
   const opens = Boolean(anchorEl);
-  const handleClick = (event) => {
-    // event.stopPropagation();
-    setAnchorEl(event.currentTarget);
+  const handleClick = (e) => {
+    e.stopPropagation();
+    setAnchorEl(e.currentTarget);
   };
   const check = profile?.id !== user_id;
 
-  const handleDeleteComment = async (e) => {
+  const handleDeleteComment = async () => {
     const { data, error } = await deleteComment({ id });
-    if (data) {
-      toast.success("comment deleted successfully");
-    }
-    if (error) {
-      toast.error(error);
-    }
-    handleCloses();
-  };
-  const handleEditComment = (e) => {
-    setEditCommentModal(true);
-  };
+    if (data) toast.success("comment deleted successfully");
+    if (error) toast.error(error);
 
-  const handleClose = () => {
-    setEditCommentModal(false);
     handleCloses();
   };
+  const [open, setOpen] = useState(false);
+  const handleEditComment = (e) => setOpen(true);
+
   return (
     <>
       <ListItemText
@@ -287,35 +276,35 @@ export function Text({ item, profile }) {
             <div className="ql-text">{parse(comment)}</div>
           </Grid>
         }
-        secondary={
-          <Detail item={item} setEditCommentModal={setEditCommentModal} />
-        }
+        secondary={<Detail item={item} />}
       />
+
       <EditModal
-        handleClose={handleClose}
         item={item}
-        open={editCommentModal}
+        open={open}
+        handleClose={() => {
+          handleCloses();
+          setOpen(false);
+        }}
       />
     </>
   );
 }
 function Detail({ item }) {
   const { id } = item;
-  const [likeState, setLikeState] = useState(item?.liked === 1 ? true : false);
+  const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
-
   const { data: repliedComment } = useGetPostCommentsQuery({
     type: "comments",
     parentId: id,
   });
-
   const { data } = useGetLikesQuery({
     type: "comments",
-    parentId: item?.id,
+    parentId: id,
   });
 
-  //   console.log(body, "numberOfLikes");
   const handleLikePost = async (e) => {
+    e.stopPropagation();
     const { data: dt } = await likePost({
       parent_type: "comments",
       parent_id: item?.id,
@@ -331,7 +320,6 @@ function Detail({ item }) {
             text={repliedComment?.length}
             onClick={(e) => {
               navigate(`/user/comment/?id=${id}`);
-              // }}
             }}
             Icon={<ChatBubbleOutline />}
           />
@@ -346,7 +334,7 @@ function Detail({ item }) {
                 <FavoriteBorderOutlined />
               )
             }
-            text={data?.body?.likes?.length}
+            text={data?.length}
           />
 
           <StyledButton
@@ -359,53 +347,7 @@ function Detail({ item }) {
     </>
   );
 }
-function EditModal({ item, open, handleClose }) {
-  const [editComment, { isLoading: loading }] = useEditCommentMutation();
-  const handleSubmit = async (values) => {
-    const { edit } = values;
-    const { data, error } = await editComment({
-      comment: edit,
-      id: item?.id,
-    });
-    handleClose();
-    if (data) toast.success(data);
-    if (error) toast.error(error);
-  };
-  return (
-    <NotificationModal isOpen={open} handleClose={handleClose}>
-      <Grid item container>
-        <Typography
-          sx={{ mb: 2, textAlign: "center", width: "100%" }}
-          variant="h2"
-        >
-          Edit Comment
-        </Typography>
-        <Formik
-          onSubmit={handleSubmit}
-          enableReinitialize
-          initialValues={{ edit: item?.comment }}
-        >
-          {({ values }) => {
-            return (
-              <Form>
-                <Grid item container flexDirection={"column"} gap={2}>
-                  {/* <Grid item container> */}
-                  <Editor name="edit" value={values.edit} />
-                  {/* </Grid> */}
-                  <CustomButton
-                    title={"Edit Post"}
-                    type="submit"
-                    isSubmitting={loading}
-                  />
-                </Grid>
-              </Form>
-            );
-          }}
-        </Formik>
-      </Grid>
-    </NotificationModal>
-  );
-}
+
 SingleComment.propTypes = {};
 
 export default SingleComment;

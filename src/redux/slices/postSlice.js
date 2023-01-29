@@ -16,7 +16,7 @@ export const postSlice = api.injectEndpoints({
       query: ({ category, userId, offset }) => ({
         url: `post/?${category ? `category=${category}` : ""}${
           offset ? `&offset=${offset}` : "&offset=0"
-        }&limit=10${userId ? `&${userId}` : ""}`,
+        }&limit=10${userId ? `&user_id=${userId}` : ""}`,
 
         // `post${
         //   category

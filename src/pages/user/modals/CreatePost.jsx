@@ -123,17 +123,31 @@ const CreatePost = ({
 
   const handleCreatePost = async (values, onSubmitProps) => {
     const { title, category, text, post_id } = values;
-    const { data, error } = await create({
-      title,
-      category,
-      body: text,
-      post_id,
-    });
-    if (error) toast.error(error);
-    if (data) {
-      toast.success(data);
-      onSubmitProps.resetForm();
-      setTimeout(() => handleClose(), 3000);
+    if (post_id) {
+      const { data, error } = await create({
+        title,
+        category,
+        body: text,
+        post_id,
+      });
+      if (error) toast.error(error);
+      if (data) {
+        toast.success(data);
+        onSubmitProps.resetForm();
+        setTimeout(() => handleClose(), 3000);
+      }
+    } else {
+      const { data, error } = await create({
+        title,
+        category,
+        body: text,
+      });
+      if (error) toast.error(error);
+      if (data) {
+        toast.success(data);
+        onSubmitProps.resetForm();
+        setTimeout(() => handleClose(), 3000);
+      }
     }
   };
   const initialValue = { title: "", category: "", text: "", post_id: "" };

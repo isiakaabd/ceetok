@@ -70,7 +70,6 @@ const ProfileItem = ({ profile }) => {
   async function saveToServer(file) {
     const form = new FormData();
     form.append("profile_pic", file);
-    console.log(form);
     const { data, error } = await uploadImage(form);
     console.log(data, error);
     // handleClose(e);

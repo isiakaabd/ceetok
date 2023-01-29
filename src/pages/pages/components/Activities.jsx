@@ -45,6 +45,10 @@ const Activities = (props) => {
       setOpen(false);
     }
   }
+  const [state, setState] = useState({
+    data: [],
+    type: "post",
+  });
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
@@ -62,17 +66,13 @@ const Activities = (props) => {
   useEffect(() => {
     if (profile?.id) {
       const fetchdata = async () => {
-        await getPost({ userId: profile?.id });
-        if (posts) setState({ data: posts, type: "post" });
+        const { data } = await getPost({ userId: profile?.id });
+        if (data) setState({ data, type: "post" });
       };
       fetchdata();
     }
     //eslint-disable-next-line
   }, [profile?.id, posts]);
-  const [state, setState] = useState({
-    data: posts,
-    type: "post",
-  });
 
   useEffect(() => {
     if (posts) setState({ data: posts, type: "post" });

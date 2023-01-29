@@ -8,8 +8,6 @@ const baseQuery = fetchBaseQuery({
 
     if (endpoint !== "userProfileUpdate") {
       headers.append("Content-Type", "application/json");
-
-      // } else {
     }
 
     if (token) {

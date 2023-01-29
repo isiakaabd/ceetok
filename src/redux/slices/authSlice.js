@@ -66,9 +66,6 @@ export const authSlice = api.injectEndpoints({
       query: (form) => ({
         url: "/user/edit",
         method: "PATCH",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
 
         body: form,
       }),

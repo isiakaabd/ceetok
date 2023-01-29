@@ -2,15 +2,19 @@ import images from "assets";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetAdsQuery } from "redux/slices/adsSlice";
-import { link } from "helpers";
+import { getImage, link } from "helpers";
 const Advert = () => {
-  const { image01, image02, image03 } = images;
+  const { image01, image02, image03, obi } = images;
   const { data: allAds, isLoading } = useGetAdsQuery();
   const imgArr = [image01, image02, image03];
   console.log(allAds);
   if (isLoading) return <Skeleton />;
   return (
-    <Grid item container sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}>
+    <Grid
+      item
+      container
+      // sx={{ paddingInline: { xs: "1rem", md: "4rem", overflowX: "scroll" } }}
+    >
       <Grid
         item
         container
@@ -36,15 +40,19 @@ const Advert = () => {
         <Grid
           item
           container
-          // gap={2}
+          gap={2}
           justifyContent="space-between"
-          flexWrap={"nowrap"}
+          flexWrap="nowrap"
+          sx={{ overflowX: "scroll" }}
         >
           {allAds?.ads?.map((item) => (
-            <Grid item xs={3.8}>
-              {console.log(item)}
+            <Grid item container xs={6} md={3}>
               <img
-                src={`${link}${item.media[0]?.storage_path}`}
+                src={
+                  item?.media.length > 0
+                    ? getImage(item.media[0]?.storage_path)
+                    : obi
+                }
                 alt={item.title}
                 style={{ objectFit: "contain", height: "100%", width: "100%" }}
               />

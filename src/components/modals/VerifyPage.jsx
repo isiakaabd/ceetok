@@ -20,7 +20,7 @@ import {
 import * as Yup from "yup";
 import { TextError } from "validation/TextError";
 import { toast } from "react-toastify";
-import { link } from "helpers";
+import { getImage, link } from "helpers";
 const VerifyPage = ({ isOpen, handleClose }) => {
   const likes = [
     "entertainment",
@@ -177,7 +177,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                           // display: "inline-block",
                           height: "10rem",
                         }}
-                        src={`${link}${avatar}`}
+                        src={getImage(avatar)}
                         alt={full_name}
                       />
                       <Typography

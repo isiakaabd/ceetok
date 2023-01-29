@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import NotificationIcon from "assets/svgs/NotificationIcon";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
-import { link } from "helpers";
+import { getImage } from "helpers";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
@@ -48,7 +48,6 @@ const UserAccount = () => {
 
     setOpens(false);
   };
-
   return (
     <Grid item>
       <Grid
@@ -107,8 +106,7 @@ const UserAccount = () => {
                   height: { md: 32 },
                   fontSize: "1.8rem",
                 }}
-                src={`${link}${userProfile?.avatar}`}
-                // src={userProfile?.avatar}
+                src={getImage(userProfile?.avatar)}
                 alt={userProfile?.full_name?.slice(0, 1).toUpperCase().slice(1)}
               >
                 {userProfile?.full_name?.slice(0, 1).toUpperCase()}

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-import { getDate, getTime } from "helpers";
+import { getDate, getImage, getTime } from "helpers";
 import { useGetViewsQuery } from "redux/slices/postSlice";
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const AllPosts = ({ post, index, showUser }) => {
   const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const handleLogin = () => setOpen(true);
+  // const handleLogin = () => setOpen(true);
 
   return (
     <>
@@ -59,7 +59,9 @@ const AllPosts = ({ post, index, showUser }) => {
           }}
         >
           <Avatar
-            src={media[0]?.storage_path || images.obi}
+            src={
+              media.length > 0 ? getImage(media[0]?.storage_path) : images.obi
+            }
             alt="obi"
             variant="rounded"
             sx={{ height: "100%", width: "100%" }}

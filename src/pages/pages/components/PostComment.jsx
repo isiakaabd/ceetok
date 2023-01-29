@@ -40,10 +40,11 @@ import {
 } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
+import { getImage } from "helpers";
 export const Comment = ({ handleShare, data }) => {
   const { id, category, user_id, body, media } = data;
   const navigate = useNavigate();
-
+  console.log(data);
   const { data: profile, isLoading } = useUserProfileQuery();
 
   const [open, setOpen] = useState(false);
@@ -144,6 +145,7 @@ export const Comment = ({ handleShare, data }) => {
       console.log(data);
     }
   }
+
   return (
     <>
       <Grid
@@ -269,9 +271,11 @@ export const Comment = ({ handleShare, data }) => {
           </Tooltips>
         </Grid>
         <img
-          src={media[0]?.storage_path || images.obi2}
+          src={
+            media.length > 0 ? getImage(media[0]?.storage_path) : images.obi2
+          }
           style={{ width: "100%" }}
-          alt="peter obi"
+          alt={category}
         />
         <Grid container item flexDirection="column" rowGap={2}>
           <Typography

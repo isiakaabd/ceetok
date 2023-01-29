@@ -38,7 +38,7 @@ import {
   usePostCommentMutation,
   useUpdateCommentMutation,
 } from "redux/slices/commentSlice";
-import { getAgo, link } from "helpers";
+import { getAgo, getImage, link } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { useSelector } from "react-redux";
 import { useUserProfileQuery } from "redux/slices/authSlice";
@@ -213,7 +213,6 @@ function Single({ comments }) {
     });
   };
   const { data: profile } = useUserProfileQuery();
-  console.log(comments);
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const handleCloses = () => setAnchorEl(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -272,7 +271,7 @@ function Single({ comments }) {
           <ListItemAvatar>
             <Avatar
               alt={full_name}
-              src={`${link}${avatar}`}
+              src={getImage(avatar)}
               onClick={() => handleClicks(user_id)}
               sx={{ cursor: "pointer" }}
             >

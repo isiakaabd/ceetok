@@ -6,7 +6,7 @@ import React, { useRef, useState } from "react";
 import { CloseOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
-import { getDate, getTime } from "helpers";
+import { getDate, getImage, getTime } from "helpers";
 
 const UserProfile = ({ data }) => {
   const anchorRef = useRef(null);
@@ -19,7 +19,6 @@ const UserProfile = ({ data }) => {
     get_notifications,
     user: { full_name, email, avatar, username },
   } = data;
-  console.log(avatar);
   return (
     <>
       <Grid
@@ -35,7 +34,11 @@ const UserProfile = ({ data }) => {
         }}
       >
         <Grid item sx={{ alignSelf: "center" }}>
-          <Avatar sx={{ alignItems: "center" }} alt={avatar}>
+          <Avatar
+            sx={{ alignItems: "center" }}
+            alt={full_name}
+            src={getImage(avatar)}
+          >
             {full_name.slice(0, 1).toUpperCase()}
           </Avatar>
           {/* </Grid> */}

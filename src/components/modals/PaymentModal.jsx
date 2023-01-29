@@ -9,7 +9,7 @@ const PaymentModal = ({ open, handleClose, data, duration }) => {
   const { data: profile, isLoading } = useUserProfileQuery();
   const [validatePayment] = useValidateAnnoucementMutation();
   const config = {
-    public_key: "FLWPUBK_TEST-692e93515a83fe4c4ca8bd1dcc3e3b14-X",
+    public_key: "FLWPUBK_TEST-9b27878d10450bee730880c3064dce82-X",
     tx_ref: data?.payment?.id || data?.id,
     amount: data?.payment?.amount || data?.amount,
     currency: "NGN",

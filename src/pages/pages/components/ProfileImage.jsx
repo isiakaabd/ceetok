@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import Pen from "assets/svgs/Pen";
-import { link } from "helpers";
+import { getImage, link } from "helpers";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -125,7 +125,7 @@ export default function ProfileImage({ avatar, name }) {
       >
         <Avatar
           alt={name}
-          src={`${link}${avatar}`}
+          src={getImage(avatar)}
           sx={{
             width: "10rem",
             fontSize: { md: "3rem", xs: "2.5rem" },

@@ -40,7 +40,7 @@ import {
 // import { Comment } from "./components/PostComment";
 // import SocialMedia from "components/modals/SocialMedia";
 // import { useUserProfileQuery } from "redux/slices/authSlice";
-import { getAgo, link } from "helpers";
+import { getAgo, getImage, link } from "helpers";
 import EditModal from "./EditPost";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
@@ -108,7 +108,7 @@ export function Image({ person }) {
     <ListItemAvatar>
       <Avatar
         alt={full_name}
-        src={`${link}${avatar}`}
+        src={getImage(avatar)}
         onClick={() => handleClicks(user_id)}
         sx={{ cursor: "pointer" }}
       >

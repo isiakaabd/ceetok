@@ -3,11 +3,13 @@ import { Typography, Grid, Skeleton } from "@mui/material";
 import images from "assets";
 import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
 import { toast } from "react-toastify";
+import { useValidateAdMutation } from "redux/slices/adsSlice";
 import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { useUserProfileQuery } from "redux/slices/authSlice";
-const PaymentModal = ({ open, handleClose, data, duration }) => {
+const PaymentModal = ({ open, handleClose, data, type, duration }) => {
   const { data: profile, isLoading } = useUserProfileQuery();
   const [validatePayment] = useValidateAnnoucementMutation();
+  const [validateAds] = useValidateAdMutation();
   const config = {
     public_key: "FLWPUBK_TEST-9b27878d10450bee730880c3064dce82-X",
     tx_ref: data?.payment?.id || data?.id,
@@ -30,13 +32,22 @@ const PaymentModal = ({ open, handleClose, data, duration }) => {
     ...config,
     text: "Pay with Flutterwave!",
     callback: async (response) => {
-      const { data: dt, error } = await validatePayment({
-        payment_id: data?.payment?.id || data?.id,
-      });
-      if (error) toast.error(error);
+      if (type !== "ads") {
+        const { data: dt, error } = await validatePayment({
+          payment_id: data?.payment?.id || data?.id,
+        });
+        if (error) toast.error(error);
 
-      if (dt) toast.success(dt);
-      console.log(dt);
+        if (dt) toast.success(dt);
+      } else {
+        const { data: dt, error } = await validateAds({
+          payment_id: data?.payment?.id || data?.id,
+        });
+        if (error) toast.error(error);
+
+        if (dt) toast.success(dt);
+      }
+
       closePaymentModal(); // this will close the modal programmatically
       handleClose();
     },

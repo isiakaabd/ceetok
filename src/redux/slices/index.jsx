@@ -5,11 +5,12 @@ const baseQuery = fetchBaseQuery({
 
   prepareHeaders: (headers, { getState, type, endpoint }) => {
     const token = getState().auth.token;
-    if (endpoint !== "userProfileUpdate" || endpoint !== "createAds") {
-      console.log(endpoint, "endpoint");
+    if (endpoint !== "userProfileUpdate") {
       headers.append("Content-Type", "application/json");
     }
-
+    if (endpoint === "createAds") {
+      headers.delete("Content-Type", "application/json");
+    }
     if (token) {
       headers.append("AUTHORIZATION", `Bearer ${token}`);
     }

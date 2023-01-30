@@ -9,7 +9,7 @@ export const adsSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["ads"],
-      //   transformResponse: (response) => response.body.views,
+      transformResponse: (response) => response,
       transformErrorResponse: (error) => error.data,
     }),
     getAds: builder.query({
@@ -30,8 +30,22 @@ export const adsSlice = api.injectEndpoints({
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data,
     }),
+    validateAd: builder.mutation({
+      query: (body) => ({
+        url: `/ad/validate`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["ads"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
-export const { useCreateAdsMutation, useGetAdsQuery, useViewAdQuery } =
-  adsSlice;
+export const {
+  useCreateAdsMutation,
+  useGetAdsQuery,
+  useViewAdQuery,
+  useValidateAdMutation,
+} = adsSlice;

@@ -37,6 +37,7 @@ const CreatePost = ({
   initialValues,
   heading,
   postHeading,
+  uploadType,
   data,
 }) => {
   const [create] = useCreatePostMutation();
@@ -87,21 +88,34 @@ const CreatePost = ({
     setCategories(cats);
   }, [dt]);
   const handleCreateAnnoucement = async (values, onSubmitProps) => {
-    const { title, text, duration } = values;
-    const { data, error } = await createAnnouncement({
-      title,
-      duration,
-      body: text,
-    });
-
-    if (error) toast.error(error);
-    if (data) {
-      toast.success(data.message);
-      onSubmitProps.resetForm();
-      onSubmitProps.setFieldValue("text", "");
-      setTimeout(() => handleCreateOpen(), 3000);
+    const { title, text, duration, post_id } = values;
+    if (post_id) {
+      const { data, error } = await createAnnouncement({
+        title,
+        duration,
+        body: text,
+      });
+      if (data) {
+        toast.success(data.message);
+        onSubmitProps.resetForm();
+        onSubmitProps.setFieldValue("text", "");
+        setTimeout(() => handleCreateOpen(), 3000);
+      }
+      if (error) toast.error(error);
+    } else {
+      const { data, error } = await createAnnouncement({
+        title,
+        duration,
+        body: text,
+      });
+      if (data) {
+        toast.success(data.message);
+        onSubmitProps.resetForm();
+        onSubmitProps.setFieldValue("text", "");
+        setTimeout(() => handleCreateOpen(), 3000);
+      }
+      if (error) toast.error(error);
     }
-    if (error) toast.error(error);
   };
   const handEditAnnoucement = async (values, { resetForm, setFieldValue }) => {
     const { id } = initialValues;
@@ -248,6 +262,9 @@ const CreatePost = ({
                       placeholder="write something..."
                       value={initialValues.text}
                       upload_id={"post_id"}
+                      type={
+                        uploadType === "annoucement" ? "announcements" : "posts"
+                      }
                     />
 
                     <Typography

@@ -29,12 +29,12 @@ const CreateAdvert = ({ handleClose, title }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const [createAds, { isLoading }] = useCreateAdsMutation();
-  const handleCreateAdvert = (values) => {
-    const { title, actions, files, actionType, duration, format } = values;
+  const handleCreateAdvert = async (values) => {
+    const { title, actions, files, duration, format } = values;
     const form = new FormData();
     const body = {
       title,
-      files: files,
+      files: files[0],
       format,
       duration,
       actions,
@@ -42,18 +42,26 @@ const CreateAdvert = ({ handleClose, title }) => {
     // const actn = actions.map((i) => JSON.stringify(i));
     // console.log(actn, 1233);
     form.append("title", title);
-    form.append("files", files);
     form.append("format", format);
     form.append("duration", duration);
-    for (let x = 0; x < files.length; x++) {
-      form.append("files[]", files[x]);
-    }
-    // form.append("actions", JSON.stringify(actions));
+
+    // for (let x = 0; x < files.length; x++) {
+    //   form.append("ad_assets", files[x]);
+    // }
+    console.log(files[0]);
+    form.append("ad_assets", files[0]);
+    form.append("actions[]", JSON.stringify(actions));
     actions.forEach((item, index) => {
-      form.append(`actions[${[index]}][name]`, item.name);
+      form.append(
+        `${actions}${[index]}${["value"]}`,
+        JSON.stringify(item.name)
+      );
     });
     actions.forEach((item, index) => {
-      form.append(`actions[${[index]}][value]`, item.value);
+      form.append(
+        `${actions}${[index]}${["value"]}`,
+        JSON.stringify(item.value)
+      );
     });
     console.log(form);
     fetch("https://api.ceetok.live/ad", {

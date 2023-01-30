@@ -37,10 +37,11 @@ import {
 import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PaymentModal from "components/modals/PaymentModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import { getImage } from "helpers";
+import { useViewAdQuery } from "redux/slices/adsSlice";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -91,7 +92,7 @@ const Shares = ({ data: item }) => {
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const check = profile?.id === item?.user_id;
-  console.log(item);
+
   const handleLikePost = async () => {
     const { error } = await likePost({
       parent_type: "announcements",
@@ -120,6 +121,7 @@ const Shares = ({ data: item }) => {
     if (error) toast.error(error);
   };
   const [editModal, setEditModal] = useState(false);
+  console.log(item?.payment?.status);
   const [paymentModal, setPaymentModal] = useState(false);
   return (
     <>
@@ -129,10 +131,7 @@ const Shares = ({ data: item }) => {
         justifyContent="space-between"
         alignItems="center"
         flexWrap="nowrap"
-        sx={{
-          color: "#5F5C5C",
-          mt: "auto",
-        }}
+        sx={{ color: "#5F5C5C", mt: "auto" }}
       >
         <Grid item>
           <Grid container alignItems="center" sx={{ cursor: "pointer" }}>
@@ -222,7 +221,7 @@ const Shares = ({ data: item }) => {
               </ListItemText>
             </MenuItem>
           )}
-          {check && item?.payment?.status !== "completed" && (
+          {check && !item?.approved && (
             <MenuItem
               onClick={() => setPaymentModal(true)}
               sx={{
@@ -287,8 +286,10 @@ const Shares = ({ data: item }) => {
   );
 };
 
-const Announcement = () => {
+const Ads = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { id } = useParams();
+  console.log(id);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -308,16 +309,13 @@ const Announcement = () => {
 
     setOpenCreatePost(true);
   };
-  const { data: annoucements } = useGetAnnoucementsQuery();
-  console.log(annoucements);
+  const { data: annoucements } = useViewAdQuery(id);
   return (
     <>
       <Grid
         item
         container
-        sx={{
-          padding: { xs: "2rem 1rem ", md: "0 4rem " },
-        }}
+        sx={{ padding: { xs: "2rem 1rem ", md: "0 4rem " } }}
       >
         <Grid
           item
@@ -436,21 +434,7 @@ const Announcement = () => {
             }}
           >
             {annoucements?.map((item, index) => (
-              <Grid
-                item
-                container
-                key={index}
-                flexWrap="nowrap"
-                sx={{
-                  borderRadius: "1.2rem",
-                  background:
-                    item?.payment.status === "completed" && item?.approved
-                      ? "#37D42A"
-                      : item?.payment.status === "completed" && !item?.approved
-                      ? "#FF9B04"
-                      : "white",
-                }}
-              >
+              <Grid item container key={index} flexWrap="nowrap">
                 <Grid
                   item
                   container
@@ -477,7 +461,7 @@ const Announcement = () => {
                   <Grid item sx={{ mt: 2 }}>
                     <Typography
                       sx={{
-                        color: !item?.approved ? "#464646" : "#fff",
+                        color: "#464646",
                         fontSize: "1.3rem",
                         fontWeight: 700,
                         // overflow: "hiddem",
@@ -529,4 +513,4 @@ const Announcement = () => {
   );
 };
 
-export default Announcement;
+export default Ads;

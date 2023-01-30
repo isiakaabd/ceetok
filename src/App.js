@@ -20,6 +20,7 @@ import Live from "pages/live";
 import Trending from "pages/trending";
 import CreateAdvert from "pages/pages/CreateAdvert";
 import Categories from "pages/home/categories";
+import Ads from "pages/Ads";
 
 const App = () => {
   return (
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="create-advert" element={<CreateAdvert />} />
               <Route path="annoucement" element={<Announcement />} />
               <Route path="annoucement/:id" element={<SingleAnnoucement />} />
+              <Route path="ads/:id" element={<Ads />} />
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
               <Route path="comment" element={<ReplyComment />} />

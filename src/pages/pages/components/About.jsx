@@ -27,7 +27,7 @@ const About = (props) => {
               >
                 DOB:
                 <Typography sx={{ ml: 1 }} variant="span">
-                  {dob || "No Data yet"}
+                  {getDate(dob) || "No Data yet"}
                 </Typography>
               </Typography>
               <Typography

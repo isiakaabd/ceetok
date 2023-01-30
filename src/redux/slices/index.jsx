@@ -5,8 +5,8 @@ const baseQuery = fetchBaseQuery({
 
   prepareHeaders: (headers, { getState, type, endpoint }) => {
     const token = getState().auth.token;
-
-    if (endpoint !== "userProfileUpdate") {
+    if (endpoint !== "userProfileUpdate" || endpoint !== "createAds") {
+      console.log(endpoint, "endpoint");
       headers.append("Content-Type", "application/json");
     }
 

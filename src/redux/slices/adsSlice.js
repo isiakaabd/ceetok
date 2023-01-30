@@ -21,7 +21,17 @@ export const adsSlice = api.injectEndpoints({
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data,
     }),
+    viewAd: builder.query({
+      query: (status) => ({
+        url: `/ad/${status}`,
+        method: "GET",
+      }),
+      providesTags: ["ads"],
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data,
+    }),
   }),
 });
 
-export const { useCreateAdsMutation, useGetAdsQuery } = adsSlice;
+export const { useCreateAdsMutation, useGetAdsQuery, useViewAdQuery } =
+  adsSlice;

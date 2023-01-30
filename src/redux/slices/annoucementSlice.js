@@ -58,8 +58,8 @@ export const annoucementSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["announcement"],
-      // transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data.message.error,
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
     }),
   }),
 });

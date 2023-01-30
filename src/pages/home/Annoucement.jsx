@@ -19,7 +19,7 @@ const Annoucement = () => {
   const handleCreatePostOpen = () => setCreatePost(true);
   const { data: annoucements } = useGetAnnoucementsQuery();
   const handleCreatePostClose = () => setCreatePost(false);
-
+  console.log(annoucements);
   return (
     <>
       <Grid
@@ -142,6 +142,7 @@ const Annoucement = () => {
         open={openCreatePost}
         handleClose={handleCreatePostClose}
         postHeading={"Make Annoucement"}
+        uploadType={"annoucement"}
         initialValues={{
           title: "",
           text: "",

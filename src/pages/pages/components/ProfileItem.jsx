@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 import { getImage, link } from "helpers";
+import { toast } from "react-toastify";
 
 const ProfileItem = ({ profile }) => {
   const [open, setOpen] = useState(false);
@@ -72,6 +73,7 @@ const ProfileItem = ({ profile }) => {
     form.append("profile_pic", file);
     const { data, error } = await uploadImage(form);
     console.log(data, error);
+    if (data) toast.success(data);
     // handleClose(e);
   }
   return (
@@ -128,7 +130,7 @@ const ProfileItem = ({ profile }) => {
       </ListItem>
       <Popper
         open={open}
-        anchorEl={anchorRef.current}
+        anchorEl={anchorRef?.current}
         role={undefined}
         placement="bottom-start"
         transition
@@ -145,7 +147,6 @@ const ProfileItem = ({ profile }) => {
           >
             <Paper>
               <ClickAwayListener>
-                {" "}
                 {/* // onClickAway={handleClose} */}
                 <MenuList
                   autoFocusItem={open}

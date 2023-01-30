@@ -2,11 +2,10 @@ import images from "assets";
 import { Grid, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetAdsQuery } from "redux/slices/adsSlice";
-import { getImage, link } from "helpers";
+import { getImage } from "helpers";
 const Advert = () => {
-  const { image01, image02, image03, obi } = images;
+  const { obi } = images;
   const { data: allAds, isLoading } = useGetAdsQuery();
-  const imgArr = [image01, image02, image03];
   console.log(allAds);
   if (isLoading) return <Skeleton />;
   return (
@@ -20,7 +19,7 @@ const Advert = () => {
         container
         gap={2}
         alignItems="center"
-        sx={{ p: { md: 4, xs: 0 }, justifyContent: { md: "left" } }}
+        sx={{ p: { md: 4, xs: 2 }, justifyContent: { md: "left" } }}
       >
         <Typography
           sx={{
@@ -40,22 +39,46 @@ const Advert = () => {
         <Grid
           item
           container
-          gap={2}
-          justifyContent="space-between"
+          // gap={2}
+          display="grid"
+          // justifyContent="space-between"
           flexWrap="nowrap"
-          sx={{ overflowX: "scroll" }}
+          sx={{
+            overflowX: "scroll",
+            gridAutoFlow: "column",
+            gridAutoColumns: { md: "21%", xs: "80%" },
+            overscrollBehaviorInline: "contain",
+            scrollPaddingInline: { md: "1rem", xs: ".5rem" },
+            scrollSnapType: "inline mandatory",
+            "&::-webkit-scrollbar": {
+              width: ".85rem",
+              display: "none",
+            },
+            padding: { md: "2rem", xs: "1rem" },
+          }}
+          gap={{ md: 3, xs: 2 }}
         >
           {allAds?.ads?.map((item) => (
-            <Grid item container xs={6} md={3}>
-              <img
-                src={
-                  item?.media.length > 0
-                    ? getImage(item.media[0]?.storage_path)
-                    : obi
-                }
-                alt={item.title}
-                style={{ objectFit: "contain", height: "100%", width: "100%" }}
-              />
+            <Grid item container sx={{ scrollSnapAlign: "start" }}>
+              {console.log(item)}
+              {item?.media?.map((i) => (
+                <Link to={`/user/ads/${item?.slug}`} style={{ width: "100%" }}>
+                  <img
+                    loading="lazy"
+                    src={
+                      item?.media.length > 0 ? getImage(i?.storage_path) : obi
+                    }
+                    alt={item.title}
+                    style={{
+                      objectFit: "cover",
+                      height: "100%",
+                      inlineSize: "100%",
+                      borderRadius: ".5rem",
+                      aspectRatio: 16 / 9,
+                    }}
+                  />
+                </Link>
+              ))}
             </Grid>
           ))}
         </Grid>

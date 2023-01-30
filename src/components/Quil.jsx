@@ -9,7 +9,7 @@ import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-const Editor = ({ theme, name, placeholder, value, upload_id }) => {
+const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   hljs.configure({
     languages: ["javascript", "ruby", "python", "rust"],
   });
@@ -77,9 +77,8 @@ const Editor = ({ theme, name, placeholder, value, upload_id }) => {
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {
     const form = new FormData();
-    form.append("type", "posts");
+    form.append("type", type);
     form.append("media", file);
-    console.log(form);
 
     // const res = await uploadImage(form);
     fetch("https://api.ceetok.live/post/upload-media", {

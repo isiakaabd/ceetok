@@ -30,13 +30,12 @@ const PaymentModal = ({ open, handleClose, data, duration }) => {
     ...config,
     text: "Pay with Flutterwave!",
     callback: async (response) => {
-      console.log(response);
       const { data: dt, error } = await validatePayment({
         payment_id: data?.payment?.id || data?.id,
       });
-      if (error) {
-        toast.error(error);
-      }
+      if (error) toast.error(error);
+
+      if (dt) toast.success(dt);
       console.log(dt);
       closePaymentModal(); // this will close the modal programmatically
       handleClose();

@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 
-const SearchComponent = ({ handleSubmit }) => {
+const SearchComponent = ({ placeholder, handleSubmit }) => {
   return (
     <Grid item container>
       <Formik initialValues={{ name: "" }} onSubmit={handleSubmit}>
@@ -11,7 +11,7 @@ const SearchComponent = ({ handleSubmit }) => {
           <FormikControl
             control="inputs"
             name="name"
-            placeholder="Search..."
+            placeholder={placeholder ? placeholder : "Search..."}
             Icon={SearchOutlined}
             order={1}
             buttonStyle={{

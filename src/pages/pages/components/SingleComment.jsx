@@ -141,10 +141,13 @@ export function Text({ item, profile }) {
     if (data) toast.success("comment deleted successfully");
     if (error) toast.error(error);
 
-    handleCloses();
+    handleCloses(e);
   };
   const [open, setOpen] = useState(false);
-  const handleEditComment = (e) => setOpen(true);
+  const handleEditComment = (e) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
 
   return (
     <>
@@ -282,8 +285,9 @@ export function Text({ item, profile }) {
       <EditModal
         item={item}
         open={open}
-        handleClose={() => {
-          handleCloses();
+        handleClose={(e) => {
+          e.stopPropagation();
+          handleCloses(e);
           setOpen(false);
         }}
       />

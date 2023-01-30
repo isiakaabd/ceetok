@@ -28,10 +28,7 @@ const RightTab = ({ setCreatePost }) => {
     error,
     isLoading,
   } = useGetPostQuery({ offset: page - 1 });
-  const [count] = useState(10);
-  const handleChange = (e, value) => {
-    setPage(value);
-  };
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

@@ -12,10 +12,9 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled, alpha } from "@mui/material/styles";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
-  ApprovalOutlined,
   ApprovalSharp,
   ChatBubbleOutline,
   Delete,
@@ -24,8 +23,8 @@ import {
   FilterList,
   IosShareOutlined,
   Payment,
-  Report,
   ReportOutlined,
+  VerifiedUserRounded,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
@@ -43,6 +42,7 @@ import SocialMedia from "components/modals/SocialMedia";
 import { useNavigate } from "react-router-dom";
 import PaymentModal from "components/modals/PaymentModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { getImage } from "helpers";
 import { useApproveAnnoucementMutation } from "redux/slices/adminSlice";
 
@@ -109,7 +109,8 @@ const Shares = ({ data: item }) => {
   const [likePost] = useLikeAndUnlikePostMutation();
   const [approveAnnoucement, { isLoading: isApprovalLoading }] =
     useApproveAnnoucementMutation();
-
+  const [validate, { isLoading: validating }] =
+    useValidateAnnoucementMutation();
   const check = profile?.id === user_id;
   const handleLikePost = async () => {
     const { error } = await likePost({
@@ -146,6 +147,15 @@ const Shares = ({ data: item }) => {
       handleCloses();
     }
     if (error) toast.success(error);
+  };
+
+  const validatePayment = async () => {
+    const { data, error } = await validate({
+      payment_id: item?.payment?.id,
+    });
+    if (data) toast.success(data);
+    if (error) toast.error(error);
+    handleCloses();
   };
   const [editModal, setEditModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
@@ -239,40 +249,38 @@ const Shares = ({ data: item }) => {
               </ListItemText>
             </MenuItem>
           )}
-          {check ||
-            (admin && (
-              <MenuItem
-                onClick={handleDeleteComment}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Delete sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  {isLoading ? "Deleting" : "Delete"}
-                </ListItemText>
-              </MenuItem>
-            ))}
-          {check ||
-            (admin && (
-              <MenuItem
-                onClick={() => setEditModal(true)}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <ListItemIcon>
-                  <Edit sx={{ fontSize: "2rem" }} />
-                </ListItemIcon>
-                <ListItemText sx={{ fontSize: "3rem" }}>
-                  {edited ? "Edit Again" : "Edit Annoucement"}
-                </ListItemText>
-              </MenuItem>
-            ))}
+          {(check || admin) && (
+            <MenuItem
+              onClick={handleDeleteComment}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <Delete sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                {isLoading ? "Deleting" : "Delete"}
+              </ListItemText>
+            </MenuItem>
+          )}
+          {(check || admin) && (
+            <MenuItem
+              onClick={() => setEditModal(true)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <Edit sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                {edited ? "Edit Again" : "Edit Annoucement"}
+              </ListItemText>
+            </MenuItem>
+          )}
           {check && !admin && payment?.status !== "completed" && (
             <MenuItem
               onClick={() => setPaymentModal(true)}
@@ -286,6 +294,22 @@ const Shares = ({ data: item }) => {
               </ListItemIcon>
               <ListItemText sx={{ fontSize: "3rem" }}>
                 Make Payment
+              </ListItemText>
+            </MenuItem>
+          )}
+          {check && !admin && payment?.status === "completed" && !approved && (
+            <MenuItem
+              onClick={validatePayment}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon>
+                <VerifiedUserRounded sx={{ fontSize: "2rem" }} />
+              </ListItemIcon>
+              <ListItemText sx={{ fontSize: "3rem" }}>
+                {validating ? "Validating" : "Validate Payment"}
               </ListItemText>
             </MenuItem>
           )}

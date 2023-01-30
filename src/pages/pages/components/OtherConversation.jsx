@@ -1,18 +1,13 @@
-import React from "react";
-import { Grid, List, Typography } from "@mui/material";
+import { Grid, List, Skeleton, Typography } from "@mui/material";
 import SinglePosts from "pages/home/SinglePosts";
-import { useSelector } from "react-redux";
+import { useGetPostQuery } from "redux/slices/postSlice";
 const OtherConversation = () => {
-  const posts = useSelector((state) => state.posts.posts);
-  const array =
-    posts.length > 0
-      ? posts
-      : Array(20).fill({
-          title:
-            "Obi campaign shutsdown Kaduna and path ways for North Eastern Collaboration",
-          category: "Politics",
-        });
+  const { data: posts, isLoading } = useGetPostQuery({
+    offset: 0,
+    category: "politics",
+  });
 
+  if (isLoading) return <Skeleton />;
   return (
     <Grid item container>
       <Grid
@@ -36,27 +31,32 @@ const OtherConversation = () => {
           Politics
         </Typography>
       </Grid>
-      <List
-        sx={{
-          maxHeight: "80rem",
-          overflowY: "scroll",
-          "&::-webkit-scrollbar": {
-            width: ".85rem",
-            display: "none",
-          },
-        }}
-        xs={12}
-      >
-        {array.map((post, index) => {
-          return (
-            <SinglePosts
-              key={index}
-              post={post}
-              display={{ xs: "none", md: "flex" }}
-            />
-          );
-        })}
-      </List>
+      {posts?.length > 0 ? (
+        <List
+          sx={{
+            maxHeight: "80rem",
+            overflowY: "scroll",
+            width: "100%",
+            "&::-webkit-scrollbar": {
+              width: ".85rem",
+              display: "none",
+            },
+          }}
+          xs={12}
+        >
+          {posts?.map((post, index) => {
+            return (
+              <SinglePosts
+                key={index}
+                post={post}
+                display={{ xs: "none", md: "flex" }}
+              />
+            );
+          })}
+        </List>
+      ) : (
+        <Typography variant="h2">No Data</Typography>
+      )}
     </Grid>
   );
 };

@@ -21,6 +21,8 @@ import Trending from "pages/trending";
 import CreateAdvert from "pages/pages/CreateAdvert";
 import Categories from "pages/home/categories";
 import Ads from "pages/Ads";
+import AdminRoute from "routes/AdminRoute";
+import AllUsers from "pages/admin";
 
 const App = () => {
   return (
@@ -54,6 +56,10 @@ const App = () => {
               <Route path="settings" element={<Settings />} />
               <Route path="all-friends" element={<AllFriend />} />
               <Route path="comment" element={<ReplyComment />} />
+            </Route>
+
+            <Route path="admin" element={<AdminRoute />}>
+              <Route path="all-users" element={<AllUsers />} />
             </Route>
             <Route path="/" element={<PrivateRoute />}></Route>
           </Routes>

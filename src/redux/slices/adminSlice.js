@@ -22,8 +22,20 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getUsers: builder.query({
+      query: (body) => ({
+        url: `/admin/user/`,
+        method: "GET",
+      }),
+      providesTags: ["admin"],
+      transformResponse: (response) => response.body.users,
+      // transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
-export const { useApprovePostMutation, useApproveAnnoucementMutation } =
-  adminSlice;
+export const {
+  useApprovePostMutation,
+  useGetUsersQuery,
+  useApproveAnnoucementMutation,
+} = adminSlice;

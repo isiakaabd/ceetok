@@ -9,6 +9,7 @@ import FormikControl from "validation/FormikControl";
 import { getDate, getImage, getTime } from "helpers";
 
 const UserProfile = ({ data }) => {
+  console.log(data, "dt");
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => setOpen(!open);

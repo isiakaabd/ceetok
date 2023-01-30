@@ -6,10 +6,6 @@ import {
   useEditCommentMutation,
   useGetPostCommentsQuery,
 } from "redux/slices/commentSlice";
-// import { Comment } from "./components/PostComment";
-// import SocialMedia from "components/modals/SocialMedia";
-// import { useUserProfileQuery } from "redux/slices/authSlice";
-import { getAgo, link } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quil";
@@ -17,7 +13,6 @@ import { CustomButton } from "components";
 
 export default function EditModal({ open, item, handleClose }) {
   const [editComment, { isLoading: loading }] = useEditCommentMutation();
-  console.log(item);
   const handleSubmit = async (values) => {
     const { edit } = values;
     const { data, error } = await editComment({

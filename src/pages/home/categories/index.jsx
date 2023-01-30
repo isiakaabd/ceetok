@@ -36,7 +36,7 @@ const Categories = () => {
   //       //   console.log(z());
   //     }
   //   }, [categories]);
-  console.log(AllPosts);
+
   if ((isLoading, loading)) return <Skeleton />;
   return (
     <Grid item container sx={{ p: { md: 4, xs: 1 } }}>

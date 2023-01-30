@@ -31,6 +31,7 @@ const Profile = () => {
           justifyContent={"space-between"}
           sx={{
             mb: 3,
+
             flexDirection: { md: "row", xs: "column" },
             // height: "100%",
           }}

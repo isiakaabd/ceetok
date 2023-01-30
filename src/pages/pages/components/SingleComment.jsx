@@ -71,7 +71,6 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 
 const SingleComment = ({ item, icons, profile }) => {
   const navigate = useNavigate();
-  console.log(item, "item");
   return (
     <ListItem
       disablePadding
@@ -97,7 +96,6 @@ const SingleComment = ({ item, icons, profile }) => {
   );
 };
 export function Image({ person: { user } }) {
-  // console.log(person, "person");
   const { full_name, avatar, user_id } = user;
   const navigate = useNavigate();
   const handleClicks = (id) => {

@@ -110,11 +110,11 @@ export const Details = ({ handleShare, data }) => {
   });
 
   const handleLikePost = async () => {
-    const { data: dt } = await likePost({
+    await likePost({
       parent_type: "posts",
       parent_id: data?.id,
     });
-    console.log(dt);
+
     setLikeState(!likeState);
   };
   return (
@@ -145,7 +145,6 @@ const SingleAnnoucement = () => {
 
   const [state, setState] = useState(true);
   const { data, isLoading, error } = useGetAnnoucementQuery({ id });
-  console.log(data);
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
   });

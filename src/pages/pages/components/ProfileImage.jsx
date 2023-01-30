@@ -8,6 +8,7 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Grid,
 } from "@mui/material";
 import Pen from "assets/svgs/Pen";
 import { getImage, link } from "helpers";
@@ -115,7 +116,7 @@ export default function ProfileImage({ avatar, name }) {
   // console.log(data, error);
 
   return (
-    <>
+    <Grid>
       <Badge
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -130,6 +131,7 @@ export default function ProfileImage({ avatar, name }) {
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleToggle}
+        sx={{ background: "white" }}
       >
         <Avatar
           alt={name}
@@ -177,6 +179,6 @@ export default function ProfileImage({ avatar, name }) {
           </Grow>
         )}
       </Popper>
-    </>
+    </Grid>
   );
 }

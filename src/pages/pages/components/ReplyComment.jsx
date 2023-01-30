@@ -194,7 +194,6 @@ const ReplyComment = () => {
 };
 
 function Single({ comments }) {
-  console.log(comments);
   const { edited, updatedAt, createdAt, user, user_id, comment, id } = comments;
   const { full_name, avatar } = user;
   // const token = useSelector((state) => state.auth.token);
@@ -238,7 +237,6 @@ function Single({ comments }) {
       handleCloses();
     }, 500);
     setEditComment(false);
-    console.log(data);
     // const form = new FormData();
     // form.append("profile_pic", file);
     // fetch("https://api.ceetok.live/user/edit", {

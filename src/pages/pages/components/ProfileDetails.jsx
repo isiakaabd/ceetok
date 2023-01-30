@@ -56,7 +56,7 @@ const ProfileDetails = (props) => {
     }
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
-  if (isLoading && loading) return <Skeleton />;
+  if (isLoading || loading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
@@ -68,15 +68,26 @@ const ProfileDetails = (props) => {
         justifyContent="flex-start"
         sx={{
           height: "100%",
-          pt: 3,
-          px: 1,
-          borderRadius: "2rem",
+          // pt: 8,
+          // px: 1,
           background: "#fff",
+          borderRadius: "2rem",
+          // background: "#fff",
         }}
       >
         <Grid item container flexDirection="column">
           <Grid item container flexDirection="column" alignItems="center">
-            <ProfileImage avatar={state?.avatar} name={state?.full_name} />
+            <Grid
+              item
+              container
+              sx={{
+                // background: "#044402",
+                pt: "8rem",
+                justifyContent: "center",
+              }}
+            >
+              <ProfileImage avatar={state?.avatar} name={state?.full_name} />
+            </Grid>
             <Grid item container justifyContent="center" alignItems="center">
               <Typography fontWeight={700} fontSize="2.2rem">
                 {state?.full_name}
@@ -96,7 +107,7 @@ const ProfileDetails = (props) => {
             <Grid item>
               <Grid item container gap={2} alignItems="center">
                 <Typography color="#9B9A9A" fontWeight={500} fontSize="1rem">
-                  {state?.username || "Not Available"}
+                  {state?.username || state?.role}
                 </Typography>
                 {condition && (
                   <Grid item>
@@ -118,6 +129,7 @@ const ProfileDetails = (props) => {
               </Grid>
             </Grid>
           </Grid>
+
           <Grid
             item
             container

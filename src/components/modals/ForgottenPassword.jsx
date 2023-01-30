@@ -10,15 +10,12 @@ import NotificationModal from "./NotificationModal";
 import * as Yup from "yup";
 import { useForgotPasswordMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
-import { useNavigate, useSearchParams } from "react-router-dom";
 const ForgottenPassword = ({ isOpen, handleClose, handleParentModalClose }) => {
   const [showConfirmMail, setShowConfirmMail] = useState(false);
   const [resetPassword, { isLoading }] = useForgotPasswordMutation();
   // const [searchParams, setSearchParams] = useSearchParams();
   // const navigate= useNavigate()
   const handleSubmit = async (values) => {
-    console.log(values);
-
     const { data, error } = await resetPassword({ email: values.email });
 
     if (data) {

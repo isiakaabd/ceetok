@@ -41,12 +41,17 @@ import {
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
+import { useSelector } from "react-redux";
+import { useApprovePostMutation } from "redux/slices/adminSlice";
 export const Comment = ({ handleShare, data }) => {
   const { id, category, user_id, body, media } = data;
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
+  const admin = useSelector((state) => state.auth.admin);
 
   const [open, setOpen] = useState(false);
+  const [approvePost, { isLoading: approvalLoading }] =
+    useApprovePostMutation();
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
   const anchorRef = useRef(null);
@@ -83,6 +88,16 @@ export const Comment = ({ handleShare, data }) => {
       toast.error(error);
     }
     handleClose();
+  };
+  const handleApproveTopic = async () => {
+    const { data, error } = await approvePost({
+      id,
+    });
+    if (data) {
+      toast.success(data);
+      handleClose();
+    }
+    if (error) toast.error(error);
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -134,14 +149,12 @@ export const Comment = ({ handleShare, data }) => {
         interests: [...interests, category.toLowerCase()],
       });
       if (data) toast.success(data);
-      console.log(data);
     } else {
       const newArr = interests.filter((ite) => ite !== category.toLowerCase());
       const data = await update({
         interests: [...newArr],
       });
       if (data) toast.success(data);
-      console.log(data);
     }
   }
 
@@ -213,22 +226,25 @@ export const Comment = ({ handleShare, data }) => {
                         ]}
                       />
                     </Grid>
-                    {checkUser && (
-                      <Grid item>
-                        <IconButton
-                          ref={anchorRef}
-                          id="composition-avatar"
-                          aria-controls={open ? "composition-menu" : undefined}
-                          aria-expanded={open ? "true" : undefined}
-                          aria-haspopup="true"
-                          onClick={handleToggle}
-                        >
-                          <TuneOutlined
-                            sx={{ fontSize: "2.5rem", color: "#fff" }}
-                          />
-                        </IconButton>
-                      </Grid>
-                    )}
+                    {checkUser ||
+                      (admin && (
+                        <Grid item>
+                          <IconButton
+                            ref={anchorRef}
+                            id="composition-avatar"
+                            aria-controls={
+                              open ? "composition-menu" : undefined
+                            }
+                            aria-expanded={open ? "true" : undefined}
+                            aria-haspopup="true"
+                            onClick={handleToggle}
+                          >
+                            <TuneOutlined
+                              sx={{ fontSize: "2.5rem", color: "#fff" }}
+                            />
+                          </IconButton>
+                        </Grid>
+                      ))}
                   </Grid>
                 </Form>
               </Formik>
@@ -359,9 +375,23 @@ export const Comment = ({ handleShare, data }) => {
                   onKeyDown={handleListKeyDown}
                 >
                   {/* {user_id !=== profile?.id} */}
-                  <MenuItem onClick={() => setEditPostModal(true)}>
-                    Edit Topic
-                  </MenuItem>
+                  {!admin && (
+                    <MenuItem onClick={() => setEditPostModal(true)}>
+                      Edit Topic
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem
+                      onClick={handleApproveTopic}
+                      disabled={data?.approved}
+                    >
+                      {approvalLoading
+                        ? "Approving"
+                        : data?.approved
+                        ? "Approved"
+                        : "Approve Topic"}
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleClose}>Close Topic</MenuItem>
                   <MenuItem
                     onClick={handleDeleteTopic}

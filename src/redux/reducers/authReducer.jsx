@@ -4,6 +4,7 @@ const initialState = {
   user: {},
   loading: false,
   auth: false,
+  admin: localStorage.getItem("admin") || null,
   token: localStorage.getItem("access_token") || null,
 };
 
@@ -15,7 +16,6 @@ export const authSlice = createSlice({
     loginAction: (state, action) => {
       state.auth = true;
       localStorage.setItem("access_token", action.payload.auth.accessToken);
-      localStorage.setItem("user", JSON.stringify(action.payload));
       state.user = action.payload;
       state.token = action.payload.auth.accessToken;
     },
@@ -23,16 +23,22 @@ export const authSlice = createSlice({
       // localStorage.setItem("access_token", action.payload.auth.accessToken);
       state.user = action.payload;
     },
+    checkAdmin: (state, action) => {
+      localStorage.setItem("admin", action.payload);
+      state.admin = action.payload;
+    },
     logoutAction: (state, action) => {
       localStorage.clear();
       state.token = null;
       state.user = {};
+      state.admin = null;
     },
   },
 });
 
 const { reducer, actions } = authSlice;
-export const { registerAction, loginAction, logoutAction } = actions;
+export const { registerAction, loginAction, logoutAction, checkAdmin } =
+  actions;
 export const loginState = (state) => state.auth;
 export const registerState = (state) => state.register;
 export const userProfile = (state) => state.user;

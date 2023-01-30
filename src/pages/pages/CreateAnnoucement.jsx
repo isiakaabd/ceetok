@@ -200,7 +200,6 @@ const CreateAnnoucement = ({ handleClose, open, title, data }) => {
           onSubmit={handleSubmit}
         >
           {({ values, errors }) => {
-            console.log(errors, values);
             return (
               <Form>
                 <Grid item container sx={{ height: "100%" }}>

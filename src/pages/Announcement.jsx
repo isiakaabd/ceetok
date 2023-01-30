@@ -8,12 +8,15 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
+  Skeleton,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled, alpha } from "@mui/material/styles";
 import { useState, useRef } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
+  ApprovalOutlined,
+  ApprovalSharp,
   ChatBubbleOutline,
   Delete,
   Edit,
@@ -41,6 +44,7 @@ import { useNavigate } from "react-router-dom";
 import PaymentModal from "components/modals/PaymentModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import { getImage } from "helpers";
+import { useApproveAnnoucementMutation } from "redux/slices/adminSlice";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -86,21 +90,37 @@ export const StyledMenu = styled((props) => (
 }));
 
 const Shares = ({ data: item }) => {
-  const [likeState, setLikeState] = useState(Boolean(item?.liked));
+  const {
+    id,
+    liked,
+    user_id,
+    title,
+    duration,
+    payment,
+    comments_count,
+    edited,
+    approved,
+    likes_count,
+    body,
+  } = item;
+  const [likeState, setLikeState] = useState(Boolean(liked));
   const { data: profile } = useUserProfileQuery();
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
-  const check = profile?.id === item?.user_id;
-  console.log(item);
+  const [approveAnnoucement, { isLoading: isApprovalLoading }] =
+    useApproveAnnoucementMutation();
+
+  const check = profile?.id === user_id;
   const handleLikePost = async () => {
     const { error } = await likePost({
       parent_type: "announcements",
-      parent_id: item?.id,
+      parent_id: id,
     });
 
     if (error) toast.error(error);
     setLikeState(!likeState);
   };
+  const admin = useSelector((state) => state.auth.admin);
 
   const [deleteAnnoucement, { isLoading }] = useDeleteAnnoucementsMutation();
   const navigate = useNavigate();
@@ -112,12 +132,20 @@ const Shares = ({ data: item }) => {
   const handleCloses = () => {
     setAnchorEl(null);
   };
-  const handleDeleteComment = async (id) => {
+  const handleDeleteComment = async () => {
     const { data, error } = await deleteAnnoucement({ id });
 
     if (data) toast.success(data);
     handleCloses();
     if (error) toast.error(error);
+  };
+  const handleApproval = async () => {
+    const { data, error } = await approveAnnoucement({ id });
+    if (data) {
+      toast.success(data);
+      handleCloses();
+    }
+    if (error) toast.success(error);
   };
   const [editModal, setEditModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
@@ -144,7 +172,7 @@ const Shares = ({ data: item }) => {
               <ChatBubbleOutline />
             </IconButton>
             <Typography variant="span" sx={{ fontSize: "2rem" }}>
-              {item?.comments_count}
+              {comments_count}
             </Typography>
           </Grid>
         </Grid>
@@ -153,11 +181,11 @@ const Shares = ({ data: item }) => {
             container
             alignItems="center"
             onClick={handleLikePost}
-            sx={{ cursor: "pointer", color: item?.liked && "red" }}
+            sx={{ cursor: "pointer", color: liked && "red" }}
           >
-            {!item?.liked ? <FavoriteBorderOutlined /> : <FavoriteIcon />}
+            {!liked ? <FavoriteBorderOutlined /> : <FavoriteIcon />}
             <Typography variant="span" sx={{ ml: 1, fontSize: "2rem" }}>
-              {item?.likes_count}
+              {likes_count}
             </Typography>
           </Grid>
         </Grid>
@@ -190,39 +218,62 @@ const Shares = ({ data: item }) => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {check && (
+          {admin && (
             <MenuItem
-              onClick={() => handleDeleteComment(item.id)}
+              disabled={approved}
+              onClick={handleApproval}
               sx={{
                 display: "flex",
                 alignItems: "center",
               }}
             >
               <ListItemIcon>
-                <Delete sx={{ fontSize: "2rem" }} />
+                <ApprovalSharp sx={{ fontSize: "2rem" }} />
               </ListItemIcon>
               <ListItemText sx={{ fontSize: "3rem" }}>
-                {isLoading ? "Deleting" : "Delete"}
+                {isApprovalLoading
+                  ? "Approving"
+                  : approved
+                  ? "Approved"
+                  : "Approve"}
               </ListItemText>
             </MenuItem>
           )}
-          {check && (
-            <MenuItem
-              onClick={() => setEditModal(true)}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <ListItemIcon>
-                <Edit sx={{ fontSize: "2rem" }} />
-              </ListItemIcon>
-              <ListItemText sx={{ fontSize: "3rem" }}>
-                {item?.edited ? "Edit Again" : "Edit Annoucement"}
-              </ListItemText>
-            </MenuItem>
-          )}
-          {check && item?.payment?.status !== "completed" && (
+          {check ||
+            (admin && (
+              <MenuItem
+                onClick={handleDeleteComment}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <ListItemIcon>
+                  <Delete sx={{ fontSize: "2rem" }} />
+                </ListItemIcon>
+                <ListItemText sx={{ fontSize: "3rem" }}>
+                  {isLoading ? "Deleting" : "Delete"}
+                </ListItemText>
+              </MenuItem>
+            ))}
+          {check ||
+            (admin && (
+              <MenuItem
+                onClick={() => setEditModal(true)}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <ListItemIcon>
+                  <Edit sx={{ fontSize: "2rem" }} />
+                </ListItemIcon>
+                <ListItemText sx={{ fontSize: "3rem" }}>
+                  {edited ? "Edit Again" : "Edit Annoucement"}
+                </ListItemText>
+              </MenuItem>
+            ))}
+          {check && !admin && payment?.status !== "completed" && (
             <MenuItem
               onClick={() => setPaymentModal(true)}
               sx={{
@@ -238,9 +289,8 @@ const Shares = ({ data: item }) => {
               </ListItemText>
             </MenuItem>
           )}
-          {!check && (
+          {!check && !admin && (
             <MenuItem
-              // onClick={() => setPaymentModal(true)}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -268,10 +318,10 @@ const Shares = ({ data: item }) => {
         }}
         type="annoucement"
         initialValues={{
-          id: item?.id,
-          text: item?.body,
-          title: item?.title,
-          duration: item?.duration,
+          id: id,
+          text: body,
+          title: title,
+          duration: duration,
         }}
       />
       <PaymentModal
@@ -280,8 +330,8 @@ const Shares = ({ data: item }) => {
           handleCloses();
           setPaymentModal(false);
         }}
-        data={item?.payment}
-        duration={item?.duration}
+        data={payment}
+        duration={duration}
       />
     </>
   );
@@ -308,8 +358,9 @@ const Announcement = () => {
 
     setOpenCreatePost(true);
   };
-  const { data: annoucements } = useGetAnnoucementsQuery();
-  console.log(annoucements);
+  const { data: annoucements, isLoading } = useGetAnnoucementsQuery();
+  if (isLoading) return <Skeleton />;
+
   return (
     <>
       <Grid
@@ -435,63 +486,73 @@ const Announcement = () => {
               background: "White",
             }}
           >
-            {annoucements?.map((item, index) => (
-              <Grid
-                item
-                container
-                key={index}
-                flexWrap="nowrap"
-                sx={{
-                  borderRadius: "1.2rem",
-                  background:
-                    item?.payment.status === "completed" && item?.approved
-                      ? "#37D42A"
-                      : item?.payment.status === "completed" && !item?.approved
-                      ? "#FF9B04"
-                      : "white",
-                }}
-              >
+            {annoucements?.map((item, index) => {
+              const {
+                payment,
+
+                approved,
+                media,
+
+                body,
+              } = item;
+              return (
                 <Grid
                   item
                   container
-                  // gap={2}
+                  key={index}
+                  flexWrap="nowrap"
                   sx={{
-                    padding: "2rem",
-                    border: "1px solid #9B9A9A",
                     borderRadius: "1.2rem",
-                    flexDirection: "column",
+                    background:
+                      payment?.status === "completed" && approved
+                        ? "#37D42A"
+                        : payment?.status === "completed" && !approved
+                        ? "#FF9B04"
+                        : "#FF9B04",
                   }}
                 >
-                  <Grid item>
-                    <img
-                      src={
-                        item?.media.length > 0
-                          ? getImage(item?.media[0]?.storage_path)
-                          : images.davido
-                      }
-                      // src={item.media>0? getImage() images.davido}
-                      style={{ width: "100%", height: "100%" }}
-                      alt="davido"
-                    />
+                  <Grid
+                    item
+                    container
+                    // gap={2}
+                    sx={{
+                      padding: "2rem",
+                      border: "1px solid #9B9A9A",
+                      borderRadius: "1.2rem",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Grid item>
+                      <img
+                        src={
+                          media?.length > 0
+                            ? getImage(media[0]?.storage_path)
+                            : images.davido
+                        }
+                        // src={item.media>0? getImage() images.davido}
+                        style={{ width: "100%", height: "100%" }}
+                        alt="davido"
+                      />
+                    </Grid>
+                    <Grid item sx={{ mt: 2 }}>
+                      <Typography
+                        sx={{
+                          color: !approved ? "#464646" : "#fff",
+                          fontSize: "1.3rem",
+                          fontWeight: 700,
+                          // overflow: "hiddem",
+                          // whiteSpace: "nowrap",
+                          // textOverflow: "ellipsis",
+                        }}
+                      >
+                        {parse(body)}
+                      </Typography>
+                    </Grid>
+                    <Shares data={item} />
                   </Grid>
-                  <Grid item sx={{ mt: 2 }}>
-                    <Typography
-                      sx={{
-                        color: !item?.approved ? "#464646" : "#fff",
-                        fontSize: "1.3rem",
-                        fontWeight: 700,
-                        // overflow: "hiddem",
-                        // whiteSpace: "nowrap",
-                        // textOverflow: "ellipsis",
-                      }}
-                    >
-                      {parse(item?.body)}
-                    </Typography>
-                  </Grid>
-                  <Shares data={item} />
                 </Grid>
-              </Grid>
-            ))}
+              );
+            })}
           </Grid>
         ) : (
           <Typography

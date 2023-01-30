@@ -72,8 +72,9 @@ const ProfileItem = ({ profile }) => {
     const form = new FormData();
     form.append("profile_pic", file);
     const { data, error } = await uploadImage(form);
-    console.log(data, error);
+
     if (data) toast.success(data);
+    if (error) toast.error(error);
     // handleClose(e);
   }
   return (

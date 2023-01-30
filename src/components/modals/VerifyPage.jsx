@@ -104,7 +104,6 @@ const VerifyPage = ({ isOpen, handleClose }) => {
       toast.success(data);
       setTimeout(() => handleClose(), 3000);
     }
-    console.log(data, error);
   };
   const ref = useRef();
 
@@ -122,7 +121,6 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     gender,
     username,
   } = profile;
-  console.log(profile);
   const initialValues = {
     username: username || "",
     dob: getDates(new Date(dob)) || "",

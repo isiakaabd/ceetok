@@ -49,7 +49,13 @@ const CreateAdvert = ({ handleClose, title }) => {
     form.append("format", format);
     form.append("duration", duration);
 
-    form.append("ad_assets", files[0]);
+    if (files.length === 1) {
+      form.append("ad_assets", files[0]);
+    } else {
+      for (let i = 0; i < files.length; i++) {
+        form.append("ad_assets", files[i]);
+      }
+    }
     actions.forEach((item, index) => {
       form.append(`actions[${[index]}][name]`, item.name);
     });
@@ -60,7 +66,7 @@ const CreateAdvert = ({ handleClose, title }) => {
 
     const { data, error } = await createAds(form);
 
-    if (data.message) {
+    if (data?.message) {
       toast.success(data.message);
       setTimeout(() => setPaymentModal(true), 3000);
     }
@@ -84,15 +90,6 @@ const CreateAdvert = ({ handleClose, title }) => {
               >
                 Place Advert
               </Typography>
-              {/* <Typography
-              sx={{
-                textAlign: "center",
-                fontSize: { md: "1.7rem", xs: "1.5rem" },
-              }}
-            >
-              You are creating a post. The label to trending post is interesting
-              content and a descriptive title
-            </Typography> */}
             </Grid>
 
             <Formik
@@ -103,6 +100,7 @@ const CreateAdvert = ({ handleClose, title }) => {
                 format: "",
                 files: "",
                 duration: "",
+                multiple: false,
 
                 actions: [{ name: "", value: "" }],
               }}
@@ -193,7 +191,7 @@ const CreateAdvert = ({ handleClose, title }) => {
                       <FormikControl
                         control="file"
                         name="files"
-                        multiple={true}
+                        multiple={values.format === "carousel" && true}
                       />
                     </Grid>
                     <Grid

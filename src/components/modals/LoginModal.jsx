@@ -21,7 +21,7 @@ import * as Yup from "yup";
 import { useLoginMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { loginAction } from "redux/reducers/authReducer";
+import { checkAdmin, loginAction } from "redux/reducers/authReducer";
 const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
   const [loginUser, { isLoading }] = useLoginMutation();
   const [state, setState] = useState(false);
@@ -45,9 +45,10 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
     if (error) toast.error("Invalid Email/Password");
     if (data) {
       toast.success(data.message);
-      console.log(data.body.auth.accessToken);
-      dispatch(loginAction(data.body));
-
+      dispatch(loginAction(data?.body));
+      if (data?.body?.role === "admin") {
+        dispatch(checkAdmin(data?.body?.role));
+      }
       setTimeout(() => {
         handleClose();
       }, 3000);

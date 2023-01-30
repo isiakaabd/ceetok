@@ -42,7 +42,6 @@ const NewPassword = () => {
       navigate("/");
     }
     if (err) toast.error(err);
-    console.log(dt, err);
   };
   return (
     <Grid container>

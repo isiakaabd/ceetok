@@ -93,6 +93,7 @@ export const {
   useUserProfileQuery,
   useLogoutMutation,
   useOtherUserProfileQuery,
+  useLazyOtherUserProfileQuery,
   useResetPasswordMutation,
   useUserProfileUpdateMutation,
   useRecoverTokenMutation,

@@ -121,7 +121,6 @@ const Shares = ({ data: item }) => {
     if (error) toast.error(error);
   };
   const [editModal, setEditModal] = useState(false);
-  console.log(item?.payment?.status);
   const [paymentModal, setPaymentModal] = useState(false);
   return (
     <>
@@ -289,7 +288,6 @@ const Shares = ({ data: item }) => {
 const Ads = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { id } = useParams();
-  console.log(id);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

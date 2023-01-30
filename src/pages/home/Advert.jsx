@@ -6,7 +6,6 @@ import { getImage } from "helpers";
 const Advert = () => {
   const { obi } = images;
   const { data: allAds, isLoading } = useGetAdsQuery();
-  console.log(allAds);
   if (isLoading) return <Skeleton />;
   return (
     <Grid
@@ -60,7 +59,6 @@ const Advert = () => {
         >
           {allAds?.ads?.map((item) => (
             <Grid item container sx={{ scrollSnapAlign: "start" }}>
-              {console.log(item)}
               {item?.media?.map((i) => (
                 <Link to={`/user/ads/${item?.slug}`} style={{ width: "100%" }}>
                   <img

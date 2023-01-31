@@ -94,6 +94,7 @@ const CreatePost = ({
         title,
         duration,
         body: text,
+        post_id,
       });
       if (data) {
         toast.success(data.message);

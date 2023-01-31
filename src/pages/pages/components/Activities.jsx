@@ -45,10 +45,6 @@ const Activities = (props) => {
       setOpen(false);
     }
   }
-  const [state, setState] = useState({
-    data: [],
-    type: "post",
-  });
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
@@ -59,17 +55,24 @@ const Activities = (props) => {
 
     prevOpen.current = open;
   }, [open]);
-  const [getPost, { data: posts }] = useLazyGetPostQuery();
+  // const {data:allPost}
   const { data: profile } = useUserProfileQuery();
+  // const {data:allPosts}= useGetPostQuery()
+  const [state, setState] = useState({
+    data: [],
+    type: "post",
+  });
+  const [getPost, { data: posts }] = useLazyGetPostQuery();
   const { data: annoucement } = useGetAnnoucementsQuery();
 
   useEffect(() => {
     if (profile?.id) {
-      const fetchdata = async () => {
-        const { data } = await getPost({ userId: profile?.id });
-        if (data) setState({ data, type: "post" });
-      };
-      fetchdata();
+      // const fetchdata = async () => {
+      const { data } = getPost({ userId: profile?.id });
+      console.log(data?.posts);
+      if (data) setState({ data: data?.posts, type: "post" });
+      // };
+      // fetchdata();
     }
     //eslint-disable-next-line
   }, [profile?.id, posts]);

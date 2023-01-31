@@ -179,8 +179,8 @@ const Entertainment = () => {
                 }}
                 xs={12}
               >
-                {array?.length > 0 ? (
-                  array.map((post, index) => {
+                {array?.posts?.length > 0 ? (
+                  array.posts?.map((post, index) => {
                     return <SinglePosts key={index} post={post} />;
                   })
                 ) : (
@@ -188,9 +188,9 @@ const Entertainment = () => {
                 )}
               </List>
             </Grid>
-            {array?.length > 0 && (
+            {array?.posts?.length > 0 && (
               <Grid item container sx={{ p: 3 }}>
-                {array.slice(0, 50).map((item, index) => {
+                {array?.posts?.slice(0, 50).map((item, index) => {
                   return item.recent_views.map((numbers) => {
                     return (
                       //  numbers?.viewer.map((view) => (
@@ -212,13 +212,13 @@ const Entertainment = () => {
                     // ));
                   });
                 })}
-                {array?.length >= 50 && (
+                {array?.posts?.length >= 50 && (
                   <Typography
                     variant="span"
                     color="#FF9B04"
                     fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
                   >
-                    {`and ${array.length - 50} guests`}
+                    {`and ${array?.posts?.length - 50} guests`}
                   </Typography>
                 )}
               </Grid>

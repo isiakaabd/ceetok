@@ -22,12 +22,8 @@ const RightTab = ({ setCreatePost }) => {
   const [register, setRegister] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const loginStatus = useSelector((state) => state.auth.token);
-  const [page, setPage] = useState(1);
-  const {
-    data: array,
-    error,
-    isLoading,
-  } = useGetPostQuery({ offset: page - 1 });
+  const [page, setPage] = useState(0);
+  const { data: array, error, isLoading } = useGetPostQuery({ offset: page });
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -114,7 +110,7 @@ const RightTab = ({ setCreatePost }) => {
           )}
         </Grid>
         <Grid item container>
-          {array?.length > 0 ? (
+          {array?.posts?.length > 0 ? (
             <>
               <List
                 dense
@@ -130,12 +126,16 @@ const RightTab = ({ setCreatePost }) => {
                 xs={12}
               >
                 {/* {posts.length > 0 ? ( */}
-                {array.map((post, index) => {
+                {array?.posts?.map((post, index) => {
                   return <SinglePosts key={index} index={index} post={post} />;
                 })}
               </List>
               {/* <Grid item container justifyContent={"center"}> */}
-              <Paginations page={page} setPage={setPage} />
+              <Paginations
+                page={page}
+                setPage={setPage}
+                count={array?.total_pages}
+              />
               {/* </Grid> */}
             </>
           ) : (

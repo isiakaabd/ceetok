@@ -3,7 +3,7 @@ import { Pagination } from "@mui/material";
 
 const Paginations = ({ page, setPage, count }) => {
   const handleChange = (_, value) => {
-    setPage(value);
+    setPage(value - 1);
   };
   return (
     <Pagination

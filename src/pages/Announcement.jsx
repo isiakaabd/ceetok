@@ -45,6 +45,7 @@ import { useUserProfileQuery } from "redux/slices/authSlice";
 import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { getImage } from "helpers";
 import { useApproveAnnoucementMutation } from "redux/slices/adminSlice";
+import Paginations from "components/modals/Paginations";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -105,6 +106,7 @@ const Shares = ({ data: item }) => {
   } = item;
   const [likeState, setLikeState] = useState(Boolean(liked));
   const { data: profile } = useUserProfileQuery();
+
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const [approveAnnoucement, { isLoading: isApprovalLoading }] =
@@ -382,7 +384,8 @@ const Announcement = () => {
 
     setOpenCreatePost(true);
   };
-  const { data: annoucements, isLoading } = useGetAnnoucementsQuery();
+  const [page, setPage] = useState(0);
+  const { data: annoucements, isLoading } = useGetAnnoucementsQuery({ page });
   if (isLoading) return <Skeleton />;
 
   return (
@@ -497,7 +500,7 @@ const Announcement = () => {
         </Grid>
 
         {/* list */}
-        {annoucements?.length > 0 ? (
+        {annoucements?.announcements?.length > 0 ? (
           <Grid
             item
             container
@@ -510,7 +513,7 @@ const Announcement = () => {
               background: "White",
             }}
           >
-            {annoucements?.map((item, index) => {
+            {annoucements?.announcements?.map((item, index) => {
               const {
                 payment,
 
@@ -588,6 +591,14 @@ const Announcement = () => {
             No Annoucement here
           </Typography>
         )}
+
+        <Grid item container>
+          <Paginations
+            setPage={setPage}
+            page={page}
+            count={annoucements?.total_pages || 5}
+          />
+        </Grid>
       </Grid>
 
       {modal && (

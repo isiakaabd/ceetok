@@ -21,7 +21,7 @@ export const postSlice = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["post"],
-      transformResponse: (response) => response.body.posts,
+      transformResponse: (response) => response.body,
       // transformErrorResponse: (error) => error.data.message,
     }),
     addImage: builder.mutation({

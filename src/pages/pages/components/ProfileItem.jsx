@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
-import { getImage, link } from "helpers";
+import { getImage } from "helpers";
 import { toast } from "react-toastify";
 import { useBanUsersMutation } from "redux/slices/adminSlice";
 
@@ -34,7 +34,6 @@ const ProfileItem = ({ profile }) => {
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const [uploadImage] = useUserProfileUpdateMutation();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -56,7 +55,6 @@ const ProfileItem = ({ profile }) => {
     }
   }
 
-  // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -65,18 +63,7 @@ const ProfileItem = ({ profile }) => {
 
     prevOpen.current = open;
   }, [open]);
-  const handleChangeImage = (e) => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
 
-    input.onchange = (e) => {
-      const file = e.currentTarget.files[0];
-      saveToServer(file);
-    };
-    //
-  };
   const handleBanUser = async (e) => {
     const { data, error } = await banorUnban({
       users: [id],
@@ -86,15 +73,6 @@ const ProfileItem = ({ profile }) => {
     setTimeout(() => handleClose(e), 300);
   };
 
-  async function saveToServer(file) {
-    const form = new FormData();
-    form.append("profile_pic", file);
-    const { data, error } = await uploadImage(form);
-
-    if (data) toast.success(data);
-    if (error) toast.error(error);
-    // handleClose(e);
-  }
   return (
     <ListItemButton>
       <ListItem

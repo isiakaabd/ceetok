@@ -17,7 +17,8 @@ import { getDate, getTime } from "helpers";
 const Annoucement = () => {
   const [openCreatePost, setCreatePost] = useState(false);
   const handleCreatePostOpen = () => setCreatePost(true);
-  const { data: annoucements } = useGetAnnoucementsQuery();
+  const [page, setPage] = useState(0);
+  const { data: annoucements } = useGetAnnoucementsQuery({ page });
   const handleCreatePostClose = () => setCreatePost(false);
   console.log(annoucements);
   return (
@@ -72,7 +73,7 @@ const Annoucement = () => {
           </Grid>
         </Grid>
         <Grid item container flexDirection="column">
-          {annoucements?.length > 0 ? (
+          {annoucements?.announcements?.length > 0 ? (
             <List
               item
               container
@@ -87,7 +88,7 @@ const Annoucement = () => {
                 },
               }}
             >
-              {annoucements?.map((item, i) => {
+              {annoucements?.announcements?.map((item, i) => {
                 const { title, createdAt, user } = item;
                 return (
                   <ListItem
@@ -124,7 +125,7 @@ const Annoucement = () => {
             </Typography>
           )}
 
-          {annoucements?.length > 0 && (
+          {annoucements?.announcements?.length > 0 && (
             <CustomButton
               title="See More"
               width="10rem"

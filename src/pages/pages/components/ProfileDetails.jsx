@@ -20,6 +20,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
   useAllUsersQuery,
+  useLazyOtherUserProfileQuery,
   useOtherUserProfileQuery,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
@@ -48,23 +49,26 @@ const ProfileDetails = (props) => {
   const [open, setOpen] = useState(false);
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
-  const { data: dt, isLoading: loading } = useOtherUserProfileQuery(id);
+  const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
   const { data: users, isLoading: usersLoading } = useAllUsersQuery();
   const admin = useSelector((state) => state.auth.admin);
   const condition = !id || dt?.id === userProfile?.id;
-  const dummy = Array(10).fill(undefined);
+  const dummy = [];
   const list = admin ? users : dummy;
-  console.log(users);
+
   // console.log(userProfile.id, dt.id);
   useEffect(() => {
     if (id) {
-      setState(dt);
+      const { data } = fetchProfile(id);
+      if (data) {
+        setState(data);
+      }
     } else {
       setState(userProfile);
     }
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
-  if (isLoading || loading || usersLoading) return <Skeleton />;
+  if (isLoading || usersLoading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
@@ -201,18 +205,31 @@ const ProfileDetails = (props) => {
               <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
                 {admin ? "Users List" : "Friends List"}
               </Typography>
-              <CustomButton
-                title={"See All"}
-                component={Link}
-                to={admin ? "/admin/all-users" : "/user/all-friends"}
-                fontSize={{ md: "1.6rem", xs: "1.4rem" }}
-              />
+              {list?.length > 0 && (
+                <CustomButton
+                  title={"See All"}
+                  component={Link}
+                  to={admin ? "/admin/all-users" : "/user/all-friends"}
+                  fontSize={{ md: "1.6rem", xs: "1.4rem" }}
+                />
+              )}
             </Grid>
-            <List sx={{ p: 2, maxWidth: "100%" }}>
-              {list?.slice(0, 11)?.map((item) => (
-                <ProfileItem profile={item} />
-              ))}
-            </List>
+            {list?.length > 0 ? (
+              <List sx={{ p: 2, maxWidth: "100%" }}>
+                {list?.slice(0, 11)?.map((item) => (
+                  <ProfileItem profile={item} />
+                ))}
+              </List>
+            ) : (
+              <Typography
+                variant="h2"
+                textAlign="center"
+                width="100%"
+                sx={{ alignSelf: "center" }}
+              >
+                No data here
+              </Typography>
+            )}
           </>
         )}
       </Grid>

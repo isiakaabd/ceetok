@@ -62,6 +62,15 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
+    allUsers: builder.query({
+      query: (id) => ({
+        url: `/user/list`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      transformResponse: (response) => response.body.users,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     userProfileUpdate: builder.mutation({
       query: (form) => ({
         url: "/user/edit",
@@ -91,6 +100,7 @@ export const {
   useLoginMutation,
   useForgotPasswordMutation,
   useUserProfileQuery,
+  useAllUsersQuery,
   useLogoutMutation,
   useOtherUserProfileQuery,
   useLazyOtherUserProfileQuery,

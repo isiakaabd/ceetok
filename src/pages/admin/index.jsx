@@ -3,11 +3,11 @@ import SearchComponent from "components/modals/SearchComponent";
 import React, { useState } from "react";
 import CustomizedTables from "./Table";
 import Paginations from "components/modals/Paginations";
-import { useGetUsersQuery } from "redux/slices/adminSlice";
-import { useUserProfileQuery } from "redux/slices/authSlice";
+// import { useGetUsersQuery } from "redux/slices/adminSlice";
+import { useAllUsersQuery } from "redux/slices/authSlice";
 
 const AllUsers = () => {
-  const { data, isLoading, error } = useGetUsersQuery();
+  const { data, isLoading, error } = useAllUsersQuery();
   console.log(data, error, "hgh");
   // page, setPage, count;
   const [page, setPage] = useState(1);

@@ -31,6 +31,16 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.users,
       // transformErrorResponse: (error) => error.data.message,
     }),
+    banUsers: builder.mutation({
+      query: (body) => ({
+        url: `/admin/user/ban`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -38,4 +48,5 @@ export const {
   useApprovePostMutation,
   useGetUsersQuery,
   useApproveAnnoucementMutation,
+  useBanUsersMutation,
 } = adminSlice;

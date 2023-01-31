@@ -9,6 +9,7 @@ import {
   IconButton,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   MenuItem,
@@ -20,8 +21,17 @@ import {
 import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 import { getImage, link } from "helpers";
 import { toast } from "react-toastify";
+import { useBanUsersMutation } from "redux/slices/adminSlice";
 
 const ProfileItem = ({ profile }) => {
+  const { full_name, id, username, banned } = profile;
+  const [banorUnban, { isLoading }] = useBanUsersMutation();
+  const overflow = {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
+
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [uploadImage] = useUserProfileUpdateMutation();
@@ -67,6 +77,14 @@ const ProfileItem = ({ profile }) => {
     };
     //
   };
+  const handleBanUser = async (e) => {
+    const { data, error } = await banorUnban({
+      users: [id],
+    });
+    if (data) toast.success(data);
+    if (error) toast.error(error);
+    setTimeout(() => handleClose(e), 300);
+  };
 
   async function saveToServer(file) {
     const form = new FormData();
@@ -78,7 +96,7 @@ const ProfileItem = ({ profile }) => {
     // handleClose(e);
   }
   return (
-    <>
+    <ListItemButton>
       <ListItem
         sx={{
           borderRadius: "1rem",
@@ -96,8 +114,13 @@ const ProfileItem = ({ profile }) => {
         <ListItemText
           primary={
             <Grid item alignItems="center" gap={1} container flexWrap="nowrap">
-              <Typography color="#9B9A9A" fontSize="1.4rem" fontWeight={400}>
-                John Friday
+              <Typography
+                color="#9B9A9A"
+                fontSize="1.4rem"
+                fontWeight={400}
+                sx={overflow}
+              >
+                {full_name}
               </Typography>
               <div
                 style={{
@@ -111,8 +134,13 @@ const ProfileItem = ({ profile }) => {
           }
           // "Brunch this weekend?"
           secondary={
-            <Typography fontSize="1.4rem" fontWeight={400} color="#9B9A9A">
-              @johnneskey
+            <Typography
+              fontSize="1.4rem"
+              fontWeight={400}
+              color="#9B9A9A"
+              sx={overflow}
+            >
+              {username ? `@${username}` : "No username"}
             </Typography>
           }
         />
@@ -155,16 +183,22 @@ const ProfileItem = ({ profile }) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem onClick={handleChangeImage}>Change Avatar</MenuItem>
-                  <MenuItem onClick={handleClose}>Remove Avatar</MenuItem>
-                  <MenuItem onClick={handleClose}>Save Avatar</MenuItem>
+                  <MenuItem onClick={handleBanUser}>
+                    {isLoading
+                      ? "Loading..."
+                      : banned
+                      ? "Unban User"
+                      : "Ban User"}
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>Send Mail</MenuItem>
+                  {/* <MenuItem onClick={handleClose}>Save Avatar</MenuItem> */}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
           </Grow>
         )}
       </Popper>
-    </>
+    </ListItemButton>
   );
 };
 

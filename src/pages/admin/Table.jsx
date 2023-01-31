@@ -48,7 +48,7 @@ export default function CustomizedTables({ rows }) {
           <TableRow>
             <StyledTableCell>Username</StyledTableCell>
             <StyledTableCell align="left">Join Date</StyledTableCell>
-            <StyledTableCell align="left">Status</StyledTableCell>
+            <StyledTableCell align="left">Email</StyledTableCell>
             <StyledTableCell align="left">Verification</StyledTableCell>
             <StyledTableCell align="left">Post</StyledTableCell>
             <StyledTableCell align="left">Last Activity</StyledTableCell>
@@ -60,7 +60,7 @@ export default function CustomizedTables({ rows }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map?.((row, index) => (
+          {rows?.map?.((row, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell
                 component="th"
@@ -94,7 +94,7 @@ export default function CustomizedTables({ rows }) {
               <StyledTableCell align="left">
                 {getDate(row.createdAt)}
               </StyledTableCell>
-              <StyledTableCell align="left">{row.status}</StyledTableCell>
+              <StyledTableCell align="left">{row.email}</StyledTableCell>
               <StyledTableCell align="left">
                 {row.verification === "Verified" ? (
                   <Grid item container alignItems="center">

@@ -19,11 +19,14 @@ import { SettingsOutlined } from "@mui/icons-material";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
+  useAllUsersQuery,
   useOtherUserProfileQuery,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
 import { getDate } from "helpers";
 import VerifyPage from "components/modals/VerifyPage";
+import { useSelector } from "react-redux";
+import { useGetUsersQuery } from "redux/slices/adminSlice";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -46,7 +49,12 @@ const ProfileDetails = (props) => {
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
   const { data: dt, isLoading: loading } = useOtherUserProfileQuery(id);
+  const { data: users, isLoading: usersLoading } = useAllUsersQuery();
+  const admin = useSelector((state) => state.auth.admin);
   const condition = !id || dt?.id === userProfile?.id;
+  const dummy = Array(10).fill(undefined);
+  const list = admin ? users : dummy;
+  console.log(users);
   // console.log(userProfile.id, dt.id);
   useEffect(() => {
     if (id) {
@@ -56,7 +64,7 @@ const ProfileDetails = (props) => {
     }
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
-  if (isLoading || loading) return <Skeleton />;
+  if (isLoading || loading || usersLoading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
@@ -191,21 +199,19 @@ const ProfileDetails = (props) => {
           <>
             <Grid item container alignItems="center" sx={{ mt: 4, p: 2 }}>
               <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
-                Friend List
+                {admin ? "Users List" : "Friends List"}
               </Typography>
               <CustomButton
                 title={"See All"}
                 component={Link}
-                to="/user/all-friends"
+                to={admin ? "/admin/all-users" : "/user/all-friends"}
                 fontSize={{ md: "1.6rem", xs: "1.4rem" }}
               />
             </Grid>
-            <List sx={{ wdith: "100%", p: 2 }}>
-              {Array(10)
-                .fill(undefined)
-                .map((item) => (
-                  <ProfileItem profile={item} />
-                ))}
+            <List sx={{ p: 2, maxWidth: "100%" }}>
+              {list?.slice(0, 11)?.map((item) => (
+                <ProfileItem profile={item} />
+              ))}
             </List>
           </>
         )}

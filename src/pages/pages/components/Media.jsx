@@ -1,8 +1,26 @@
-import { Avatar, Grid, IconButton, Checkbox, Typography } from "@mui/material";
+import {
+  Avatar,
+  Grid,
+  IconButton,
+  Checkbox,
+  Typography,
+  Skeleton,
+} from "@mui/material";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import PropTypes from "prop-types";
 import images from "assets";
+import { useAllMediaQuery, useUserMediaQuery } from "redux/slices/authSlice";
+import { useGetPostQuery } from "redux/slices/postSlice";
+import Paginations from "components/modals/Paginations";
+import { useState } from "react";
+import { DeleteForeverOutlined, DeleteOutline } from "@mui/icons-material";
+import { getImage } from "helpers";
 const Media = (props) => {
+  const [page, setPage] = useState(0);
+  const { data, error, isLoading } = useAllMediaQuery(page);
+  console.log(data);
+  if (isLoading) return <Skeleton />;
+  if (error) return "Something Went Wrong";
   return (
     <Grid
       item
@@ -18,32 +36,46 @@ const Media = (props) => {
     >
       <Grid item sx={{ mb: 4, mt: 2 }}>
         <Grid container alignItems="center" gap={0.5}>
-          {/* <IconButton> */}
-          <DeleteIcon sx={{ fontSize: "2.5rem", mt: 1 }} />
-          {/* </IconButton> */}
-          <Typography fontSize="1.4rem" fontWeight={400} color="secondary">
+          <IconButton edge="start" size="small">
+            <DeleteOutline sx={{ fontSize: "2rem" }} />
+          </IconButton>
+
+          <Typography
+            fontSize="2rem"
+            fontWeight={400}
+            lineHeight={2}
+            color="secondary"
+          >
             Delete All
           </Typography>
-          <Checkbox
-            defaultChecked
-            sx={{
-              "& .MuiSvgIcon-root": { fontSize: "2.5rem", color: "#9B9A9A" },
-            }}
-          />
+          <IconButton edge="start" size="small">
+            <Checkbox
+              defaultChecked
+              sx={{
+                "& .MuiSvgIcon-root": { fontSize: "2rem", color: "#9B9A9A" },
+              }}
+            />
+          </IconButton>
         </Grid>
       </Grid>
-      <Grid item container gap={2}>
-        {Array(6)
-          .fill(undefined)
-          .map((item, index) => (
+      {data?.media?.length > 0 ? (
+        <Grid item container gap={2}>
+          {data?.media?.map((item, index) => (
             <Avatar
               key={index}
-              src={images.image04}
+              src={getImage(item?.storage_path)}
               sx={{ height: "8rem", width: "10rem", objectFit: "contain" }}
               variant="square"
             />
           ))}
-      </Grid>
+        </Grid>
+      ) : (
+        <Typography variant="h2" width="100%" textAlign="center">
+          No Data yet
+        </Typography>
+      )}
+
+      <Paginations page={page} setPage={setPage} count={data?.total_pages} />
     </Grid>
   );
 };

@@ -62,14 +62,32 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
+    userMedia: builder.query({
+      query: ({ offset }) => ({
+        url: `/media/`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      //  ?limit=10${!offset ? "&offset=0" : offset}`,
+      // transformResponse: (response) => response.body.user,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     allUsers: builder.query({
       query: (username) => ({
-        // post/?${category ? `category=${category}`
         url: `/user/list/${username ? `?username=${username}` : ""} `,
         method: "GET",
       }),
       providesTags: ["user"],
       transformResponse: (response) => response.body.users,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    allMedia: builder.query({
+      query: (page) => ({
+        url: `/media?limit=10&offset=${page ? page : 0}`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
     userProfileUpdate: builder.mutation({
@@ -89,7 +107,7 @@ export const authSlice = api.injectEndpoints({
         url: "/user/logout",
         method: "POST",
       }),
-
+      invalidatesTags: ["user", "post", "announcement", "admin"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -103,6 +121,8 @@ export const {
   useUserProfileQuery,
   useAllUsersQuery,
   useLogoutMutation,
+  useUserMediaQuery,
+  useAllMediaQuery,
   useOtherUserProfileQuery,
   useLazyOtherUserProfileQuery,
   useResetPasswordMutation,

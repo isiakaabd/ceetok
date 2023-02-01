@@ -39,7 +39,7 @@ const ProfileItem = ({ profile }) => {
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (anchorRef?.current && anchorRef?.current.contains(event.target)) {
       return;
     }
 
@@ -153,8 +153,7 @@ const ProfileItem = ({ profile }) => {
             }}
           >
             <Paper>
-              <ClickAwayListener>
-                {/* // onClickAway={handleClose} */}
+              <ClickAwayListener onClickAway={handleClose}>
                 <MenuList
                   autoFocusItem={open}
                   id="composition-menu"

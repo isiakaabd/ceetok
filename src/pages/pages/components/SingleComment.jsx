@@ -34,13 +34,9 @@ import {
 import { toast } from "react-toastify";
 import {
   useDeleteCommentMutation,
-  useEditCommentMutation,
   useGetPostCommentsQuery,
 } from "redux/slices/commentSlice";
-// import { Comment } from "./components/PostComment";
-// import SocialMedia from "components/modals/SocialMedia";
-// import { useUserProfileQuery } from "redux/slices/authSlice";
-import { getAgo, getImage, link } from "helpers";
+import { getImage, getTimeMoment } from "helpers";
 import EditModal from "./EditPost";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
@@ -181,7 +177,7 @@ export function Text({ item, profile }) {
                     ml: ".4rem",
                   }}
                 >
-                  {edited ? getAgo(updatedAt) : getAgo(createdAt)}
+                  {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
                 </Typography>
                 {edited && (
                   <Typography

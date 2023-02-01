@@ -38,7 +38,7 @@ import {
   usePostCommentMutation,
   useUpdateCommentMutation,
 } from "redux/slices/commentSlice";
-import { getAgo, getImage, link } from "helpers";
+import { getImage, getTimeMoment } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { useSelector } from "react-redux";
 import { useUserProfileQuery } from "redux/slices/authSlice";
@@ -299,7 +299,9 @@ function Single({ comments }) {
                         ml: ".4rem",
                       }}
                     >
-                      {edited ? getAgo(updatedAt) : getAgo(createdAt)}
+                      {edited
+                        ? getTimeMoment(updatedAt)
+                        : getTimeMoment(createdAt)}
                     </Typography>
                     {edited && (
                       <Typography

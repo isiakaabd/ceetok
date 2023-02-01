@@ -24,12 +24,9 @@ import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
-
 import parse from "html-react-parser";
-
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-// import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
 import {
   useDeleteCommentMutation,
@@ -40,7 +37,6 @@ import {
 } from "redux/slices/commentSlice";
 import { getImage, getTimeMoment } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
-import { useSelector } from "react-redux";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 const validationSchema = Yup.object({
   comment: Yup.string().required("Enter your Comment"),

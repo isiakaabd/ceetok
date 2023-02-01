@@ -26,8 +26,8 @@ export const annoucementSlice = api.injectEndpoints({
       query: ({ page }) => ({
         url: `announcement/?${page ? `&offset=${page}` : "&offset=0"}&limit=10`,
         method: "GET",
-        providesTags: ["announcement"],
       }),
+      providesTags: ["announcement"],
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),

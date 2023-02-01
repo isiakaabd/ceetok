@@ -7,8 +7,11 @@ import Paginations from "components/modals/Paginations";
 import { useAllUsersQuery } from "redux/slices/authSlice";
 
 const AllUsers = () => {
-  const { data, isLoading, error } = useAllUsersQuery();
-  console.log(data, error, "hgh");
+  const [userName, setUserName] = useState("");
+  const { data, isLoading, isFetching, error } = useAllUsersQuery(userName);
+  const handleSubmit = (values) => {
+    setUserName(values.name);
+  };
   // page, setPage, count;
   const [page, setPage] = useState(1);
   if (isLoading) return <Skeleton />;
@@ -66,14 +69,25 @@ const AllUsers = () => {
               />
             ))}
           </Grid>
+          {isFetching && (
+            <Typography variant="h4" color="success">
+              Loading...
+            </Typography>
+          )}
           <Grid item>
-            <SearchComponent placeholder={"Search Username"} />
+            <SearchComponent
+              placeholder={"Search Username"}
+              handleSubmit={handleSubmit}
+            />
           </Grid>
         </Grid>
         <Grid item container>
           <CustomizedTables rows={data} />
         </Grid>
-        <Paginations page={page} setPage={setPage} count={10} />
+
+        {data?.length > 0 ? (
+          <Paginations page={page} setPage={setPage} count={10} />
+        ) : null}
       </Grid>
     </Grid>
   );

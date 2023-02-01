@@ -29,7 +29,7 @@ const Text = ({
         alignItems: "center",
       }}
     >
-      <IconButton sx={{ background: background }}>
+      <IconButton type="submit" sx={{ background: background }}>
         <Icon />
       </IconButton>
       <InputBase

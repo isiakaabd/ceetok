@@ -41,6 +41,16 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    sendEmail: builder.mutation({
+      query: (body) => ({
+        url: `/admin/user/send-email`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -49,4 +59,5 @@ export const {
   useGetUsersQuery,
   useApproveAnnoucementMutation,
   useBanUsersMutation,
+  useSendEmailMutation,
 } = adminSlice;

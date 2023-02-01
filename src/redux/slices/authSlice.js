@@ -63,8 +63,9 @@ export const authSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     allUsers: builder.query({
-      query: (id) => ({
-        url: `/user/list`,
+      query: (username) => ({
+        // post/?${category ? `category=${category}`
+        url: `/user/list/${username ? `?username=${username}` : ""} `,
         method: "GET",
       }),
       providesTags: ["user"],

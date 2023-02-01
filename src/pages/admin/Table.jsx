@@ -23,11 +23,19 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { getDate, getImage } from "helpers";
+import { getDate, getImage, getTimeMoment } from "helpers";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useBanUsersMutation } from "redux/slices/adminSlice";
-
+import {
+  useBanUsersMutation,
+  useSendEmailMutation,
+} from "redux/slices/adminSlice";
+import NotificationModal from "components/modals/NotificationModal";
+import { Formik, Form } from "formik/dist";
+import FormikControl from "validation/FormikControl";
+import Editor from "components/Quil";
+import { CustomButton } from "components";
+import * as Yup from "yup";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#F1F0F0",
@@ -54,11 +62,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function CustomizedTables({ rows }) {
-  const overflow = {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  };
   const [banorUnban, { isLoading }] = useBanUsersMutation();
   const [ids, setIds] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -84,7 +87,15 @@ export default function CustomizedTables({ rows }) {
       handleClose(e);
     }
   };
-  const [state, setState] = useState(false);
+  const [state] = useState(false);
+  const [emailModal, setEmailModal] = useState(false);
+  const handleCheck = () => {
+    if (ids.length > 0) {
+      setEmailModal(true);
+    } else toast.error("Add atleast one User");
+    handleClose();
+  };
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -114,7 +125,7 @@ export default function CustomizedTables({ rows }) {
                   <MenuItem onClick={handleBanUser}>
                     {isLoading ? "Loading..." : "Ban/Unban User"}
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>Send Mail</MenuItem>
+                  <MenuItem onClick={handleCheck}>Send Mail</MenuItem>
                 </Menu>
               </StyledTableCell>
               <StyledTableCell align="left">
@@ -124,19 +135,50 @@ export default function CustomizedTables({ rows }) {
               </StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows?.map?.((row, index) => (
-              <Rows
-                row={row}
-                key={index}
-                state={state}
-                ids={ids}
-                setIds={setIds}
-              />
-            ))}
-          </TableBody>
+          {rows?.length > 0 ? (
+            <TableBody sx={{ width: "100%" }}>
+              {rows.map?.((row, index) => (
+                <Rows
+                  row={row}
+                  key={index}
+                  state={state}
+                  ids={ids}
+                  setIds={setIds}
+                />
+              ))}
+            </TableBody>
+          ) : (
+            <TableBody sx={{ width: "100%" }}>
+              <StyledTableRow>
+                <Grid
+                  item
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    height: "100%",
+                    minHeight: "30vh",
+                    width: "100%",
+                  }}
+                >
+                  <Typography variant="h2" textAlign="center">
+                    No Data Yet
+                  </Typography>
+                </Grid>
+              </StyledTableRow>
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
+
+      <EmailModal
+        open={emailModal}
+        id={ids}
+        handleClose={() => {
+          setEmailModal(false);
+          handleClose();
+        }}
+      />
     </>
   );
 }
@@ -153,7 +195,7 @@ function Rows({ row, state, ids, setIds }) {
     email,
   } = row;
   const [banorUnban, { isLoading }] = useBanUsersMutation();
-
+  const [sendEmail, { isLoading: sendingEmail }] = useSendEmailMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -181,7 +223,10 @@ function Rows({ row, state, ids, setIds }) {
       setIds(x);
     }
   };
-
+  const handleCheck = () => {
+    setEmailModal(true);
+  };
+  const [emailModal, setEmailModal] = useState(false);
   return (
     <>
       <StyledTableRow>
@@ -220,7 +265,7 @@ function Rows({ row, state, ids, setIds }) {
         </StyledTableCell>
         <StyledTableCell align="left">{post_count}</StyledTableCell>
         <StyledTableCell align="left">
-          {last_activity ? getDate(last_activity) : "No Activity"}
+          {last_activity ? getTimeMoment(last_activity) : "No Activity"}
         </StyledTableCell>
         <StyledTableCell align="left">
           <Grid item container alignItems="center">
@@ -256,10 +301,76 @@ function Rows({ row, state, ids, setIds }) {
             <MenuItem onClick={handleBanUser}>
               {isLoading ? "Loading..." : banned ? "Unban User" : "Ban User"}
             </MenuItem>
-            <MenuItem onClick={handleClose}>Send Mail</MenuItem>
+            <MenuItem onClick={handleCheck}>
+              {sendingEmail ? "Sending" : "Send Mail"}
+            </MenuItem>
           </Menu>
         </StyledTableCell>
       </StyledTableRow>
+
+      <EmailModal
+        open={emailModal}
+        id={id}
+        handleClose={() => {
+          setEmailModal(false);
+          handleClose();
+        }}
+      />
     </>
+  );
+}
+
+function EmailModal({ open, handleClose, id }) {
+  const [sendEmail, { isLoading: sendingEmail }] = useSendEmailMutation();
+  const handleSendEmail = async (values) => {
+    const { subject, body } = values;
+
+    // const idx = typeof id ==="string"? id : newIdx
+    const { data, error } = await sendEmail({
+      users: typeof id === "string" ? [id] : [...id],
+      subject,
+      body,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleClose(), 3000);
+    }
+    if (error) toast.error(error);
+  };
+  const validationSchema = Yup.object({
+    subject: Yup.string("Enter Subject").required("Required"),
+    body: Yup.string().required("Required"),
+  });
+  return (
+    <NotificationModal isOpen={open} handleClose={handleClose}>
+      <Grid item container>
+        <Formik
+          initialValues={{ subject: "", body: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleSendEmail}
+        >
+          <Form>
+            <Grid item container gap={2} flexDirection="column">
+              <Typography variant="h2" textAlign="center" width="100%">
+                Send Mail
+              </Typography>
+              <Grid item container>
+                <FormikControl name="subject" placeholder="Subject" />
+              </Grid>
+              <Grid item>
+                <Editor name="body" placeholder="Enter Email here..." />
+              </Grid>
+              <Grid item container>
+                <CustomButton
+                  type="submit"
+                  isSubmitting={sendingEmail}
+                  title="Send Mail"
+                />
+              </Grid>
+            </Grid>
+          </Form>
+        </Formik>
+      </Grid>
+    </NotificationModal>
   );
 }

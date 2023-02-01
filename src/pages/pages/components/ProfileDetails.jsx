@@ -225,7 +225,7 @@ const ProfileDetails = (props) => {
                 variant="h2"
                 textAlign="center"
                 width="100%"
-                sx={{ alignSelf: "center" }}
+                sx={{ alignSelf: "center", py: 3 }}
               >
                 No data here
               </Typography>

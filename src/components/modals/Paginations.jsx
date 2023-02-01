@@ -13,7 +13,7 @@ const Paginations = ({ page, setPage, count }) => {
       color="success"
       // hidePrevButton={true}
       // hideNextButton={true}
-      size="large"
+      size="medium"
       sx={{
         margin: "auto",
         py: 2,

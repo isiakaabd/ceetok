@@ -36,7 +36,10 @@ export const getTimeMoment = (startDate) => {
     return durationObj.asHours().toFixed(0) + "h";
   } else if (durationObj.asMinutes() > 1) {
     return durationObj.asMinutes().toFixed(0) + "m ";
+  } else if (durationObj.asSeconds() >= 1) {
+    return durationObj.asSeconds().toFixed(0) + "s ";
   }
-  return durationObj.seconds().toFixed(0) + "s";
+  return "now";
+  //  durationObj.seconds().toFixed(0) + "s";
   // return formattedDuration;
 };

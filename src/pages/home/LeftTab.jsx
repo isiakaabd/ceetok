@@ -7,15 +7,18 @@ import {
   ListItemButton,
 } from "@mui/material";
 
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { CustomButton } from "components";
 import { useGetCategoriesQuery } from "redux/slices/postSlice";
 import SearchComponent from "components/modals/SearchComponent";
+import { useState } from "react";
 const LeftTab = () => {
-  const loginStatus = useSelector((state) => state.auth.token);
+  // const loginStatus = useSelector((state) => state.auth.token);
+  const [search, setSearch] = useState("");
   const { data: categories } = useGetCategoriesQuery();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const handleSubmit = async () => {};
   return (
     <Grid
       item
@@ -34,7 +37,10 @@ const LeftTab = () => {
           padding: { xs: "1rem", md: "2rem 2rem 2rem 4rem" },
         }}
       >
-        <SearchComponent />
+        <SearchComponent
+          handleSubmit={handleSubmit}
+          placeholder={"Search Categorie"}
+        />
         <List sx={{ width: "100%" }} dense>
           {categories?.map((item, index) => {
             return (

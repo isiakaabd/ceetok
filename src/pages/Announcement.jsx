@@ -374,6 +374,7 @@ const Announcement = () => {
   };
 
   const loginStatus = useSelector((state) => state.auth.token);
+
   const [modal, setModal] = useState(false);
   const [openCreatePost, setOpenCreatePost] = useState(false);
 

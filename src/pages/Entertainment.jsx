@@ -24,6 +24,7 @@ import Tooltips from "components/ToolTips";
 const Entertainment = () => {
   const [searchParams] = useSearchParams();
   const params = searchParams.get("category");
+  const [value, setValue] = useState("");
   const loginStatus = useSelector((state) => state.auth.token);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -42,6 +43,7 @@ const Entertainment = () => {
   };
   const { data: array, isLoading } = useGetPostQuery({
     category: params.toLowerCase(),
+    from: value,
   });
   const { data: profile, isLoading: loading } = useUserProfileQuery();
   const [opens, setOpens] = useState(false);
@@ -161,6 +163,8 @@ const Entertainment = () => {
                   anchorEl={anchorEl}
                   setAnchorEl={setAnchorEl}
                   open={open}
+                  value={value}
+                  setValue={setValue}
                   handleClick={handleClick}
                   handleClose={handleClose}
                 />

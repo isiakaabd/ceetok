@@ -15,19 +15,22 @@ import Pen from "assets/svgs/Pen";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
 import SettingsIcon from "assets/svgs/Settings";
-import { SettingsOutlined } from "@mui/icons-material";
+import { PersonAddAlt1Outlined, SettingsOutlined } from "@mui/icons-material";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
   useAllUsersQuery,
+  useFollowUserMutation,
   useLazyOtherUserProfileQuery,
   useOtherUserProfileQuery,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
-import { getDate } from "helpers";
+import { getDate, getTimeMoment } from "helpers";
 import VerifyPage from "components/modals/VerifyPage";
 import { useSelector } from "react-redux";
 import { useGetUsersQuery } from "redux/slices/adminSlice";
+import CustomizedTooltips from "components/ToolTips";
+import { toast } from "react-toastify";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -47,22 +50,33 @@ const ProfileDetails = (props) => {
   );
 
   const [open, setOpen] = useState(false);
+  const [follow] = useFollowUserMutation();
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
   const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
-  const { data: users, isLoading: usersLoading } = useAllUsersQuery();
+  const { data: users, isLoading: usersLoading } = useAllUsersQuery({
+    followers: true,
+  });
   const admin = useSelector((state) => state.auth.admin);
   const condition = !id || dt?.id === userProfile?.id;
   const dummy = [];
   const list = admin ? users : dummy;
-
+  const handleFollowUser = async () => {
+    const { data, error } = await follow({ user_id: id });
+    toast.success(data?.message);
+    toast.error(error?.message);
+  };
   // console.log(userProfile.id, dt.id);
   useEffect(() => {
     if (id) {
-      const { data } = fetchProfile(id);
-      if (data) {
-        setState(data);
+      async function x() {
+        const { data } = await fetchProfile(id);
+        console.log(data);
+        if (data) {
+          setState(data);
+        }
       }
+      x();
     } else {
       setState(userProfile);
     }
@@ -121,6 +135,19 @@ const ProfileDetails = (props) => {
                 <Typography color="#9B9A9A" fontWeight={500} fontSize="1rem">
                   {state?.username || state?.role}
                 </Typography>
+                {!condition && (
+                  <Grid item>
+                    <CustomizedTooltips title={"follow"}>
+                      <IconButton
+                        edge="start"
+                        size="small"
+                        onClick={handleFollowUser}
+                      >
+                        <PersonAddAlt1Outlined title="Follow" />
+                      </IconButton>
+                    </CustomizedTooltips>
+                  </Grid>
+                )}
                 {condition && (
                   <Grid item>
                     <Grid container alignItems="center">
@@ -169,7 +196,7 @@ const ProfileDetails = (props) => {
           <Divider flexItem inset sx={{ border: "1px solid #9B9A9A" }} />
           <Grid item sx={{ pt: 2, pb: 1 }}>
             <CustomSubTypography fontSize="1.4rem !important">
-              Last Activity: Today, 03:04pm
+              Last Activity: {getTimeMoment(state?.last_activity)}
             </CustomSubTypography>
             <CustomSubTypography fontSize="1.4rem !important">
               Joined: {getDate(state?.createdAt)}
@@ -199,6 +226,7 @@ const ProfileDetails = (props) => {
           )}
         </Grid>
         <Divider inset sx={{ border: "1px solid #9B9A9A" }} />
+
         {condition && (
           <>
             <Grid item container alignItems="center" sx={{ mt: 4, p: 2 }}>

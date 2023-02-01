@@ -59,7 +59,7 @@ const UserProfile = ({ data }) => {
                   fontWeight: 600,
                 }}
               >
-                Posted by {username || email.split("@")[0]}{" "}
+                Posted by {username || full_name}{" "}
               </Typography>
               <Typography
                 color="secondary"

@@ -18,7 +18,10 @@ const Categories = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { data: AllPosts, isLoading: loading } = useGetPostQuery();
+  const [value, setValue] = useState("");
+  const { data: AllPosts, isLoading: loading } = useGetPostQuery({
+    from: value,
+  });
   const [state, setState] = useState([]);
   const { data: categories, isLoading } = useGetCategoriesQuery();
   //   const [getPost, { data }] = useLazyGetPostQuery();
@@ -57,6 +60,8 @@ const Categories = () => {
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
             open={open}
+            value={value}
+            setValue={setValue}
             handleClick={handleClick}
             handleClose={handleClose}
           />

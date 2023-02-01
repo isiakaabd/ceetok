@@ -21,9 +21,14 @@ const RightTab = ({ setCreatePost }) => {
   // const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [value, setValue] = useState("");
   const loginStatus = useSelector((state) => state.auth.token);
   const [page, setPage] = useState(0);
-  const { data: array, error, isLoading } = useGetPostQuery({ offset: page });
+  const {
+    data: array,
+    error,
+    isLoading,
+  } = useGetPostQuery({ offset: page, from: value });
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -93,6 +98,8 @@ const RightTab = ({ setCreatePost }) => {
               anchorEl={anchorEl}
               setAnchorEl={setAnchorEl}
               open={open}
+              value={value}
+              setValue={setValue}
               handleClick={handleClick}
               handleClose={handleClose}
             />

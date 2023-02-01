@@ -16,6 +16,7 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
+      invalidatesTags: ["user", "post", "announcement", "admin"],
     }),
     forgotPassword: builder.mutation({
       query: (body) => ({
@@ -62,24 +63,27 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
-    userMedia: builder.query({
-      query: ({ offset }) => ({
-        url: `/media/`,
-        method: "GET",
-      }),
-      providesTags: ["user"],
-      //  ?limit=10${!offset ? "&offset=0" : offset}`,
-      // transformResponse: (response) => response.body.user,
-      transformErrorResponse: (error) => error.data.message,
-    }),
+
     allUsers: builder.query({
-      query: (username) => ({
-        url: `/user/list/${username ? `?username=${username}` : ""} `,
+      query: ({ username, followers }) => ({
+        url: `/user/list/?${username ? `username=${username}` : ""}${
+          followers ? `followed=true` : ""
+        } `,
         method: "GET",
       }),
       providesTags: ["user"],
       transformResponse: (response) => response.body.users,
       transformErrorResponse: (error) => error.data.message,
+    }),
+    followUser: builder.mutation({
+      query: (body) => ({
+        url: `/follow `,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data,
     }),
     allMedia: builder.query({
       query: (page) => ({
@@ -121,7 +125,7 @@ export const {
   useUserProfileQuery,
   useAllUsersQuery,
   useLogoutMutation,
-  useUserMediaQuery,
+  useFollowUserMutation,
   useAllMediaQuery,
   useOtherUserProfileQuery,
   useLazyOtherUserProfileQuery,

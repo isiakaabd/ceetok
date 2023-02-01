@@ -13,17 +13,28 @@ import {
 import { FilterList } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { StyledMenu } from "pages/Announcement";
+import { getDate, getDates } from "helpers";
 
-const Filters = ({ anchorEl, setAnchorEl, open, handleClick, handleClose }) => {
-  //   const [anchorEl, setAnchorEl] = useState(null);
-  //   const posts = useSelector((state) => state.posts.posts);
-  //   const open = Boolean(anchorEl);
-  //   const handleClick = (event) => {
-  //     setAnchorEl(event.currentTarget);
-  //   };
-  //   const handleClose = () => {
-  //     setAnchorEl(null);
-  //   };
+const Filters = ({
+  anchorEl,
+  setAnchorEl,
+  value,
+  setValue,
+  open,
+  handleClick,
+  handleClose,
+}) => {
+  const today = new Date();
+  const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  const lastMonth = new Date(
+    today.getFullYear(),
+    today.getMonth() - 1,
+    today.getDate()
+  );
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
 
   return (
     <>
@@ -58,27 +69,28 @@ const Filters = ({ anchorEl, setAnchorEl, open, handleClick, handleClose }) => {
             <FormControl>
               <FormLabel id="demo-radio-buttons-group-label">Time</FormLabel>
               <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
+                aria-labelledby="filters by days,weeks and month"
+                value={value}
                 name="radio-buttons-group"
+                onChange={handleChange}
               >
                 <FormControlLabel
-                  value="All Time"
+                  value=""
                   control={<Radio />}
                   label="All Time"
                 />
                 <FormControlLabel
-                  value="Today"
-                  control={<Radio />}
                   label="Today"
+                  control={<Radio />}
+                  value={getDates(today)}
                 />
                 <FormControlLabel
-                  value="Last Week"
+                  value={getDates(lastWeek)}
                   control={<Radio />}
                   label="Last Week"
                 />
                 <FormControlLabel
-                  value="Last Month"
+                  value={getDates(lastMonth)}
                   control={<Radio />}
                   label="Last Month"
                 />

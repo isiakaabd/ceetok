@@ -32,9 +32,11 @@ const Trending = () => {
   };
 
   const [page, setPage] = useState(1);
+  const [value, setValue] = useState("");
   const { data: array, isLoading } = useGetPostQuery({
     offset: page - 1,
     category: "trending",
+    from: value,
   });
   const handleChange = (e, value) => {
     setPage(value);
@@ -100,6 +102,8 @@ const Trending = () => {
                   anchorEl={anchorEl}
                   setAnchorEl={setAnchorEl}
                   open={open}
+                  value={value}
+                  setValue={setValue}
                   handleClick={handleClick}
                   handleClose={handleClose}
                 />

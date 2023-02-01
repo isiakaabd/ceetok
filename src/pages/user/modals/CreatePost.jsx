@@ -19,6 +19,7 @@ import {
   useEditAnnoucementMutation,
 } from "redux/slices/annoucementSlice";
 import PaymentModal from "components/modals/PaymentModal";
+import { useSelector } from "react-redux";
 
 const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
@@ -41,6 +42,7 @@ const CreatePost = ({
   data,
 }) => {
   const [create] = useCreatePostMutation();
+  const admin = useSelector((state) => state.auth.admin);
   const handleCreateOpen = () => setCreateAnnoucement(true);
   const [openCreateAnnoucement, setCreateAnnoucement] = useState(false);
   const handleCreateAnnoucementClose = () => setCreateAnnoucement(false);
@@ -245,14 +247,26 @@ const CreatePost = ({
                           name="duration"
                           disabled={type === "annoucement"}
                           placeholder="Duration should be in days"
-                          options={categories}
+                          options={[
+                            ...categories,
+                            admin && {
+                              label: "trending",
+                              value: "trending",
+                            },
+                          ]}
                         />
                       ) : (
                         <FormikControl
                           control="select"
                           name="category"
                           placeholder="Category"
-                          options={categories}
+                          options={[
+                            ...categories,
+                            admin && {
+                              label: "trending",
+                              value: "trending",
+                            },
+                          ]}
                         />
                       )}
                     </Grid>

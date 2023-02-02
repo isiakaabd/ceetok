@@ -140,7 +140,7 @@ const ProfileDetails = (props) => {
             </Typography>
             <Grid item>
               <Grid item container gap={2} alignItems="center">
-                <Typography color="#9B9A9A" fontWeight={500} fontSize="1rem">
+                <Typography color="#9B9A9A" fontWeight={700} fontSize="1.2rem">
                   {state?.username || state?.role}
                 </Typography>
                 {!condition && (
@@ -185,7 +185,7 @@ const ProfileDetails = (props) => {
             sx={{ p: 3 }}
           >
             <Grid item>
-              <CustomTypography>86</CustomTypography>
+              <CustomTypography>{state?.post_count || 0}</CustomTypography>
               <CustomSubTypography>post</CustomSubTypography>
             </Grid>
             <Grid item>
@@ -193,11 +193,11 @@ const ProfileDetails = (props) => {
               <CustomSubTypography>Likes</CustomSubTypography>
             </Grid>
             <Grid item>
-              <CustomTypography>1.2k</CustomTypography>
+              <CustomTypography>{state?.followers_count || 0}</CustomTypography>
               <CustomSubTypography>Followers</CustomSubTypography>
             </Grid>
             <Grid item>
-              <CustomTypography>200</CustomTypography>
+              <CustomTypography>{state?.following_count || 0}</CustomTypography>
               <CustomSubTypography>Following</CustomSubTypography>
             </Grid>
           </Grid>

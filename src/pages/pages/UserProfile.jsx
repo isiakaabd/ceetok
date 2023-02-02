@@ -17,8 +17,9 @@ const UserProfile = ({ data }) => {
     createdAt,
     likes_count,
     get_notifications,
-    user: { full_name, avatar, username },
+    user: { full_name, avatar, username, followers_count },
   } = data;
+
   return (
     <>
       <Grid
@@ -33,7 +34,7 @@ const UserProfile = ({ data }) => {
           background: "#fafafa",
         }}
       >
-        <Grid item sx={{ alignSelf: "center" }}>
+        <Grid item>
           <Avatar
             sx={{ alignItems: "center" }}
             alt={full_name}
@@ -86,7 +87,7 @@ const UserProfile = ({ data }) => {
                     />
 
                     <Typography variant="span" fontSize="2rem" color="#5F5C5C">
-                      1.2k
+                      {followers_count || 0}
                     </Typography>
                   </Grid>
                 </Grid>

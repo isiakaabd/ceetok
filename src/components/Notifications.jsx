@@ -15,6 +15,7 @@ import {
   Menu,
   Divider,
   Avatar,
+  Skeleton,
 } from "@mui/material";
 import {
   Message,
@@ -36,7 +37,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "redux/reducers/authReducer";
-import { useLogoutMutation } from "redux/slices/authSlice";
+import { useLogoutMutation, useUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 
 export default function Notifications({
@@ -51,6 +52,7 @@ export default function Notifications({
   anchorRefs,
   handleCloses,
 }) {
+  const { data: profile, isLoading } = useUserProfileQuery();
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
       event.preventDefault();
@@ -67,48 +69,7 @@ export default function Notifications({
       setOpens(false);
     }
   }
-  const notificationArr = [
-    {
-      title: "Chat",
-      Icon: EmailOutlined,
-      number: 4,
-    },
-    {
-      title: "Like",
-      Icon: FavoriteBorderOutlined,
-      number: 9,
-    },
-    {
-      title: "Reply",
-      Icon: ReplyOutlined,
-      number: 4,
-    },
-    {
-      title: "Tags",
-      Icon: PermIdentityOutlined,
-      number: 4,
-    },
-    {
-      title: "Shares",
-      Icon: ShareOutlined,
-      number: 4,
-    },
-    {
-      title: "Followed Topics",
-      Icon: AddchartOutlined,
-      number: 4,
-    },
-    {
-      title: "Followers",
-      Icon: PeopleOutlineOutlined,
-      number: 9,
-    },
-    {
-      title: "Mentions",
-      Icon: ManageAccountsOutlined,
-      number: 0,
-    },
-  ];
+
   const accountDetails = [
     {
       title: "Profile",
@@ -155,6 +116,54 @@ export default function Notifications({
       toast.error(error);
     }
   };
+  if (isLoading) return <Skeleton />;
+  const notificationArr = [
+    {
+      title: "Chat",
+      Icon: EmailOutlined,
+      number: profile?.chat || 0,
+    },
+    {
+      title: "Like",
+      Icon: FavoriteBorderOutlined,
+      number: profile?.like || 0,
+    },
+    {
+      title: "Reply",
+      Icon: ReplyOutlined,
+      number: profile?.reply || 0,
+    },
+    {
+      title: "Tags",
+      Icon: PermIdentityOutlined,
+      number: profile?.tags || 0,
+    },
+    {
+      title: "Shares",
+      Icon: ShareOutlined,
+      number: profile?.share || 0,
+    },
+    {
+      title: "Followed Topics",
+      Icon: AddchartOutlined,
+      number: profile?.topics || 0,
+    },
+    {
+      title: "Followers",
+      Icon: PeopleOutlineOutlined,
+      number: profile?.followers_count || 0,
+    },
+    {
+      title: "Following",
+      Icon: PeopleOutlineOutlined,
+      number: profile?.following_count || 0,
+    },
+    {
+      title: "Post Count",
+      Icon: ManageAccountsOutlined,
+      number: profile?.post_count || 0,
+    },
+  ];
   return (
     <>
       <Popper

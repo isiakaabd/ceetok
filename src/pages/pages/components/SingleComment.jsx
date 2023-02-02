@@ -122,6 +122,7 @@ export function Image({ person: { user } }) {
 
 export function Text({ item, profile }) {
   const { user, comment, createdAt, updatedAt, edited, user_id, id } = item;
+  console.log(item);
   const { full_name } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();

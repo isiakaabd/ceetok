@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import { SettingsOutlined } from "@mui/icons-material";
+import {
+  Person2Outlined,
+  PersonAddAlt1Outlined,
+  SettingsOutlined,
+} from "@mui/icons-material";
 import {
   Avatar,
   ClickAwayListener,
@@ -27,11 +31,21 @@ import { getImage } from "helpers";
 import { toast } from "react-toastify";
 import { useBanUsersMutation } from "redux/slices/adminSlice";
 import { useSelector } from "react-redux";
+import CustomizedTooltips from "components/ToolTips";
 
 const ProfileItem = ({ profile }) => {
-  const { full_name, id, username, banned } = profile;
+  const {
+    full_name,
+    is_blocked_by_me,
+    is_follower,
+    is_followed,
+    id,
+    username,
+    banned,
+  } = profile;
+  console.log(profile);
   const admin = useSelector((state) => state.auth.admin);
-  const blockStatus = true;
+
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [banorUnban, { isLoading }] = useBanUsersMutation();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
@@ -93,13 +107,13 @@ const ProfileItem = ({ profile }) => {
     if (error) toast.success(error);
   };
   const handleBlockUser = async (e) => {
-    if (!blockStatus) {
+    if (!is_blocked_by_me) {
       const { data, error } = await blockUser({
         user_id: id,
       });
       if (data) {
         toast.success(data);
-        setTimeout(() => handleClose(), 3000);
+        setTimeout(() => handleClose(e), 3000);
       }
       if (error) toast.success(error);
     } else {
@@ -135,11 +149,26 @@ const ProfileItem = ({ profile }) => {
               <Typography
                 color="#9B9A9A"
                 fontSize="1.4rem"
+                lineHeight={2}
                 fontWeight={400}
-                sx={overflow}
+                variant="span"
+                sx={{ ...overflow, verticalAlign: "middle" }}
               >
                 {full_name}
               </Typography>
+              {is_follower && (
+                <CustomizedTooltips title="following You">
+                  <PersonAddAlt1Outlined
+                    sx={{
+                      top: ".3rem",
+                      color: "#9B9A9A",
+                      position: "relative",
+                      width: "2rem",
+                      height: "2rem",
+                    }}
+                  />
+                </CustomizedTooltips>
+              )}
               <div
                 style={{
                   width: ".5rem",
@@ -214,12 +243,16 @@ const ProfileItem = ({ profile }) => {
                   )}
 
                   <MenuItem onClick={handleFollowUser}>
-                    {following ? "Following" : "Follow User"}
+                    {following
+                      ? "Following"
+                      : is_followed
+                      ? "Unfollow User"
+                      : "Follow User"}
                   </MenuItem>
                   <MenuItem onClick={handleBlockUser}>
-                    {blocking
+                    {blocking || unblocking
                       ? "Loading"
-                      : !blockStatus
+                      : !is_blocked_by_me
                       ? "Block User"
                       : "UnBlock User"}
                   </MenuItem>

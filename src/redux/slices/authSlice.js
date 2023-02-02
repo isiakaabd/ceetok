@@ -17,6 +17,7 @@ export const authSlice = api.injectEndpoints({
         body: JSON.stringify(body),
       }),
       invalidatesTags: ["user", "post", "announcement", "admin"],
+      transformErrorResponse: (error) => error.message,
     }),
     forgotPassword: builder.mutation({
       query: (body) => ({

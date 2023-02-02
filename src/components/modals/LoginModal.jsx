@@ -42,7 +42,7 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
     const { email, password } = values;
     const { data, error } = await loginUser({ email, password });
 
-    if (error) toast.error("Invalid Email/Password");
+    if (error) toast.error(error?.message);
     if (data) {
       toast.success(data.message);
       dispatch(loginAction(data?.body));

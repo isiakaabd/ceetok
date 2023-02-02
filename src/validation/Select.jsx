@@ -5,13 +5,21 @@ import { Typography, Select, MenuItem, Grid } from "@mui/material";
 
 import { TextError } from "./TextError";
 
-export const Formiks = ({ borderRadius, placeholder, options, ...rest }) => {
+export const Formiks = ({
+  borderRadius,
+  defaultValue,
+  placeholder,
+  options,
+  ...rest
+}) => {
   return (
     <Select
       displayEmpty
       {...rest}
       renderValue={(value) => (
-        <Typography color="#828484">{value || placeholder}</Typography>
+        <Typography color="#828484">
+          {value || defaultValue || placeholder}
+        </Typography>
       )}
       // placeholder={placeholder}
       sx={{
@@ -31,8 +39,8 @@ export const Formiks = ({ borderRadius, placeholder, options, ...rest }) => {
     >
       {/* <MenuItem value="">{placeholder}</MenuItem> */}
       {options?.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
+        <MenuItem key={option?.value} value={option?.value}>
+          {option?.label}
         </MenuItem>
       ))}
     </Select>
@@ -58,7 +66,7 @@ const Selects = (props) => {
     placeholder,
     ...rest
   } = props;
-
+  console.log(rest);
   return (
     <Grid container direction="column">
       <Field

@@ -11,6 +11,7 @@ const UserAccount = () => {
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const { data: userProfile } = useUserProfileQuery();
+  console.log(userProfile);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };

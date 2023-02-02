@@ -89,6 +89,7 @@ const CreatePost = ({
     });
     setCategories(cats);
   }, [dt]);
+  console.log(dt);
   const handleCreateAnnoucement = async (values, onSubmitProps) => {
     const { title, text, duration, post_id } = values;
     if (post_id) {
@@ -167,7 +168,12 @@ const CreatePost = ({
       }
     }
   };
-  const initialValue = { title: "", category: "", text: "", post_id: "" };
+  const initialValue = {
+    title: "",
+    category: admin && type === "trending" ? "trending" : "",
+    text: "",
+    post_id: "",
+  };
   return (
     <>
       <NotificationModal
@@ -247,23 +253,26 @@ const CreatePost = ({
                           name="duration"
                           disabled={type === "annoucement"}
                           placeholder="Duration should be in days"
-                          options={[
-                            ...categories,
-                            admin && {
-                              label: "trending",
-                              value: "trending",
-                            },
-                          ]}
+                          // options={[
+                          //   ...categories,
+                          //   admin && {
+                          //     label: "trending",
+                          //     value: "trending",
+                          //   },
+                          // ]}
                         />
                       ) : (
                         <FormikControl
                           control="select"
                           name="category"
                           placeholder="Category"
+                          defaultValue={
+                            admin && type === "trending" && "trending"
+                          }
                           options={[
                             ...categories,
                             admin && {
-                              label: "trending",
+                              label: "Trending",
                               value: "trending",
                             },
                           ]}

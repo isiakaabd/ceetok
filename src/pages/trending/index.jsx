@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   IconButton,
   List,
@@ -20,8 +21,12 @@ import {
 import { CustomButton } from "components";
 import Filters from "components/modals/Filters";
 import { useGetPostQuery } from "redux/slices/postSlice";
+import CreatePost from "pages/user/modals/CreatePost";
+import { useSelector } from "react-redux";
+import LoginModal from "components/modals/LoginModal";
 const Trending = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const loginStatus = useSelector((state) => state.auth.token);
   const [count] = useState(10);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -41,127 +46,152 @@ const Trending = () => {
   const handleChange = (e, value) => {
     setPage(value);
   };
-
+  const [openModal, setOpenModal] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
   return (
-    <Grid
-      item
-      gap={2}
-      container
-      sx={{
-        p: { md: "4rem", xs: "1rem" },
-        background: "#E5E5E5",
-      }}
-    >
-      <Heading />
+    <>
       <Grid
         item
+        gap={2}
         container
         sx={{
           p: { md: "4rem", xs: "1rem" },
-          borderRadius: "1.5rem",
-          background: "#fff",
-          mt: "2.5rem",
+          background: "#E5E5E5",
         }}
       >
-        <Grid item container sx={{ pb: 2 }}>
-          <Grid
-            item
-            container
-            alignItems="center"
-            flexWrap="nowrap"
-            justifyContent="space-between"
-          >
-            <Grid item>
-              <CustomButton
-                background={"#37D42A"}
-                variant="contained"
-                disableElevation
-                title={"Create Post"}
-                sx={{
-                  width: { md: "18rem", xs: "10rem" },
-                  fontSize: { xs: "1.2rem", md: "1.8rem" },
-                }}
-                startIcon={
-                  <IconButton>
-                    <AddCircleOutline />
-                  </IconButton>
-                }
-                // onClick={}
-              />
-            </Grid>
+        <Heading />
+        <Grid
+          item
+          container
+          sx={{
+            p: { md: "4rem", xs: "1rem" },
+            borderRadius: "1.5rem",
+            background: "#fff",
+            mt: "2.5rem",
+          }}
+        >
+          <Grid item container sx={{ pb: 2 }}>
             <Grid
               item
-              sx={{ minWidth: "40rem" }}
-              display={{ md: "block", xs: "none" }}
+              container
+              alignItems="center"
+              flexWrap="nowrap"
+              justifyContent="space-between"
             >
-              <SearchComponent handleSubmit={{}} />
-            </Grid>
-            <Grid item>
-              <Grid item container gap={{ md: 3, xs: 1 }} flexWrap="nowrap">
-                <Filters
-                  anchorEl={anchorEl}
-                  setAnchorEl={setAnchorEl}
-                  open={open}
-                  value={value}
-                  setValue={setValue}
-                  handleClick={handleClick}
-                  handleClose={handleClose}
-                />
-                <IconButton edge="start" size="small">
-                  <TuneOutlined sx={{ fontSize: { md: "4rem", xs: "2rem" } }} />
-                </IconButton>
-                <IconButton edge="start" size="small">
-                  <SettingsOutlined
-                    sx={{ fontSize: { md: "4rem", xs: "2rem" } }}
+              <Grid item>
+                <Button
+                  background={"#37D42A"}
+                  sx={{
+                    backgroundColor: "#37D42A",
+                    fontSize: { md: "1.9rem", xs: "1.4rem" },
+                    paddingInline: { md: "3rem", xs: "1.2rem" },
+                    borderRadius: 25,
+                    color: "#fff",
+                    fontWeight: 600,
+                    height: "100%",
+                    ":hover": {
+                      background: "#37D42A",
+                    },
+                  }}
+                  variant="contained"
+                  disableElevation
+                  startIcon={<AddCircleOutline />}
+                  onClick={() =>
+                    loginStatus ? setOpenModal(true) : setOpenLoginModal(true)
+                  }
+                >
+                  Create Post
+                </Button>
+              </Grid>
+              <Grid
+                item
+                sx={{ minWidth: "40rem" }}
+                display={{ md: "block", xs: "none" }}
+              >
+                <SearchComponent handleSubmit={{}} />
+              </Grid>
+              <Grid item>
+                <Grid item container gap={{ md: 3, xs: 1 }} flexWrap="nowrap">
+                  <Filters
+                    anchorEl={anchorEl}
+                    setAnchorEl={setAnchorEl}
+                    open={open}
+                    value={value}
+                    setValue={setValue}
+                    handleClick={handleClick}
+                    handleClose={handleClose}
                   />
-                </IconButton>
+                  <IconButton edge="start" size="small">
+                    <TuneOutlined
+                      sx={{ fontSize: { md: "4rem", xs: "2rem" } }}
+                    />
+                  </IconButton>
+                  <IconButton edge="start" size="small">
+                    <SettingsOutlined
+                      sx={{ fontSize: { md: "4rem", xs: "2rem" } }}
+                    />
+                  </IconButton>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item container>
-          {isLoading ? (
-            <Skeleton />
-          ) : array?.length > 0 ? (
-            <>
-              <List
-                dense
-                sx={{
-                  maxHeight: "120rem",
-                  overflowY: "scroll",
-                  width: "100%",
-                  "&::-webkit-scrollbar": {
-                    width: ".85rem",
-                    display: "none",
-                  },
-                }}
-                xs={12}
-              >
-                {/* {posts.length > 0 ? ( */}
-                {array.map((post, index) => {
-                  return <SinglePosts key={index} index={index} post={post} />;
-                })}
-              </List>
-              {/* <Grid item container justifyContent={"center"}> */}
-              <Pagination
-                page={page}
-                count={count}
-                hidePrevButton={true}
-                hideNextButton={true}
-                sx={{ margin: "auto", py: 2 }}
-                // boundaryCount={0}
-                onChange={handleChange}
-              />
-              {/* </Grid> */}
-            </>
-          ) : (
-            <Typography variant="h2" width="100%" textAlign="center">
-              No Data yet
-            </Typography>
-          )}
+          <Grid item container>
+            {isLoading ? (
+              <Skeleton />
+            ) : array?.length > 0 ? (
+              <>
+                <List
+                  dense
+                  sx={{
+                    maxHeight: "120rem",
+                    overflowY: "scroll",
+                    width: "100%",
+                    "&::-webkit-scrollbar": {
+                      width: ".85rem",
+                      display: "none",
+                    },
+                  }}
+                  xs={12}
+                >
+                  {/* {posts.length > 0 ? ( */}
+                  {array.map((post, index) => {
+                    return (
+                      <SinglePosts key={index} index={index} post={post} />
+                    );
+                  })}
+                </List>
+                {/* <Grid item container justifyContent={"center"}> */}
+                <Pagination
+                  page={page}
+                  count={count}
+                  hidePrevButton={true}
+                  hideNextButton={true}
+                  sx={{ margin: "auto", py: 2 }}
+                  // boundaryCount={0}
+                  onChange={handleChange}
+                />
+                {/* </Grid> */}
+              </>
+            ) : (
+              <Typography variant="h2" width="100%" textAlign="center">
+                No Data yet
+              </Typography>
+            )}
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+
+      <CreatePost
+        open={openModal}
+        handleClose={() => setOpenModal(false)}
+        type="trending"
+      />
+
+      <LoginModal
+        isLogin={openLoginModal}
+        handleClose={() => setOpenLoginModal(false)}
+      />
+    </>
   );
 };
 

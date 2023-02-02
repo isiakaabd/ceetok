@@ -22,6 +22,7 @@ import {
   useAllUsersQuery,
   useFollowUserMutation,
   useLazyOtherUserProfileQuery,
+  useListUsersQuery,
   useOtherUserProfileQuery,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
@@ -31,6 +32,7 @@ import { useSelector } from "react-redux";
 import { useGetUsersQuery } from "redux/slices/adminSlice";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
+import { array } from "yup";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -54,13 +56,17 @@ const ProfileDetails = (props) => {
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
   const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
-  const { data: users, isLoading: usersLoading } = useAllUsersQuery({
-    followers: true,
-  });
+  const { data: users, isLoading: usersLoading } = useListUsersQuery({
+    username: "",
+  }); //
+
+  // {
+  //   followers: true,
+  // }
   const admin = useSelector((state) => state.auth.admin);
   const condition = !id || dt?.id === userProfile?.id;
-  const dummy = [];
-  const list = admin ? users : dummy;
+
+  const list = users;
   const handleFollowUser = async () => {
     const { data, error } = await follow({ user_id: id });
     toast.success(data?.message);
@@ -71,7 +77,7 @@ const ProfileDetails = (props) => {
     if (id) {
       async function x() {
         const { data } = await fetchProfile(id);
-        console.log(data);
+
         if (data) {
           setState(data);
         }
@@ -82,8 +88,11 @@ const ProfileDetails = (props) => {
     }
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
+  const [listNumber, setListNumber] = useState(5);
+  console.log(listNumber);
   if (isLoading || usersLoading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
+
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
     <>
@@ -193,7 +202,7 @@ const ProfileDetails = (props) => {
               <CustomSubTypography>Following</CustomSubTypography>
             </Grid>
           </Grid>
-          <Divider flexItem inset sx={{ border: "1px solid #9B9A9A" }} />
+          <Divider flexItem sx={{ border: "1px solid #9B9A9A" }} />
           <Grid item sx={{ pt: 2, pb: 1 }}>
             <CustomSubTypography fontSize="1.4rem !important">
               Last Activity: {getTimeMoment(state?.last_activity)}
@@ -225,7 +234,7 @@ const ProfileDetails = (props) => {
             </Grid>
           )}
         </Grid>
-        <Divider inset sx={{ border: "1px solid #9B9A9A" }} />
+        <Divider sx={{ border: "1px solid #9B9A9A" }} />
 
         {condition && (
           <>
@@ -237,14 +246,21 @@ const ProfileDetails = (props) => {
                 <CustomButton
                   title={"See All"}
                   component={Link}
-                  to={admin ? "/admin/all-users" : "/user/all-friends"}
+                  onClick={() => {
+                    if (!admin) {
+                      listNumber > list.length
+                        ? setListNumber(list?.length)
+                        : setListNumber(listNumber + 5);
+                    }
+                  }}
+                  to={admin ? "/admin/all-users" : null}
                   fontSize={{ md: "1.6rem", xs: "1.4rem" }}
                 />
               )}
             </Grid>
             {list?.length > 0 ? (
               <List sx={{ p: 2, maxWidth: "100%" }}>
-                {list?.slice(0, 11)?.map((item) => (
+                {list?.slice(0, listNumber)?.map((item) => (
                   <ProfileItem profile={item} />
                 ))}
               </List>

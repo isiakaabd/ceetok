@@ -63,21 +63,50 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
-
-    allUsers: builder.query({
-      query: ({ username, followers }) => ({
-        url: `/user/list/?${username ? `username=${username}` : ""}${
-          followers ? `followed=true` : ""
-        } `,
+    listUsers: builder.query({
+      query: ({ username }) => ({
+        url: `/user/list/?${username ? `username=${username}` : ""}`,
         method: "GET",
       }),
       providesTags: ["user"],
       transformResponse: (response) => response.body.users,
       transformErrorResponse: (error) => error.data.message,
     }),
+
+    allUsers: builder.query({
+      query: ({ username, followers }) => ({
+        url: `/user/list/`,
+        method: "GET",
+      }),
+      // transformResponse: (response) => response.body.users,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    // /${username ? `?username=${username}` : ""}${
+    //   followers ? `&followed=true` : ""
+    // }
     followUser: builder.mutation({
       query: (body) => ({
         url: `/follow `,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data,
+    }),
+    blockUser: builder.mutation({
+      query: (body) => ({
+        url: `/follow/block`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data,
+    }),
+    unBlockUser: builder.mutation({
+      query: (body) => ({
+        url: `/follow/unblock`,
         method: "POST",
         body,
       }),
@@ -121,10 +150,13 @@ export const authSlice = api.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
+  useBlockUserMutation,
+  useListUsersQuery,
   useForgotPasswordMutation,
   useUserProfileQuery,
   useAllUsersQuery,
   useLogoutMutation,
+  useUnBlockUserMutation,
   useFollowUserMutation,
   useAllMediaQuery,
   useOtherUserProfileQuery,

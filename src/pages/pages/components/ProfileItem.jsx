@@ -18,14 +18,24 @@ import {
   Popper,
   Typography,
 } from "@mui/material";
-import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
+import {
+  useBlockUserMutation,
+  useFollowUserMutation,
+  useUnBlockUserMutation,
+} from "redux/slices/authSlice";
 import { getImage } from "helpers";
 import { toast } from "react-toastify";
 import { useBanUsersMutation } from "redux/slices/adminSlice";
+import { useSelector } from "react-redux";
 
 const ProfileItem = ({ profile }) => {
   const { full_name, id, username, banned } = profile;
+  const admin = useSelector((state) => state.auth.admin);
+  const blockStatus = true;
+  const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [banorUnban, { isLoading }] = useBanUsersMutation();
+  const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
+  const [unBlock, { isLoading: unblocking }] = useUnBlockUserMutation();
   const overflow = {
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -72,7 +82,37 @@ const ProfileItem = ({ profile }) => {
     if (error) toast.error(error);
     setTimeout(() => handleClose(e), 300);
   };
-
+  const handleFollowUser = async (e) => {
+    const { data, error } = await followUser({
+      user_id: id,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleClose(e), 3000);
+    }
+    if (error) toast.success(error);
+  };
+  const handleBlockUser = async (e) => {
+    if (!blockStatus) {
+      const { data, error } = await blockUser({
+        user_id: id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleClose(), 3000);
+      }
+      if (error) toast.success(error);
+    } else {
+      const { data, error } = await unBlock({
+        user_id: id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleClose(e), 3000);
+      }
+      if (error) toast.success(error);
+    }
+  };
   return (
     <ListItemButton>
       <ListItem
@@ -160,15 +200,29 @@ const ProfileItem = ({ profile }) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem onClick={handleBanUser}>
-                    {isLoading
-                      ? "Loading..."
-                      : banned
-                      ? "Unban User"
-                      : "Ban User"}
+                  {admin && (
+                    <MenuItem onClick={handleBanUser}>
+                      {isLoading
+                        ? "Loading..."
+                        : banned
+                        ? "Unban User"
+                        : "Ban User"}
+                    </MenuItem>
+                  )}
+                  {admin && (
+                    <MenuItem onClick={handleClose}>Send Mail</MenuItem>
+                  )}
+
+                  <MenuItem onClick={handleFollowUser}>
+                    {following ? "Following" : "Follow User"}
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>Send Mail</MenuItem>
-                  {/* <MenuItem onClick={handleClose}>Save Avatar</MenuItem> */}
+                  <MenuItem onClick={handleBlockUser}>
+                    {blocking
+                      ? "Loading"
+                      : !blockStatus
+                      ? "Block User"
+                      : "UnBlock User"}
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

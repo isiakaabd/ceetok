@@ -4,17 +4,19 @@ import React, { useState } from "react";
 import CustomizedTables from "./Table";
 import Paginations from "components/modals/Paginations";
 // import { useGetUsersQuery } from "redux/slices/adminSlice";
-import { useAllUsersQuery } from "redux/slices/authSlice";
+import { useListUsersQuery } from "redux/slices/authSlice";
 
 const AllUsers = () => {
-  const [userName, setUserName] = useState("");
-  const { data, isLoading, isFetching, error } = useAllUsersQuery(userName);
-  const handleSubmit = (values) => {
-    setUserName(values.name);
-  };
+  const [username, setUserName] = useState("");
+  const { data, isLoading, isFetching, error } = useListUsersQuery({
+    username,
+  });
+  const handleSubmit = (values) => setUserName(values.name);
+
   // page, setPage, count;
   const [page, setPage] = useState(1);
   if (isLoading) return <Skeleton />;
+  if (error) return <p>Something went wrong</p>;
   return (
     <Grid
       item

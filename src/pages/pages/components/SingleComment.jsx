@@ -7,6 +7,7 @@ import {
   MoreVertOutlined,
   ChatBubbleOutline,
   Edit,
+  BlockOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import {
@@ -249,7 +250,6 @@ export function Text({ item, profile }) {
                         </ListItemIcon>
 
                         <ListItemText sx={{ fontSize: "3rem" }}>
-                          {/* {isLoading ? "Editing" : "Delete"} */}
                           Edit
                         </ListItemText>
                       </MenuItem>
@@ -265,6 +265,19 @@ export function Text({ item, profile }) {
                           <ReportOutlined sx={{ fontSize: "2rem" }} />
                         </ListItemIcon>
                         <ListItemText>Report</ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <ListItemIcon>
+                          <BlockOutlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>Block User</ListItemText>
                       </MenuItem>
                     )}
                   </Menu>

@@ -89,7 +89,6 @@ const ProfileDetails = (props) => {
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
   const [listNumber, setListNumber] = useState(5);
-  console.log(listNumber);
   if (isLoading || usersLoading) return <Skeleton />;
   if (isError) return <p>Something went wrong...</p>;
 

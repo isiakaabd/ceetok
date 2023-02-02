@@ -6,19 +6,15 @@ import {
   Typography,
   Skeleton,
 } from "@mui/material";
-import DeleteIcon from "assets/svgs/DeleteIcon";
-import PropTypes from "prop-types";
-import images from "assets";
-import { useAllMediaQuery, useUserMediaQuery } from "redux/slices/authSlice";
-import { useGetPostQuery } from "redux/slices/postSlice";
+import { useAllMediaQuery } from "redux/slices/authSlice";
 import Paginations from "components/modals/Paginations";
 import { useState } from "react";
-import { DeleteForeverOutlined, DeleteOutline } from "@mui/icons-material";
+import { DeleteOutline } from "@mui/icons-material";
 import { getImage } from "helpers";
 const Media = (props) => {
   const [page, setPage] = useState(0);
   const { data, error, isLoading } = useAllMediaQuery(page);
-  console.log(data);
+
   if (isLoading) return <Skeleton />;
   if (error) return "Something Went Wrong";
   return (

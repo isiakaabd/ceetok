@@ -8,6 +8,7 @@ import {
   ChatBubbleOutline,
   Edit,
   BlockOutlined,
+  PersonAddAlt1Outlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import {
@@ -39,6 +40,10 @@ import {
 } from "redux/slices/commentSlice";
 import { getImage, getTimeMoment } from "helpers";
 import EditModal from "./EditPost";
+import {
+  useBlockUserMutation,
+  useFollowUserMutation,
+} from "redux/slices/authSlice";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -119,7 +124,9 @@ export function Text({ item, profile }) {
   const { user, comment, createdAt, updatedAt, edited, user_id, id } = item;
   const { full_name } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
   const handleCloses = (e) => {
     e.stopPropagation();
     setAnchorEl(null);
@@ -145,7 +152,31 @@ export function Text({ item, profile }) {
     e.stopPropagation();
     setOpen(true);
   };
-
+  const handleReportUser = (e) => {
+    e.stopPropagation();
+  };
+  const handleBlockUser = async (e) => {
+    e.stopPropagation();
+    const { data, error } = await blockUser({
+      user_id,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleCloses(e), 3000);
+    }
+    if (error) toast.success(error);
+  };
+  const handleFollowUser = async (e) => {
+    e.stopPropagation();
+    const { data, error } = await followUser({
+      user_id,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleCloses(e), 3000);
+    }
+    if (error) toast.success(error);
+  };
   return (
     <>
       <ListItemText
@@ -260,6 +291,7 @@ export function Text({ item, profile }) {
                           display: "flex",
                           alignItems: "center",
                         }}
+                        onClick={handleReportUser}
                       >
                         <ListItemIcon>
                           <ReportOutlined sx={{ fontSize: "2rem" }} />
@@ -273,11 +305,30 @@ export function Text({ item, profile }) {
                           display: "flex",
                           alignItems: "center",
                         }}
+                        onClick={handleBlockUser}
                       >
                         <ListItemIcon>
                           <BlockOutlined sx={{ fontSize: "2rem" }} />
                         </ListItemIcon>
-                        <ListItemText>Block User</ListItemText>
+                        <ListItemText>
+                          {blocking ? "Blocking" : "Block User"}
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        onClick={handleFollowUser}
+                      >
+                        <ListItemIcon>
+                          <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          {following ? "Following" : "Follow User"}
+                        </ListItemText>
                       </MenuItem>
                     )}
                   </Menu>

@@ -62,7 +62,7 @@ const CreateAdvert = ({ handleClose, title }) => {
     actions.forEach((item, index) => {
       form.append(`actions[${[index]}][value]`, item.value);
     });
-    console.log(form);
+    // console.log(form);
 
     const { data, error } = await createAds(form);
 

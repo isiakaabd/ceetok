@@ -92,7 +92,7 @@ export const authSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["user"],
       transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data,
+      transformErrorResponse: (error) => error.message,
     }),
     blockUser: builder.mutation({
       query: (body) => ({
@@ -102,7 +102,7 @@ export const authSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["user"],
       transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data,
+      transformErrorResponse: (error) => error.message,
     }),
     unBlockUser: builder.mutation({
       query: (body) => ({
@@ -112,7 +112,7 @@ export const authSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["user"],
       transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data,
+      transformErrorResponse: (error) => error.message,
     }),
     allMedia: builder.query({
       query: (page) => ({

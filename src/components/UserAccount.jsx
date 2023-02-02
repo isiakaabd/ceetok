@@ -1,19 +1,6 @@
-import {
-  NotificationAddOutlined,
-  NotificationsNoneOutlined,
-} from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  Tooltip,
-  Grid,
-  IconButton,
-  Typography,
-  Zoom,
-} from "@mui/material";
+import { Avatar, Grid, IconButton, Typography } from "@mui/material";
 import { useState, useRef } from "react";
 import Notifications from "./Notifications";
-import { useSelector } from "react-redux";
 import NotificationIcon from "assets/svgs/NotificationIcon";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
@@ -24,7 +11,6 @@ const UserAccount = () => {
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const { data: userProfile } = useUserProfileQuery();
-  console.log(userProfile);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };

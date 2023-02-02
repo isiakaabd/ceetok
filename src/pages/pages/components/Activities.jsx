@@ -69,7 +69,6 @@ const Activities = (props) => {
     if (profile?.id) {
       // const fetchdata = async () => {
       const { data } = getPost({ userId: profile?.id });
-      console.log(data?.posts);
       if (data) setState({ data: data?.posts, type: "post" });
       // };
       // fetchdata();

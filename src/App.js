@@ -23,6 +23,8 @@ import Categories from "pages/home/categories";
 import Ads from "pages/Ads";
 import AdminRoute from "routes/AdminRoute";
 import AllUsers from "pages/admin";
+import Recent from "pages/recent";
+import New from "pages/new";
 
 const App = () => {
   return (
@@ -34,6 +36,8 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/live" element={<Live />} />
             <Route path="/trending" element={<Trending />} />
+            <Route path="/new" element={<New />} />
+            <Route path="/recent" element={<Recent />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/auth/new-password" element={<NewPassword />} />

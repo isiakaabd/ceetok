@@ -45,7 +45,7 @@ const Advert = () => {
           sx={{
             overflowX: "scroll",
             gridAutoFlow: "column",
-            gridAutoColumns: { md: "21%", xs: "80%" },
+            gridAutoColumns: { md: "21%", xs: "90%" },
             overscrollBehaviorInline: "contain",
             scrollPaddingInline: { md: "1rem", xs: ".5rem" },
             scrollSnapType: "inline mandatory",

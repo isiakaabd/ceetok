@@ -79,29 +79,24 @@ const Trending = () => {
               justifyContent="space-between"
             >
               <Grid item>
-                <Button
+                <CustomButton
                   background={"#37D42A"}
-                  sx={{
-                    backgroundColor: "#37D42A",
-                    fontSize: { md: "1.9rem", xs: "1.4rem" },
-                    paddingInline: { md: "3rem", xs: "1.2rem" },
-                    borderRadius: 25,
-                    color: "#fff",
-                    fontWeight: 600,
-                    height: "100%",
-                    ":hover": {
-                      background: "#37D42A",
-                    },
-                  }}
                   variant="contained"
                   disableElevation
-                  startIcon={<AddCircleOutline />}
+                  title={"Create Post"}
+                  sx={{
+                    width: { md: "18rem", xs: "10rem" },
+                    fontSize: { xs: "1.2rem", md: "1.8rem" },
+                  }}
+                  // startIcon={
+                  //   <IconButton>
+                  //     <AddCircleOutline />
+                  //   </IconButton>
+                  // }
                   onClick={() =>
                     loginStatus ? setOpenModal(true) : setOpenLoginModal(true)
                   }
-                >
-                  Create Post
-                </Button>
+                />
               </Grid>
               <Grid
                 item

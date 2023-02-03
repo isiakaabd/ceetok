@@ -1,14 +1,14 @@
 import { Grid } from "@mui/material";
-import { useState } from "react";
-import OnlineActivity from "./OnlineActivity";
-import Annoucement from "./Annoucement";
-import Advert from "./Advert";
-import Headings from "./Headings";
-import LeftTab from "./LeftTab";
-import RightTab from "./RightTab";
+import Advert from "pages/home/Advert";
+import Annoucement from "pages/home/Annoucement";
+import Headings from "pages/home/Headings";
+import LeftTab from "pages/home/LeftTab";
+import OnlineActivity from "pages/home/OnlineActivity";
+import RightTab from "pages/home/RightTab";
 import CreatePost from "pages/user/modals/CreatePost";
+import { useState } from "react";
 
-const Home = () => {
+const New = () => {
   const [openCreatePost, setCreatePost] = useState(false);
   return (
     <>
@@ -53,4 +53,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default New;

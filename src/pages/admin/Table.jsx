@@ -1,11 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 
-import {
-  MoreHorizOutlined,
-  StarHalfOutlined,
-  VerifiedOutlined,
-} from "@mui/icons-material";
+import { MoreHorizOutlined, StarHalfOutlined } from "@mui/icons-material";
 import {
   Avatar,
   Grid,

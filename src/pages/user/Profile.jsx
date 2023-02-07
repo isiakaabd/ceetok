@@ -2,8 +2,10 @@ import { ArrowBack } from "@mui/icons-material";
 import { Grid, IconButton } from "@mui/material";
 import ProfileDetails from "pages/pages/components/ProfileDetails";
 import UserTab from "pages/pages/components/UserTab";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   return (
     <Grid
       item
@@ -20,7 +22,7 @@ const Profile = () => {
       <Grid item container flexDirection="column">
         <Grid item>
           <Grid container sx={{ py: 1, display: { xs: "none", md: "block" } }}>
-            <IconButton>
+            <IconButton onClick={() => navigate(-1)}>
               <ArrowBack sx={{ fontSize: "3rem" }} />
             </IconButton>
           </Grid>

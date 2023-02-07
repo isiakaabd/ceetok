@@ -89,7 +89,7 @@ const Annoucement = () => {
               }}
             >
               {annoucements?.announcements?.map((item, i) => {
-                const { title, createdAt, user } = item;
+                const { title, createdAt, user, slug } = item;
                 return (
                   <ListItem
                     disableGutters
@@ -97,7 +97,11 @@ const Annoucement = () => {
                     alignItems="flex-start"
                     key={i}
                   >
-                    <ListItemButton disableGutters dense>
+                    <ListItemButton
+                      disableGutters
+                      dense
+                      to={`/user/annoucement/${slug}`}
+                    >
                       <ListItemText
                         primary={title}
                         primaryTypographyProps={{

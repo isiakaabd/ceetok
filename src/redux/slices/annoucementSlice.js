@@ -46,8 +46,8 @@ export const annoucementSlice = api.injectEndpoints({
         url: `/announcement/${id}`,
         method: "GET",
       }),
-      providesTags: ["announcement"],
-      // transformResponse: (response) => response.message,
+      providesTags: ["announcement", "post", "comment"],
+      transformResponse: (response) => response.body.post,
       transformErrorResponse: (error) => error.data.message,
     }),
     validateAnnoucement: builder.mutation({

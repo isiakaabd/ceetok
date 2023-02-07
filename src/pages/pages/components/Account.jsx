@@ -1,17 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Switch,
-  Typography,
-} from "@mui/material";
+import { Button, Checkbox, Grid, Skeleton, Typography } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
+import {
+  useGetUserSettingsQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 const Account = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -21,38 +16,35 @@ const Account = (props) => {
     color: "#5F5C5C",
     // textAlign: "center",
   }));
+  const { data: user, isLoading: loading } = useGetUserSettingsQuery();
+  const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
+
+  if (loading || profileLoading) return <Skeleton />;
+  const { email } = profile;
 
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
+          enableReinitialize
           initialValues={{
-            title: "",
-            day: "",
-            invisibleMode: false,
-            month: "",
-            year: "",
-            reputation: true,
-            privateMessaging: false,
-            occupation: "",
-            interest: "",
-            location: "",
-            bio: "",
-            contact: "",
-            web: "",
-            emailing: false,
-            visitorMessaging: true,
+            invisibleMode: user[2]?.value || "",
+            reputation: user[3]?.value || "",
+            private_message_source: user[5]?.value || "",
+            privateMessaging: user[4]?.value || "",
+            visitorMessaging: user[6]?.value || "",
+            emailing: user[7]?.value || "",
           }}
         >
           {({ values }) => {
             return (
               <Form style={{ width: "100%" }}>
                 <Grid item container gap={2} sx={{ p: { md: 3, xs: 1 } }}>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item md={3} display={{ xs: "none", md: "block" }}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
-                        text="User Title"
+                        text="Password"
                       />
                     </Grid>
                     <Grid item xs={12} md={8}>
@@ -67,7 +59,7 @@ const Account = (props) => {
                       />
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3} display={{ xs: "none", md: "block" }} />
 
                     <Grid item xs={12} md={8}>
@@ -89,7 +81,7 @@ const Account = (props) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3} display={{ xs: "none", md: "block" }} />
 
                     <Grid item xs={12} md={8}>
@@ -104,7 +96,7 @@ const Account = (props) => {
                     </Grid>
                   </Grid>
 
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3} display={{ xs: "none", md: "block" }}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
@@ -125,7 +117,7 @@ const Account = (props) => {
                       </ul>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3} display={{ xs: "none", md: "block" }}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
@@ -137,7 +129,7 @@ const Account = (props) => {
                         fontWeight={600}
                         fontSize={{ md: "1.6rem", xs: "1.4rem" }}
                       >
-                        Josh4real.@gmail.com
+                        {email}
                       </Typography>
                       <Grid item container>
                         <FormikControl
@@ -148,7 +140,7 @@ const Account = (props) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={12} md={3}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
@@ -172,7 +164,6 @@ const Account = (props) => {
                   <Grid
                     item
                     container
-                    alignItems="center"
                     // justifyContent={{ xs: "center" }}
                     flexDirection={{ md: "row", xs: "row" }}
                   >
@@ -197,7 +188,7 @@ const Account = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item md={3} xs={12}>
                       <CustomSubTypography
                         text="Private Messaging"
@@ -220,7 +211,7 @@ const Account = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item md={3} xs={12}>
                       <CustomSubTypography
                         text="Receive Private Messaging"
@@ -231,7 +222,10 @@ const Account = (props) => {
                       <Grid item container>
                         <Grid item container flexDirection={"column"}>
                           <Grid item container alignItems="center">
-                            <Checkbox />
+                            <Checkbox
+                              // checked={private_message_source}
+                              name="private_message_source"
+                            />
                             <Typography>From all members</Typography>
                           </Grid>
                           <Grid
@@ -256,7 +250,7 @@ const Account = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item md={3} xs={12}>
                       <CustomSubTypography
                         text="Visitor Messaging"
@@ -281,7 +275,7 @@ const Account = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3}>
                       <CustomSubTypography
                         text="Emailing"
@@ -302,9 +296,16 @@ const Account = (props) => {
                         messages. If you do not want to receive email from
                         certain people then you may disable the options here
                       </Typography>
+                      <Grid item container>
+                        <FormikControl
+                          name="emailing"
+                          control="switch"
+                          label={values.emailing ? "Turn Off" : "Turn On"}
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3} display={{ xs: "none", md: "block" }}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
@@ -331,7 +332,7 @@ const Account = (props) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item xs={3}>
                       <CustomSubTypography
                         text="Ignore List"

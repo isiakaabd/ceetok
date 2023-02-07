@@ -59,7 +59,8 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "2rem", xs: "1.rem" },
   fontWeight: 400,
 }));
-export const Details = ({ handleShare, type, data, setOpenComment }) => {
+export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
+  console.log(data);
   const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
   const [likePost] = useLikeAndUnlikePostMutation();
   const [open, setOpen] = useState(false);
@@ -68,14 +69,14 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
     parentId: data?.id,
   });
 
-  const handleLikePost = async () => {
-    const { data: dt } = await likePost({
-      parent_type: type ? type : "posts",
-      parent_id: data?.id,
-    });
+  // const handleLikePost = async () => {
+  //   const { data: dt } = await likePost({
+  //     parent_type: type ? type : "posts",
+  //     parent_id: data?.id,
+  //   });
 
-    if (dt) setLikeState(!likeState);
-  };
+  //   if (dt) setLikeState(!likeState);
+  // };
   const [quote, { isLoading }] = usePostCommentMutation();
 
   const handleSubmit = async (values) => {
@@ -108,9 +109,9 @@ export const Details = ({ handleShare, type, data, setOpenComment }) => {
 
           <StyledButton
             onClick={handleLikePost}
-            color={likeState ? "#f00" : ""}
+            color={Boolean(data?.liked) ? "#f00" : ""}
             Icon={
-              likeState ? (
+              Boolean(data?.liked) ? (
                 <Favorite sx={{ fill: "#f00" }} />
               ) : (
                 <FavoriteBorderOutlined />

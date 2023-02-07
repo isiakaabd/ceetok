@@ -1,9 +1,23 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Checkbox, Grid, Typography } from "@mui/material";
+import { Button, Checkbox, Grid, Skeleton, Typography } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
+import {
+  useGetUserSettingsQuery,
+  useUpdateUserSettingsMutation,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
+import { getDate } from "helpers";
+import * as Yup from "yup";
+import { CustomButton } from "components";
+
+const validationSchema = Yup.object({
+  title: Yup.string().required("Required"),
+  occupation: Yup.string(),
+  location: Yup.string(),
+  contact: Yup.string(),
+  web: Yup.string().required("Required"),
+});
 const ProfileSetting = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -14,21 +28,46 @@ const ProfileSetting = (props) => {
 
     // textAlign: "center",
   }));
+  const { data: user, isLoading: loading } = useGetUserSettingsQuery();
+  const [updateProfile, { isLoading }] = useUpdateUserSettingsMutation();
+  const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
+  if (loading || profileLoading) return <Skeleton />;
+  const { occupation, dob, phone, location } = profile;
+  const dt = getDate(dob)?.split("-");
+  const handleSubmit = async (values) => {
+    const { title, web } = values;
+
+    const titleValue = {
+      name: "title",
+      type: "string",
+      value: title,
+    };
+
+    const webValue = {
+      name: "web",
+      type: "string",
+      value: web,
+    };
+    const { data, error } = updateProfile({ settings: [titleValue, webValue] });
+    console.log(data, error);
+  };
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
+          enableReinitialize
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
           initialValues={{
-            title: "",
-            day: "",
-            month: "",
-            year: "",
-            occupation: "",
-            interest: "",
-            location: "",
+            title: user[0].value || "",
+            day: dt[0] || "",
+            month: dt[1] || "",
+            year: dt[2] || "",
+            occupation: occupation || "",
+            location: location || "",
             bio: "",
-            contact: "",
-            web: "",
+            contact: phone || "",
+            web: user[1].value || "",
           }}
         >
           <Form style={{ width: "100%" }}>
@@ -69,13 +108,13 @@ const ProfileSetting = (props) => {
                     <Grid item md={3} xs={12}>
                       <FormikControl
                         name="day"
-                        placeholder="Day"
                         options={[
                           {
-                            label: "1",
-                            value: "1",
+                            label: dt[0],
+                            value: dt[0],
                           },
                         ]}
+                        disabled
                         control="select"
                       />
                       <Grid
@@ -95,23 +134,11 @@ const ProfileSetting = (props) => {
                         placeholder="Month"
                         name="month"
                         control="select"
+                        disabled
                         options={[
                           {
-                            label: 0,
-                            value: 0,
-                          },
-                          {
-                            label: "1",
-                            value: "1",
-                          },
-                          {
-                            label: "2",
-                            value: "2",
-                          },
-
-                          {
-                            label: 3,
-                            value: "3",
+                            label: dt[1],
+                            value: dt[1],
                           },
                         ]}
                       />
@@ -120,23 +147,11 @@ const ProfileSetting = (props) => {
                       <FormikControl
                         placeholder="Year"
                         name="year"
+                        disabled
                         options={[
                           {
-                            label: 0,
-                            value: 0,
-                          },
-                          {
-                            label: "1",
-                            value: "1",
-                          },
-                          {
-                            label: "2",
-                            value: "2",
-                          },
-
-                          {
-                            label: 3,
-                            value: "3",
+                            label: dt[2],
+                            value: dt[2],
                           },
                         ]}
                         control="select"
@@ -200,7 +215,7 @@ const ProfileSetting = (props) => {
                 <Grid item xs={12} md={8}>
                   <Grid item container>
                     <FormikControl
-                      name="web"
+                      name="bio"
                       placeholder="A few details about yourself"
                       control="input"
                       multiline={true}
@@ -243,6 +258,32 @@ const ProfileSetting = (props) => {
                     />
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid
+                item
+                container
+                flexWrap="nowrap"
+                gap={2}
+                sx={{ mt: 2 }}
+                justifyContent={{ md: "flex-start", xs: "space-between" }}
+              >
+                <CustomButton
+                  title={"Save"}
+                  type="submit"
+                  isSubmitting={isLoading}
+                />
+                <Button
+                  variant="outlined"
+                  sx={{
+                    padding: "1rem 4em",
+                    fontSize: "1.6rem",
+                    fontWeight: 700,
+                    borderRadius: "5rem",
+                  }}
+                  color="success"
+                >
+                  Reset
+                </Button>
               </Grid>
               {/* interest */}
             </Grid>

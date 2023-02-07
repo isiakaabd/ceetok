@@ -93,7 +93,7 @@ const PrivateMessage = () => {
                   Send a me a message when you see this victor
                 </Typography>
                 <Grid item xs={7} md={5}>
-                  <Details icons={icons} handleShare={{}} />
+                  <Details icons={icons} handleShare={{}} handleLikePost={{}} />
                 </Grid>
               </Grid>
             </Grid>

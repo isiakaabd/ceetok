@@ -76,7 +76,8 @@ function Header() {
     },
   }));
   const loginStatus = useSelector((state) => state.auth.token);
-  const [open, setOpen] = useState(false);
+
+  const [open] = useState(false);
   const anchorRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const opens = Boolean(anchorEl);

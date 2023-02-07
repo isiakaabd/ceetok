@@ -14,25 +14,20 @@ import ProfileImage from "./ProfileImage";
 import Pen from "assets/svgs/Pen";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
-import SettingsIcon from "assets/svgs/Settings";
-import { PersonAddAlt1Outlined, SettingsOutlined } from "@mui/icons-material";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { PersonAddAlt1Outlined } from "@mui/icons-material";
+import { Link, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
-  useAllUsersQuery,
   useFollowUserMutation,
   useLazyOtherUserProfileQuery,
   useListUsersQuery,
-  useOtherUserProfileQuery,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
 import { getDate, getTimeMoment } from "helpers";
 import VerifyPage from "components/modals/VerifyPage";
 import { useSelector } from "react-redux";
-import { useGetUsersQuery } from "redux/slices/adminSlice";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
-import { array } from "yup";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();

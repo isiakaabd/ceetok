@@ -1,10 +1,6 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { useRef, useEffect } from "react";
+
+import { Dialog, DialogActions, DialogContent } from "@mui/material";
 import { Grid, useMediaQuery } from "@mui/material";
 import { CloseOutlined } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
@@ -16,9 +12,9 @@ export default function Dialogs({
   width,
   title,
 }) {
-  const descriptionElementRef = React.useRef(null);
+  const descriptionElementRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -36,8 +32,6 @@ export default function Dialogs({
       scroll={"body"}
       fullScreen={fullScreen}
       sx={{ m: 0 }}
-      aria-labelledby="scroll-dialog-title"
-      aria-describedby="scroll-dialog-description"
       title={title}
     >
       <DialogActions>

@@ -114,7 +114,8 @@ const Shares = ({ data: item }) => {
   const [validate, { isLoading: validating }] =
     useValidateAnnoucementMutation();
   const check = profile?.id === user_id;
-  const handleLikePost = async () => {
+  const handleLikePost = async (e) => {
+    e.stopPropagation();
     const { error } = await likePost({
       parent_type: "announcements",
       parent_id: id,
@@ -130,19 +131,23 @@ const Shares = ({ data: item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-  const handleCloses = () => {
+  const handleCloses = (e) => {
+    e.stopPropagation();
     setAnchorEl(null);
   };
-  const handleDeleteComment = async () => {
+  const handleDeleteComment = async (e) => {
+    e.stopPropagation();
     const { data, error } = await deleteAnnoucement({ id });
 
     if (data) toast.success(data);
-    handleCloses();
+    handleCloses(e);
     if (error) toast.error(error);
   };
-  const handleApproval = async () => {
+  const handleApproval = async (e) => {
+    e.stopPropagation();
     const { data, error } = await approveAnnoucement({ id });
     if (data) {
       toast.success(data);
@@ -151,7 +156,8 @@ const Shares = ({ data: item }) => {
     if (error) toast.success(error);
   };
 
-  const validatePayment = async () => {
+  const validatePayment = async (e) => {
+    e.stopPropagation();
     const { data, error } = await validate({
       payment_id: item?.payment?.id,
     });
@@ -179,7 +185,10 @@ const Shares = ({ data: item }) => {
             <IconButton
               edge="start"
               size="small"
-              onClick={() => navigate(`/user/annoucement/${item.slug}`)}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/user/annoucement/${item.slug}`);
+              }}
             >
               <ChatBubbleOutline />
             </IconButton>
@@ -204,7 +213,10 @@ const Shares = ({ data: item }) => {
         <IconButton
           edge="start"
           size="small"
-          onClick={() => setOpenShareModal(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenShareModal(true);
+          }}
         >
           <IosShareOutlined />
         </IconButton>
@@ -372,6 +384,7 @@ const Announcement = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const navigate = useNavigate();
 
   const loginStatus = useSelector((state) => state.auth.token);
 
@@ -517,7 +530,7 @@ const Announcement = () => {
             {annoucements?.announcements?.map((item, index) => {
               const {
                 payment,
-
+                slug,
                 approved,
                 media,
 
@@ -527,9 +540,11 @@ const Announcement = () => {
                 <Grid
                   item
                   container
+                  onClick={() => navigate(`/user/annoucement/${slug}`)}
                   key={index}
                   flexWrap="nowrap"
                   sx={{
+                    cursor: "pointer",
                     borderRadius: "1.2rem",
                     background:
                       payment?.status === "completed" && approved

@@ -16,6 +16,7 @@ import {
   IconButton,
   Typography,
   Skeleton,
+  List,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
@@ -49,7 +50,17 @@ import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
-import { useGetAnnoucementQuery } from "redux/slices/annoucementSlice";
+import {
+  useGetAnnoucementQuery,
+  useGetAnnoucementsQuery,
+} from "redux/slices/annoucementSlice";
+import ArrowBack from "assets/svgs/ArrowBack";
+import { getImage } from "helpers";
+import {
+  useFollowUserMutation,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
+import SingleComment from "./components/SingleComment";
 
 const socialItems = [
   {
@@ -101,37 +112,33 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "1.2rem", xs: ".9rem" },
   fontWeight: 400,
 }));
-export const Details = ({ handleShare, data }) => {
-  const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
-  const [likePost] = useLikeAndUnlikePostMutation();
-  const { data: numberOfLikes } = useGetLikesQuery({
-    type: "posts",
-    parentId: data?.id,
-  });
+const Details = ({ handleShare, data }) => {
+  const liked = Boolean(data?.liked);
+
+  const [likeAnnoucement] = useLikeAndUnlikePostMutation();
 
   const handleLikePost = async () => {
-    await likePost({
-      parent_type: "posts",
+    await likeAnnoucement({
+      parent_type: "announcements",
       parent_id: data?.id,
     });
-
-    setLikeState(!likeState);
   };
+
   return (
     <Grid item container justifyContent="space-between" flexWrap="nowrap">
       <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
         <StyledButton text="Reply" Icon={<ReplyOutlined />} />
         <StyledButton
           onClick={handleLikePost}
-          color={likeState ? "#f00" : ""}
+          color={liked ? "#f00" : ""}
           Icon={
-            likeState ? (
+            liked ? (
               <Favorite sx={{ fill: "#f00" }} />
             ) : (
               <FavoriteBorderOutlined />
             )
           }
-          text="Like"
+          text={data?.likes_count}
         />
 
         <StyledButton text="Share" Icon={<IosShareOutlined />} />
@@ -148,21 +155,47 @@ const SingleAnnoucement = () => {
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
   });
-
+  console.log(data);
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
+  const [page, setPage] = useState(0);
+  const { data: annoucements, isLoading: annoucementLoading } =
+    useGetAnnoucementsQuery({ page });
+  console.log(annoucements);
+  const [followOrUnfollow] = useFollowUserMutation();
   const { data: views } = useGetViewsQuery({
-    type: "posts",
+    type: "announcements",
     parentId: data?.id,
   });
 
-  const [openShareModal, setOpenShareModal] = useState(false);
-  const handleShare = () => setOpenShareModal(true);
+  // const [openShareModal, setOpenShareModal] = useState(false);
+  // const handleShare = () => setOpenShareModal(true);
 
+  const navigate = useNavigate();
+  const { data: profile } = useUserProfileQuery();
+  if (isLoading || annoucementLoading)
+    return <Skeleton animation="wave" height="12rem" width="100%" />;
+  if (error) return <p>Soemthing went wrong...</p>;
+  const {
+    body,
+    media,
+    title,
+    id: parent_id,
+    user_id,
+    recent_comments,
+    followed,
+    user: { avatar, full_name, username },
+  } = data;
+  const handleFollow = async () => {
+    const { data, error } = await followOrUnfollow({
+      user_id,
+    });
+    if (data) toast.success(data);
+    if (error) toast.success(error);
+  };
   const handleSubmit = async (values, onSubmitProps) => {
-    const { id } = data;
     const { data: dt, error } = await postAComment({
-      parent_id: id,
-      parent_type: "posts",
+      parent_id,
+      parent_type: "announcements",
       comment: values.comment,
     });
     if (dt) {
@@ -171,15 +204,13 @@ const SingleAnnoucement = () => {
       onSubmitProps.resetForm();
     }
     if (error) {
-      toast.error("something went wrong, try again...");
+      toast.error(error);
     }
   };
-  if (isLoading)
-    return <Skeleton animation="wave" height="12rem" width="100%" />;
-  if (error) return <p>Soemthing went wrong...</p>;
+
   return (
     <>
-      <Grid item container gap={2} flexWrap="nowrap">
+      {/* <Grid item container gap={2} flexWrap="nowrap">
         <Grid item xs={1} display={{ md: "block", xs: "none" }}>
           <Grid container justifyContent="center">
             <IconButton>
@@ -309,6 +340,198 @@ const SingleAnnoucement = () => {
               </Form>
             </Formik>
           </Grid>
+    
+        </Grid>
+      </Grid>
+      <SocialMedia
+        open={openShareModal}
+        handleClose={() => setOpenShareModal(false)}
+      /> */}
+
+      <Grid
+        item
+        container
+        gap={2}
+        flexWrap={{ md: "nowrap", xs: "wrap" }}
+        sx={{
+          px: { xs: "1rem", md: "4rem" },
+          background: "#E5E5E5",
+          py: 4,
+        }}
+      >
+        <Grid
+          item
+          md={10}
+          xs={12}
+          sx={{ p: 4, background: "#fff", borderRadius: "2rem 2rem 0 0" }}
+        >
+          <Grid container item flexDirection="column" gap={3}>
+            <Grid item container>
+              <IconButton onClick={() => navigate(-1)}>
+                <ArrowBack sx={{ fontSize: "3rem" }} />
+              </IconButton>
+            </Grid>
+
+            <Grid item>
+              <Grid item container gap={2} flexWrap="nowrap">
+                <Avatar alt={full_name} src={getImage(avatar)}>
+                  {full_name?.slice(0, 1)?.toUpperCase()}
+                </Avatar>
+                <Grid item container flexDirection="column">
+                  <Typography
+                    sx={{
+                      color: "#5F5C5C",
+                      fontWeight: 700,
+                      fontSize: { md: "2rem", xs: "1.5rem" },
+                    }}
+                  >
+                    {full_name || "No Name Yet"}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "#9B9A9A",
+                      fontWeight: 500,
+                      fontSize: { md: "1.8rem", xs: "1.2rem" },
+                    }}
+                  >
+                    @{username || "No Username yet"}
+                  </Typography>
+                  <CustomButton
+                    borderRadius={"0px"}
+                    title={followed ? "Unfollow" : "Follow"}
+                    width="8rem"
+                    sx={{ fontWeight: 400 }}
+                    height="3rem"
+                    onClick={handleFollow}
+                    // width={"max-content"}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item container flexDirection="column" gap={3}>
+              <Typography
+                sx={{
+                  color: "#464646",
+                  fontSize: { md: "2.5rem", xs: "2rem" },
+                }}
+              >
+                {title}
+              </Typography>
+              <img
+                src={
+                  media?.length > 0
+                    ? getImage(media[0]?.storage_path)
+                    : images.adeleke
+                }
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "60rem",
+                }}
+                alt={title}
+              />
+              <Grid
+                color="#5F5C5C"
+                fontWeight={400}
+                fontSize={{ md: "2.4rem", xs: "1.5rem" }}
+              >
+                {parse(body)}
+              </Grid>{" "}
+              <Grid item container>
+                <Details data={data} />
+              </Grid>
+              <Divider sx={{ my: 4 }} />
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            container
+            sx={{
+              maxHeight: { xs: "70rem" },
+              overflowY: "scroll",
+              "&::-webkit-scrollbar": {
+                width: ".85rem",
+                display: "none",
+              },
+            }}
+          >
+            <Typography
+              color="secondary"
+              fontSize={{ md: "3rem", xs: "2rem" }}
+              fontWeight={700}
+            >
+              Comments
+            </Typography>
+            {recent_comments?.length > 0 ? (
+              <List sx={{ width: "100%" }} dense>
+                {recent_comments?.map((item) => (
+                  <SingleComment
+                    // icons={icons}
+                    key={item.id}
+                    item={item}
+                    type="annoucements"
+                    profile={profile}
+                  />
+                ))}
+              </List>
+            ) : (
+              <Grid item container>
+                <Typography>No comments available</Typography>
+              </Grid>
+            )}
+          </Grid>
+          <Grid
+            sx={{
+              mt: { md: 3, xs: 1.5 },
+              // paddingInline: { xs: "1rem", md: "4rem" },
+            }}
+          >
+            <Formik
+              initialValues={{ comment: "" }}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+            >
+              <Form>
+                <Editor
+                  theme="snow"
+                  name="comment"
+                  value={""}
+                  placeholder="write something..."
+                />
+
+                <Grid
+                  item
+                  container
+                  sx={{ mt: 2 }}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      color: "#9B9A9A",
+                      borderColor: "inherit",
+                      // border: "2px solid #9B9A9A",
+                      fontSize: "1.2rem",
+                      fontWeight: 700,
+                      padding: ".8rem 2rem",
+                      borderRadius: "3rem",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <CustomButton
+                    title="Post"
+                    variant="contained"
+                    width="10rem"
+                    type="submit"
+                    isSubmitting={loading}
+                  />
+                </Grid>
+              </Form>
+            </Formik>
+          </Grid>
           <Grid
             item
             container
@@ -350,11 +573,100 @@ const SingleAnnoucement = () => {
             </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={3} sx={{ display: { xs: "none", md: "block" } }}>
+          <Grid item container gap={2}>
+            <Grid container item>
+              <Grid container item>
+                <CustomButton
+                  borderRadius={"0px"}
+                  width="100%"
+                  sx={{ px: "1.6em", backgroundColor: "#FF9B04" }}
+                  title={"People also Viewed"}
+                />
+              </Grid>
+            </Grid>
+
+            {annoucements?.announcements?.length > 0 ? (
+              <Grid item container gap={2}>
+                {annoucements?.announcements
+                  ?.slice(0, 5)
+                  ?.map((item, index) => {
+                    const {
+                      payment,
+
+                      approved,
+                      media,
+
+                      body,
+                    } = item;
+                    return (
+                      <Grid
+                        item
+                        container
+                        key={index}
+                        flexWrap="nowrap"
+                        sx={{
+                          borderRadius: "1.2rem",
+                          // background:
+                          // payment?.status === "completed" && approved
+                          //   ? "#37D42A"
+                          //   : payment?.status === "completed" && !approved
+                          //   ? "#FF9B04"
+                          //   : "#FF9B04",
+                        }}
+                      >
+                        <Grid
+                          item
+                          container
+                          // gap={2}
+                          sx={{
+                            padding: "2rem",
+                            border: "1px solid #9B9A9A",
+                            borderRadius: "1.2rem",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <Grid item>
+                            <img
+                              src={
+                                media?.length > 0
+                                  ? getImage(media[0]?.storage_path)
+                                  : images.davido
+                              }
+                              // src={item.media>0? getImage() images.davido}
+                              style={{ width: "100%", height: "100%" }}
+                              alt="davido"
+                            />
+                          </Grid>
+                          <Grid item sx={{ mt: 2 }}>
+                            <Typography
+                              sx={{
+                                color:
+                                  //  !approved ?
+                                  "#464646",
+                                //  : "#fff",
+                                fontSize: "1.3rem",
+                                fontWeight: 700,
+                                // overflow: "hiddem",
+                                // whiteSpace: "nowrap",
+                                // textOverflow: "ellipsis",
+                              }}
+                            >
+                              {parse(body)}
+                            </Typography>
+                          </Grid>
+                          <Details data={item} />
+                        </Grid>
+                      </Grid>
+                    );
+                  })}
+              </Grid>
+            ) : (
+              <Typography>No Annoucement Yet</Typography>
+            )}
+          </Grid>
+        </Grid>
       </Grid>
-      <SocialMedia
-        open={openShareModal}
-        handleClose={() => setOpenShareModal(false)}
-      />
     </>
   );
 };

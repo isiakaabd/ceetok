@@ -95,6 +95,25 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.message,
     }),
+    getUserSettings: builder.query({
+      query: () => ({
+        url: `/user/setting`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      transformResponse: (response) => response.body.settings,
+      transformErrorResponse: (error) => error.message,
+    }),
+    updateUserSettings: builder.mutation({
+      query: (body) => ({
+        url: `/user/setting`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["user"],
+      // transformResponse: (response) => response.body.settings,
+      // transformErrorResponse: (error) => error.message,
+    }),
     blockUser: builder.mutation({
       query: (body) => ({
         url: `/follow/block`,
@@ -156,7 +175,9 @@ export const {
   useForgotPasswordMutation,
   useUserProfileQuery,
   useAllUsersQuery,
+  useGetUserSettingsQuery,
   useLogoutMutation,
+  useUpdateUserSettingsMutation,
   useUnBlockUserMutation,
   useFollowUserMutation,
   useAllMediaQuery,

@@ -28,7 +28,10 @@ import { useNavigate } from "react-router-dom";
 import FormikControl from "validation/FormikControl";
 import UserProfile from "../UserProfile";
 import images from "assets";
-import { useDeleteAPostMutation } from "redux/slices/postSlice";
+import {
+  useDeleteAPostMutation,
+  useLikeAndUnlikePostMutation,
+} from "redux/slices/postSlice";
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
@@ -137,20 +140,21 @@ export const Comment = ({ handleShare, data }) => {
       link: "",
     },
   ];
+  const [likePost] = useLikeAndUnlikePostMutation();
   if (isLoading) return <Skeleton />;
   const { interests } = profile;
-  const check = interests?.includes(category.toLowerCase());
+  const check = interests?.includes(category?.toLowerCase());
   const checkUser = profile?.id === user_id;
 
   async function handleCheck() {
     const { interests } = profile;
     if (!check) {
       const data = await update({
-        interests: [...interests, category.toLowerCase()],
+        interests: [...interests, category?.toLowerCase()],
       });
       if (data) toast.success(data);
     } else {
-      const newArr = interests.filter((ite) => ite !== category.toLowerCase());
+      const newArr = interests.filter((ite) => ite !== category?.toLowerCase());
       const data = await update({
         interests: [...newArr],
       });
@@ -158,6 +162,14 @@ export const Comment = ({ handleShare, data }) => {
     }
   }
 
+  const handleLikePost = async () => {
+    await likePost({
+      parent_type: "posts",
+      parent_id: data?.id,
+    });
+
+    // setLikeState(!likeState);
+  };
   return (
     <>
       <Grid
@@ -284,7 +296,7 @@ export const Comment = ({ handleShare, data }) => {
         </Grid>
         <img
           src={
-            media.length > 0 ? getImage(media[0]?.storage_path) : images.obi2
+            media?.length > 0 ? getImage(media[0]?.storage_path) : images.obi2
           }
           style={{ width: "100%" }}
           alt={category}
@@ -303,7 +315,12 @@ export const Comment = ({ handleShare, data }) => {
           </Typography>
         </Grid>
         <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
-          <Details handleShare={handleShare} icons={icons} data={data} />
+          <Details
+            handleShare={handleShare}
+            icons={icons}
+            data={data}
+            handleLikePost={handleLikePost}
+          />
         </Grid>
         <Divider flexItem sx={{ pb: 2 }} />
       </Grid>

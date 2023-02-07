@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   Grid,
   Radio,
+  Skeleton,
   Switch,
   Typography,
 } from "@mui/material";
@@ -13,6 +14,10 @@ import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
+import {
+  useGetUserSettingsQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 const Notifications = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -22,15 +27,28 @@ const Notifications = (props) => {
     color: "#5F5C5C",
     // textAlign: "center",
   }));
-
+  const { data: user, isLoading: loading } = useGetUserSettingsQuery();
+  const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
+  console.log(user);
+  if (loading || profileLoading) return <Skeleton />;
+  const { username } = profile;
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           initialValues={{
-            subscribe: true,
-            privateMessage: true,
-            birthday: false,
+            subscribe: user[14]?.value || "",
+            email: user[15]?.value || "",
+            notify_if_user_subs_to_you: user[16]?.value || "",
+            notify_if_user_accepts_sub_request: user[17]?.value || "",
+            notify_if_vote_on_your_poll: user[18]?.value || "",
+            notify_if_user_likes_your_post: user[19]?.value || "",
+            notify_on_mentions: user[20]?.value || "",
+            notify_on_quotes: user[21]?.value || "",
+            notify_on_replies_to_your_discussions: user[22]?.value || "",
+            notify_on_comment_to_your_discussion: user[23]?.value || "",
+            notify_email_for_private_message: user[24]?.value || "",
+            notify_email_for_bday: user[25]?.value || "",
           }}
         >
           {({ values }) => {
@@ -68,11 +86,14 @@ const Notifications = (props) => {
                         name="email"
                         options={[
                           {
-                            label: "Hello",
-                            value: "Hello",
+                            label: "Weekly",
+                            value: "weekly",
+                          },
+                          {
+                            label: "Monthly",
+                            value: "monthly",
                           },
                         ]}
-                        placeholder="Email Address"
                         control="select"
                       />
                       <Typography textAlign="justify">
@@ -98,41 +119,122 @@ const Notifications = (props) => {
                       </Typography>
                       <Grid item xs={12} sx={{ mt: 2 }}>
                         <Grid item container>
-                          <Grid item container alignItems="center">
-                            <Checkbox />
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_if_user_subs_to_you"
+                                control="checkbox"
+                              />
+                            </Grid>
                             <Typography>Subscribe to you</Typography>
                           </Grid>
-                          <Grid item container alignItems="center">
-                            <Checkbox />
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_if_user_accepts_sub_request"
+                                control="checkbox"
+                              />
+                            </Grid>
                             <Typography>
                               Confirms a subscribe request
                             </Typography>
                           </Grid>
-                          <Grid item container alignItems="center">
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_if_vote_on_your_poll"
+                                control="checkbox"
+                              />
+                            </Grid>
+                            <Typography>Votes on your polls</Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_if_user_likes_your_post"
+                                control="checkbox"
+                              />
+                            </Grid>
+                            <Typography>Likes your post</Typography>
+                          </Grid>
+
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_on_replies_to_your_discussions"
+                                control="checkbox"
+                              />
+                            </Grid>
+                            <Typography>
+                              Replies to your discussion (this also includes
+                              comments in your topics){" "}
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            container
+                            alignItems="center"
+                            flexWrap="nowrap"
+                          >
+                            <Grid item>
+                              <FormikControl
+                                name="notify_on_comment_to_your_discussion"
+                                control="checkbox"
+                              />
+                            </Grid>
+                            <Typography>Comments on your discussion</Typography>
+                          </Grid>
+
+                          {/* <Grid item container alignItems="center">
                             <Checkbox />
                             <Typography>
                               Posts on your visitor message board
                             </Typography>
-                          </Grid>
+                          </Grid> 
                           <Grid item container alignItems="center">
                             <Checkbox />
-                            <Typography>Votes on your polls</Typography>
-                          </Grid>
-                          <Grid item container alignItems="center">
+                            <Typography></Typography>
+                          </Grid>*/}
+                          {/* <Grid item container alignItems="center">
                             <Checkbox />
-                            <Typography>Likes your post</Typography>
-                          </Grid>
-                          <Grid item container alignItems="center">
+                            <Typography></Typography>
+                          </Grid> */}
+                          {/* <Grid item container alignItems="center">
                             <Checkbox />
                             <Typography>
-                              Mentions you (@Forumnaija) in a pos
+                            
                             </Typography>
-                          </Grid>
-                          <Grid item container alignItems="center">
+                          </Grid> */}
+                          {/* <Grid item container alignItems="center">
                             <Checkbox />
-                            <Typography>Quotes you in a post</Typography>
-                          </Grid>
-                          <Grid
+                            <Typography></Typography>
+                          </Grid> */}
+                          {/* <Grid
                             item
                             container
                             alignItems="center"
@@ -143,11 +245,7 @@ const Notifications = (props) => {
                               Replies to your discussion (this also includes
                               comments in your topics)
                             </Typography>
-                          </Grid>
-                          <Grid item container alignItems="center">
-                            <Checkbox />
-                            <Typography>Comments on your discussion</Typography>
-                          </Grid>
+                          </Grid> */}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -159,23 +257,41 @@ const Notifications = (props) => {
                         />
                       </Grid>
                       <Grid item xs={12} md={8}>
-                        <Grid item container>
-                          <Grid item container alignItems="center">
-                            <Checkbox />
-                            <Typography>
-                              Replies to your discussion (this also includes
-                              comments in your topics)
-                            </Typography>
+                        <Grid
+                          item
+                          container
+                          alignItems="center"
+                          flexWrap="nowrap"
+                        >
+                          <Grid item>
+                            <FormikControl
+                              name="notify_on_mentions"
+                              control="checkbox"
+                            />
                           </Grid>
-                          <Grid item container alignItems="center">
-                            <Checkbox />
-                            <Typography>Comments on your discussion</Typography>
+                          <Typography>
+                            {" "}
+                            {`Mentions you (@${username}) in a pos`}
+                          </Typography>
+                        </Grid>
+                        <Grid
+                          item
+                          container
+                          alignItems="center"
+                          flexWrap="nowrap"
+                        >
+                          <Grid item>
+                            <FormikControl
+                              name="notify_on_quotes"
+                              control="checkbox"
+                            />
                           </Grid>
+                          <Typography>Quotes you in a post </Typography>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid
+                  {/* <Grid
                     item
                     container
                     alignItems="center"
@@ -252,7 +368,7 @@ const Notifications = (props) => {
                         </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                   <Grid
                     item
                     container
@@ -270,8 +386,12 @@ const Notifications = (props) => {
                       <Grid item container>
                         <FormikControl
                           control="switch"
-                          label={values.privateMessage ? "Turn Off" : "Turn On"}
-                          name="privateMessage"
+                          label={
+                            values.notify_email_for_private_message
+                              ? "Turn Off"
+                              : "Turn On"
+                          }
+                          name="notify_email_for_private_message"
                         />
                       </Grid>
                       <Typography textAlign="justify">
@@ -298,8 +418,12 @@ const Notifications = (props) => {
                       <Grid item container>
                         <FormikControl
                           control="switch"
-                          label={values.birthday ? "Turn Off" : "Turn On"}
-                          name="birthday"
+                          label={
+                            values.notify_email_for_bday
+                              ? "Turn Off"
+                              : "Turn On"
+                          }
+                          name="notify_email_for_bday"
                         />
                       </Grid>
                       <Typography textAlign="justify">

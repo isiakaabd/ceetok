@@ -1,17 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Switch,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Skeleton, Typography } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
+import { useGetUserSettingsQuery } from "redux/slices/authSlice";
 const Privacy = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -21,26 +13,27 @@ const Privacy = (props) => {
     color: "#5F5C5C",
     // textAlign: "center",
   }));
+  const { data: user, isLoading: loading } = useGetUserSettingsQuery();
 
+  if (loading) return <Skeleton />;
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           initialValues={{
-            subscriberRequest: false,
-            contactInfo: "",
+            subscriberRequest: user[8]?.value || "",
+            contactInfo: user[9]?.value,
+            avatar: user[10]?.value,
+            activities: user[11]?.value,
+            photos: user[12]?.value,
+            videos: user[13]?.value,
           }}
         >
           {({ values }) => {
             return (
               <Form style={{ width: "100%" }}>
                 <Grid item container gap={2} sx={{ p: { md: 3, xs: 1 } }}>
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    flexDirection={{ md: "row", xs: "row" }}
-                  >
+                  <Grid item container flexDirection={{ md: "row", xs: "row" }}>
                     <Grid item md={3} xs={12}>
                       <CustomSubTypography
                         fontSize={{ xs: "1.4rem" }}
@@ -54,7 +47,7 @@ const Privacy = (props) => {
                           label={
                             values.subscriberRequest ? "Turn Off" : "Turn On"
                           }
-                          name="reputation"
+                          name="subscriberRequest"
                         />
                       </Grid>
                       <Typography textAlign="justify">
@@ -63,7 +56,7 @@ const Privacy = (props) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid item container alignItems="center">
+                  <Grid item container>
                     <Grid item md={3} xs={12}>
                       <CustomSubTypography
                         text="Profile"
@@ -80,7 +73,6 @@ const Privacy = (props) => {
                           <Grid
                             container
                             justifyContent={"space-between"}
-                            alignItems="center"
                             gap={2}
                           >
                             <Grid item>
@@ -93,19 +85,21 @@ const Privacy = (props) => {
                               <Grid container>
                                 <FormikControl
                                   name="contactInfo"
-                                  options={[{ label: "hello", value: "Hello" }]}
+                                  options={[
+                                    { label: "No One", value: "none" },
+
+                                    {
+                                      label: user[9]?.value,
+                                      value: user[9]?.value,
+                                    },
+                                  ]}
                                   control="select"
-                                  placeholder="Contact Info"
                                 />
                               </Grid>
                             </Grid>
                           </Grid>
                           {/*  Avatar*/}
-                          <Grid
-                            container
-                            justifyContent={"space-between"}
-                            alignItems="center"
-                          >
+                          <Grid container justifyContent={"space-between"}>
                             <Grid item>
                               <CustomSubTypography
                                 text="Avatar"
@@ -116,19 +110,21 @@ const Privacy = (props) => {
                               <Grid container>
                                 <FormikControl
                                   name="avatar"
-                                  options={[]}
+                                  options={[
+                                    { label: "No One", value: "none" },
+
+                                    {
+                                      label: user[10]?.value,
+                                      value: user[10]?.value,
+                                    },
+                                  ]}
                                   control="select"
-                                  placeholder="Avatar"
                                 />
                               </Grid>
                             </Grid>
                           </Grid>
                           {/* activities */}
-                          <Grid
-                            container
-                            justifyContent={"space-between"}
-                            alignItems="center"
-                          >
+                          <Grid container justifyContent={"space-between"}>
                             <Grid item>
                               <CustomSubTypography
                                 text="Activities"
@@ -139,17 +135,23 @@ const Privacy = (props) => {
                               <Grid container>
                                 <FormikControl
                                   name="activities"
-                                  options={[]}
+                                  options={[
+                                    { label: "No One", value: "none" },
+
+                                    {
+                                      label: user[11]?.value,
+                                      value: user[11]?.value,
+                                    },
+                                  ]}
                                   control="select"
-                                  placeholder="Activities"
                                 />
                               </Grid>
                             </Grid>
                           </Grid>
-                          <Grid
+                          {/* <Grid
                             container
                             justifyContent={"space-between"}
-                            alignItems="center"
+                        
                           >
                             <Grid item>
                               <CustomSubTypography
@@ -167,11 +169,11 @@ const Privacy = (props) => {
                                 />
                               </Grid>
                             </Grid>
-                          </Grid>
-                          <Grid
+                          </Grid> */}
+                          {/* <Grid
                             container
                             justifyContent={"space-between"}
-                            alignItems="center"
+                         
                           >
                             <Grid item>
                               <CustomSubTypography
@@ -189,8 +191,8 @@ const Privacy = (props) => {
                                 />
                               </Grid>
                             </Grid>
-                          </Grid>
-                          <Grid
+                          </Grid> */}
+                          {/* <Grid
                             container
                             justifyContent={"space-between"}
                             alignItems="center"
@@ -211,12 +213,8 @@ const Privacy = (props) => {
                                 />
                               </Grid>
                             </Grid>
-                          </Grid>
-                          <Grid
-                            container
-                            justifyContent={"space-between"}
-                            alignItems="center"
-                          >
+                          </Grid> */}
+                          <Grid container justifyContent={"space-between"}>
                             <Grid item>
                               <CustomSubTypography
                                 text="Photos"
@@ -226,19 +224,21 @@ const Privacy = (props) => {
                             <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
-                                  name="subscribers"
-                                  options={[]}
-                                  placeholder="Subscribers"
+                                  name="photos"
+                                  options={[
+                                    { label: "No One", value: "none" },
+
+                                    {
+                                      label: user[12]?.value,
+                                      value: user[12]?.value,
+                                    },
+                                  ]}
                                   control="select"
                                 />
                               </Grid>
                             </Grid>
                           </Grid>
-                          <Grid
-                            container
-                            justifyContent={"space-between"}
-                            alignItems="center"
-                          >
+                          <Grid container justifyContent={"space-between"}>
                             <Grid item>
                               <CustomSubTypography
                                 text="Videos"
@@ -248,9 +248,15 @@ const Privacy = (props) => {
                             <Grid item xs={6}>
                               <Grid container>
                                 <FormikControl
-                                  name="subscribers"
-                                  options={[]}
-                                  placeholder="Videos"
+                                  name="videos"
+                                  options={[
+                                    { label: "No One", value: "none" },
+
+                                    {
+                                      label: user[13]?.value,
+                                      value: user[13]?.value,
+                                    },
+                                  ]}
                                   control="select"
                                 />
                               </Grid>

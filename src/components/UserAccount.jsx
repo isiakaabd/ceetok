@@ -10,7 +10,7 @@ const UserAccount = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-  const { data: userProfile } = useUserProfileQuery();
+  const { data: userProfile, isLoading } = useUserProfileQuery();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -35,6 +35,7 @@ const UserAccount = () => {
 
     setOpens(false);
   };
+  if (isLoading) return;
   return (
     <Grid item>
       <Grid

@@ -38,6 +38,7 @@ import {
 import { getImage, getTimeMoment } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import ArrowBack from "assets/svgs/ArrowBack";
 const validationSchema = Yup.object({
   comment: Yup.string().required("Enter your Comment"),
 });
@@ -57,7 +58,7 @@ const ReplyComment = () => {
     type: "comments",
     parentId: id,
   });
-
+  const navigate = useNavigate();
   const [openShareModal, setOpenShareModal] = useState(false);
   const handleSubmit = async (values, { setFieldValue }) => {
     const { data: dt, error } = await postAComment({
@@ -79,7 +80,12 @@ const ReplyComment = () => {
 
   return (
     <>
-      <Grid item container sx={{ mt: 6, background: "#E5E5E5" }}>
+      <Grid
+        item
+        container
+        flexDirection="column"
+        sx={{ mt: 6, background: "#E5E5E5" }}
+      >
         <Grid
           sx={{
             mx: "auto",
@@ -93,6 +99,9 @@ const ReplyComment = () => {
           sm={8}
           xs={11}
         >
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBack sx={{ fontSize: "3rem" }} />
+          </IconButton>
           <Grid item container flexDirection={"column"}>
             <Grid item container flexDirection={"column"} gap={2}>
               <Typography

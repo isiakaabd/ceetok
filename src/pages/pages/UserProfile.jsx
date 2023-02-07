@@ -9,6 +9,7 @@ import FormikControl from "validation/FormikControl";
 import { getDate, getImage, getTime } from "helpers";
 
 const UserProfile = ({ data }) => {
+  console.log(data);
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => setOpen(!open);
@@ -40,7 +41,7 @@ const UserProfile = ({ data }) => {
             alt={full_name}
             src={getImage(avatar)}
           >
-            {full_name.slice(0, 1).toUpperCase()}
+            {full_name?.slice(0, 1).toUpperCase()}
           </Avatar>
           {/* </Grid> */}
         </Grid>

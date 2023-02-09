@@ -1,20 +1,7 @@
-import React from "react";
 import { Field, ErrorMessage } from "formik/dist";
 import PropTypes from "prop-types";
-// import { makeStyles } from "@mui/styles";
-import { FormLabel, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { TextError } from "./TextError";
-
-// const useStyles = makeStyles((theme) => ({
-//   input: {
-//     ...theme.typography.input,
-//   },
-//   FormLabel: {
-//     "&.MuiFormLabel-root": {
-//       ...theme.typography.FormLabel,
-//     },
-//   },
-// }));
 
 const Input = (props) => {
   const { label, name, type, borderRadius, helperText, styles, ...rest } =

@@ -1,12 +1,26 @@
-import { Button, Checkbox, Grid, Skeleton, Typography } from "@mui/material";
+import { Button, Grid, Skeleton, Typography } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
 import {
   useGetUserSettingsQuery,
+  useUpdateUserSettingsMutation,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+
+const validationSchema = Yup.object({
+  invisible_mode: Yup.boolean().required("Required"),
+  visitors_message: Yup.boolean().required("Required"),
+  private_message_source: Yup.boolean().required("Required"),
+  private_message: Yup.boolean().required("Required"),
+  show_reputation: Yup.boolean().required("Required"),
+  emailing: Yup.boolean().required("Required"),
+  email_notification_frequency: Yup.string().required("Required"),
+  subscriber_request: Yup.boolean().required("Required"),
+});
 const Account = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -19,22 +33,107 @@ const Account = (props) => {
   const { data: user, isLoading: loading } = useGetUserSettingsQuery();
   const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
 
+  const [updateProfile, { isLoading }] = useUpdateUserSettingsMutation();
   if (loading || profileLoading) return <Skeleton />;
   const { email } = profile;
+  const {
+    invisible_mode,
+    visitors_message,
+    private_message_source,
+    private_message,
+    show_reputation,
+    emailing,
+    email_notification_frequency,
+    subscriber_request,
+  } = user;
+  const initialValues = {
+    invisible_mode: Boolean(Number(invisible_mode?.value)),
+    show_reputation: Boolean(Number(show_reputation?.value)),
+    private_message_source: Boolean(Number(private_message_source?.value)),
+    subscriber_request: Boolean(Number(subscriber_request?.value)),
+    private_message: Boolean(Number(private_message?.value)),
+    visitors_message: Boolean(Number(visitors_message?.value)),
+    emailing: Boolean(Number(emailing?.value)),
+    email_notification_frequency: email_notification_frequency?.value || "",
+  };
+  const handleSubmit = async (values) => {
+    const {
+      invisible_mode,
+      visitors_message,
+      private_message_source,
+      private_message,
+      show_reputation,
+      emailing,
+      email_notification_frequency,
+      subscriber_request,
+    } = values;
+    const getValue = (val) => {
+      return val ? "1" : "0";
+    };
+    const invisible_mode_value = {
+      name: "invisible_mode",
+      type: "boolean",
+      value: getValue(invisible_mode),
+    };
+    const subscriber_request_value = {
+      name: "subscriber_request",
+      type: "boolean",
+      value: getValue(subscriber_request),
+    };
+    const email_notification_frequency_value = {
+      name: "email_notification_frequency",
+      type: "string",
+      value: email_notification_frequency,
+    };
+    const emailing_value = {
+      name: "emailing",
+      type: "boolean",
+      value: getValue(emailing),
+    };
+    const show_reputation_value = {
+      name: "show_reputation",
+      type: "boolean",
+      value: getValue(show_reputation),
+    };
+    const private_message_value = {
+      name: "private_message",
+      type: "boolean",
+      value: getValue(private_message),
+    };
 
+    const visitors_message_value = {
+      name: "visitors_message",
+      type: "boolean",
+      value: getValue(visitors_message),
+    };
+    const private_message_source_value = {
+      name: "private_message_source",
+      type: "string",
+      value: getValue(private_message_source),
+    };
+    const { data, error } = await updateProfile({
+      settings: [
+        invisible_mode_value,
+        show_reputation_value,
+        private_message_source_value,
+        subscriber_request_value,
+        private_message_value,
+        visitors_message_value,
+        emailing_value,
+        email_notification_frequency_value,
+      ],
+    });
+    if (data) toast.success(data);
+    if (error) toast.error(error);
+  };
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           enableReinitialize
-          initialValues={{
-            invisibleMode: user[2]?.value || "",
-            reputation: user[3]?.value || "",
-            private_message_source: user[5]?.value || "",
-            privateMessaging: user[4]?.value || "",
-            visitorMessaging: user[6]?.value || "",
-            emailing: user[7]?.value || "",
-          }}
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
         >
           {({ values }) => {
             return (
@@ -150,9 +249,9 @@ const Account = (props) => {
                     <Grid item xs={12} md={8}>
                       <Grid item container>
                         <FormikControl
-                          name="invisibleMode"
+                          name="invisible_mode"
                           control="switch"
-                          label={values.invisibleMode ? "Turn Off" : "Turn On"}
+                          label={values.invisible_mode ? "Turn Off" : "Turn On"}
                         />
                         <Typography textAlign="justify">
                           Invisible mode allows you to browse the forums without
@@ -177,8 +276,10 @@ const Account = (props) => {
                       <Grid item container>
                         <FormikControl
                           control="switch"
-                          label={values.reputation ? "Turn Off" : "Turn On"}
-                          name="reputation"
+                          label={
+                            values.show_reputation ? "Turn Off" : "Turn On"
+                          }
+                          name="show_reputation"
                         />
                       </Grid>
                       <Typography textAlign="justify">
@@ -199,9 +300,9 @@ const Account = (props) => {
                       <Grid item container>
                         <FormikControl
                           control="switch"
-                          name="privateMessaging"
+                          name="private_message"
                           label={
-                            values.privateMessaging ? "Turn Off" : "Turn On"
+                            values.private_message ? "Turn Off" : "Turn On"
                           }
                         />
                       </Grid>
@@ -221,12 +322,12 @@ const Account = (props) => {
                     <Grid item xs={12} md={8}>
                       <Grid item container>
                         <Grid item container flexDirection={"column"}>
-                          <Grid item container alignItems="center">
-                            <Checkbox
-                              // checked={private_message_source}
+                          <Grid item>
+                            <FormikControl
+                              control={"checkbox"}
                               name="private_message_source"
+                              label={"From all members"}
                             />
-                            <Typography>From all members</Typography>
                           </Grid>
                           <Grid
                             item
@@ -234,11 +335,13 @@ const Account = (props) => {
                             flexWrap={"nowrap"}
                             alignItems="center"
                           >
-                            <Checkbox />
-                            <Typography textAlign="justify">
-                              Only from subscribers, moderators, and
-                              administrators
-                            </Typography>
+                            <FormikControl
+                              control={"checkbox"}
+                              name="subscriber_request"
+                              label={
+                                "Only from subscribers, moderators, and administrators"
+                              }
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
@@ -260,10 +363,10 @@ const Account = (props) => {
                     <Grid item xs={12} md={8}>
                       <Grid item container>
                         <FormikControl
-                          name="visitorMessaging"
+                          name="visitors_message"
                           control="switch"
                           label={
-                            values.visitorMessaging ? "Turn Off" : "Turn On"
+                            values.visitors_message ? "Turn Off" : "Turn On"
                           }
                         />
                       </Grid>
@@ -298,9 +401,22 @@ const Account = (props) => {
                       </Typography>
                       <Grid item container>
                         <FormikControl
-                          name="emailing"
-                          control="switch"
-                          label={values.emailing ? "Turn Off" : "Turn On"}
+                          name="email_notification_frequency"
+                          control="select"
+                          options={[
+                            {
+                              label: email_notification_frequency?.value,
+                              value: email_notification_frequency?.value,
+                            },
+                            {
+                              label: "Monthly",
+                              value: "monthly",
+                            },
+                            {
+                              label: "Weekly",
+                              value: "weekly",
+                            },
+                          ]}
                         />
                       </Grid>
                     </Grid>
@@ -361,7 +477,11 @@ const Account = (props) => {
                     gap={2}
                     justifyContent={{ md: "flex-start", xs: "space-between" }}
                   >
-                    <CustomButton title={"Save"} />
+                    <CustomButton
+                      isSubmitting={isLoading}
+                      title={"Save"}
+                      type="submit"
+                    />
                     <Button
                       variant="outlined"
                       sx={{
@@ -384,7 +504,5 @@ const Account = (props) => {
     </Grid>
   );
 };
-
-Account.propTypes = {};
 
 export default Account;

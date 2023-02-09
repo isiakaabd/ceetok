@@ -17,10 +17,9 @@ import { getDate, getTime } from "helpers";
 const Annoucement = () => {
   const [openCreatePost, setCreatePost] = useState(false);
   const handleCreatePostOpen = () => setCreatePost(true);
-  const [page, setPage] = useState(0);
+  const [page] = useState(0);
   const { data: annoucements } = useGetAnnoucementsQuery({ page });
   const handleCreatePostClose = () => setCreatePost(false);
-  console.log(annoucements);
   return (
     <>
       <Grid

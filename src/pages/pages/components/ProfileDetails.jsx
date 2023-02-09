@@ -1,8 +1,5 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import {
-  Avatar,
-  Button,
   Divider,
   Grid,
   IconButton,

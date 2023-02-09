@@ -31,7 +31,15 @@ body {
 .ql-editor > * {
   word-break: break-all !important;
 }
+.ql-editor {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
 
+  color: #828484;
+}
 .ql-text {
   /* max-height: 10rem; */
   /* overflow: clip; */
@@ -40,13 +48,15 @@ body {
 .ql-text > * {
   color: rgba(0, 0, 0, 0.87);
 
-  /* width: calc(95%); */
   max-width: 95%;
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
-  /* white-space: nowrap; */
+
   word-break: break-all;
   display: inline-block;
+}
+.ql-toolbar button {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  font-size: 2rem !important;
 }
 .payment_btn {
   width: 100%;

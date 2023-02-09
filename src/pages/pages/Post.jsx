@@ -15,19 +15,13 @@ import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
 import NotificationModal from "components/modals/NotificationModal";
 
-import {
-  useGetAPostQuery,
-  useLikeAndUnlikePostMutation,
-  useGetLikesQuery,
-  useGetViewsQuery,
-} from "redux/slices/postSlice";
+import { useGetAPostQuery, useGetViewsQuery } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
-import { useUserProfileQuery } from "redux/slices/authSlice";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -60,14 +54,14 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontWeight: 400,
 }));
 export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
-  console.log(data);
-  const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
-  const [likePost] = useLikeAndUnlikePostMutation();
+  // console.log(data);
+  // const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
+  // const [likePost] = useLikeAndUnlikePostMutation();
   const [open, setOpen] = useState(false);
-  const { data: numberOfLikes } = useGetLikesQuery({
-    type: "posts",
-    parentId: data?.id,
-  });
+  // const { data: numberOfLikes } = useGetLikesQuery({
+  //   type: "posts",
+  //   parentId: data?.id,
+  // });
 
   // const handleLikePost = async () => {
   //   const { data: dt } = await likePost({
@@ -80,7 +74,7 @@ export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
   const [quote, { isLoading }] = usePostCommentMutation();
 
   const handleSubmit = async (values) => {
-    const { data: dt, error } = await quote({
+    await quote({
       parent_type: "comments",
       parent_id: data?.id,
       comment: values.comment,

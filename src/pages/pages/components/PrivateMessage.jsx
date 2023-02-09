@@ -1,8 +1,4 @@
-import PropTypes from "prop-types";
-import { ReplyAllOutlined } from "@mui/icons-material";
 import { Avatar, Grid, IconButton, Typography, Checkbox } from "@mui/material";
-import DeleteIcon from "assets/svgs/DeleteIcon";
-import { Link } from "react-router-dom";
 import Dots from "assets/svgs/Dots";
 import { Details } from "../Post";
 import Reply from "assets/svgs/Reply";

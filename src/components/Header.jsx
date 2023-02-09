@@ -19,7 +19,6 @@ import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import Modals from "./Modal";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
 import { ArrowDropDown, SearchOutlined } from "@mui/icons-material";

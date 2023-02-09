@@ -1,9 +1,7 @@
 import {
-  ArrowBackOutlined,
   FavoriteBorderOutlined,
   Favorite,
   IosShareOutlined,
-  Instagram,
   ReplyOutlined,
   ReportOutlined,
 } from "@mui/icons-material";
@@ -22,34 +20,20 @@ import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import FormikControl from "validation/FormikControl";
-import UserProfile from "./UserProfile";
+
 import images from "assets";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
-import OtherConversation from "./components/OtherConversation";
-import NotificationModal from "components/modals/NotificationModal";
-import Facebook from "assets/svgs/FacebookIcon";
-import Messenger from "assets/svgs/Messenger";
-import Twitter from "assets/svgs/Twitter";
-import WhatsApp from "assets/svgs/WhatsApp";
-import Copy from "assets/svgs/Copy";
-import Save from "assets/svgs/Save";
-import Share from "assets/svgs/Share";
-import Mail from "assets/svgs/Mail";
+
 import {
-  useGetAPostQuery,
-  useDeleteAPostMutation,
   useLikeAndUnlikePostMutation,
-  useGetLikesQuery,
   useGetViewsQuery,
 } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";
-import { Comment } from "./components/PostComment";
-import SocialMedia from "components/modals/SocialMedia";
+
 import {
   useGetAnnoucementQuery,
   useGetAnnoucementsQuery,
@@ -61,29 +45,6 @@ import {
   useUserProfileQuery,
 } from "redux/slices/authSlice";
 import SingleComment from "./components/SingleComment";
-
-const socialItems = [
-  {
-    link: "",
-    Icon: Facebook,
-  },
-  {
-    link: "",
-    Icon: Instagram,
-  },
-  {
-    link: "",
-    Icon: Twitter,
-  },
-  {
-    link: "",
-    Icon: WhatsApp,
-  },
-  {
-    link: "",
-    Icon: Messenger,
-  },
-];
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -150,17 +111,16 @@ const Details = ({ handleShare, data }) => {
 const SingleAnnoucement = () => {
   const { id } = useParams();
 
-  const [state, setState] = useState(true);
   const { data, isLoading, error } = useGetAnnoucementQuery({ id });
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
   });
-  console.log(data);
+
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-  const [page, setPage] = useState(0);
+  const [page] = useState(0);
   const { data: annoucements, isLoading: annoucementLoading } =
     useGetAnnoucementsQuery({ page });
-  console.log(annoucements);
+
   const [followOrUnfollow] = useFollowUserMutation();
   const { data: views } = useGetViewsQuery({
     type: "announcements",
@@ -363,7 +323,11 @@ const SingleAnnoucement = () => {
           item
           md={10}
           xs={12}
-          sx={{ p: 4, background: "#fff", borderRadius: "2rem 2rem 0 0" }}
+          sx={{
+            p: { md: 4, xs: 2 },
+            background: "#fff",
+            borderRadius: "2rem 2rem 0 0",
+          }}
         >
           <Grid container item flexDirection="column" gap={3}>
             <Grid item container>
@@ -591,14 +555,7 @@ const SingleAnnoucement = () => {
                 {annoucements?.announcements
                   ?.slice(0, 5)
                   ?.map((item, index) => {
-                    const {
-                      payment,
-
-                      approved,
-                      media,
-
-                      body,
-                    } = item;
+                    const { media, body } = item;
                     return (
                       <Grid
                         item
@@ -607,12 +564,6 @@ const SingleAnnoucement = () => {
                         flexWrap="nowrap"
                         sx={{
                           borderRadius: "1.2rem",
-                          // background:
-                          // payment?.status === "completed" && approved
-                          //   ? "#37D42A"
-                          //   : payment?.status === "completed" && !approved
-                          //   ? "#FF9B04"
-                          //   : "#FF9B04",
                         }}
                       >
                         <Grid

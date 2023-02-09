@@ -110,9 +110,9 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      providesTags: ["user"],
-      // transformResponse: (response) => response.body.settings,
-      // transformErrorResponse: (error) => error.message,
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.message,
     }),
     blockUser: builder.mutation({
       query: (body) => ({

@@ -1,4 +1,4 @@
-import { Typography, Grid, Button, Checkbox } from "@mui/material";
+import { Typography, Grid, Button, Skeleton } from "@mui/material";
 import { CustomButton } from "components";
 import Editor from "components/Quil";
 import NotificationModal from "components/modals/NotificationModal";
@@ -25,6 +25,7 @@ const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
   category: Yup.string("Enter Category").required("Required"),
   text: Yup.string("Enter Category").required("Required"),
+  // acceptTerm: Yup.boolean(),
 });
 const annoucementValidation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
@@ -79,17 +80,19 @@ const CreatePost = ({
     }
   };
   const [categories, setCategories] = useState([]);
-  const { data: dt } = useGetCategoriesQuery();
+  const { data: dt, isLoading: categoryLoading } = useGetCategoriesQuery();
   useEffect(() => {
-    const cats = dt?.map((category) => {
-      return {
-        label: category.name,
-        value: category.slug,
-      };
-    });
-    setCategories(cats);
+    if (dt) {
+      const cats = dt?.map((category) => {
+        return {
+          label: category.name,
+          value: category.slug,
+        };
+      });
+      setCategories(cats);
+    }
   }, [dt]);
-  console.log(dt);
+  // if (categoryLoading) return <Skeleton />;
   const handleCreateAnnoucement = async (values, onSubmitProps) => {
     const { title, text, duration, post_id } = values;
     if (post_id) {
@@ -173,6 +176,7 @@ const CreatePost = ({
     category: admin && type === "trending" ? "trending" : "",
     text: "",
     post_id: "",
+    acceptTerm: false,
   };
   return (
     <>
@@ -230,6 +234,7 @@ const CreatePost = ({
             }
           >
             {({ initialValues, isSubmitting, values }) => {
+              console.log(values);
               return (
                 <Form style={{ width: "100%" }}>
                   <Grid
@@ -269,13 +274,17 @@ const CreatePost = ({
                           defaultValue={
                             admin && type === "trending" && "trending"
                           }
-                          options={[
-                            ...categories,
-                            admin && {
-                              label: "Trending",
-                              value: "trending",
-                            },
-                          ]}
+                          options={
+                            categoryLoading
+                              ? [{ label: "Loading", value: "" }]
+                              : [
+                                  ...categories,
+                                  admin && {
+                                    label: "Trending",
+                                    value: "trending",
+                                  },
+                                ]
+                          }
                         />
                       )}
                     </Grid>
@@ -298,14 +307,13 @@ const CreatePost = ({
                       Please be mindful Ceetok Content Policy and practice good
                       communication
                     </Typography>
-                    <Grid
-                      item
-                      container
-                      gap={2}
-                      flexWrap="nowrap"
-                      alignItems="center"
-                    >
-                      <Checkbox
+                    <Grid item container>
+                      <FormikControl
+                        control="checkbox"
+                        name="acceptTerm"
+                        label=" Get reply, likes, tag, follow and comments notification"
+                      />
+                      {/* <Checkbox
                         defaultChecked
                         // fontSize="6rem"
                         sx={{
@@ -314,16 +322,14 @@ const CreatePost = ({
                             color: "#37D42A",
                           },
                         }}
-                      />
-                      <Typography
+                      /> */}
+                      {/* <Typography
                         fontSize={{
                           md: "1.3rem",
                           xs: ".9rem",
                           fontWeight: 500,
                         }}
-                      >
-                        Get reply, likes, tag, follow and comments notification
-                      </Typography>
+                      ></Typography> */}
                     </Grid>
                     <Grid
                       item

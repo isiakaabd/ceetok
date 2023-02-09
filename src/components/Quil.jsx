@@ -1,65 +1,82 @@
 import { useEffect } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography, Icon } from "@mui/material";
 import { useQuill } from "react-quilljs";
 import hljs from "highlight.js";
-import "quill/dist/quill.snow.css"; // Add css for snow theme
-// or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
+import javascript from "highlight.js/lib/languages/javascript";
+
+import BlotFormatter from "quill-blot-formatter";
+import { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+// import "highlight.js/styles/tomorrow-night.css";
 import { useFormikContext } from "formik/dist";
 import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { AddPhotoAlternate } from "@mui/icons-material";
+Quill.register(BlotFormatter, true);
+
+hljs.registerLanguage("javascript", javascript);
 const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
-  hljs.configure({
-    languages: ["javascript", "ruby", "python", "rust"],
-  });
   const modules = {
+    toolbar: [
+      ["bold", "italic", "underline", "blockquote"],
+      [{ align: [] }, { indent: "-1" }, { indent: "+1" }],
+
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { header: [1, 2, 3, 4, 5, 6, false] },
+      ],
+
+      ["link", "image", "video"],
+      ["align", "strike", { script: "sub" }, { script: "super" }],
+      [
+        { color: ["#37D42A", "#fff", "#f00"] },
+        { background: [] },
+        { font: [] },
+      ],
+      ["code-block"],
+      ["clean", { direction: "rtl" }],
+      ["tweet"],
+    ],
     syntax: {
       highlight: (text) => hljs.highlightAuto(text).value,
     },
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      [{ align: [] }],
+    // handlers: {
+    //   tweet: () => {
+    //     console.log("customControl was clicked");
+    //   },
+    // },
+    // fontsize: {
+    //   whitelist: [10, 12, 14, 16, 18, 20, 22, 24, 36],
+    // },
 
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["link", "image", "video", "code-block", "script"],
-      ["script", "underline", "align"],
-      [{ color: ["#37D42A", "#fff", "#f00"] }, { background: [] }],
-
-      ["clean"],
-      ["code-block"],
-    ],
-    clipboard: {
-      matchVisual: false,
-    },
+    // blotFormatter: {},
   };
 
-  const formats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "align",
-    "strike",
-    "script",
-    "blockquote",
-    "background",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "color",
-    "code-block",
-  ];
   const { quill, quillRef } = useQuill({
     theme,
-    ...formats,
+    // formats
+    formats: [
+      "bold",
+      "italic",
+      "blockquote",
+      "code-block",
+      "font",
+      "tweet",
+      "underline",
+      "background",
+      "color",
+      "script",
+      "strike",
+      "sub",
+      "align",
+      "header",
+      "strike",
+      "super",
+      "label",
+    ],
     modules,
     placeholder,
   });
@@ -136,9 +153,12 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     if (quill) {
       // Add custom handler for Image Upload
       quill.getModule("toolbar").addHandler("image", selectLocalImage);
-      // quill.getModule("toolbar").addHandler("container", "#toolbar");
     }
+
+    //eslint-disable-next-line
   }, [quill]);
+  // quill.getModule("toolbar").addHandler("tweet", () => console.log(!24));
+
   return (
     <>
       <Grid

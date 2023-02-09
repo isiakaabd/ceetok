@@ -3,7 +3,11 @@ import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
-import { useGetUserSettingsQuery } from "redux/slices/authSlice";
+import {
+  useGetUserSettingsQuery,
+  useUpdateUserSettingsMutation,
+} from "redux/slices/authSlice";
+import { toast } from "react-toastify";
 const Privacy = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
     <Typography {...rest}>{text}</Typography>
@@ -14,22 +18,100 @@ const Privacy = (props) => {
     // textAlign: "center",
   }));
   const { data: user, isLoading: loading } = useGetUserSettingsQuery();
+  const [updateProfile, { isLoading }] = useUpdateUserSettingsMutation();
 
   if (loading) return <Skeleton />;
+  console.log(user);
+  const {
+    subscriber_request,
+    allow_to_view_photos,
+    allow_to_view_activities,
+    allow_to_view_avatar,
+    allow_to_view_videos,
+    allow_to_view_contact,
+  } = user;
+
+  const handleSubmit = async (values) => {
+    console.log(values);
+    const {
+      subscriber_request,
+      photos,
+      activities,
+      avatar,
+      videos,
+      contactInfo,
+    } = values;
+    const getValue = (val) => {
+      return val ? "1" : "0";
+    };
+    const allow_to_view_photos_value = {
+      name: "allow_to_view_photos",
+      type: "string",
+      value: photos,
+    };
+    const subscriber_request_value = {
+      name: "subscriber_request",
+      type: "boolean",
+      value: getValue(subscriber_request),
+    };
+    const allow_to_view_activities_value = {
+      name: "allow_to_view_activities",
+      type: "string",
+      value: activities,
+    };
+    const allow_to_view_avatar_value = {
+      name: "allow_to_view_avatar",
+      type: "string",
+      value: avatar,
+    };
+    const allow_to_view_videos_value = {
+      name: "allow_to_view_videos",
+      type: "string",
+      value: videos,
+    };
+    const allow_to_view_contact_value = {
+      name: "allow_to_view_contact",
+      type: "string",
+      value: contactInfo,
+    };
+    const { data, error } = await updateProfile({
+      settings: [
+        allow_to_view_photos_value,
+        allow_to_view_contact_value,
+        allow_to_view_videos_value,
+        subscriber_request_value,
+        allow_to_view_avatar_value,
+        allow_to_view_activities_value,
+      ],
+    });
+    if (data) toast.success(data);
+    if (error) toast.error(error);
+  };
   return (
     <Grid item container>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
+          onSubmit={handleSubmit}
           initialValues={{
-            subscriberRequest: user[8]?.value || "",
-            contactInfo: user[9]?.value,
-            avatar: user[10]?.value,
-            activities: user[11]?.value,
-            photos: user[12]?.value,
-            videos: user[13]?.value,
+            subscriberRequest: Boolean(Number(subscriber_request?.value)),
+            contactInfo: allow_to_view_contact?.value,
+            avatar: allow_to_view_avatar?.value,
+            activities: allow_to_view_activities?.value,
+            photos: allow_to_view_photos?.value,
+            videos: allow_to_view_videos?.value,
           }}
+          enableReinitialize
         >
-          {({ values }) => {
+          {({
+            values: {
+              photos,
+              videos,
+              avatar,
+              activities,
+              contactInfo,
+              subscriberRequest,
+            },
+          }) => {
             return (
               <Form style={{ width: "100%" }}>
                 <Grid item container gap={2} sx={{ p: { md: 3, xs: 1 } }}>
@@ -44,9 +126,7 @@ const Privacy = (props) => {
                       <Grid item container>
                         <FormikControl
                           control="switch"
-                          label={
-                            values.subscriberRequest ? "Turn Off" : "Turn On"
-                          }
+                          label={subscriberRequest ? "Turn Off" : "Turn On"}
                           name="subscriberRequest"
                         />
                       </Grid>
@@ -89,8 +169,12 @@ const Privacy = (props) => {
                                     { label: "No One", value: "none" },
 
                                     {
-                                      label: user[9]?.value,
-                                      value: user[9]?.value,
+                                      label: contactInfo,
+                                      value: contactInfo,
+                                    },
+                                    {
+                                      label: "everyone",
+                                      value: "everyone",
                                     },
                                   ]}
                                   control="select"
@@ -114,8 +198,12 @@ const Privacy = (props) => {
                                     { label: "No One", value: "none" },
 
                                     {
-                                      label: user[10]?.value,
-                                      value: user[10]?.value,
+                                      label: avatar,
+                                      value: avatar,
+                                    },
+                                    {
+                                      label: "everyone",
+                                      value: "everyone",
                                     },
                                   ]}
                                   control="select"
@@ -139,8 +227,12 @@ const Privacy = (props) => {
                                     { label: "No One", value: "none" },
 
                                     {
-                                      label: user[11]?.value,
-                                      value: user[11]?.value,
+                                      label: activities,
+                                      value: activities,
+                                    },
+                                    {
+                                      label: "everyone",
+                                      value: "everyone",
                                     },
                                   ]}
                                   control="select"
@@ -229,8 +321,12 @@ const Privacy = (props) => {
                                     { label: "No One", value: "none" },
 
                                     {
-                                      label: user[12]?.value,
-                                      value: user[12]?.value,
+                                      label: photos,
+                                      value: photos,
+                                    },
+                                    {
+                                      label: "everyone",
+                                      value: "everyone",
                                     },
                                   ]}
                                   control="select"
@@ -253,8 +349,12 @@ const Privacy = (props) => {
                                     { label: "No One", value: "none" },
 
                                     {
-                                      label: user[13]?.value,
-                                      value: user[13]?.value,
+                                      label: videos,
+                                      value: videos,
+                                    },
+                                    {
+                                      label: "everyone",
+                                      value: "everyone",
                                     },
                                   ]}
                                   control="select"
@@ -273,7 +373,11 @@ const Privacy = (props) => {
                     gap={2}
                     justifyContent={{ md: "flex-start", xs: "space-between" }}
                   >
-                    <CustomButton title={"Save"} />
+                    <CustomButton
+                      title={"Save"}
+                      type="submit"
+                      isSubmitting={isLoading}
+                    />
                     <Button
                       variant="outlined"
                       sx={{

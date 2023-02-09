@@ -20,7 +20,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
@@ -233,8 +233,7 @@ function Single({ comments }) {
 
   const handleSubmit = async (values) => {
     const { comment } = values;
-
-    const data = await updateComment({
+    await updateComment({
       id,
       comment,
     });

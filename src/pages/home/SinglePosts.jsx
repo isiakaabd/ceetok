@@ -10,7 +10,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getDate, getImage, getTime } from "helpers";
 import { useGetViewsQuery } from "redux/slices/postSlice";
 import { useSelector } from "react-redux";

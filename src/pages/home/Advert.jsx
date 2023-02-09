@@ -34,7 +34,7 @@ const Advert = () => {
           <Typography sx={{ fontSize: "2rem" }}>Create Advert</Typography>
         </Link>
       </Grid>
-      {allAds.ads?.length > 0 ? (
+      {allAds?.ads?.length > 0 ? (
         <Grid
           item
           container

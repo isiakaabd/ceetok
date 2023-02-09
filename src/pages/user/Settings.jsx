@@ -1,5 +1,3 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Grid, IconButton, Typography } from "@mui/material";
 import ArrowBack from "assets/svgs/ArrowBack";
 import SettingsTab from "pages/pages/components/SettingsTab";

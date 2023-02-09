@@ -70,6 +70,7 @@ export const {
   usePostCommentMutation,
   useDeleteCommentMutation,
   useEditCommentMutation,
+  useLazyGetPostCommentsQuery,
   useUpdateCommentMutation,
   useGetSingleCommentQuery,
 } = commentSlice;

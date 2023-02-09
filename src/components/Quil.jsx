@@ -164,7 +164,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
         sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
         flexDirection="column"
       >
-        <Grid ref={quillRef} />
+        <Grid ref={quillRef} onClick={(e) => e.stopPropagation()} />
 
         <Typography
           color="#9B9A9A"

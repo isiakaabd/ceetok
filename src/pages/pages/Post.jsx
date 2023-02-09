@@ -4,6 +4,9 @@ import {
   Favorite,
   IosShareOutlined,
   ChatBubbleOutline,
+  FormatQuoteOutlined,
+  RequestQuote,
+  StarRate,
 } from "@mui/icons-material";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -22,6 +25,7 @@ import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
+import Quotes from "assets/svgs/Quote";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -53,7 +57,13 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "2rem", xs: "1.rem" },
   fontWeight: 400,
 }));
-export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
+export const Details = ({
+  type,
+  data,
+  setOpenComment,
+  setState,
+  handleLikePost,
+}) => {
   // console.log(data);
   // const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
   // const [likePost] = useLikeAndUnlikePostMutation();
@@ -84,6 +94,7 @@ export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
   const validationSchema = Yup.object({
     comment: Yup.string("Enter Comment").required("Required"),
   });
+
   return (
     <>
       <Grid item container justifyContent="space-between" flexWrap="nowrap">
@@ -97,7 +108,13 @@ export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
           <StyledButton
             text={data?.comments_count}
             // {...de}
-            onClick={type === "comments" ? () => setOpen(true) : null}
+            onClick={() =>
+              type === "comments"
+                ? setOpen(true)
+                : type === "posts"
+                ? setState(true)
+                : null
+            }
             Icon={<ChatBubbleOutline />}
           />
 
@@ -114,6 +131,11 @@ export const Details = ({ type, data, setOpenComment, handleLikePost }) => {
             text={data?.likes_count}
           />
 
+          <StyledButton
+            onClick={() => (type === "posts" ? setState(false) : null)}
+            Icon={<Quotes />}
+            text={data?.quotes_count}
+          />
           <StyledButton Icon={<IosShareOutlined />} />
         </Grid>
       </Grid>

@@ -35,7 +35,10 @@ import {
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
-import { useGetPostCommentsQuery } from "redux/slices/commentSlice";
+import {
+  useGetPostCommentsQuery,
+  useLazyGetPostCommentsQuery,
+} from "redux/slices/commentSlice";
 import { Details } from "../Post";
 import {
   useUserProfileQuery,
@@ -46,6 +49,7 @@ import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
+import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
 export const Comment = ({ handleShare, data }) => {
   const { id, category, user_id, body, media } = data;
   const navigate = useNavigate();
@@ -114,10 +118,32 @@ export const Comment = ({ handleShare, data }) => {
     prevOpen.current = open;
   }, [open]);
 
-  const { data: comments } = useGetPostCommentsQuery({
-    parentId: id,
-    limit: 5,
-  });
+  const [fetchPosts, { data: comments }] = useLazyGetPostCommentsQuery();
+  const [fetchQuotes, { data: quotes }] = useLazyGetPostQuotesQuery();
+  console.log(quotes);
+  const [state, setState] = useState(true);
+  useEffect(() => {
+    if (state) {
+      fetchPosts({
+        parentId: id,
+        limit: 5,
+      });
+    }
+    //eslint-disable-next-line
+  }, [state, id]);
+  useEffect(() => {
+    if (!state) {
+      fetchQuotes({
+        parentId: id,
+        limit: 5,
+      });
+    }
+    //eslint-disable-next-line
+  }, [state, id]);
+  // const { data: comments } = useGetPostCommentsQuery({
+  //   parentId: id,
+  //   limit: 5,
+  // });
   const icons = [
     {
       title: "Reply",
@@ -170,6 +196,7 @@ export const Comment = ({ handleShare, data }) => {
 
     // setLikeState(!likeState);
   };
+
   return (
     <>
       <Grid
@@ -308,7 +335,7 @@ export const Comment = ({ handleShare, data }) => {
               fontWeight: 400,
               fontSize: { md: "2rem", sm: "1rem" },
               textAlign: "justify",
-              pl: 3,
+              // pl: 3,
             }}
           >
             {parse(body)}
@@ -319,49 +346,95 @@ export const Comment = ({ handleShare, data }) => {
             handleShare={handleShare}
             icons={icons}
             data={data}
+            type="posts"
+            setState={setState}
             handleLikePost={handleLikePost}
           />
         </Grid>
         <Divider flexItem sx={{ pb: 2 }} />
       </Grid>
       <Grid item md={7} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
-        <Typography
-          color="secondary"
-          sx={{ my: 1 }}
-          fontSize={{ md: "3rem", xs: "2rem" }}
-          fontWeight={700}
-        >
-          Comments
-        </Typography>
-        <Grid
-          item
-          container
-          sx={{
-            maxHeight: { xs: "70rem" },
-            overflowY: "scroll",
-            "&::-webkit-scrollbar": {
-              width: ".85rem",
-              display: "none",
-            },
-          }}
-        >
-          {comments?.length > 0 ? (
-            <List sx={{ width: "100%" }} dense>
-              {comments?.map((item) => (
-                <SingleComment
-                  icons={icons}
-                  key={item.id}
-                  item={item}
-                  profile={profile}
-                />
-              ))}
-            </List>
-          ) : (
-            <Grid item container>
-              <Typography>No comments available</Typography>
+        {state ? (
+          <Grid item container>
+            <Typography
+              color="secondary"
+              sx={{ my: 1 }}
+              fontSize={{ md: "3rem", xs: "2rem" }}
+              fontWeight={700}
+            >
+              Comments
+            </Typography>
+            <Grid
+              item
+              container
+              sx={{
+                maxHeight: { xs: "70rem" },
+                overflowY: "scroll",
+                "&::-webkit-scrollbar": {
+                  width: ".85rem",
+                  display: "none",
+                },
+              }}
+            >
+              {comments?.length > 0 ? (
+                <List sx={{ width: "100%" }} dense>
+                  {comments?.map((item) => (
+                    <SingleComment
+                      icons={icons}
+                      key={item.id}
+                      item={item}
+                      profile={profile}
+                    />
+                  ))}
+                </List>
+              ) : (
+                <Grid item container>
+                  <Typography>No comments available</Typography>
+                </Grid>
+              )}
             </Grid>
-          )}
-        </Grid>
+          </Grid>
+        ) : (
+          <Grid item container>
+            <Typography
+              color="secondary"
+              sx={{ my: 1 }}
+              fontSize={{ md: "3rem", xs: "2rem" }}
+              fontWeight={700}
+            >
+              Quotes
+            </Typography>
+            <Grid
+              item
+              container
+              sx={{
+                maxHeight: { xs: "70rem" },
+                overflowY: "scroll",
+                "&::-webkit-scrollbar": {
+                  width: ".85rem",
+                  display: "none",
+                },
+              }}
+            >
+              {quotes?.length > 0 ? (
+                <List sx={{ width: "100%" }} dense>
+                  {quotes?.map((item) => (
+                    <SingleComment
+                      icons={icons}
+                      key={item.id}
+                      item={item}
+                      profile={profile}
+                    />
+                  ))}
+                </List>
+              ) : (
+                <Grid item container>
+                  <Typography>No Quotes available</Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        )}
       </Grid>
       <Popper
         open={open}
@@ -429,34 +502,6 @@ export const Comment = ({ handleShare, data }) => {
         data={data}
         type="edit"
       />
-
-      {/* <PopOvers
-        anchorRef={anchorRefs}
-        open={openComment}
-        setOpen={setOpenComment}
-      >
-        <Grid item container flexDirection="column" sx={{ px: 1 }}>
-          <Grid item container>
-            <Formik enableReinitialize initialValues={{ comment: "" }}>
-              {({ values }) => (
-                <Form style={{ width: "100%" }}>
-                  <Grid
-                    item
-                    container
-                    alignItems="center"
-                    sx={{ mb: 1 }}
-                    flexWrap={"nowrap"}
-                  >
-                    <Grid item sx={{ mr: -1 }}>
-                      <FormikControl control="input" name="notification" />
-                    </Grid>
-                  </Grid>
-                </Form>
-              )}
-            </Formik>
-          </Grid>
-        </Grid>
-      </PopOvers> */}
     </>
   );
 };

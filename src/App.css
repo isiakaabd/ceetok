@@ -57,6 +57,12 @@ body {
 .ql-formats {
   margin-right: 5px !important;
 }
+.ql-syntax pre {
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  padding: 1rem;
+}
 .payment_btn {
   width: 100%;
   max-width: 400px;

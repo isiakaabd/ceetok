@@ -29,7 +29,6 @@ const Input = (props) => {
         <Typography
           variant="span"
           color="#9B9A9A"
-          sx={{ md: ".5rem", xs: ".2rem" }}
           fontSize={{ md: "1.2rem", xs: "1rem" }}
         >
           {helperText}

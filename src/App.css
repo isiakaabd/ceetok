@@ -41,15 +41,11 @@ body {
   color: #828484;
 }
 .ql-text {
-  /* max-height: 10rem; */
-  /* overflow: clip; */
   width: 100%;
 }
 .ql-text > * {
   color: rgba(0, 0, 0, 0.87);
-
   max-width: 95%;
-
   word-break: break-all;
   display: inline-block;
 }
@@ -57,6 +53,9 @@ body {
   width: 2.5rem !important;
   height: 2.5rem !important;
   font-size: 2rem !important;
+}
+.ql-formats {
+  margin-right: 5px !important;
 }
 .payment_btn {
   width: 100%;

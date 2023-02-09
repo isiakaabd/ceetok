@@ -13,32 +13,29 @@ import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { AddPhotoAlternate } from "@mui/icons-material";
 Quill.register(BlotFormatter, true);
 
 hljs.registerLanguage("javascript", javascript);
 const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   const modules = {
     toolbar: [
-      ["bold", "italic", "underline", "blockquote"],
+      ["bold", "italic", "underline"],
       [{ align: [] }, { indent: "-1" }, { indent: "+1" }],
 
       [
+        "blockquote",
         { list: "ordered" },
         { list: "bullet" },
-        { header: [1, 2, 3, 4, 5, 6, false] },
-      ],
-
-      ["link", "image", "video"],
-      ["align", "strike", { script: "sub" }, { script: "super" }],
-      [
-        { color: ["#37D42A", "#fff", "#f00"] },
-        { background: [] },
-        { font: [] },
+        // { header: [1, 2, 3, 4, 5, 6, false] },
       ],
       ["code-block"],
-      ["clean", { direction: "rtl" }],
-      ["tweet"],
+      [{ direction: "rtl" }],
+
+      ["align", "strike", { script: "sub" }, { script: "super" }],
+      ["link", "image", "video"],
+      [{ color: ["#37D42A", "#fff", "#f00"] }, { background: [] }],
+      [{ font: [] }]["clean"],
+      // ["tweet"],
     ],
     syntax: {
       highlight: (text) => hljs.highlightAuto(text).value,

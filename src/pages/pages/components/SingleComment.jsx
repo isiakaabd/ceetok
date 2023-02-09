@@ -88,7 +88,7 @@ const SingleComment = ({ item, icons, profile }) => {
         color: "text.primary",
       }}
     >
-      <ListItemButton component="div">
+      <ListItemButton component="div" disableGutters dense>
         <div style={{ width: "100%", display: "flex" }}>
           <Image person={item} />
           <Text item={item} profile={profile} icons={icons} />{" "}

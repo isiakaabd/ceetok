@@ -574,7 +574,7 @@ function CreateQuoteModal({
           variant="h3"
           sx={{ width: "100%", textAlign: "center" }}
         >
-          {`${type === "edit" ? "Edit" : "Create"} Quote`}`
+          {`${type === "edit" ? "Edit" : "Create"} Quote`}
         </Typography>
         <ListItem
           disableRipple

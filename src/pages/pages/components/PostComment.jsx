@@ -35,10 +35,7 @@ import {
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
-import {
-  useGetPostCommentsQuery,
-  useLazyGetPostCommentsQuery,
-} from "redux/slices/commentSlice";
+import { useLazyGetPostCommentsQuery } from "redux/slices/commentSlice";
 import { Details } from "../Post";
 import {
   useUserProfileQuery,
@@ -50,8 +47,9 @@ import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
 import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
-export const Comment = ({ handleShare, data }) => {
+export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
+  console.log(body);
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
   const admin = useSelector((state) => state.auth.admin);
@@ -120,8 +118,8 @@ export const Comment = ({ handleShare, data }) => {
 
   const [fetchPosts, { data: comments }] = useLazyGetPostCommentsQuery();
   const [fetchQuotes, { data: quotes }] = useLazyGetPostQuotesQuery();
-  console.log(quotes);
-  const [state, setState] = useState(true);
+
+  // const [state, setState] = useState(true);
   useEffect(() => {
     if (state) {
       fetchPosts({
@@ -170,6 +168,7 @@ export const Comment = ({ handleShare, data }) => {
   if (isLoading) return <Skeleton />;
   const { interests } = profile;
   const check = interests?.includes(category?.toLowerCase());
+
   const checkUser = profile?.id === user_id;
 
   async function handleCheck() {
@@ -424,6 +423,7 @@ export const Comment = ({ handleShare, data }) => {
                       key={item.id}
                       item={item}
                       profile={profile}
+                      type="quote"
                     />
                   ))}
                 </List>

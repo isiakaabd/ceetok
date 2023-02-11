@@ -86,7 +86,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontWeight: 600,
 }));
 
-const SingleComment = ({ item, icons, profile }) => {
+const SingleComment = ({ item, icons, profile, type }) => {
   // const navigate = useNavigate();
   return (
     <>
@@ -115,7 +115,12 @@ const SingleComment = ({ item, icons, profile }) => {
         >
           <div style={{ width: "100%", display: "flex" }}>
             <Image person={item} />
-            <Text item={item} profile={profile} icons={icons} />{" "}
+            <Text
+              item={item}
+              profile={profile}
+              icons={icons}
+              type={type}
+            />{" "}
           </div>
         </ListItemButton>
       </ListItem>
@@ -145,17 +150,19 @@ export function Image({ person: { user } }) {
   );
 }
 
-export function Text({ item, profile, displayDetail }) {
+export function Text({ item, profile, displayDetail, type }) {
   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
     item;
+
   const { full_name } = user;
 
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
   const handleCloses = (e) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     setAnchorEl(null);
   };
 
@@ -164,13 +171,19 @@ export function Text({ item, profile, displayDetail }) {
     e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
-  const check = profile?.id === user_id;
+  const check = profile?.id !== user_id;
 
   const handleDeleteComment = async (e) => {
+    if (type === "quote") {
+      const { data, error } = await deleteQuote({ id });
+      if (data) toast.success("comment deleted successfully");
+      if (error) toast.error(error);
+    } else {
+      const { data, error } = await deleteComment({ id });
+      if (data) toast.success("comment deleted successfully");
+      if (error) toast.error(error);
+    }
     e.stopPropagation();
-    const { data, error } = await deleteComment({ id });
-    if (data) toast.success("comment deleted successfully");
-    if (error) toast.error(error);
 
     handleCloses(e);
   };
@@ -290,7 +303,7 @@ export function Text({ item, profile, displayDetail }) {
                         </ListItemIcon>
 
                         <ListItemText sx={{ fontSize: "3rem" }}>
-                          {isLoading ? "Deleting" : "Delete"}
+                          {isLoading || deleting ? "Deleting" : "Delete"}
                         </ListItemText>
                       </MenuItem>
                     )}
@@ -372,9 +385,9 @@ export function Text({ item, profile, displayDetail }) {
       <EditModal
         item={item}
         open={open}
-        handleClose={(e) => {
-          e.stopPropagation();
-          handleCloses(e);
+        type={type}
+        handleClose={() => {
+          handleCloses();
           setOpen(false);
         }}
       />
@@ -386,7 +399,6 @@ Text.defaultProps = {
 };
 function Detail({ item }) {
   const { id, recent_quotes, user, quotes_count, likes_count } = item;
-  console.log(item);
 
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
@@ -528,9 +540,10 @@ function CreateQuoteModal({
   const validationSchema = Yup.object({
     text: Yup.string("Enter Quote").required("Required"),
   });
+
   const [createQuote] = useCreateQuoteMutation();
   const [editQuote] = useEditQuoteMutation();
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const { data, error } = await createQuote({
       body: values.text,
       parent_id: id,
@@ -538,9 +551,11 @@ function CreateQuoteModal({
     });
     if (data) toast.success(data);
     if (error) toast.error(error);
+
+    setTimeout(() => resetForm(), 2000);
     setTimeout(() => handleClose(), 3000);
   };
-  const handleEdit = async (values) => {
+  const handleEdit = async (values, { resetForm }) => {
     const { data, error } = await editQuote({
       body: values.text,
       id,
@@ -628,7 +643,7 @@ function TextQuote({ item, profile }) {
   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
     item;
   const { full_name } = user;
-  console.log(item);
+
   const [deleteQuote, { isLoading }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [anchorEl, setAnchorEl] = useState(null);

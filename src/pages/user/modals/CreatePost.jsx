@@ -234,7 +234,6 @@ const CreatePost = ({
             }
           >
             {({ initialValues, isSubmitting, values }) => {
-              console.log(values);
               return (
                 <Form style={{ width: "100%" }}>
                   <Grid

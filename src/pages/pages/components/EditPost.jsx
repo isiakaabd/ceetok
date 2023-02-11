@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, ListItemAvatar, Typography } from "@mui/material";
 
 import { toast } from "react-toastify";
 import {
@@ -10,18 +10,32 @@ import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
+import { useEditQuoteMutation } from "redux/slices/quoteSlice";
 
-export default function EditModal({ open, item, handleClose }) {
-  const [editComment, { isLoading: loading }] = useEditCommentMutation();
+export default function EditModal({ open, item, handleClose, type }) {
+  const [editComment] = useEditCommentMutation();
+  const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values) => {
+    const { id } = item;
     const { edit } = values;
-    const { data, error } = await editComment({
-      comment: edit,
-      id: item?.id,
-    });
-    setTimeout(() => handleClose(), 500);
-    if (data) toast.success(data);
-    if (error) toast.error(error);
+
+    if (type === "quote") {
+      const { data, error } = await editQuote({
+        body: edit,
+        id,
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+      setTimeout(() => handleClose(), 3000);
+    } else {
+      const { data, error } = await editComment({
+        comment: edit,
+        id: item?.id,
+      });
+      setTimeout(() => handleClose(), 500);
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+    }
   };
   return (
     <NotificationModal isOpen={open} handleClose={handleClose}>
@@ -37,7 +51,7 @@ export default function EditModal({ open, item, handleClose }) {
           enableReinitialize
           initialValues={{ edit: item?.comment }}
         >
-          {({ initialValues }) => {
+          {({ initialValues, isSubmitting }) => {
             return (
               <Form>
                 <Grid item container flexDirection={"column"} gap={2}>
@@ -47,7 +61,7 @@ export default function EditModal({ open, item, handleClose }) {
                   <CustomButton
                     title={"Edit Post"}
                     type="submit"
-                    isSubmitting={loading}
+                    isSubmitting={isSubmitting}
                   />
                 </Grid>
               </Form>

@@ -12,7 +12,7 @@ import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
@@ -26,6 +26,7 @@ import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
 import Quotes from "assets/svgs/Quote";
+import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -92,7 +93,7 @@ export const Details = ({
   };
 
   const validationSchema = Yup.object({
-    comment: Yup.string("Enter Comment").required("Required"),
+    comment: Yup.string("Enter Comment").trim().required("Required"),
   });
 
   return (
@@ -165,37 +166,55 @@ export const Details = ({
 const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
+
   const { data, isLoading, error } = useGetAPostQuery(postId);
 
   const validationSchema = Yup.object({
-    comment: Yup.string().required("Enter your Comment"),
+    comment: Yup.string().trim().required("Enter your Comment"),
   });
 
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
+  const [createQuote] = useCreateQuoteMutation();
+  const navigate = useNavigate();
   const { data: views } = useGetViewsQuery({
     type: "posts",
     parentId: data?.id,
   });
 
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [changeCommentState, setChangeCommentState] = useState(false);
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
     const { id } = data;
-    const { data: dt, error } = await postAComment({
-      parent_id: id,
-      parent_type: "posts",
-      comment: values.comment,
-    });
-    if (dt) {
-      toast.success(dt);
-      // quill.setContents([{ insert: "\n" }]);
-      onSubmitProps.resetForm();
-    }
-    if (error) {
-      toast.error("something went wrong, try again...");
+    if (changeCommentState) {
+      const { data: dt, error } = await postAComment({
+        parent_id: id,
+        parent_type: "posts",
+        comment: values.comment,
+      });
+      if (dt) {
+        toast.success(dt);
+        // quill.setContents([{ insert: "\n" }]);
+        onSubmitProps.resetForm();
+      }
+      if (error) {
+        toast.error("something went wrong, try again...");
+      }
+    } else {
+      const { data, error } = await createQuote({
+        body: values.comment,
+        parent_id: id,
+        parent_type: "posts",
+      });
+      if (data) {
+        toast.success(data);
+        onSubmitProps.resetForm();
+      }
+      if (error) toast.error(error);
     }
   };
+
   if (isLoading)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
   if (error) return <p>Soemthing went wrong...</p>;
@@ -204,7 +223,7 @@ const Post = () => {
       <Grid item container gap={2} flexWrap="nowrap">
         <Grid item xs={1} display={{ md: "block", xs: "none" }}>
           <Grid container justifyContent="center">
-            <IconButton>
+            <IconButton onClick={() => navigate(-1)}>
               <ArrowBackOutlined
                 sx={{
                   fontSize: "3rem",
@@ -275,7 +294,12 @@ const Post = () => {
               </Button>
             </Grid>
             {state ? (
-              <Comment handleShare={handleShare} data={data} />
+              <Comment
+                handleShare={handleShare}
+                data={data}
+                state={changeCommentState}
+                setState={setChangeCommentState}
+              />
             ) : (
               <OtherConversation />
             )}

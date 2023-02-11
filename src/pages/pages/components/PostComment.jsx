@@ -49,7 +49,7 @@ import { useApprovePostMutation } from "redux/slices/adminSlice";
 import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
-  console.log(body);
+
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
   const admin = useSelector((state) => state.auth.admin);

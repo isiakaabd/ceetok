@@ -182,7 +182,7 @@ const Post = () => {
   });
 
   const [openShareModal, setOpenShareModal] = useState(false);
-  const [changeCommentState, setChangeCommentState] = useState(false);
+  const [changeCommentState, setChangeCommentState] = useState(true);
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {

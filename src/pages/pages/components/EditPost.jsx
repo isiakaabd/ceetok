@@ -44,7 +44,7 @@ export default function EditModal({ open, item, handleClose, type }) {
           sx={{ mb: 2, textAlign: "center", width: "100%" }}
           variant="h2"
         >
-          Edit Comment
+          {`Edit ${type === "quote" ? "Quote" : "Comment"}`}
         </Typography>
         <Formik
           onSubmit={handleSubmit}

@@ -282,6 +282,10 @@ const CreatePost = ({
                                     label: "Trending",
                                     value: "trending",
                                   },
+                                  admin && {
+                                    label: "Live",
+                                    value: "live",
+                                  },
                                 ]
                           }
                         />

@@ -1,30 +1,40 @@
 import {
   Button,
-  Divider,
   Grid,
   List,
+  ListItem,
   ListItemButton,
+  ListItemIcon,
+  Skeleton,
   ListItemText,
   Typography,
   useMediaQuery,
   useTheme,
+  ListItemAvatar,
+  Avatar,
 } from "@mui/material";
 import React, { useState } from "react";
 import images from "assets";
 import { CustomButton } from "components";
 import { Link } from "react-router-dom";
-import {
-  RemoveRedEyeOutlined,
-  VideoCameraBackOutlined,
-} from "@mui/icons-material";
+import { RemoveRedEyeOutlined, Star } from "@mui/icons-material";
 import Video from "assets/svgs/Video";
+import { useGetPostQuery } from "redux/slices/postSlice";
 const Live = () => {
   const theme = useTheme();
   const breakpoint = useMediaQuery(
     theme.breakpoints.down("sm", { noSsr: true })
   );
   const [state, setState] = useState(true);
+  const [page, setPage] = useState(0);
+  const {
+    data: array,
+    error,
+    isLoading,
+  } = useGetPostQuery({ offset: page, category: "live" });
 
+  console.log(array);
+  if (isLoading) return <Skeleton />;
   return (
     <Grid
       item
@@ -184,87 +194,77 @@ const Live = () => {
             </Grid>
             {/* <Divider variant="inset" /> */}
           </Grid>
-          <Grid
-            item
-            container
-            gap={3}
-            sx={{
-              maxHeight: { xs: "30rem", md: "100%" },
-              overflowY: "scroll",
-              "&::-webkit-scrollbar": {
-                width: ".85rem",
-                display: "none",
-              },
-            }}
-          >
-            {Array(5)
-              .fill(undefined)
-              .map((item, index) => (
-                <Grid
-                  item
-                  key={index}
-                  container
-                  sx={{
-                    p: 2,
-                    borderRadius: "2rem",
-                    boxShadow: "0px 8px 9px rgba(0, 0, 0, 0.15)",
-                  }}
-                >
-                  <Typography
-                    color="#5F5C5C"
-                    sx={{ py: 2, fontSize: { md: "1.9rem" } }}
-                  >
-                    23:03 &nbsp; 1&nbsp;Nov &nbsp;
-                  </Typography>
-                  <Grid item container gap={1} flexWrap="nowrap">
-                    <Grid item md={3} xs={4}>
-                      <img
-                        src={images.adeleke}
-                        alt="adeleke"
-                        style={{
-                          height: "70%",
-                          objectFit: "contain",
-                          width: "100%",
+          <Grid item container sx={{ height: "100%" }}>
+            {array?.posts?.length > 0 ? (
+              <List
+                item
+                container
+                gap={3}
+                sx={{
+                  maxHeight: { xs: "30rem", md: "100%" },
+                  overflowY: "scroll",
+                  "&::-webkit-scrollbar": {
+                    width: ".85rem",
+                    display: "none",
+                  },
+                }}
+              >
+                {array?.posts?.fill(undefined).map((item, index) => (
+                  <ListItem item key={index} container>
+                    <ListItemButton
+                      alignItems="flex-start"
+                      sx={{
+                        p: 2,
+                        borderRadius: "2rem",
+                        boxShadow: "0px 8px 9px rgba(0, 0, 0, 0.15)",
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar>H</Avatar>
+                      </ListItemAvatar>
+
+                      <ListItemText
+                        primaryTypographyProps={{
+                          color: "#464646",
+                          textAlign: "justify",
+                          fontSize: { md: "2rem", xs: "1.2rem" },
                         }}
+                        secondaryTypographyProps={{
+                          color: "#9B9A9A",
+                          fontWeight: 500,
+                          textAlign: "justify",
+                          fontSize: { md: "1.4rem", xs: "1rem" },
+                        }}
+                        primary="David Ifeanyi Adeleke is confirmed dead after
+                            drowing in a swimming pool"
+                        secondary="  Tortor, lobortis semper viverra ac, molestie tortor
+                            laoreet amet euismod et diam quis aliquam consequat
+                            porttitor integer a nisl, in faucibus nunc et aenean
+                            turpis dui dignissim nec scelerisque ullamcorper eu
+                            neque, augue quam quis lacus pretium eros est amet
+                            turpis nunc in turpis massa et Tortor, lobortis
+                            semper viverra ac, molestie tortor laoreet amet
+                            euismod et dia porttitor integer a nisl, in faucibu
+                            nec scelerisque ullamcorper eu neque, augue quam
+                            quis lacus pretium eros est a"
                       />
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Grid item container flexDirection="column">
-                        <Typography
-                          color="#464646"
-                          sx={{
-                            textAlign: "justify",
-                            paddingBlock: { md: "1.6rem", xs: ".8rem" },
-                            fontSize: { md: "2rem", xs: "1.2rem" },
-                          }}
-                        >
-                          David Ifeanyi Adeleke is confirmed dead after drowing
-                          in a swimming pool
-                        </Typography>
-                        <Typography
-                          color="#9B9A9A"
-                          fontWeight={500}
-                          sx={{
-                            textAlign: "justify",
-                            fontSize: { md: "1.4rem", xs: "1rem" },
-                          }}
-                        >
-                          Tortor, lobortis semper viverra ac, molestie tortor
-                          laoreet amet euismod et diam quis aliquam consequat
-                          porttitor integer a nisl, in faucibus nunc et aenean
-                          turpis dui dignissim nec scelerisque ullamcorper eu
-                          neque, augue quam quis lacus pretium eros est amet
-                          turpis nunc in turpis massa et Tortor, lobortis semper
-                          viverra ac, molestie tortor laoreet amet euismod et
-                          dia porttitor integer a nisl, in faucibu nec
-                          scelerisque ullamcorper eu neque, augue quam quis
-                          lacus pretium eros est a
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              ))}
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Grid
+                item
+                container
+                justifyContent="center"
+                alignItems="flex-start"
+                sx={{ mt: 4 }}
+              >
+                <Typography component="h2" variant="h2">
+                  No Post Yet
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Grid>
         <Grid
@@ -302,6 +302,7 @@ const Live = () => {
               p: 2,
               pb: 12,
               backgroundColor: "#fff",
+              listStyleType: "initial",
               maxHeight: { xs: "30rem", md: "100%" },
               overflowY: "scroll",
               "&::-webkit-scrollbar": {
@@ -313,13 +314,20 @@ const Live = () => {
             {Array(10)
               .fill(undefined)
               .map((item) => (
-                <ListItemButton>
-                  <ListItemText sx={{ width: "100%" }}>
-                    David Ifeanyi Adeleke:, molestie tortor laoreet amet euismod
-                    et diam quis aliquam consequat porttitor integer a nisl, in
-                    faucibus nunc et aenean turpis dui dignissim nec
-                  </ListItemText>
-                </ListItemButton>
+                <ListItem dense disableGutters>
+                  <ListItemButton disableRipple alignItems="flex-start">
+                    <ListItemIcon>
+                      <Star />
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ width: "100%" }}
+                      primary="
+                      David Ifeanyi Adeleke:, molestie tortor laoreet amet
+                      euismod et diam quis aliquam consequat porttitor integer a
+                      nisl, in faucibus nunc et aenean turpis dui dignissim nec"
+                    />
+                  </ListItemButton>
+                </ListItem>
               ))}
           </List>
         </Grid>

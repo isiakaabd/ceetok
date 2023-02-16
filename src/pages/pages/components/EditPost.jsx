@@ -13,7 +13,6 @@ import { CustomButton } from "components";
 import { useEditQuoteMutation } from "redux/slices/quoteSlice";
 
 export default function EditModal({ open, item, handleClose, type }) {
-  console.log(item);
   const [editComment] = useEditCommentMutation();
   const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values) => {

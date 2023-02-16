@@ -113,9 +113,8 @@ export const Details = ({
                 ? setState(true)
                 : null
             }
-            Icon={<ChatBubbleOutline />}
+            Icon={<ChatBubbleOutline sx={{ fill: state && "#0f0" }} />}
           />
-
           <StyledButton
             onClick={handleLikePost}
             color={Boolean(data?.liked) ? "#f00" : ""}
@@ -128,10 +127,9 @@ export const Details = ({
             }
             text={data?.likes_count}
           />
-
           <StyledButton
             onClick={() => (type === "posts" ? setState(false) : null)}
-            Icon={<Quotes />}
+            Icon={<Quotes style={{ color: !state ? "#0f0" : "#5F5C5C" }} />}
             text={data?.quotes_count}
             state={!state}
           />

@@ -346,6 +346,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             icons={icons}
             data={data}
             type="posts"
+            state={state}
             setState={setState}
             handleLikePost={handleLikePost}
           />

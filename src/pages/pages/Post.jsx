@@ -4,9 +4,6 @@ import {
   Favorite,
   IosShareOutlined,
   ChatBubbleOutline,
-  FormatQuoteOutlined,
-  RequestQuote,
-  StarRate,
 } from "@mui/icons-material";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -28,7 +25,7 @@ import SocialMedia from "components/modals/SocialMedia";
 import Quotes from "assets/svgs/Quote";
 import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 
-const StyledButton = styled(({ text, Icon, color, ...rest }) => (
+const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
     item
     container
@@ -37,7 +34,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
     justifyContent="center"
     {...rest}
     sx={{
-      color,
+      color: state ? "#0f0" : color,
       cursor: "pointer",
     }}
   >
@@ -48,6 +45,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
       sx={{
         fontSize: { xs: "2rem" },
         fontWeight: 600,
+        color: state ? "#0f0" : "#000",
       }}
     >
       {text}
@@ -60,14 +58,12 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 export const Details = ({
   type,
+  state,
   data,
   setOpenComment,
   setState,
   handleLikePost,
 }) => {
-  // console.log(data);
-  // const [likeState, setLikeState] = useState(data?.liked === 1 ? true : false);
-  // const [likePost] = useLikeAndUnlikePostMutation();
   const [open, setOpen] = useState(false);
   // const { data: numberOfLikes } = useGetLikesQuery({
   //   type: "posts",
@@ -109,6 +105,7 @@ export const Details = ({
           <StyledButton
             text={data?.comments_count}
             // {...de}
+            state={state}
             onClick={() =>
               type === "comments"
                 ? setOpen(true)
@@ -136,6 +133,7 @@ export const Details = ({
             onClick={() => (type === "posts" ? setState(false) : null)}
             Icon={<Quotes />}
             text={data?.quotes_count}
+            state={!state}
           />
           <StyledButton Icon={<IosShareOutlined />} />
         </Grid>

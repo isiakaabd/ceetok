@@ -157,10 +157,8 @@ function Header() {
             <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
               <Link to="/">
                 {" "}
-                {/* onClick={() => setActive(0)} */}
                 <img
                   src={images.logo}
-                  variant="square"
                   alt="logo"
                   style={{ width: "10em", objectFit: "contain" }}
                 />
@@ -172,7 +170,7 @@ function Header() {
                   display: { xs: "none", md: "flex", margin: "auto" },
                 }}
               >
-                {pages.map((page, index) => (
+                {pages.map((page) => (
                   <Link
                     to={page.path}
                     key={page.id}

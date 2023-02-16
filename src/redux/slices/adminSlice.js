@@ -51,12 +51,23 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    livePost: builder.mutation({
+      query: (body) => ({
+        url: `/admin/live`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["admin"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
 export const {
   useApprovePostMutation,
   useGetUsersQuery,
+  useLivePostMutation,
   useApproveAnnoucementMutation,
   useBanUsersMutation,
   useSendEmailMutation,

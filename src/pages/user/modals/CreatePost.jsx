@@ -20,6 +20,7 @@ import {
 } from "redux/slices/annoucementSlice";
 import PaymentModal from "components/modals/PaymentModal";
 import { useSelector } from "react-redux";
+import { useLivePostMutation } from "redux/slices/adminSlice";
 
 const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
@@ -43,6 +44,7 @@ const CreatePost = ({
   data,
 }) => {
   const [create] = useCreatePostMutation();
+  const [livePost] = useLivePostMutation();
   const admin = useSelector((state) => state.auth.admin);
   const handleCreateOpen = () => setCreateAnnoucement(true);
   const [openCreateAnnoucement, setCreateAnnoucement] = useState(false);
@@ -178,6 +180,19 @@ const CreatePost = ({
     post_id: "",
     acceptTerm: false,
   };
+  const handleCreateLivePost = async (values, { resetForm }) => {
+    const { title, text } = values;
+    const { data, error } = await livePost({
+      title,
+      body: text,
+    });
+    if (data) {
+      toast.success(data);
+      resetForm();
+      setTimeout(() => handleClose(), 3000);
+    }
+    if (error) toast.error(error);
+  };
   return (
     <>
       <NotificationModal
@@ -197,6 +212,8 @@ const CreatePost = ({
             >
               {type === "edit"
                 ? "Edit Post"
+                : type === "live"
+                ? "Live Post"
                 : postHeading
                 ? postHeading
                 : "Create Post"}
@@ -217,6 +234,8 @@ const CreatePost = ({
             onSubmit={
               type === "annoucement"
                 ? handEditAnnoucement
+                : type === "live"
+                ? handleCreateLivePost
                 : type === "edit"
                 ? handleEditPost
                 : postHeading
@@ -257,38 +276,33 @@ const CreatePost = ({
                           name="duration"
                           disabled={type === "annoucement"}
                           placeholder="Duration should be in days"
-                          // options={[
-                          //   ...categories,
-                          //   admin && {
-                          //     label: "trending",
-                          //     value: "trending",
-                          //   },
-                          // ]}
                         />
                       ) : (
-                        <FormikControl
-                          control="select"
-                          name="category"
-                          placeholder="Category"
-                          defaultValue={
-                            admin && type === "trending" && "trending"
-                          }
-                          options={
-                            categoryLoading
-                              ? [{ label: "Loading", value: "" }]
-                              : [
-                                  ...categories,
-                                  admin && {
-                                    label: "Trending",
-                                    value: "trending",
-                                  },
-                                  admin && {
-                                    label: "Live",
-                                    value: "live",
-                                  },
-                                ]
-                          }
-                        />
+                        type !== "live" && (
+                          <FormikControl
+                            control="select"
+                            name="category"
+                            placeholder="Category"
+                            defaultValue={
+                              admin && type === "trending" && "trending"
+                            }
+                            options={
+                              categoryLoading
+                                ? [{ label: "Loading", value: "" }]
+                                : [
+                                    ...categories,
+                                    admin && {
+                                      label: "Trending",
+                                      value: "trending",
+                                    },
+                                    admin && {
+                                      label: "Live",
+                                      value: "live",
+                                    },
+                                  ]
+                            }
+                          />
+                        )
                       )}
                     </Grid>
 

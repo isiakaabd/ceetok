@@ -1,11 +1,4 @@
-import {
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 
 const Privacy = () => {
   return (

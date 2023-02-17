@@ -10,7 +10,6 @@ import Profile from "pages/user/Profile";
 import Settings from "pages/user/Settings";
 import AllFriend from "pages/pages/components/AllFriend";
 import Entertainment from "pages/Entertainment";
-import CreatePost from "pages/pages/CreateAdvert";
 import CreateAnnoucement from "pages/pages/CreateAnnoucement";
 import SingleAnnoucement from "pages/pages/SingleAnnoucement";
 import ResetPassword from "components/modals/ResetPassword";

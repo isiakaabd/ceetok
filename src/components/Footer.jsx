@@ -140,6 +140,7 @@ const Footer = () => {
                 <img
                   src={icon}
                   key={index}
+                  alt="icon"
                   style={{ height: "3rem", width: "3rem" }}
                 />
               ))}

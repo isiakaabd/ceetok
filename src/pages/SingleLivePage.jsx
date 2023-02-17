@@ -2,7 +2,7 @@ import { Button, Grid, IconButton, Skeleton, Typography } from "@mui/material";
 import ArrowBack from "assets/svgs/ArrowBack";
 import { getImage, getTime } from "helpers";
 // import { Comment } from "./components/PostComment";
-import { Comment } from "pages/pages/components/PostComment";
+// import { Comment } from "pages/pages/components/PostComment";
 import parse from "html-react-parser";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -24,13 +24,13 @@ const SingleLivePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [changeCommentState, setChangeCommentState] = useState(true);
+  const [changeCommentState] = useState(true); //setChangeCommentState
   const [postAComment] = usePostCommentMutation();
   const [createQuote] = useCreateQuoteMutation();
   const { data: post, isLoading: loading } = useGetLivePostQuery(id);
-  console.log(post);
-  const [openShareModal, setOpenShareModal] = useState(false);
-  const handleShare = () => setOpenShareModal(true);
+  //   console.log(post);
+  //   const [openShareModal, setOpenShareModal] = useState(false);
+  //   const handleShare = () => setOpenShareModal(true);
   if (loading) return <Skeleton />;
 
   const handleSubmit = async (values, onSubmitProps) => {

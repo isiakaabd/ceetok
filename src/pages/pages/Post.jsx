@@ -241,7 +241,7 @@ const Post = () => {
             pb: 3,
             background: "#fff",
             borderRadius: { md: "2rem", xs: 0 },
-            // m: 2,
+
             mx: "auto",
           }}
         >

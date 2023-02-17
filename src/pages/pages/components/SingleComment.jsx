@@ -379,7 +379,9 @@ export function Text({ item, profile, displayDetail, type }) {
             <div className="ql-text">{parse(comment || body)}</div>
           </Grid>
         }
-        secondary={!displayDetail ? null : <Detail item={item} />}
+        secondary={
+          !displayDetail || type === "quote" ? null : <Detail item={item} />
+        }
       />
 
       <EditModal

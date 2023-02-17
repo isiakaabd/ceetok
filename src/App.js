@@ -25,6 +25,10 @@ import AdminRoute from "routes/AdminRoute";
 import AllUsers from "pages/admin";
 import Recent from "pages/recent";
 import New from "pages/new";
+import SingleLivePage from "pages/SingleLivePage";
+import GuideLine from "pages/GuideLine";
+import Privacy from "pages/Privacy";
+import ContactUs from "pages/ContactUs";
 
 const App = () => {
   return (
@@ -34,7 +38,11 @@ const App = () => {
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/live" element={<Live />} />
+            <Route exact path="/guideline" element={<GuideLine />} />
+            <Route exact path="/privacy" element={<Privacy />} />
+            <Route exact path="/contact-us" element={<ContactUs />} />
+            <Route exact path="/live" element={<Live />} />
+            <Route path="/live/:id" element={<SingleLivePage />} />
             <Route path="/trending" element={<Trending />} />
             <Route path="/new" element={<New />} />
             <Route path="/recent" element={<Recent />} />

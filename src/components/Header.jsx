@@ -48,7 +48,7 @@ const pages = [
   },
   {
     id: 5,
-    path: "#",
+    path: "/contact-us",
     title: "Contact Us",
   },
 ];
@@ -289,7 +289,8 @@ function Header() {
           sx={{
             flexWrap: "nowrap",
             display: { md: "none", xs: "flex" },
-            paddingInline: "1rem",
+            px: "1rem",
+            py: "2rem",
           }}
         >
           <IconButton

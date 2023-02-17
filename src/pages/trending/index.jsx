@@ -1,5 +1,4 @@
 import {
-  Button,
   Grid,
   IconButton,
   List,
@@ -7,17 +6,11 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import images from "assets";
+import { useState } from "react";
 import SinglePosts from "../home/SinglePosts";
 import Heading from "./Heading";
 import SearchComponent from "components/modals/SearchComponent";
-import {
-  AddCircleOutline,
-  MenuOutlined,
-  SettingsOutlined,
-  TuneOutlined,
-} from "@mui/icons-material";
+import { SettingsOutlined, TuneOutlined } from "@mui/icons-material";
 import { CustomButton } from "components";
 import Filters from "components/modals/Filters";
 import { useGetPostQuery } from "redux/slices/postSlice";

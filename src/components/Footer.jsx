@@ -2,15 +2,48 @@ import {
   Grid,
   List,
   ListItem,
-  Button,
+  ListItemButton,
   ListItemText,
   Typography,
 } from "@mui/material";
 import images from "assets";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const { facebook, youtube, linkedin, twitter, instagram } = images;
   const icons = [facebook, youtube, linkedin, twitter, instagram];
+  const items = [
+    {
+      name: "Terms & Condtions",
+      route: "/guideline",
+    },
+    {
+      name: "Contact Us",
+      route: "/contact-us",
+    },
+    {
+      name: "Message Moderator",
+      route: "/message-us",
+    },
+    {
+      name: "Privacy Policy",
+      route: "/privacy",
+    },
+  ];
+  const items2 = [
+    {
+      name: "Sign In",
+      route: "#",
+    },
+    {
+      name: "Login",
+      route: "#",
+    },
+    {
+      name: "Forgotten Password",
+      route: "#",
+    },
+  ];
   return (
     <Grid
       item
@@ -42,45 +75,54 @@ const Footer = () => {
           <List>
             <ListItem dense disableGutters>
               <ListItemText
-                disableTypography
-                sx={{ fontSize: "1.3rem", fontWeight: 700 }}
-              >
-                Company
-              </ListItemText>
+                primaryTypographyProps={{
+                  fontSize: "1.3rem",
+                  fontWeight: 700,
+                }}
+                primary="Company"
+              />
             </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Terms & Condtions</ListItemText>
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Contact Us</ListItemText>
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Message Moderator</ListItemText>
-            </ListItem>
+
+            {items.map((item, index) => (
+              <ListItem disableGutters disablePadding key={index}>
+                <ListItemButton
+                  disableGutters
+                  disableRipple
+                  disableTouchRipple
+                  component={Link}
+                  to={item.route}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </List>
         </Grid>
         <Grid item sx={{ flex: { md: 1, xs: 1 } }}>
           <List>
             <ListItem dense disableGutters>
               <ListItemText
-                disableTypography
-                sx={{ fontSize: "1.3rem", fontWeight: 700 }}
-              >
-                Quick Links
-              </ListItemText>
+                primaryTypographyProps={{
+                  fontSize: "1.3rem",
+                  fontWeight: 700,
+                }}
+                primary="Quick Links"
+              />
             </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Sign In</ListItemText>
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Login</ListItemText>
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Forgotten Password</ListItemText>
-            </ListItem>
-            <ListItem disableGutters>
-              <ListItemText>Forgotten Password</ListItemText>
-            </ListItem>
+
+            {items2.map((item, index) => (
+              <ListItem disableGutters disablePadding key={index}>
+                <ListItemButton
+                  disableGutters
+                  disableRipple
+                  disableTouchRipple
+                  component={Link}
+                  to={item.route}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </List>
         </Grid>
         <Grid item sx={{ flex: { md: 1.2, xs: 1 } }}>
@@ -95,15 +137,11 @@ const Footer = () => {
             </ListItem>
             <Grid item container gap={4} sx={{ mt: 4 }}>
               {icons.map((icon, index) => (
-                //   <ListItem key={index}>
-                /* <ListItemIcon> */
                 <img
                   src={icon}
                   key={index}
                   style={{ height: "3rem", width: "3rem" }}
                 />
-                // </ListItemIcon>
-                //   </ListItem>
               ))}
             </Grid>
           </List>

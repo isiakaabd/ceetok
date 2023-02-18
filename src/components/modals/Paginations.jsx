@@ -5,6 +5,7 @@ const Paginations = ({ page, setPage, count }) => {
   const handleChange = (_, value) => {
     setPage(value);
   };
+  console.log(page);
   return (
     <Pagination
       page={page}

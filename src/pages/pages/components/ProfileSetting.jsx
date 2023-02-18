@@ -76,7 +76,7 @@ const ProfileSetting = (props) => {
         >
           <Form style={{ width: "100%" }}>
             <Grid item container gap={2}>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item md={3} xs={0} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -94,7 +94,7 @@ const ProfileSetting = (props) => {
                   />
                 </Grid>
               </Grid>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item md={3} display={{ xs: "none", md: "block" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -121,18 +121,6 @@ const ProfileSetting = (props) => {
                         disabled
                         control="select"
                       />
-                      <Grid
-                        item
-                        container
-                        flexWrap="nowrap"
-                        alignItems="center"
-                      >
-                        <FormikControl
-                          control={"checkbox"}
-                          name="displayDOB"
-                          label={" Display my date of birth on my profile"}
-                        />
-                      </Grid>
                     </Grid>
                     <Grid item md={3} xs={12}>
                       <FormikControl
@@ -163,9 +151,16 @@ const ProfileSetting = (props) => {
                       />
                     </Grid>
                   </Grid>
+                  <Grid item container flex={1}>
+                    <FormikControl
+                      control={"checkbox"}
+                      name="displayDOB"
+                      label={" Display my date of birth on my profile"}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -191,7 +186,7 @@ const ProfileSetting = (props) => {
                 </Grid>
               </Grid>
 
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography fontSize={{ xs: "1.4rem" }} text="Web" />
                 </Grid>
@@ -213,7 +208,7 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography fontSize={{ xs: "1.4rem" }} text="Bio" />
                 </Grid>
@@ -228,7 +223,7 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -246,7 +241,7 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container alignItems="center">
+              <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}

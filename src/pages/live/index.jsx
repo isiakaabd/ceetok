@@ -189,16 +189,18 @@ const Live = () => {
                   </Typography>
                 </Typography>
               </Grid>
-              <Grid item>
-                <CustomButton
-                  sx={{
-                    width: { md: "15rem", sm: "12rem", xs: "10rem" },
-                    fontSize: { md: "1.5rem", xs: "1.2rem" },
-                  }}
-                  onClick={() => setOpen(true)}
-                  title="Get Involved"
-                />
-              </Grid>
+              {admin && (
+                <Grid item>
+                  <CustomButton
+                    sx={{
+                      width: { md: "15rem", sm: "12rem", xs: "10rem" },
+                      fontSize: { md: "1.5rem", xs: "1.2rem" },
+                    }}
+                    onClick={() => setOpen(true)}
+                    title="Get Involved"
+                  />
+                </Grid>
+              )}
             </Grid>
             <Grid item container sx={{ height: "100%" }}>
               {array?.posts?.length > 0 ? (

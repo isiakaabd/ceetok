@@ -33,6 +33,10 @@ const annoucementValidation = Yup.object({
   duration: Yup.string("Enter Duration").required("Required"),
   text: Yup.string("Enter Content").required("Required"),
 });
+const LiveValidation = Yup.object({
+  title: Yup.string("Enter Title").required("Required"),
+  text: Yup.string("Enter Content").required("Required"),
+});
 const CreatePost = ({
   open,
   handleClose,
@@ -179,19 +183,44 @@ const CreatePost = ({
     text: "",
     post_id: "",
     acceptTerm: false,
+    summary: false,
+    allow_interaction: false,
+    pin_to_top: false,
   };
+
   const handleCreateLivePost = async (values, { resetForm }) => {
-    const { title, text } = values;
-    const { data, error } = await livePost({
-      title,
-      body: text,
-    });
-    if (data) {
-      toast.success(data);
-      resetForm();
-      setTimeout(() => handleClose(), 3000);
+    const { title, text, summary, post_id, allow_interaction, pin_to_top } =
+      values;
+    if (post_id) {
+      const { data, error } = await livePost({
+        title,
+        body: text,
+        summary,
+        id: post_id,
+        allow_interaction,
+        pin_to_top,
+      });
+      if (data) {
+        toast.success(data);
+        resetForm();
+        setTimeout(() => handleClose(), 3000);
+      }
+      if (error) toast.error(error);
+    } else {
+      const { data, error } = await livePost({
+        title,
+        body: text,
+        summary,
+        allow_interaction,
+        pin_to_top,
+      });
+      if (data) {
+        toast.success(data);
+        resetForm();
+        setTimeout(() => handleClose(), 3000);
+      }
+      if (error) toast.error(error);
     }
-    if (error) toast.error(error);
   };
   return (
     <>
@@ -230,7 +259,13 @@ const CreatePost = ({
           </Grid>
 
           <Formik
-            validationSchema={postHeading ? annoucementValidation : validation}
+            validationSchema={
+              postHeading
+                ? annoucementValidation
+                : type === "live"
+                ? LiveValidation
+                : validation
+            }
             onSubmit={
               type === "annoucement"
                 ? handEditAnnoucement
@@ -313,10 +348,44 @@ const CreatePost = ({
                       value={initialValues.text}
                       upload_id={"post_id"}
                       type={
-                        uploadType === "annoucement" ? "announcements" : "posts"
+                        uploadType === "annoucement"
+                          ? "announcements"
+                          : // : type === "live"
+                            // ? "live"
+                            "posts"
                       }
                     />
+                    {type === "live" && (
+                      <Grid
+                        item
+                        container
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Grid item>
+                          <FormikControl
+                            control="switch"
+                            name="summary"
+                            label="Summary"
+                          />
+                        </Grid>
 
+                        <Grid item>
+                          <FormikControl
+                            control="switch"
+                            name="allow_interaction"
+                            label="Allow Interaction"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <FormikControl
+                            control="switch"
+                            name="pin_to_top"
+                            label="Pin To Top"
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
                     <Typography
                       fontSize={{ md: "1.3rem", xs: ".9rem", fontWeight: 400 }}
                       color="#9B9A9A"
@@ -330,23 +399,6 @@ const CreatePost = ({
                         name="acceptTerm"
                         label=" Get reply, likes, tag, follow and comments notification"
                       />
-                      {/* <Checkbox
-                        defaultChecked
-                        // fontSize="6rem"
-                        sx={{
-                          color: "#37D42A",
-                          "&.Mui-checked": {
-                            color: "#37D42A",
-                          },
-                        }}
-                      /> */}
-                      {/* <Typography
-                        fontSize={{
-                          md: "1.3rem",
-                          xs: ".9rem",
-                          fontWeight: 500,
-                        }}
-                      ></Typography> */}
                     </Grid>
                     <Grid
                       item
@@ -355,13 +407,15 @@ const CreatePost = ({
                       alignItems="center"
                     >
                       <Button
+                        disableElevation
+                        disableFocusRipple
+                        disableRipple
                         variant="outlined"
                         sx={{
                           color: "#9B9A9A",
-                          border: "2px solid #9B9A9A",
                           fontSize: "1.2rem",
                           fontWeight: 700,
-                          padding: ".8rem 2rem",
+                          padding: "1rem 2rem",
                           borderRadius: "3rem",
                         }}
                         onClick={handleClose}

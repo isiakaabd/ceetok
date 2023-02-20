@@ -94,7 +94,7 @@ const UserAccount = () => {
                   fontSize: "1.8rem",
                 }}
                 src={getImage(userProfile?.avatar)}
-                alt={userProfile?.full_name?.slice(0, 1).toUpperCase().slice(1)}
+                alt={userProfile?.full_name}
               >
                 {userProfile?.full_name?.slice(0, 1).toUpperCase()}
               </Avatar>

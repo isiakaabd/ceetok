@@ -1,20 +1,14 @@
 import {
   Favorite,
-  FilterList,
   IosShareOutlined,
   ReplyOutlined,
   ReportOutlined,
-  SearchOutlined,
-  TuneOutlined,
 } from "@mui/icons-material";
-import parse from "html-react-parser";
 import {
-  Divider,
   Grid,
   Paper,
   MenuItem,
   Grow,
-  IconButton,
   Popper,
   ClickAwayListener,
   MenuList,
@@ -22,33 +16,27 @@ import {
   List,
   Skeleton,
 } from "@mui/material";
-import { Formik, Form } from "formik/dist";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import FormikControl from "validation/FormikControl";
-import UserProfile from "../UserProfile";
-import images from "assets";
 import {
   useDeleteAPostMutation,
   useLikeAndUnlikePostMutation,
 } from "redux/slices/postSlice";
-import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import { useLazyGetPostCommentsQuery } from "redux/slices/commentSlice";
-import { Details } from "../Post";
+
 import {
   useUserProfileQuery,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
-import SingleComment from "./SingleComment";
-import Tooltips from "components/ToolTips";
-import { getImage } from "helpers";
+
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
 import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
-export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, media } = data;
+import SingleComment from "pages/pages/components/SingleComment";
+export const LiveComment = ({ handleShare, data, state, setState }) => {
+  const { id, category, user_id } = data;
 
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
@@ -198,157 +186,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
 
   return (
     <>
-      <Grid item container>
-        <Grid
-          item
-          container
-          alignItems="center"
-          sx={{
-            backgroundColor: "#044402",
-            borderRadius: { md: ".7rem", sm: 0 },
-            py: 2,
-            px: 1,
-          }}
-          justifyContent={{ md: "flex-end", xs: "flex-start" }}
-        >
-          <Grid item md={7} xs={12}>
-            <Grid item container>
-              <Formik initialValues={{ filter: "" }}>
-                <Form style={{ width: "100%" }}>
-                  <Grid
-                    item
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                    flexWrap="nowrap"
-                    gap={2}
-                  >
-                    <Grid item flex={{ md: 0.8, xs: 1 }}>
-                      <FormikControl
-                        control="inputs"
-                        name="filter"
-                        borderRadius="1rem"
-                        // color="#fff"
-                        Icon={SearchOutlined}
-                        order={2}
-                        height="4rem"
-                        color={"#fff"}
-                        buttonStyle={{ color: "#fff" }}
-                        border="2px solid #fff"
-                      />
-                    </Grid>
-                    <Grid item>
-                      <FormikControl
-                        control="selects"
-                        name="filter"
-                        borderRadius="1rem"
-                        placeholder="filter"
-                        Icon={FilterList}
-                        order={2}
-                        height="4rem"
-                        buttonStyle={{ color: "#fff" }}
-                        border="2px solid #fff"
-                        options={[
-                          {
-                            label: "Male",
-                            value: "Male",
-                          },
-                          {
-                            label: "Female",
-                            value: "Female",
-                          },
-                        ]}
-                      />
-                    </Grid>
-                    {(checkUser || admin) && (
-                      <Grid item>
-                        <IconButton
-                          ref={anchorRef}
-                          id="composition-avatar"
-                          aria-controls={open ? "composition-menu" : undefined}
-                          aria-expanded={open ? "true" : undefined}
-                          aria-haspopup="true"
-                          onClick={handleToggle}
-                        >
-                          <TuneOutlined
-                            sx={{ fontSize: "2.5rem", color: "#fff" }}
-                          />
-                        </IconButton>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Form>
-              </Formik>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* user Profile */}
-        <Grid item md={12} xs={12} sm={12} sx={{ my: 3 }}>
-          <UserProfile data={data} />
-        </Grid>
-      </Grid>
-      <Grid item md={8} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
-        <Grid
-          container
-          alignItems="center"
-          justifyContent="space-between"
-          flexWrap="nowrap"
-        >
-          <Typography
-            color="secondary"
-            fontSize={{ md: "3rem", sm: "2rem", xs: "1.5rem" }}
-            sx={{ whiteSpace: "nowrap" }}
-            fontWeight="700"
-          >
-            {category}
-          </Typography>
-          <Tooltips title={check ? "unfollow" : "Follow"}>
-            <Typography
-              fontWeight={500}
-              component="a"
-              onClick={handleCheck}
-              sx={{ display: "flex", cursor: "pointer", alignItems: "center" }}
-              fontSize="2rem"
-              color={check ? "#37D42A" : "#FF9B04"}
-            >
-              {updating ? "Updating..." : check ? "Followed" : "Follow"}
-              {check && <VerifiedOutlined />}
-            </Typography>
-          </Tooltips>
-        </Grid>
-        <img
-          src={
-            media?.length > 0 ? getImage(media[0]?.storage_path) : images.obi2
-          }
-          style={{ width: "100%" }}
-          alt={category}
-        />
-        <Grid container item flexDirection="column" rowGap={2}>
-          <Typography
-            color="secondary"
-            sx={{
-              fontWeight: 400,
-              fontSize: { md: "2rem", sm: "1rem" },
-              textAlign: "justify",
-              // pl: 3,
-            }}
-          >
-            {parse(body)}
-          </Typography>
-        </Grid>
-        <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
-          <Details
-            handleShare={handleShare}
-            icons={icons}
-            data={data}
-            type="posts"
-            state={state}
-            setState={setState}
-            handleLikePost={handleLikePost}
-          />
-        </Grid>
-        <Divider flexItem sx={{ pb: 2 }} />
-      </Grid>
       <Grid item md={7} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
         {state ? (
           <Grid item container>

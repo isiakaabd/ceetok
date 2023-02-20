@@ -14,9 +14,7 @@ import Editor from "components/Quil";
 import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
 import NotificationModal from "components/modals/NotificationModal";
-
 import { useGetAPostQuery, useGetViewsQuery } from "redux/slices/postSlice";
-
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { usePostCommentMutation } from "redux/slices/commentSlice";

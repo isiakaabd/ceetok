@@ -14,14 +14,15 @@ import {
   Avatar,
 } from "@mui/material";
 import { useState } from "react";
-import images from "assets";
 import { CustomButton } from "components";
 import { Link } from "react-router-dom";
 import { RemoveRedEyeOutlined, Star } from "@mui/icons-material";
 import Video from "assets/svgs/Video";
-import { useGetPostQuery } from "redux/slices/postSlice";
+import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import CreatePost from "pages/user/modals/CreatePost";
+import { useGetLivePostsQuery } from "redux/slices/adminSlice";
+import { getImage } from "helpers";
 const Live = () => {
   const theme = useTheme();
   const admin = useSelector((state) => state.auth.admin);
@@ -29,14 +30,28 @@ const Live = () => {
     theme.breakpoints.down("sm", { noSsr: true })
   );
   const [state, setState] = useState(true);
-  const [page, setPage] = useState(0);
-  const {
-    data: array,
-    error,
-    isLoading,
-  } = useGetPostQuery({ offset: page, category: "live" });
+  // const [page, setPage] = useState(0);
+  const { data: array, isLoading, error } = useGetLivePostsQuery();
+
   const [open, setOpen] = useState(false);
   if (isLoading) return <Skeleton />;
+  console.log(error);
+  // if (error)
+  //   return (
+  //     <Typography variant="h2" textAlign="center">
+  //       {error || "Something went Wrong..."}
+  //     </Typography>
+  //   );
+  // const {
+
+  //   posts,
+  // } = array;
+  const summaries = array?.posts.filter((item) => item.summary);
+  const truncate = (words, maxlength) => {
+    if (words.split("").length > maxlength) {
+      return `${words.slice(0, maxlength)}…`;
+    } else return words;
+  };
   return (
     <>
       <Grid
@@ -50,7 +65,10 @@ const Live = () => {
           sx={{
             p: { md: 4, xs: 2 },
             pb: { md: 0, xs: 3 },
-            backgroundImage: `url(${images.live})`,
+            backgroundImage: `url(${
+              array?.pinned?.media.length > 0 &&
+              getImage(array?.pinned?.media[0]?.storage_path)
+            })`,
             backgroundColor: "#044402",
             backgroundBlendMode: "overlay",
             backgroundPosition: "center",
@@ -79,7 +97,11 @@ const Live = () => {
               LIVE
             </Button>
           </Grid>
-          <Grid item container sx={{ alignSelf: "flex-end" }}>
+          <Grid
+            item
+            container
+            sx={{ alignSelf: "flex-end", flexDirection: "column" }}
+          >
             <Grid item>
               <Grid container alignItems={"center"} gap={2}>
                 <RemoveRedEyeOutlined sx={{ color: "#fff" }} />{" "}
@@ -89,8 +111,7 @@ const Live = () => {
                   fontWeight={400}
                 >
                   <Typography fontWeight={700} variant="span">
-                    {" "}
-                    71,811
+                    {array?.pinned?.views_count || 0}
                   </Typography>{" "}
                   viewing this page
                 </Typography>
@@ -100,9 +121,10 @@ const Live = () => {
               color={"#fff"}
               fontWeight={700}
               fontSize={{ md: "5rem", xs: "1.5rem" }}
+              component={!error && Link}
+              to={array?.pinned?.slug || "#"}
             >
-              Politics: Tinubu insult youth campaigning for Peter Obi at Lekki
-              Garage
+              {array?.pinned?.title ? parse(array?.pinned?.title) : error}
             </Typography>
           </Grid>
         </Grid>
@@ -169,35 +191,41 @@ const Live = () => {
               }}
               alignItems={"center"}
             >
-              <Grid item container flexDirection={"column"} flex={1}>
-                <Typography
-                  sx={{ fontSize: { md: "3rem", xs: "1.8rem", sm: "2rem" } }}
-                  color="#5F5C5C"
-                  fontWeight={700}
-                >
-                  Reporting Live
-                </Typography>
-                <Typography
-                  sx={{ fontSize: { md: "2rem", xs: "1.2rem", sm: "1.4rem" } }}
-                >
-                  <Typography variant="span" color="#5F5C5C" component={Link}>
-                    Josh
+              {!error ? (
+                <Grid item container flexDirection={"column"} flex={1}>
+                  <Typography
+                    sx={{ fontSize: { md: "3rem", xs: "1.8rem", sm: "2rem" } }}
+                    color="#5F5C5C"
+                    fontWeight={700}
+                  >
+                    Reporting Live
                   </Typography>
-                  {""} and{" "}
-                  <Typography variant="span" color="#5F5C5C" component={Link}>
-                    Victor
+                  <Typography
+                    sx={{
+                      fontSize: { md: "2rem", xs: "1.2rem", sm: "1.4rem" },
+                    }}
+                  >
+                    <Typography variant="span" color="#5F5C5C" component={Link}>
+                      Josh
+                    </Typography>
+                    {""} and{" "}
+                    <Typography variant="span" color="#5F5C5C" component={Link}>
+                      Victor
+                    </Typography>
                   </Typography>
-                </Typography>
-              </Grid>
+                </Grid>
+              ) : (
+                <Typography variant="h2">Welcome</Typography>
+              )}
               {admin && (
-                <Grid item>
+                <Grid item sx={{ marginLeft: "auto" }}>
                   <CustomButton
                     sx={{
                       width: { md: "15rem", sm: "12rem", xs: "10rem" },
                       fontSize: { md: "1.5rem", xs: "1.2rem" },
                     }}
                     onClick={() => setOpen(true)}
-                    title="Get Involved"
+                    title={error ? "Go Live" : "Get Involved"}
                   />
                 </Grid>
               )}
@@ -206,19 +234,19 @@ const Live = () => {
               {array?.posts?.length > 0 ? (
                 <List
                   item
-                  container
                   gap={3}
                   sx={{
                     maxHeight: { xs: "30rem", md: "100%" },
                     overflowY: "scroll",
+                    width: "100%",
                     "&::-webkit-scrollbar": {
                       width: ".85rem",
                       display: "none",
                     },
                   }}
                 >
-                  {array?.posts?.fill(undefined).map((item, index) => (
-                    <ListItem item key={index} container>
+                  {array?.posts?.map((item, index) => (
+                    <ListItem item key={index}>
                       <ListItemButton
                         alignItems="flex-start"
                         sx={{
@@ -226,9 +254,19 @@ const Live = () => {
                           borderRadius: "2rem",
                           boxShadow: "0px 8px 9px rgba(0, 0, 0, 0.15)",
                         }}
+                        to={`${item.slug}`}
+                        disableGutters
+                        component={Link}
                       >
                         <ListItemAvatar>
-                          <Avatar>H</Avatar>
+                          <Avatar
+                            src={getImage(item?.userProfile?.avatar)}
+                            alt={item?.userProfile?.full_name}
+                          >
+                            {item?.userProfile?.full_name
+                              ?.slice(0, 1)
+                              .toUpperCase()}
+                          </Avatar>
                         </ListItemAvatar>
 
                         <ListItemText
@@ -243,18 +281,8 @@ const Live = () => {
                             textAlign: "justify",
                             fontSize: { md: "1.4rem", xs: "1rem" },
                           }}
-                          primary="David Ifeanyi Adeleke is confirmed dead after
-                            drowing in a swimming pool"
-                          secondary="  Tortor, lobortis semper viverra ac, molestie tortor
-                            laoreet amet euismod et diam quis aliquam consequat
-                            porttitor integer a nisl, in faucibus nunc et aenean
-                            turpis dui dignissim nec scelerisque ullamcorper eu
-                            neque, augue quam quis lacus pretium eros est amet
-                            turpis nunc in turpis massa et Tortor, lobortis
-                            semper viverra ac, molestie tortor laoreet amet
-                            euismod et dia porttitor integer a nisl, in faucibu
-                            nec scelerisque ullamcorper eu neque, augue quam
-                            quis lacus pretium eros est a"
+                          primary={item.title}
+                          secondary={parse(truncate(item.body, 500))}
                         />
                       </ListItemButton>
                     </ListItem>
@@ -279,68 +307,103 @@ const Live = () => {
             item
             md={4}
             xs={12}
+            sx={{ height: "100%" }}
             display={{
               xs: !state && breakpoint ? "block" : "none",
               md: "block",
             }}
           >
-            <Grid
-              item
-              container
-              justifyContent="center"
-              alignItems="center"
-              sx={{
-                background: "#044402",
-                height: { md: "14rem", xs: "8rem" },
-                padding: { md: "2rem", xs: "1.5rem" },
-                borderRadius: breakpoint ? 0 : "2rem 2rem 0 0",
-              }}
-            >
-              <Typography
-                color="#fff"
+            <Grid item container>
+              <Grid
+                item
+                container
+                justifyContent="center"
+                alignItems="center"
                 sx={{
-                  fontWeight: 700,
-                  textAlign: "center",
-                  fontSize: { md: "3rem", xs: "2rem" },
+                  background: "#044402",
+                  height: { md: "14rem", xs: "8rem" },
+                  padding: { md: "2rem", xs: "1.5rem" },
+                  borderRadius: breakpoint ? 0 : "2rem 2rem 0 0",
                 }}
               >
-                Summary
-              </Typography>
+                <Typography
+                  color="#fff"
+                  sx={{
+                    fontWeight: 700,
+                    textAlign: "center",
+                    fontSize: { md: "3rem", xs: "2rem" },
+                  }}
+                >
+                  Summary
+                </Typography>
+              </Grid>
+              {summaries?.length > 0 ? (
+                <List
+                  item
+                  sx={{
+                    p: 2,
+                    // pb: 12,
+                    backgroundColor: "#fff",
+                    width: "100%",
+                    // height: "100%",
+                    listStyleType: "initial",
+                    maxHeight: { xs: "30rem", md: "100%" },
+                    overflowY: "scroll",
+                    "&::-webkit-scrollbar": {
+                      width: ".85rem",
+                      display: "none",
+                    },
+                  }}
+                >
+                  {summaries?.map((item, index) => (
+                    <ListItem dense disableGutters key={index}>
+                      <ListItemButton
+                        disableRipple
+                        component={Link}
+                        to={item.slug}
+                        alignItems="flex-start"
+                        sx={{
+                          "& .MuiListItemIcon-root": {
+                            minWidth: "3rem",
+                          },
+                        }}
+                      >
+                        <ListItemIcon>
+                          <Star />
+                        </ListItemIcon>
+                        <ListItemText
+                          sx={{
+                            width: "100%",
+
+                            // width: "100%",
+                            maxHeight: "15rem",
+                            WebkitBoxOrient: "vertical",
+                            // display: "block",
+                            display: "box",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            lineClamp: 4,
+                            WebkitLineClamp: 4,
+                          }}
+                          primaryTypographyProps={{ textAlign: "justify" }}
+                          primary={parse(truncate(item?.body, 400))}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Grid
+                  item
+                  container
+                  sx={{ textAlign: "center", backgroundColor: "#fff", py: 4 }}
+                >
+                  <Typography variant="h3" width="100%" textAlign="center">
+                    No Data Yet
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
-            <List
-              item
-              sx={{
-                p: 2,
-                pb: 12,
-                backgroundColor: "#fff",
-                listStyleType: "initial",
-                maxHeight: { xs: "30rem", md: "100%" },
-                overflowY: "scroll",
-                "&::-webkit-scrollbar": {
-                  width: ".85rem",
-                  display: "none",
-                },
-              }}
-            >
-              {Array(10)
-                .fill(undefined)
-                .map((item) => (
-                  <ListItem dense disableGutters>
-                    <ListItemButton disableRipple alignItems="flex-start">
-                      <ListItemIcon>
-                        <Star />
-                      </ListItemIcon>
-                      <ListItemText
-                        sx={{ width: "100%" }}
-                        primary="
-                      David Ifeanyi Adeleke:, molestie tortor laoreet amet
-                      euismod et diam quis aliquam consequat porttitor integer a
-                      nisl, in faucibus nunc et aenean turpis dui dignissim nec"
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-            </List>
           </Grid>
         </Grid>
       </Grid>

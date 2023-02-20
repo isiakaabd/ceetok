@@ -20,7 +20,7 @@ import LoginModal from "components/modals/LoginModal";
 const Trending = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const loginStatus = useSelector((state) => state.auth.token);
-  const [count] = useState(10);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -36,6 +36,8 @@ const Trending = () => {
     category: "trending",
     from: value,
   });
+  console.log(array);
+  const [count] = useState(array?.total_pages);
   const handleChange = (e, value) => {
     setPage(value);
   };
@@ -126,7 +128,7 @@ const Trending = () => {
           <Grid item container>
             {isLoading ? (
               <Skeleton />
-            ) : array?.length > 0 ? (
+            ) : array?.posts?.length > 0 ? (
               <>
                 <List
                   dense
@@ -142,7 +144,7 @@ const Trending = () => {
                   xs={12}
                 >
                   {/* {posts.length > 0 ? ( */}
-                  {array.map((post, index) => {
+                  {array?.posts?.map((post, index) => {
                     return (
                       <SinglePosts key={index} index={index} post={post} />
                     );
@@ -152,8 +154,8 @@ const Trending = () => {
                 <Pagination
                   page={page}
                   count={count}
-                  hidePrevButton={true}
-                  hideNextButton={true}
+                  // hidePrevButton={true}
+                  // hideNextButton={true}
                   sx={{ margin: "auto", py: 2 }}
                   // boundaryCount={0}
                   onChange={handleChange}

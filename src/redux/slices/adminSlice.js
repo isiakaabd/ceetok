@@ -70,6 +70,25 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.post,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getLivePosts: builder.query({
+      query: () => ({
+        url: `/live`,
+        method: "GET",
+      }),
+      providesTags: ["admin"],
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data.message,
+    }),
+    editLivePost: builder.mutation({
+      query: (body) => ({
+        url: `admin/live`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["admin"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -79,6 +98,8 @@ export const {
   useLivePostMutation,
   useApproveAnnoucementMutation,
   useBanUsersMutation,
+  useGetLivePostsQuery,
+  useEditLivePostMutation,
   useSendEmailMutation,
   useGetLivePostQuery,
 } = adminSlice;

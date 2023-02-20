@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled, alpha } from "@mui/material/styles";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   ChatBubbleOutline,
@@ -21,7 +21,6 @@ import {
   FilterList,
   IosShareOutlined,
   Payment,
-  Report,
   ReportOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
@@ -30,10 +29,7 @@ import { useSelector } from "react-redux";
 import AnnoucementIcon from "assets/svgs/AnnoucementIcon";
 import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
-import {
-  useDeleteAnnoucementsMutation,
-  useGetAnnoucementsQuery,
-} from "redux/slices/annoucementSlice";
+import { useDeleteAnnoucementsMutation } from "redux/slices/annoucementSlice";
 import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";

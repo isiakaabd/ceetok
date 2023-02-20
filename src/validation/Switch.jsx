@@ -55,11 +55,12 @@ const IOSSwitch = styled((props) => (
   },
 }));
 
-const Switchs = ({ label, name, value, ...rest }) => {
+const Switchs = ({ label, name, value, labelPlacement, ...rest }) => {
   return (
     <FormControlLabel
       control={<IOSSwitch sx={{ m: label ? 1 : 0 }} name={name} {...rest} />}
       label={label}
+      labelPlacement={labelPlacement}
     />
   );
 };

@@ -79,14 +79,14 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   });
   const token = useSelector((state) => state.auth.token);
   const { setFieldValue, errors, values } = useFormikContext();
-  const [uploadImage, { isLoading }] = useAddImageMutation();
+
   // const theme = 'bubble';
 
   // Insert Image(selected by user) to quill
-  const insertToEditor = (url) => {
-    const range = quill.getSelection();
-    quill.insertEmbed(range.index, "image", url);
-  };
+  // const insertToEditor = (url) => {
+  //   const range = quill.getSelection();
+  //   quill.insertEmbed(range.index, "image", url);
+  // };
 
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {

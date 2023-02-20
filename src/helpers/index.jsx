@@ -13,10 +13,9 @@ export const getTime = (date) => {
 export const getAgo = (date) => {
   return moment(date).fromNow(true);
 };
-
-export const link =
-  "https://firebasestorage.googleapis.com/v0/b/ceetok-8f448.appspot.com/o/";
-export const suffix = "?alt=media&token=e22e411b-04b4-49ed-a42a-a90ea37567fc";
+const token = process.env.REACT_APP_IMAGE_TOKEN;
+export const link = process.env.REACT_APP_IMAGE_URL;
+export const suffix = `?alt=media&token=${token}`;
 export const getImage = (url) => {
   return url ? `${link}${encodeURIComponent(url)}${suffix}` : null;
 };

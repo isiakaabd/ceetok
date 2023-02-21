@@ -80,7 +80,7 @@ export const Details = ({
 
   const handleSubmit = async (values) => {
     await quote({
-      parent_type: "comments",
+      parent_type: type === "live" ? "live" : "comments",
       parent_id: data?.id,
       comment: values.comment,
     });
@@ -107,7 +107,7 @@ export const Details = ({
             onClick={() =>
               type === "comments"
                 ? setOpen(true)
-                : type === "posts"
+                : type === "posts" || type === "live"
                 ? setState(true)
                 : null
             }
@@ -126,7 +126,9 @@ export const Details = ({
             text={data?.likes_count}
           />
           <StyledButton
-            onClick={() => (type === "posts" ? setState(false) : null)}
+            onClick={() =>
+              type === "posts" || type === "live" ? setState(false) : null
+            }
             Icon={<Quotes style={{ color: !state ? "#0f0" : "#5F5C5C" }} />}
             text={data?.quotes_count}
             state={!state}

@@ -41,27 +41,28 @@ const SingleLivePage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const admin = useSelector((state) => state.auth.admin);
-  const [changeCommentState] = useState(true); //setChangeCommentState
+  // const [changeCommentState, setChangeCommentState] = useState(true); //setChangeCommentState
   const [postAComment] = usePostCommentMutation();
   const [createQuote] = useCreateQuoteMutation();
   const { data: post, isLoading: loading } = useGetLivePostQuery(slug);
   //   console.log(post);
   //   const [openShareModal, setOpenShareModal] = useState(false);
   //   const handleShare = () => setOpenShareModal(true);
+  console.log(post);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClose = () => setAnchorEl(null);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const [editLive, { isLoading }] = useEditLivePostMutation();
   const [likePost] = useLikeAndUnlikePostMutation();
-  const [state, setState] = useState(false);
+  const [state, setState] = useState(true);
   if (loading) return <Skeleton />;
 
   const handleSubmit = async (values, onSubmitProps) => {
-    if (changeCommentState) {
+    if (state) {
       const { data: dt, error } = await postAComment({
         parent_id: id,
-        parent_type: "posts",
+        parent_type: "live",
         comment: values.comment,
       });
       if (dt) {
@@ -70,13 +71,13 @@ const SingleLivePage = () => {
         onSubmitProps.resetForm();
       }
       if (error) {
-        toast.error("something went wrong, try again...");
+        toast.error(error || "something went wrong, try again...");
       }
     } else {
       const { data, error } = await createQuote({
         body: values.comment,
         parent_id: id,
-        parent_type: "posts",
+        parent_type: "live",
       });
       if (data) {
         toast.success(data);
@@ -85,7 +86,7 @@ const SingleLivePage = () => {
       if (error) toast.error(error);
     }
   };
-
+  console.log(post);
   const {
     title,
     media,
@@ -138,8 +139,8 @@ const SingleLivePage = () => {
   };
 
   const handleLikePost = async () => {
-    const { data: dt } = await likePost({
-      parent_type: "posts",
+    await likePost({
+      parent_type: "live",
       parent_id: post?.id,
     });
 
@@ -171,7 +172,7 @@ const SingleLivePage = () => {
               fontSize: { md: "2.5rem", xs: "2rem" },
             }}
           >
-            {title}
+            {title || ""}
           </Typography>
           {admin ? (
             <>
@@ -287,7 +288,7 @@ const SingleLivePage = () => {
       <Grid item xs={12} md={7}>
         <Details
           handleLikePost={handleLikePost}
-          type={"posts"}
+          type={"live"}
           state={state}
           data={post}
           setState={setState}
@@ -310,45 +311,47 @@ const SingleLivePage = () => {
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
-            <Form>
-              {/* <Grid item container sx={{ background: "red" }}> */}
-              <Editor
-                theme="snow"
-                name="comment"
-                value={""}
-                placeholder="write something..."
-              />
-
-              <Grid
-                item
-                container
-                sx={{ mt: 2 }}
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Button
-                  variant="outlined"
-                  sx={{
-                    color: "#9B9A9A",
-                    borderColor: "inherit",
-                    // border: "2px solid #9B9A9A",
-                    fontSize: "1.2rem",
-                    fontWeight: 700,
-                    padding: ".8rem 2rem",
-                    borderRadius: "3rem",
-                  }}
-                >
-                  Cancel
-                </Button>
-                <CustomButton
-                  title="Post"
-                  variant="contained"
-                  width="10rem"
-                  type="submit"
-                  isSubmitting={loading}
+            {({ isSubmitting }) => (
+              <Form>
+                {/* <Grid item container sx={{ background: "red" }}> */}
+                <Editor
+                  theme="snow"
+                  name="comment"
+                  value={""}
+                  placeholder="write something..."
                 />
-              </Grid>
-            </Form>
+
+                <Grid
+                  item
+                  container
+                  sx={{ mt: 2 }}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      color: "#9B9A9A",
+                      borderColor: "inherit",
+                      // border: "2px solid #9B9A9A",
+                      fontSize: "1.2rem",
+                      fontWeight: 700,
+                      padding: ".8rem 2rem",
+                      borderRadius: "3rem",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <CustomButton
+                    title="Post"
+                    variant="contained"
+                    width="10rem"
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                  />
+                </Grid>
+              </Form>
+            )}
           </Formik>
         </Grid>
       ) : (

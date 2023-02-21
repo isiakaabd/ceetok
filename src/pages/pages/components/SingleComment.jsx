@@ -87,6 +87,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile, type }) => {
+  console.log(type);
   // const navigate = useNavigate();
   return (
     <>

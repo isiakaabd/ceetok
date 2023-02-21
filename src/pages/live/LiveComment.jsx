@@ -36,7 +36,7 @@ import { useApprovePostMutation } from "redux/slices/adminSlice";
 import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
 import SingleComment from "pages/pages/components/SingleComment";
 export const LiveComment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id } = data;
+  const { id, category, user_id, recent_comments, recent_quotes } = data;
 
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
@@ -104,32 +104,6 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
     prevOpen.current = open;
   }, [open]);
 
-  const [fetchPosts, { data: comments }] = useLazyGetPostCommentsQuery();
-  const [fetchQuotes, { data: quotes }] = useLazyGetPostQuotesQuery();
-
-  // const [state, setState] = useState(true);
-  useEffect(() => {
-    if (state) {
-      fetchPosts({
-        parentId: id,
-        limit: 5,
-      });
-    }
-    //eslint-disable-next-line
-  }, [state, id]);
-  useEffect(() => {
-    if (!state) {
-      fetchQuotes({
-        parentId: id,
-        limit: 5,
-      });
-    }
-    //eslint-disable-next-line
-  }, [state, id]);
-  // const { data: comments } = useGetPostCommentsQuery({
-  //   parentId: id,
-  //   limit: 5,
-  // });
   const icons = [
     {
       title: "Reply",
@@ -152,37 +126,10 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
       link: "",
     },
   ];
-  const [likePost] = useLikeAndUnlikePostMutation();
+
   if (isLoading) return <Skeleton />;
-  const { interests } = profile;
-  const check = interests?.includes(category?.toLowerCase());
 
   const checkUser = profile?.id === user_id;
-
-  async function handleCheck() {
-    const { interests } = profile;
-    if (!check) {
-      const data = await update({
-        interests: [...interests, category?.toLowerCase()],
-      });
-      if (data) toast.success(data);
-    } else {
-      const newArr = interests.filter((ite) => ite !== category?.toLowerCase());
-      const data = await update({
-        interests: [...newArr],
-      });
-      if (data) toast.success(data);
-    }
-  }
-
-  const handleLikePost = async () => {
-    await likePost({
-      parent_type: "posts",
-      parent_id: data?.id,
-    });
-
-    // setLikeState(!likeState);
-  };
 
   return (
     <>
@@ -209,13 +156,14 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
                 },
               }}
             >
-              {comments?.length > 0 ? (
+              {recent_comments?.length > 0 ? (
                 <List sx={{ width: "100%" }} dense>
-                  {comments?.map((item) => (
+                  {recent_comments?.map((item) => (
                     <SingleComment
                       icons={icons}
                       key={item.id}
                       item={item}
+                      type="live"
                       profile={profile}
                     />
                   ))}
@@ -249,9 +197,9 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
                 },
               }}
             >
-              {quotes?.length > 0 ? (
+              {recent_quotes?.length > 0 ? (
                 <List sx={{ width: "100%" }} dense>
-                  {quotes?.map((item) => (
+                  {recent_quotes?.map((item) => (
                     <SingleComment
                       icons={icons}
                       key={item.id}
@@ -296,7 +244,7 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
                   onKeyDown={handleListKeyDown}
                 >
                   {/* {user_id !=== profile?.id} */}
-                  {(check || admin) && (
+                  {admin && (
                     <MenuItem onClick={() => setEditPostModal(true)}>
                       Edit Topic
                     </MenuItem>

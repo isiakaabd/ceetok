@@ -83,7 +83,7 @@ export const postSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["post", "announcement", "comment"],
+      invalidatesTags: ["post", "announcement", "comment", "admin"],
       transformErrorResponse: (error) => error.data.message,
     }),
     getLikes: builder.query({

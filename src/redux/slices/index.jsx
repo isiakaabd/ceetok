@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getUserDetails, logoutAction } from "redux/reducers/authReducer";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_BASE_URL,
@@ -18,15 +19,16 @@ const baseQuery = fetchBaseQuery({
 
 const baseQuerywithAuth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result?.error?.originalStatus === 403) {
-    const refreshResult = await baseQuery("/refresh", api, extraOptions);
 
-    if (refreshResult?.data) {
-      // api.dispatch(getUserDetails(refreshResult));
+  if (result?.error?.status === 403) {
+    const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
+    const token = refreshResult?.data?.accessToken;
+    if (token) {
+      api.dispatch(getUserDetails(token));
       result = await baseQuery(args, api, extraOptions);
     } else {
       await baseQuery("/logout", api, extraOptions);
-      // api.dispatch(logOut());
+      api.dispatch(logoutAction());
     }
   }
 

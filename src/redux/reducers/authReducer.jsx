@@ -23,6 +23,10 @@ export const authSlice = createSlice({
       // localStorage.setItem("access_token", action.payload.auth.accessToken);
       state.user = action.payload;
     },
+    getUserDetails: (state, action) => {
+      localStorage.setItem("access_token", action.payload);
+      state.token = action.payload;
+    },
     checkAdmin: (state, action) => {
       localStorage.setItem("admin", action.payload);
       state.admin = action.payload;
@@ -37,8 +41,13 @@ export const authSlice = createSlice({
 });
 
 const { reducer, actions } = authSlice;
-export const { registerAction, loginAction, logoutAction, checkAdmin } =
-  actions;
+export const {
+  registerAction,
+  loginAction,
+  logoutAction,
+  checkAdmin,
+  getUserDetails,
+} = actions;
 export const loginState = (state) => state.auth;
 export const registerState = (state) => state.register;
 export const userProfile = (state) => state.user;

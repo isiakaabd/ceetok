@@ -1,7 +1,6 @@
 import { Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
-import { ErrorMessage, useFormikContext, Field } from "formik/dist";
+import { useFormikContext, Field } from "formik/dist";
 import PropTypes from "prop-types";
-import { TextError } from "./TextError";
 
 const Switchs = ({ label, name, size, value, ...rest }) => {
   return (

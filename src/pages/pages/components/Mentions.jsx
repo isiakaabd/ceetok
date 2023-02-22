@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Avatar, Grid, Typography, Checkbox } from "@mui/material";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import { Link } from "react-router-dom";

@@ -35,7 +35,6 @@ import {
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
-import { useLazyGetPostCommentsQuery } from "redux/slices/commentSlice";
 import { Details } from "../Post";
 import {
   useUserProfileQuery,
@@ -46,9 +45,9 @@ import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
-import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, media } = data;
+  const { id, category, user_id, body, recent_quotes, recent_comments, media } =
+    data;
 
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
@@ -116,32 +115,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     prevOpen.current = open;
   }, [open]);
 
-  const [fetchPosts, { data: comments }] = useLazyGetPostCommentsQuery();
-  const [fetchQuotes, { data: quotes }] = useLazyGetPostQuotesQuery();
-
-  // const [state, setState] = useState(true);
-  useEffect(() => {
-    if (state) {
-      fetchPosts({
-        parentId: id,
-        limit: 5,
-      });
-    }
-    //eslint-disable-next-line
-  }, [state, id]);
-  useEffect(() => {
-    if (!state) {
-      fetchQuotes({
-        parentId: id,
-        limit: 5,
-      });
-    }
-    //eslint-disable-next-line
-  }, [state, id]);
-  // const { data: comments } = useGetPostCommentsQuery({
-  //   parentId: id,
-  //   limit: 5,
-  // });
   const icons = [
     {
       title: "Reply",
@@ -372,9 +345,9 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                 },
               }}
             >
-              {comments?.length > 0 ? (
+              {recent_comments?.length > 0 ? (
                 <List sx={{ width: "100%" }} dense>
-                  {comments?.map((item) => (
+                  {recent_comments?.map((item) => (
                     <SingleComment
                       icons={icons}
                       key={item.id}
@@ -412,9 +385,9 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                 },
               }}
             >
-              {quotes?.length > 0 ? (
+              {recent_quotes?.length > 0 ? (
                 <List sx={{ width: "100%" }} dense>
-                  {quotes?.map((item) => (
+                  {recent_quotes?.map((item) => (
                     <SingleComment
                       icons={icons}
                       key={item.id}

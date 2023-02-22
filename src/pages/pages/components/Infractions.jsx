@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Typography, Grid } from "@mui/material";
 
 const Infractions = (props) => {

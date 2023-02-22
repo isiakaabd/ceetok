@@ -16,7 +16,7 @@ import {
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import SinglePosts from "pages/home/SinglePosts";
 import PrivateMessage from "./PrivateMessage";
-import { useGetPostQuery, useLazyGetPostQuery } from "redux/slices/postSlice";
+import { useLazyGetPostQuery } from "redux/slices/postSlice";
 import { useGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
 import SingleAnnoucements from "./SingleAnnoucements";
 import { useUserProfileQuery } from "redux/slices/authSlice";

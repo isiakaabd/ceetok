@@ -35,7 +35,6 @@ const Live = () => {
 
   const [open, setOpen] = useState(false);
   if (isLoading) return <Skeleton />;
-  console.log(error);
   // if (error)
   //   return (
   //     <Typography variant="h2" textAlign="center">

@@ -91,7 +91,7 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "post"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.message,
     }),
@@ -120,7 +120,7 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "post"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.message,
     }),
@@ -130,7 +130,7 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "post"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.message,
     }),
@@ -164,7 +164,7 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
-    refreshTok: builder.mutation({
+    refreshToken: builder.mutation({
       query: () => ({
         url: "/user/logout",
         method: "POST",

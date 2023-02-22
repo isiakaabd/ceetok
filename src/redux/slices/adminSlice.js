@@ -61,6 +61,16 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    deleteLivePost: builder.mutation({
+      query: (body) => ({
+        url: `/admin/live`,
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: ["admin"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     getLivePost: builder.query({
       query: (id) => ({
         url: `/live/${id}`,
@@ -98,6 +108,7 @@ export const {
   useLivePostMutation,
   useApproveAnnoucementMutation,
   useBanUsersMutation,
+  useDeleteLivePostMutation,
   useGetLivePostsQuery,
   useEditLivePostMutation,
   useSendEmailMutation,

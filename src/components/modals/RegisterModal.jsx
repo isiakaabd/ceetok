@@ -1,6 +1,5 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Grid, Button, Typography, ButtonBase, Divider } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Grid, Button, Typography, Divider } from "@mui/material";
 import images from "assets";
 import Modals from "components/Modal";
 import { Form, Formik } from "formik/dist";
@@ -31,23 +30,13 @@ const validationSchema = Yup.object({
 });
 
 const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
-  const [register, { isLoading }] = useRegisterMutation();
-  // const CustomButton = styled(ButtonBase)(({ theme }) => ({
-  //   background: "#37D42A",
-  //   display: "block",
-  //   padding: "1rem 6rem",
-  //   borderRadius: "2em",
-  //   fontWeight: 700,
-  //   "&:hover, &.Mui-focusVisible": {
-  //     zIndex: 1,
-  //   },
-  // }));
-  const [state, setState] = useState(true);
+  const [register] = useRegisterMutation();
+
+  const [state] = useState(true);
   const dispatch = useDispatch();
   const [login, setLogin] = useState(false);
   const [showEmailVerification, setEmailVerifications] = useState(false);
-  const [showPasswordVerification, setShowPasswordVerification] =
-    useState(false);
+  const [showPasswordVerification] = useState(false); //setShowPasswordVerification
   const handleSubmit = async (values) => {
     const { email, password, name } = values;
     const { data, error } = await register({

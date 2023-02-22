@@ -1,21 +1,13 @@
 import React from "react";
-import {
-  Grid,
-  Button,
-  List,
-  ListItemText,
-  ListItemButton,
-} from "@mui/material";
+import { Grid, List, ListItemText, ListItemButton } from "@mui/material";
 
 // import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { CustomButton } from "components";
 import { useGetCategoriesQuery } from "redux/slices/postSlice";
 import SearchComponent from "components/modals/SearchComponent";
-import { useState } from "react";
+
 const LeftTab = () => {
-  // const loginStatus = useSelector((state) => state.auth.token);
-  const [search, setSearch] = useState("");
   const { data: categories } = useGetCategoriesQuery();
   // const navigate = useNavigate();
   const handleSubmit = async () => {};

@@ -21,7 +21,6 @@ const Privacy = (props) => {
   const [updateProfile, { isLoading }] = useUpdateUserSettingsMutation();
 
   if (loading) return <Skeleton />;
-  console.log(user);
   const {
     subscriber_request,
     allow_to_view_photos,
@@ -32,7 +31,6 @@ const Privacy = (props) => {
   } = user;
 
   const handleSubmit = async (values) => {
-    console.log(values);
     const {
       subscriber_request,
       photos,

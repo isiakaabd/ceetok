@@ -191,7 +191,7 @@ function Rows({ row, state, ids, setIds }) {
     email,
   } = row;
   const [banorUnban, { isLoading }] = useBanUsersMutation();
-  const [sendEmail, { isLoading: sendingEmail }] = useSendEmailMutation();
+  const [, { isLoading: sendingEmail }] = useSendEmailMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

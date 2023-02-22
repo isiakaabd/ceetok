@@ -1,12 +1,10 @@
-import { Typography, Grid, Button, Checkbox } from "@mui/material";
-import { ChipItem, CustomButton } from "components";
-import Editor from "components/Quil";
+import { Typography, Grid } from "@mui/material";
+import { CustomButton } from "components";
+
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
-import FormikControl from "validation/FormikControl";
-// import { useDispatch } from "react-redux";
 import { TextError } from "validation/TextError";
 import NotificationModal from "components/modals/NotificationModal";
 import DiscreteSliderMarks from "components/modals/LinearProgress";
@@ -14,21 +12,17 @@ import ChipItems from "components/ChipItems";
 import PaymentModal from "components/modals/PaymentModal";
 
 const CreateAnnoucement = ({ handleClose, open, title, data }) => {
-  const validation = Yup.object({
-    title: Yup.string("Enter Title").required("Required"),
-    category: Yup.string("Enter Category").required("Required"),
-    text: Yup.string("Enter Category").required("Required"),
-    // name: Yup.string("Enter Your name").required("Name is ").trim(),
-  });
+  // const validation = Yup.object({
+  //   title: Yup.string("Enter Title").required("Required"),
+  //   category: Yup.string("Enter Category").required("Required"),
+  //   text: Yup.string("Enter Category").required("Required"),
+  //   // name: Yup.string("Enter Your name").required("Name is ").trim(),
+  // });
   //   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const handleCloseModal = () => setOpenModal(false);
   const handleOpenModal = () => setOpenModal(true);
-  const handleCreatePost = (values) => {
-    // const { title, category, text } = values;
-    handleOpenModal();
-    // dispatch(createPost(values));
-  };
+
   const [state, setState] = useState({});
   const handleSubmit = (values) => {
     handleOpenModal();

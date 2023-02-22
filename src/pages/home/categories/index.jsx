@@ -1,13 +1,9 @@
-import { Button, Grid, List, Skeleton, Typography } from "@mui/material";
+import { Button, Grid, Skeleton, Typography } from "@mui/material";
 import Filters from "components/modals/Filters";
-import { useEffect, useState } from "react";
-import {
-  useGetCategoriesQuery,
-  useGetPostQuery,
-  useLazyGetPostQuery,
-} from "redux/slices/postSlice";
+import { useState } from "react";
+import { useGetCategoriesQuery, useGetPostQuery } from "redux/slices/postSlice";
 import SinglePosts from "pages/home/SinglePosts";
-import { NavigateNext, SkipNext } from "@mui/icons-material";
+import { NavigateNext } from "@mui/icons-material";
 import { CustomButton } from "components";
 const Categories = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -22,7 +18,6 @@ const Categories = () => {
   const { data: AllPosts, isLoading: loading } = useGetPostQuery({
     from: value,
   });
-  const [state, setState] = useState([]);
   const { data: categories, isLoading } = useGetCategoriesQuery();
   //   const [getPost, { data }] = useLazyGetPostQuery();
   //   console.log(state, 123);

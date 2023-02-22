@@ -1,11 +1,7 @@
-import { Grid, ListItemAvatar, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import { toast } from "react-toastify";
-import {
-  useDeleteCommentMutation,
-  useEditCommentMutation,
-  useGetPostCommentsQuery,
-} from "redux/slices/commentSlice";
+import { useEditCommentMutation } from "redux/slices/commentSlice";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quil";

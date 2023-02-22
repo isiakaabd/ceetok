@@ -1,10 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
-import {
-  Person2Outlined,
-  PersonAddAlt1Outlined,
-  SettingsOutlined,
-} from "@mui/icons-material";
+import { PersonAddAlt1Outlined, SettingsOutlined } from "@mui/icons-material";
 import {
   Avatar,
   ClickAwayListener,
@@ -43,7 +38,6 @@ const ProfileItem = ({ profile }) => {
     username,
     banned,
   } = profile;
-  console.log(profile);
   const admin = useSelector((state) => state.auth.admin);
 
   const [followUser, { isLoading: following }] = useFollowUserMutation();

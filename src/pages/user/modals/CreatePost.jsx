@@ -1,4 +1,4 @@
-import { Typography, Grid, Button, Skeleton } from "@mui/material";
+import { Typography, Grid, Button } from "@mui/material";
 import { CustomButton } from "components";
 import Editor from "components/Quil";
 import NotificationModal from "components/modals/NotificationModal";
@@ -20,7 +20,10 @@ import {
 } from "redux/slices/annoucementSlice";
 import PaymentModal from "components/modals/PaymentModal";
 import { useSelector } from "react-redux";
-import { useLivePostMutation } from "redux/slices/adminSlice";
+import {
+  useEditLivePostMutation,
+  useLivePostMutation,
+} from "redux/slices/adminSlice";
 
 const validation = Yup.object({
   title: Yup.string("Enter Title").required("Required"),
@@ -46,6 +49,7 @@ const CreatePost = ({
   postHeading,
   uploadType,
   data,
+  editLive,
 }) => {
   const [create] = useCreatePostMutation();
   const [livePost] = useLivePostMutation();
@@ -53,6 +57,7 @@ const CreatePost = ({
   const handleCreateOpen = () => setCreateAnnoucement(true);
   const [openCreateAnnoucement, setCreateAnnoucement] = useState(false);
   const handleCreateAnnoucementClose = () => setCreateAnnoucement(false);
+  const [editLivePost] = useEditLivePostMutation();
   const [editPost] = useEditAPostMutation();
   const [createAnnouncement, { data: annoucementData }] =
     useCreateAnnoucementMutation();
@@ -222,6 +227,23 @@ const CreatePost = ({
       if (error) toast.error(error);
     }
   };
+  const handleEditLivePost = async (values, { resetForm }) => {
+    const { title, text, summary, id, allow_interaction, pin_to_top } = values;
+    const { data, error } = await editLivePost({
+      title,
+      body: text,
+      id,
+      summary,
+      allow_interaction,
+      pin_to_top,
+    });
+    if (data) {
+      toast.success(data);
+      resetForm();
+      setTimeout(() => handleClose(), 3000);
+    }
+    if (error) toast.error(error);
+  };
   return (
     <>
       <NotificationModal
@@ -269,8 +291,10 @@ const CreatePost = ({
             onSubmit={
               type === "annoucement"
                 ? handEditAnnoucement
-                : type === "live"
+                : type === "live" && !editLive
                 ? handleCreateLivePost
+                : type === "live" && editLive
+                ? handleEditLivePost
                 : type === "edit"
                 ? handleEditPost
                 : postHeading

@@ -11,14 +11,11 @@ import {
   Grid,
 } from "@mui/material";
 import Pen from "assets/svgs/Pen";
-import { getImage, link } from "helpers";
+import { getImage } from "helpers";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  useUserProfileQuery,
-  useUserProfileUpdateMutation,
-} from "redux/slices/authSlice";
+import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 
 export default function ProfileImage({ avatar, name }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +43,7 @@ export default function ProfileImage({ avatar, name }) {
     }
   }
   const [updateProfile] = useUserProfileUpdateMutation();
-  const { refetch } = useUserProfileQuery();
+
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
   useEffect(() => {

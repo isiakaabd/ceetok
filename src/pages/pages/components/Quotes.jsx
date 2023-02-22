@@ -1,4 +1,4 @@
-import { Avatar, Grid, IconButton, Typography, Checkbox } from "@mui/material";
+import { Avatar, Grid, Typography, Checkbox } from "@mui/material";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 
 const Quotes = () => {

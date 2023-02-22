@@ -27,16 +27,12 @@ import {
   ListItemButton,
   ListItemAvatar,
   Collapse,
-  List,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  useLikeAndUnlikePostMutation,
-  useGetLikesQuery,
-} from "redux/slices/postSlice";
+import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
 import {
@@ -48,6 +44,7 @@ import EditModal from "./EditPost";
 import {
   useBlockUserMutation,
   useFollowUserMutation,
+  useUnBlockUserMutation,
 } from "redux/slices/authSlice";
 import Quotes from "assets/svgs/Quote";
 import NotificationModal from "components/modals/NotificationModal";
@@ -87,8 +84,6 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile, type }) => {
-  console.log(type);
-  // const navigate = useNavigate();
   return (
     <>
       <ListItem
@@ -154,14 +149,14 @@ export function Image({ person: { user } }) {
 export function Text({ item, profile, displayDetail, type }) {
   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
     item;
-
-  const { full_name } = user;
+  const { full_name, is_followed, is_blocked_by_me } = user;
 
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
+  const [unBlockUser, { isLoading: unblocking }] = useUnBlockUserMutation();
   const handleCloses = (e) => {
     // e.stopPropagation();
     setAnchorEl(null);
@@ -196,15 +191,25 @@ export function Text({ item, profile, displayDetail, type }) {
     e.stopPropagation();
   };
   const handleBlockUser = async (e) => {
-    e.stopPropagation();
-    const { data, error } = await blockUser({
-      user_id,
-    });
-    if (data) {
-      toast.success(data);
-      setTimeout(() => handleCloses(e), 3000);
+    if (!is_blocked_by_me) {
+      const { data, error } = await blockUser({
+        user_id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleCloses(e), 3000);
+      }
+      if (error) toast.success(error);
+    } else {
+      const { data, error } = await unBlockUser({
+        user_id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleCloses(e), 3000);
+      }
+      if (error) toast.success(error);
     }
-    if (error) toast.success(error);
   };
   const handleFollowUser = async (e) => {
     e.stopPropagation();
@@ -352,7 +357,11 @@ export function Text({ item, profile, displayDetail, type }) {
                           <BlockOutlined sx={{ fontSize: "2rem" }} />
                         </ListItemIcon>
                         <ListItemText>
-                          {blocking ? "Blocking" : "Block User"}
+                          {blocking
+                            ? "Blocking..."
+                            : unblocking
+                            ? "Unblocking..."
+                            : `${is_blocked_by_me ? "Unblock" : "Block"} User`}
                         </ListItemText>
                       </MenuItem>
                     )}
@@ -368,7 +377,9 @@ export function Text({ item, profile, displayDetail, type }) {
                           <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
                         </ListItemIcon>
                         <ListItemText>
-                          {following ? "Following" : "Follow User"}
+                          {following
+                            ? "Following"
+                            : `${is_followed ? "Unfollow" : "Follow"} User`}
                         </ListItemText>
                       </MenuItem>
                     )}
@@ -401,15 +412,11 @@ Text.defaultProps = {
   displayDetail: true,
 };
 function Detail({ item }) {
-  const { id, recent_quotes, user, quotes_count, likes_count } = item;
+  const { id, recent_quotes, quotes_count, likes_count } = item;
 
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
   const { data: repliedComment } = useGetPostCommentsQuery({
-    type: "comments",
-    parentId: id,
-  });
-  const { data } = useGetLikesQuery({
     type: "comments",
     parentId: id,
   });
@@ -568,7 +575,7 @@ function CreateQuoteModal({
     setTimeout(() => handleClose(), 3000);
   };
   const initial = { text: "" };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <NotificationModal isOpen={open} handleClose={handleClose}>
       <Grid item container flexDirection="column" gap={2}>

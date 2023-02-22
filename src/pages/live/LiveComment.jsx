@@ -18,25 +18,17 @@ import {
 } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  useDeleteAPostMutation,
-  useLikeAndUnlikePostMutation,
-} from "redux/slices/postSlice";
+import { useDeleteAPostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
-import { useLazyGetPostCommentsQuery } from "redux/slices/commentSlice";
 
-import {
-  useUserProfileQuery,
-  useUserProfileUpdateMutation,
-} from "redux/slices/authSlice";
+import { useUserProfileQuery } from "redux/slices/authSlice";
 
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
-import { useLazyGetPostQuotesQuery } from "redux/slices/quoteSlice";
 import SingleComment from "pages/pages/components/SingleComment";
 export const LiveComment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, recent_comments, recent_quotes } = data;
+  const { id, recent_comments, recent_quotes } = data;
 
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
@@ -48,11 +40,11 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
   const anchorRef = useRef(null);
-  const [update, { isLoading: updating }] = useUserProfileUpdateMutation();
+  // const [update, { isLoading: updating }] = useUserProfileUpdateMutation();
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+  // const handleToggle = () => {
+  //   setOpen((prevOpen) => !prevOpen);
+  // };
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -129,7 +121,7 @@ export const LiveComment = ({ handleShare, data, state, setState }) => {
 
   if (isLoading) return <Skeleton />;
 
-  const checkUser = profile?.id === user_id;
+  // const checkUser = profile?.id === user_id;
 
   return (
     <>

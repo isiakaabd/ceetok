@@ -8,7 +8,7 @@ const Text = ({ ...rest }) => (
 );
 const TextArea = (props) => {
   const { name, ...rest } = props;
-  console.log(rest);
+
   return (
     <Grid container direction="column">
       <Field id={name} name={name} as={Text} type={"textarea"} {...rest} />

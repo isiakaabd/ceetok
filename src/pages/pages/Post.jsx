@@ -76,7 +76,7 @@ export const Details = ({
 
   //   if (dt) setLikeState(!likeState);
   // };
-  const [quote, { isLoading }] = usePostCommentMutation();
+  const [quote] = usePostCommentMutation();
 
   const handleSubmit = async (values) => {
     await quote({
@@ -143,17 +143,19 @@ export const Details = ({
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          <Form>
-            <Editor name="comment" placeholder={"Enter Comment.."} />
+          {({ isSubmitting }) => (
+            <Form>
+              <Editor name="comment" placeholder={"Enter Comment.."} />
 
-            <Grid item sx={{ mt: 2 }}>
-              <CustomButton
-                isSubmitting={isLoading}
-                title="Reply"
-                type="submit"
-              />
-            </Grid>
-          </Form>
+              <Grid item sx={{ mt: 2 }}>
+                <CustomButton
+                  isSubmitting={isSubmitting}
+                  title="Reply"
+                  type="submit"
+                />
+              </Grid>
+            </Form>
+          )}
         </Formik>
       </NotificationModal>
     </>

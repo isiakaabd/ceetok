@@ -1,13 +1,9 @@
-import { Typography, Grid, Button, Checkbox } from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 import { CustomButton } from "components";
-import Editor from "components/Quil";
 import { Formik, Form, FieldArray } from "formik/dist";
 import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";
-import { useDispatch, useSelector } from "react-redux";
-import { createPost } from "redux/reducers/postReducer";
-import { TextError } from "validation/TextError";
 import { useCreateAdsMutation } from "redux/slices/adsSlice";
 import { toast } from "react-toastify";
 import PaymentModal from "components/modals/PaymentModal";
@@ -36,15 +32,7 @@ const CreateAdvert = ({ handleClose, title }) => {
   const handleCreateAdvert = async (values) => {
     const { title, actions, files, duration, format } = values;
     const form = new FormData();
-    const body = {
-      title,
-      files: files[0],
-      format,
-      duration,
-      actions,
-    };
-    // const actn = actions.map((i) => JSON.stringify(i));
-    // console.log(actn, 1233);
+
     form.append("title", title);
     form.append("format", format);
     form.append("duration", duration);

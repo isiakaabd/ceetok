@@ -1,13 +1,10 @@
 import { Grid, Typography } from "@mui/material";
-import { useState } from "react";
+
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { CustomButton } from "components";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  useRecoverTokenMutation,
-  useResetPasswordMutation,
-} from "redux/slices/authSlice";
+import { useRecoverTokenMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();

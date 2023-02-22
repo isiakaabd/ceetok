@@ -1,5 +1,3 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { Grid, Checkbox, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 

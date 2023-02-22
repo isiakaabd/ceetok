@@ -2,8 +2,7 @@ import { Avatar, Grid, Skeleton, Typography } from "@mui/material";
 
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
-// import { CustomButton } from "components";
-import images from "assets";
+
 import {
   CakeOutlined,
   FemaleOutlined,
@@ -20,7 +19,7 @@ import {
 import * as Yup from "yup";
 import { TextError } from "validation/TextError";
 import { toast } from "react-toastify";
-import { getDate, getDates, getImage, link } from "helpers";
+import { getDates, getImage } from "helpers";
 import { useRef } from "react";
 const VerifyPage = ({ isOpen, handleClose }) => {
   const likes = [
@@ -68,13 +67,12 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   const handleSubmit = async (values) => {
     const {
       dob,
-      location,
+      // location,
       interests,
       profile_pic,
       full_name,
       gender,
       username,
-      phone,
     } = values;
     const form = new FormData();
     let realGender = gender === "Male" ? "m" : "f";
@@ -89,15 +87,15 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     interests.forEach((item, index) => {
       form.append(`interests[${index}]`, item);
     });
-    const body = {
-      dob,
-      location,
-      interests,
-      full_name,
-      // phone,
-      gender: realGender,
-      username,
-    };
+    // const body = {
+    //   dob,
+    //   location,
+    //   interests,
+    //   full_name,
+    //   // phone,
+    //   gender: realGender,
+    //   username,
+    // };
     const { data, error } = await updateProfile(form);
     if (error) toast.error(error);
     if (data) {

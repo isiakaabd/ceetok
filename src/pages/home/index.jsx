@@ -10,6 +10,7 @@ import CreatePost from "pages/user/modals/CreatePost";
 
 const Home = () => {
   const [openCreatePost, setCreatePost] = useState(false);
+
   return (
     <>
       <Grid item container>

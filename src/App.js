@@ -28,6 +28,7 @@ import SingleLivePage from "pages/live/SingleLivePage";
 import GuideLine from "pages/GuideLine";
 import Privacy from "pages/Privacy";
 import ContactUs from "pages/ContactUs";
+import Notification from "components/Notification";
 
 const App = () => {
   return (
@@ -61,6 +62,7 @@ const App = () => {
                 element={<CreateAnnoucement />}
               />
               <Route path="create-advert" element={<CreateAdvert />} />
+              <Route path="notifications" element={<Notification />} />
               <Route path="annoucement" element={<Announcement />} />
               <Route path="annoucement/:id" element={<SingleAnnoucement />} />
               <Route path="ads/:id" element={<Ads />} />

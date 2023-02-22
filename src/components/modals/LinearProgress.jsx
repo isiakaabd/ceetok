@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Box, Slider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useFormikContext } from "formik/dist";

@@ -13,12 +13,13 @@ export const postSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     getPost: builder.query({
-      query: ({ category, userId, offset, from, direction }) => ({
+      query: ({ category, latest, userId, offset, from, direction }) => ({
         url: `post/?${category ? `category=${category}` : ""}${
           from ? `&from=${from}` : ""
         }${offset ? `&offset=${offset}` : "&offset=0"}&limit=10${
           userId ? `&user_id=${userId}` : ""
         } ${direction ? `&from_direction=${direction}` : ""} 
+         ${latest ? `&latest=${latest}` : ""}
         `,
 
         method: "GET",

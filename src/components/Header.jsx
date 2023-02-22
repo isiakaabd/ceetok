@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 
 import {
   AppBar,
@@ -17,7 +17,7 @@ import {
 import images from "assets";
 import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
@@ -54,6 +54,15 @@ const pages = [
 ];
 
 function Header() {
+  const [active, setActive] = useState(1);
+  const location = useLocation();
+  useLayoutEffect(() => {
+    pages.map((page) =>
+      page.path === location.pathname ? setActive(page.id) : null
+    );
+
+    //eslint-disable-next-line
+  }, []);
   const ListItem = styled(MenuItem)(({ theme }) => ({
     margin: 0,
     color: "#5F5C5C",
@@ -96,7 +105,7 @@ function Header() {
 
     prevOpen.current = open;
   }, [open]);
-  const [active, setActive] = useState(1);
+
   const [modal, setModal] = useState(false);
   const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
   const [isLogin, setIsLogin] = useState(false);
@@ -156,7 +165,6 @@ function Header() {
           <Container maxWidth="xl" sx={{ p: "0 !important" }}>
             <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
               <Link to="/">
-                {" "}
                 <img
                   src={images.logo}
                   alt="logo"

@@ -10,18 +10,18 @@ import LoginModal from "components/modals/LoginModal";
 import { useGetPostQuery } from "redux/slices/postSlice";
 import Paginations from "components/modals/Paginations";
 
-const RightTab = ({ setCreatePost }) => {
+const RightTab = ({ setCreatePost, more }) => {
   // const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
   const loginStatus = useSelector((state) => state.auth.token);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const {
     data: array,
     error,
     isLoading,
-  } = useGetPostQuery({ offset: page, from: value });
+  } = useGetPostQuery({ offset: page - 1, from: value, ...more });
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -125,12 +125,11 @@ const RightTab = ({ setCreatePost }) => {
                 }}
                 xs={12}
               >
-                {/* {posts.length > 0 ? ( */}
                 {array?.posts?.map((post, index) => {
                   return <SinglePosts key={index} index={index} post={post} />;
                 })}
               </List>
-              {/* <Grid item container justifyContent={"center"}> */}
+
               <Paginations
                 page={page}
                 setPage={setPage}

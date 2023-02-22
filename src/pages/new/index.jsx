@@ -10,6 +10,7 @@ import { useState } from "react";
 
 const New = () => {
   const [openCreatePost, setCreatePost] = useState(false);
+
   return (
     <>
       <Grid item container>

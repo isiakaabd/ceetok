@@ -149,8 +149,9 @@ export function Image({ person: { user } }) {
 export function Text({ item, profile, displayDetail, type }) {
   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
     item;
-  const { full_name, is_followed, is_blocked_by_me } = user;
 
+  const { full_name, is_followed, is_blocked_by_me } = user;
+  console.log(full_name, is_followed, is_blocked_by_me);
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();

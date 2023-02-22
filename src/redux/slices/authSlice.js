@@ -56,6 +56,17 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body.user,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getNotifications: builder.query({
+      query: ({ offset }) => ({
+        url: `/notification?${
+          offset ? `&offset=${offset}` : "&offset=0"
+        }&limit=10`,
+        method: "GET",
+      }),
+      providesTags: ["user"],
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     otherUserProfile: builder.query({
       query: (id) => ({
         url: `/user/${id}`,
@@ -186,6 +197,7 @@ export const {
   useAllUsersQuery,
   useGetUserSettingsQuery,
   useLogoutMutation,
+  useGetNotificationsQuery,
   useUpdateUserSettingsMutation,
   useUnBlockUserMutation,
   useFollowUserMutation,

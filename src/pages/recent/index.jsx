@@ -10,6 +10,7 @@ import { useState } from "react";
 
 const Recent = () => {
   const [openCreatePost, setCreatePost] = useState(false);
+
   return (
     <>
       <Grid item container>
@@ -36,7 +37,7 @@ const Recent = () => {
           gap={3}
         >
           <LeftTab />
-          <RightTab setCreatePost={setCreatePost} />
+          <RightTab setCreatePost={setCreatePost} more={{ latest: true }} />
         </Grid>
         {/* Adevert */}
         <Advert />

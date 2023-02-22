@@ -1,5 +1,3 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
 import {
   Button,
   Radio,
@@ -11,9 +9,8 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { FilterList } from "@mui/icons-material";
-import { useSelector } from "react-redux";
 import { StyledMenu } from "pages/Announcement";
-import { getDate, getDates } from "helpers";
+import { getDates } from "helpers";
 
 const Filters = ({
   anchorEl,

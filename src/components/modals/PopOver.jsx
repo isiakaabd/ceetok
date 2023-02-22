@@ -37,6 +37,7 @@ export default function PopOvers({ anchorRef, open, setOpen, children }) {
     }
 
     prevOpen.current = open;
+    //eslint-disable-next-line
   }, [open]);
 
   return (

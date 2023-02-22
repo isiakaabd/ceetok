@@ -5,15 +5,13 @@ const Paginations = ({ page, setPage, count }) => {
   const handleChange = (_, value) => {
     setPage(value);
   };
-  console.log(page);
+
   return (
     <Pagination
       page={page}
-      defaultPage={0}
-      count={count}
+      defaultPage={1}
+      count={count + 1}
       color="success"
-      // hidePrevButton={true}
-      // hideNextButton={true}
       size="medium"
       sx={{
         margin: "auto",

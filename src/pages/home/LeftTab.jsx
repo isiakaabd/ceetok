@@ -1,5 +1,11 @@
 import React from "react";
-import { Grid, List, ListItemText, ListItemButton } from "@mui/material";
+import {
+  Grid,
+  List,
+  ListItemText,
+  ListItemButton,
+  Skeleton,
+} from "@mui/material";
 
 // import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -8,9 +14,10 @@ import { useGetCategoriesQuery } from "redux/slices/postSlice";
 import SearchComponent from "components/modals/SearchComponent";
 
 const LeftTab = () => {
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories, isLoading } = useGetCategoriesQuery();
   // const navigate = useNavigate();
   const handleSubmit = async () => {};
+  if (isLoading) return <Skeletons />;
   return (
     <Grid
       item
@@ -31,7 +38,7 @@ const LeftTab = () => {
       >
         <SearchComponent
           handleSubmit={handleSubmit}
-          placeholder={"Search Categorie"}
+          placeholder={"Search Categories"}
         />
         <List sx={{ width: "100%" }} dense>
           {categories?.map((item, index) => {
@@ -68,7 +75,7 @@ const LeftTab = () => {
             );
           })}
         </List>
-        <Grid sx={{ pl: 2 }} item>
+        <Grid item>
           <CustomButton
             background="#636262"
             width="10rem"
@@ -85,5 +92,24 @@ const LeftTab = () => {
     </Grid>
   );
 };
+function Skeletons() {
+  return (
+    <Grid item sx={{ width: "30rem" }} gap={3}>
+      <Grid container gap={2} overflow={"hidden"}>
+        {Array(7)
+          .fill(undefined)
+          .map((item, index) => (
+            <Grid item container flexWrap={"nowrap"} gap={2} key={index}>
+              <Skeleton
+                sx={{ height: "3rem", width: "100%" }}
+                animation="wave"
+                variant="rectangular"
+              />
+            </Grid>
+          ))}
+      </Grid>
+    </Grid>
+  );
+}
 
 export default LeftTab;

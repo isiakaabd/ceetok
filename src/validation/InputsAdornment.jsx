@@ -29,7 +29,12 @@ const Text = ({
         alignItems: "center",
       }}
     >
-      <IconButton type="submit" sx={{ background: background }}>
+      <IconButton
+        disableFocusRipple
+        disableRipple
+        type="submit"
+        sx={{ background, "&:hover": { background } }}
+      >
         <Icon />
       </IconButton>
       <InputBase

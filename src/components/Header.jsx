@@ -184,7 +184,7 @@ function Header() {
                     key={page.id}
                     style={{
                       textDecoration: "none",
-                      paddingInline: "2.5rem",
+                      marginInline: "2.5rem",
                     }}
                     onClick={() => setActive(page.id)}
                   >

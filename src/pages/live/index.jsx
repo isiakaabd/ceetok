@@ -34,7 +34,7 @@ const Live = () => {
   const { data: array, isLoading, error } = useGetLivePostsQuery();
 
   const [open, setOpen] = useState(false);
-  if (isLoading) return <Skeleton />;
+  if (isLoading) return <Skeletons />;
   // if (error)
   //   return (
   //     <Typography variant="h2" textAlign="center">
@@ -123,7 +123,9 @@ const Live = () => {
               component={!error && Link}
               to={array?.pinned?.slug || "#"}
             >
-              {array?.pinned?.title ? parse(array?.pinned?.title) : error}
+              {array?.pinned?.title
+                ? parse(array?.pinned?.title)
+                : error && "Something went wrong"}
             </Typography>
           </Grid>
         </Grid>
@@ -411,5 +413,41 @@ const Live = () => {
     </>
   );
 };
-
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      flexWrap={"nowrap"}
+      flexDirection="column"
+      gap={2}
+      // sx={{ , p: 0, overflow: "hidden" }}
+      sx={{ mt: 3, px: { xs: "1rem", md: "4rem" } }}
+    >
+      <Grid item container sx={{ height: "25rem" }}>
+        <Skeleton
+          sx={{ height: "100%", borderRadius: "1rem", width: "100%" }}
+          animation="wave"
+          variant="rectangular"
+        />
+      </Grid>
+      <Grid item container flexWrap="nowrap" gap={2} sx={{ height: "15rem" }}>
+        <Grid item xs={8}>
+          <Skeleton
+            sx={{ height: "100%", width: "100%" }}
+            animation="wave"
+            variant="rectangular"
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Skeleton
+            sx={{ height: "100%", width: "100%" }}
+            animation="wave"
+            variant="rectangular"
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
 export default Live;

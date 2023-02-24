@@ -5,12 +5,14 @@ import NotificationIcon from "assets/svgs/NotificationIcon";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
 import { getImage } from "helpers";
+import { useSelector } from "react-redux";
 
 const UserAccount = () => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-  const { data: userProfile } = useUserProfileQuery();
+  const admin = useSelector((state) => state.auth.admin);
+  const { data: userProfile, isLoading } = useUserProfileQuery();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -91,12 +93,16 @@ const UserAccount = () => {
                 sx={{
                   width: { md: 32 },
                   height: { md: 32 },
-                  fontSize: "1.8rem",
                 }}
                 src={getImage(userProfile?.avatar)}
-                alt={userProfile?.full_name}
+                alt={
+                  (isLoading && admin ? "Admin" : "User") ||
+                  userProfile?.full_name
+                }
               >
-                {userProfile?.full_name?.slice(0, 1).toUpperCase()}
+                {userProfile?.full_name?.slice(0, 1).toUpperCase() || admin
+                  ? "A"
+                  : "U"}
               </Avatar>
             </IconButton>
           </Tooltips>
@@ -120,7 +126,7 @@ const UserAccount = () => {
                 maxWidth: { xs: "12ch", sm: "100%" },
               }}
             >
-              {userProfile?.full_name}
+              {userProfile?.full_name || admin ? "Admin" : "User"}
             </Typography>
           </Tooltips>
         </Grid>

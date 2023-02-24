@@ -1,12 +1,18 @@
 import images from "assets";
-import { Grid, Skeleton, Typography } from "@mui/material";
+import {
+  Grid,
+  Skeleton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGetAdsQuery } from "redux/slices/adsSlice";
 import { getImage } from "helpers";
 const Advert = () => {
   const { obi } = images;
   const { data: allAds, isLoading } = useGetAdsQuery();
-  if (isLoading) return <Skeleton />;
+
   return (
     <Grid
       item
@@ -34,13 +40,14 @@ const Advert = () => {
           <Typography sx={{ fontSize: "2rem" }}>Create Advert</Typography>
         </Link>
       </Grid>
-      {allAds?.ads?.length > 0 ? (
+      {isLoading ? (
+        <Skeletons />
+      ) : allAds?.ads?.length > 0 ? (
         <Grid
           item
           container
           // gap={2}
           display="grid"
-          // justifyContent="space-between"
           flexWrap="nowrap"
           sx={{
             overflowX: "scroll",
@@ -88,5 +95,32 @@ const Advert = () => {
     </Grid>
   );
 };
-
+function Skeletons() {
+  const theme = useTheme();
+  const breakpoint = useMediaQuery(
+    theme.breakpoints.down("sm", { noSsr: true })
+  );
+  return (
+    <Grid
+      item
+      container
+      flexWrap={"nowrap"}
+      overflow="hidden"
+      gap={2}
+      sx={{ p: { xs: 0, md: 4 } }}
+    >
+      {Array(breakpoint ? 3 : 7)
+        .fill(undefined)
+        .map((item, index) => (
+          <Grid item xs={10} sm={8} md={4} key={index}>
+            <Skeleton
+              sx={{ height: "15rem", width: "100%" }}
+              animation="wave"
+              variant="rectangular"
+            />
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 export default Advert;

@@ -38,6 +38,15 @@ export const postSlice = api.injectEndpoints({
       invalidatesTags: ["post"],
       transformErrorResponse: (error) => error.data.message,
     }),
+    reportPost: builder.mutation({
+      query: (body) => ({
+        url: "/report",
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+      invalidatesTags: ["post"],
+      transformErrorResponse: (error) => error.data.message,
+    }),
     getAPost: builder.query({
       query: (postId) => ({
         url: `/post/${postId}`,
@@ -128,7 +137,7 @@ export const {
   useEditAPostMutation,
   useGetCategoriesQuery,
   useGetViewsQuery,
-
+  useReportPostMutation,
   useLazyGetPostQuery,
   useLikeAndUnlikePostMutation,
   useGetLikesQuery,

@@ -21,13 +21,13 @@ import { useState } from "react";
 
 const Notification = () => {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useGetNotificationsQuery({
+  const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
   if (isLoading) return <Skeleton />;
-
+  if (error) return <p>Something went wrong...</p>;
   const { total_pages, notifications } = data;
-  console.log(notifications);
+
   return (
     <Grid item container sx={{ p: 4, background: "#E5E5E5" }}>
       <Grid

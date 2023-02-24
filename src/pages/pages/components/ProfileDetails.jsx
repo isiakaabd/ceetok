@@ -81,8 +81,17 @@ const ProfileDetails = (props) => {
     //eslint-disable-next-line
   }, [userProfile, dt, id]);
   const [listNumber, setListNumber] = useState(5);
-  if (isLoading || usersLoading) return <Skeleton />;
-  if (isError) return <p>Something went wrong...</p>;
+
+  if (isLoading || usersLoading) return <Skeletons />;
+  if (isError)
+    return (
+      <Typography
+        variant="h2"
+        sx={{ px: 1, py: 3, width: "100%", textAlign: "cebter" }}
+      >
+        Something went wrong...
+      </Typography>
+    );
 
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
@@ -273,6 +282,189 @@ const ProfileDetails = (props) => {
     </>
   );
 };
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      sx={{ background: "#fff", borderRadius: "1rem", px: 3, py: 5 }}
+      flexWrap={"nowrap"}
+      overflow="hidden"
+    >
+      <Grid item container flexDirection="column" gap={2}>
+        <Skeleton
+          sx={{ height: "10rem", mx: "auto", width: "10rem" }}
+          animation="wave"
+          variant="circular"
+        />
+        <Grid
+          item
+          justifyContent={"center"}
+          container
+          gap={1}
+          flexWrap="nowrap"
+          alignItems={"center"}
+        >
+          <Skeleton
+            sx={{ height: "1rem", width: "12rem" }}
+            animation="pulse"
+            variant="text"
+          />
+          <Skeleton
+            sx={{ height: ".8rem", width: ".8rem", borderRadius: "50%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+        </Grid>
+        <Grid
+          item
+          justifyContent={"center"}
+          container
+          gap={3}
+          alignItems={"center"}
+          flexWrap="nowrap"
+        >
+          <Skeleton
+            sx={{ height: "1rem", width: "15rem" }}
+            animation="pulse"
+            variant="text"
+          />
+          <Skeleton
+            sx={{ height: "1rem", width: "4rem" }}
+            animation="pulse"
+            variant="text"
+          />
+        </Grid>
+        <Grid item container flexWrap="nowrap" justifyContent="space-around">
+          <Grid item>
+            <Skeleton
+              sx={{ height: "3rem", width: "4rem" }}
+              animation="pulse"
+              variant="rectangular"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "3rem", width: "4rem" }}
+              animation="pulse"
+              variant="rectangular"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "3rem", width: "4rem" }}
+              animation="pulse"
+              variant="rectangular"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "3rem", width: "4rem" }}
+              animation="pulse"
+              variant="rectangular"
+            />
+          </Grid>
+        </Grid>
+        <Skeleton
+          sx={{ height: ".4rem", width: "100%" }}
+          animation="pulse"
+          variant="text"
+        />
+        <Grid
+          item
+          sx={{ mb: 2 }}
+          container
+          alignItems="center"
+          flexDirection="column"
+          gap={1}
+        >
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1rem", width: "16rem" }}
+              animation="pulse"
+              variant="text"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1rem", width: "12rem" }}
+              animation="pulse"
+              variant="text"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1rem", width: "16rem" }}
+              animation="pulse"
+              variant="text"
+            />
+          </Grid>
+        </Grid>
+        <Grid item container justifyContent="center" sx={{ mb: 2 }}>
+          <Skeleton
+            sx={{ height: "4rem", borderRadius: "4rem", width: "18rem" }}
+            animation="pulse"
+            variant="rectangular"
+          />
+        </Grid>
+        <Skeleton
+          sx={{ height: ".4rem", width: "100%" }}
+          animation="pulse"
+          variant="text"
+        />
+        <Grid
+          item
+          container
+          flexWrap="nowrap"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1.5rem", width: "5rem" }}
+              animation="pulse"
+              variant="text"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "3rem", borderRadius: "2rem", width: "8rem" }}
+              animation="pulse"
+              variant="rectangular"
+            />
+          </Grid>
+        </Grid>
+        <Grid item container flexDirection="column" gap={1}>
+          <Skeleton
+            sx={{ height: "8rem", width: "100%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+          <Skeleton
+            sx={{ height: "8rem", width: "100%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+          <Skeleton
+            sx={{ height: "8rem", width: "100%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+          <Skeleton
+            sx={{ height: "8rem", width: "100%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+          <Skeleton
+            sx={{ height: "8rem", width: "100%" }}
+            animation="pulse"
+            variant="rounded"
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
 
 ProfileDetails.propTypes = {};
 

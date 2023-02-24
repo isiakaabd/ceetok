@@ -52,7 +52,7 @@ export default function Notifications({
   anchorRefs,
   handleCloses,
 }) {
-  const { data: profile, isLoading } = useUserProfileQuery();
+  const { data: profile } = useUserProfileQuery();
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
       event.preventDefault();
@@ -90,6 +90,7 @@ export default function Notifications({
     }
 
     prevOpen.current = open;
+    //eslint-disable-next-line
   }, [open]);
   const prevOpens = useRef(opens);
   useEffect(() => {
@@ -98,6 +99,7 @@ export default function Notifications({
     }
 
     prevOpens.current = opens;
+    //eslint-disable-next-line
   }, [opens]);
   const navigate = useNavigate();
   const [logoutUser] = useLogoutMutation();
@@ -116,7 +118,7 @@ export default function Notifications({
       toast.error(error);
     }
   };
-  if (isLoading) return <Skeleton />;
+
   const notificationArr = [
     {
       title: "Chat",
@@ -309,68 +311,6 @@ export default function Notifications({
           </Grow>
         )}
       </Popper>
-
-      {/* <Menu
-        anchorEl={anchorEls}
-        id="account-menu"
-        open={opens}
-        onClose={handleCloses}
-        onClick={handleCloses}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <MenuItem>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu> */}
     </>
   );
 }

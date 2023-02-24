@@ -1,4 +1,4 @@
-import { Grid, Button, List, Typography } from "@mui/material";
+import { Grid, Button, List, Typography, Skeleton } from "@mui/material";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useState } from "react";
 
@@ -38,8 +38,13 @@ const RightTab = ({ setCreatePost, more }) => {
     }
   };
 
-  // if (isLoading) return <Skeleton />;
-  if (error) return <p>Something went wrong...</p>;
+  if (isLoading) return <Skeletons />;
+  if (error)
+    return (
+      <Typography sx={{ px: { md: 4, xs: 1 } }} variant="h2">
+        Something went wrong...
+      </Typography>
+    );
   return (
     <>
       <Grid
@@ -150,5 +155,34 @@ const RightTab = ({ setCreatePost, more }) => {
     </>
   );
 };
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      flexDirection={"column"}
+      gap={2}
+      flexWrap={{ md: "nowrap", xs: "wrap" }}
+    >
+      {Array(2)
+        .fill(undefined)
+        .map((item, index) => (
+          <Grid item container flexWrap={"nowrap"} gap={3} key={index}>
+            <Skeleton
+              sx={{ height: "15rem", borderRadius: "1rem", width: "20rem" }}
+              animation="wave"
+              variant="rectangular"
+            />
+
+            <Skeleton
+              sx={{ height: "15rem", width: "100%" }}
+              animation="wave"
+              variant="rectangular"
+            />
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 
 export default RightTab;

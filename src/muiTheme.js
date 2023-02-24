@@ -102,6 +102,16 @@ export const muiTheme = createTheme({
           "0px 5px 5px -3px rgba(0,0,0,.5),0px 8px 10px 1px rgba(0,0,0,0.01),0px 3px 14px 2px rgba(0,0,0,0.01)",
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          fontSize: "2.5rem",
+          fontWeight: 500,
+          color: "success",
+          backgroundColor: "#FF9B04",
+        },
+      },
+    },
     MuiTooltip: {
       styleOverrides: {
         backgroundColor: "#FF9B04",

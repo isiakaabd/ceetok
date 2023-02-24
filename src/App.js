@@ -18,6 +18,7 @@ import ReplyComment from "pages/pages/components/ReplyComment";
 import Live from "pages/live";
 import Trending from "pages/trending";
 import CreateAdvert from "pages/pages/CreateAdvert";
+import Message from "pages/pages/Message";
 import Categories from "pages/home/categories";
 import Ads from "pages/Ads";
 import AdminRoute from "routes/AdminRoute";
@@ -56,6 +57,7 @@ const App = () => {
 
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
+              <Route path="message" element={<Message />} />
               {/* <Route path="create-post" element={<CreatePost />} /> */}
               <Route
                 path="create-annoucement"

@@ -32,7 +32,10 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
+import {
+  useLikeAndUnlikePostMutation,
+  useReportPostMutation,
+} from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
 import {
@@ -56,6 +59,7 @@ import {
   useDeleteQuoteMutation,
   useEditQuoteMutation,
 } from "redux/slices/quoteSlice";
+import { useSelector } from "react-redux";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -90,10 +94,6 @@ const SingleComment = ({ item, icons, profile, type }) => {
         disableRipple
         disableTouchRipple
         disablePadding
-        // onClick={(e) => {
-        //   e.stopPropagation();
-        //   navigate(`/user/comment/?id=${item?.id}`);
-        // }}
         sx={{
           "& .MuiListItemText-root": {
             m: 0,
@@ -147,15 +147,24 @@ export function Image({ person: { user } }) {
 }
 
 export function Text({ item, profile, displayDetail, type }) {
-  const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
-    item;
-
+  const {
+    user,
+    parent_type,
+    comment,
+    createdAt,
+    updatedAt,
+    body,
+    edited,
+    user_id,
+    id,
+  } = item;
+  const admin = useSelector((state) => state.auth.admin);
   const { full_name, is_followed, is_blocked_by_me } = user;
-  console.log(full_name, is_followed, is_blocked_by_me);
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [report] = useReportPostMutation();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
   const [unBlockUser, { isLoading: unblocking }] = useUnBlockUserMutation();
   const handleCloses = (e) => {
@@ -188,9 +197,7 @@ export function Text({ item, profile, displayDetail, type }) {
   const handleEditComment = (e) => {
     setOpen(true);
   };
-  const handleReportUser = (e) => {
-    e.stopPropagation();
-  };
+  const [openReport, setOpenReport] = useState(false);
   const handleBlockUser = async (e) => {
     if (!is_blocked_by_me) {
       const { data, error } = await blockUser({
@@ -222,6 +229,22 @@ export function Text({ item, profile, displayDetail, type }) {
       setTimeout(() => handleCloses(e), 3000);
     }
     if (error) toast.success(error);
+  };
+  const validationSchema = Yup.object({
+    body: Yup.string("").required("Required"),
+  });
+  const handleReport = async (values) => {
+    const { body } = values;
+    const { data, error } = await report({
+      parent_type,
+      parent_id: id,
+      reason: body,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => setOpenReport(false), 3000);
+    }
+    if (error) toast(error);
   };
 
   return (
@@ -332,13 +355,16 @@ export function Text({ item, profile, displayDetail, type }) {
                         </ListItemText>
                       </MenuItem>
                     )}
-                    {check && (
+                    {check && !admin && (
                       <MenuItem
                         sx={{
                           display: "flex",
                           alignItems: "center",
                         }}
-                        onClick={handleReportUser}
+                        onClick={(e) => {
+                          handleCloses(e);
+                          setOpenReport(true);
+                        }}
                       >
                         <ListItemIcon>
                           <ReportOutlined sx={{ fontSize: "2rem" }} />
@@ -396,7 +422,43 @@ export function Text({ item, profile, displayDetail, type }) {
           !displayDetail || type === "quote" ? null : <Detail item={item} />
         }
       />
-
+      <NotificationModal
+        isOpen={openReport}
+        handleClose={() => setOpenReport(false)}
+      >
+        <Formik
+          initialValues={{ body: "" }}
+          onSubmit={handleReport}
+          validationSchema={validationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Grid item container flexDirection="column" gap={4}>
+                <Typography
+                  color="#464646"
+                  sx={{
+                    textAlign: "center",
+                    fontSize: { md: "2rem", xs: "1.7rem" },
+                  }}
+                  fontWeight={700}
+                >
+                  Report Abuse
+                </Typography>
+                <Grid item>
+                  <Editor name="body" />
+                </Grid>
+                <Grid item>
+                  <CustomButton
+                    title={"Report"}
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                  />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </NotificationModal>
       <EditModal
         item={item}
         open={open}

@@ -8,6 +8,7 @@ import {
   Avatar,
   ListItemIcon,
   ListItemButton,
+  Skeleton,
 } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,29 @@ const AllPosts = ({ post, index, showUser }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   // const handleLogin = () => setOpen(true);
+  function Skeletons() {
+    return (
+      <Grid item container gap={3} flexWrap={{ md: "nowrap", xs: "wrap" }}>
+        {Array(3)
+          .fill(undefined)
+          .map((item, index) => (
+            <Grid item container gap={4} key={index}>
+              <Skeleton
+                sx={{ height: "15rem", width: "10rem" }}
+                animation="wave"
+                variant="rectangular"
+              />
+
+              <Skeleton
+                sx={{ height: "15rem", width: "100%" }}
+                animation="wave"
+                variant="rectangular"
+              />
+            </Grid>
+          ))}
+      </Grid>
+    );
+  }
 
   return (
     <>

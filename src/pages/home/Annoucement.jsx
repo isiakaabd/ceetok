@@ -6,6 +6,9 @@ import {
   List,
   ListItemText,
   ListItemButton,
+  Skeleton,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -18,7 +21,7 @@ const Annoucement = () => {
   const [openCreatePost, setCreatePost] = useState(false);
   const handleCreatePostOpen = () => setCreatePost(true);
   const [page] = useState(0);
-  const { data: annoucements } = useGetAnnoucementsQuery({ page });
+  const { data: annoucements, isLoading } = useGetAnnoucementsQuery({ page });
   const handleCreatePostClose = () => setCreatePost(false);
   return (
     <>
@@ -72,7 +75,9 @@ const Annoucement = () => {
           </Grid>
         </Grid>
         <Grid item container flexDirection="column">
-          {annoucements?.announcements?.length > 0 ? (
+          {isLoading ? (
+            <Skeletons />
+          ) : annoucements?.announcements?.length > 0 ? (
             <List
               item
               container
@@ -156,5 +161,32 @@ const Annoucement = () => {
     </>
   );
 };
-
+function Skeletons() {
+  const theme = useTheme();
+  const breakpoint = useMediaQuery(
+    theme.breakpoints.down("sm", { noSsr: true })
+  );
+  return (
+    <Grid
+      item
+      container
+      flexWrap={"nowrap"}
+      overflow="hidden"
+      gap={2}
+      sx={{ p: { md: 4, xs: 2 } }}
+    >
+      {Array(breakpoint ? 3 : 7)
+        .fill(undefined)
+        .map((item, index) => (
+          <Grid item xs={10} sm={8} md={4} key={index}>
+            <Skeleton
+              sx={{ height: "10rem", width: "100%" }}
+              animation="wave"
+              variant="rectangular"
+            />
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 export default Annoucement;

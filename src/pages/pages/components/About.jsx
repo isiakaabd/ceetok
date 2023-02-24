@@ -1,11 +1,13 @@
 import { Divider, Grid, Skeleton, Typography } from "@mui/material";
 import { getDate } from "helpers";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import Error from "./Error";
 
-const About = (props) => {
-  const { data, isLoading } = useUserProfileQuery();
+const About = () => {
+  const { data, isLoading, error } = useUserProfileQuery();
 
-  if (isLoading) return <Skeleton />;
+  if (true) return <Skeletons />;
+  if (error) return <Error />;
   const { dob, gender, interests, createdAt, occupation } = data;
   return (
     <Grid item container sx={{ background: "#fff", p: 2 }}>
@@ -261,6 +263,122 @@ const About = (props) => {
   );
 };
 
-About.propTypes = {};
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      gap={2}
+      sx={{ background: "#fff", borderRadius: "1rem", px: 3, py: 4 }}
+    >
+      <Grid item container flexDirection="column" gap={2}>
+        <Skeleton
+          sx={{ height: "1.5rem", width: "4rem" }}
+          animation="wave"
+          variant="text"
+        />
+        <Grid item container gap={1} flexWrap="nowrap">
+          <Skeleton
+            sx={{ height: "1.5rem", width: "4rem" }}
+            animation="wave"
+            variant="text"
+          />
+          <Skeleton
+            sx={{ height: "1.5rem", width: "15rem" }}
+            animation="wave"
+            variant="text"
+          />
+          <Grid item sx={{ ml: 3 }} container gap={1}>
+            <Skeleton
+              sx={{ height: "1.5rem", width: "4rem" }}
+              animation="wave"
+              variant="text"
+            />
+            <Skeleton
+              sx={{ height: "1.5rem", width: "15rem" }}
+              animation="wave"
+              variant="text"
+            />
+          </Grid>
+        </Grid>
+        <Grid item container gap={1}>
+          <Skeleton
+            sx={{ height: "1.5rem", width: "4rem" }}
+            animation="wave"
+            variant="text"
+          />
+          <Skeleton
+            sx={{ height: "1.5rem", width: "10rem" }}
+            animation="wave"
+            variant="text"
+          />
+        </Grid>
+      </Grid>
+      <Grid item container flexDirection="column" gap={2}>
+        <Skeleton
+          sx={{ height: "1.5rem", width: "9rem" }}
+          animation="wave"
+          variant="text"
+        />
+        {Array(5)
+          .fill(undefined)
+          .map((item, index) => (
+            <>
+              <Skeleton
+                sx={{ mt: 3, height: ".4rem", width: { xs: "90%", md: "60%" } }}
+                animation="wave"
+                variant="text"
+              />
+              <Grid item sx={{ width: { xs: "85%", md: "60%" } }}>
+                <Grid item gap={2} container flexDirection="column">
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                    flexWrap="nowrap"
+                  >
+                    <Skeleton
+                      sx={{ height: "1.5rem", width: "6rem" }}
+                      animation="wave"
+                      variant="text"
+                    />
+
+                    <Skeleton
+                      sx={{ height: "1.5rem", width: "6rem" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                    flexWrap="nowrap"
+                  >
+                    <Skeleton
+                      sx={{ height: "1.5rem", width: "6rem" }}
+                      animation="wave"
+                      variant="text"
+                    />
+
+                    <Skeleton
+                      sx={{ height: "1.5rem", width: "6rem" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Skeleton
+                sx={{ height: ".4rem", width: { xs: "90%", md: "60%" } }}
+                animation="wave"
+                variant="text"
+              />
+            </>
+          ))}
+      </Grid>
+    </Grid>
+  );
+}
 
 export default About;

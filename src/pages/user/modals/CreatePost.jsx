@@ -63,7 +63,6 @@ const CreatePost = ({
     useCreateAnnoucementMutation();
   const [editAnnoucement] = useEditAnnoucementMutation();
   const navigate = useNavigate();
-  // const { id, title, category, body } = data;
   const editState = {
     title: data?.title,
     category: data?.category,

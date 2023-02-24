@@ -25,6 +25,7 @@ import VerifyPage from "components/modals/VerifyPage";
 import { useSelector } from "react-redux";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
+import Error from "./Error";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -83,15 +84,7 @@ const ProfileDetails = (props) => {
   const [listNumber, setListNumber] = useState(5);
 
   if (isLoading || usersLoading) return <Skeletons />;
-  if (isError)
-    return (
-      <Typography
-        variant="h2"
-        sx={{ px: 1, py: 3, width: "100%", textAlign: "cebter" }}
-      >
-        Something went wrong...
-      </Typography>
-    );
+  if (isError) return <Error />;
 
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (

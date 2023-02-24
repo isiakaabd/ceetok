@@ -11,12 +11,13 @@ import Paginations from "components/modals/Paginations";
 import { useState } from "react";
 import { DeleteOutline } from "@mui/icons-material";
 import { getImage } from "helpers";
-const Media = (props) => {
+import Error from "./Error";
+const Media = () => {
   const [page, setPage] = useState(0);
   const { data, error, isLoading } = useAllMediaQuery(page);
 
-  if (isLoading) return <Skeleton />;
-  if (error) return "Something Went Wrong";
+  if (isLoading) return <Skeletons />;
+  if (error) return <Error />;
   return (
     <Grid
       item
@@ -54,7 +55,9 @@ const Media = (props) => {
           </IconButton>
         </Grid>
       </Grid>
-      {data?.media?.length > 0 ? (
+      {isLoading ? (
+        <Skeletons />
+      ) : data?.media?.length > 0 ? (
         <Grid item container gap={2}>
           {data?.media?.map((item, index) => (
             <Avatar
@@ -76,6 +79,29 @@ const Media = (props) => {
   );
 };
 
-Media.propTypes = {};
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      gap={2}
+      display="grid"
+      gridTemplateColumns={{ md: "repeat(3,1fr)", xs: "repeat(2,1fr)" }}
+      sx={{ background: "#fff", borderRadius: "1rem", px: 3, py: 5 }}
+    >
+      {Array(12)
+        .fill(undefined)
+        .map((_, index) => (
+          <Grid item key={index}>
+            <Skeleton
+              sx={{ height: "10rem", width: "100%" }}
+              animation="wave"
+              variant="rounded"
+            />
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 
 export default Media;

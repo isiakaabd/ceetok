@@ -162,23 +162,72 @@ function Skeletons() {
       container
       flexDirection={"column"}
       gap={2}
+      sx={{ padding: { md: "0", xs: "1rem" }, marginInline: "auto" }}
       flexWrap={{ md: "nowrap", xs: "wrap" }}
     >
-      {Array(2)
+      <Grid
+        item
+        alignItems="center"
+        container
+        justifyContent={"space-between"}
+        flexWrap={"nowrap"}
+      >
+        <Skeleton
+          sx={{ height: "4rem", borderRadius: "2rem", width: "15rem" }}
+          animation="wave"
+          variant="rectangular"
+        />
+        <Skeleton
+          sx={{ height: "4rem", width: "12rem" }}
+          animation="wave"
+          variant="rounded"
+        />
+      </Grid>
+      {Array(5)
         .fill(undefined)
         .map((item, index) => (
-          <Grid item container flexWrap={"nowrap"} gap={3} key={index}>
-            <Skeleton
-              sx={{ height: "15rem", borderRadius: "1rem", width: "20rem" }}
-              animation="wave"
-              variant="rectangular"
-            />
-
-            <Skeleton
-              sx={{ height: "15rem", width: "100%" }}
-              animation="wave"
-              variant="rectangular"
-            />
+          <Grid item container flexWrap={"nowrap"} gap={2} key={index}>
+            <Grid item>
+              <Grid item container gap={1}>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: "1rem", width: "1rem" }}
+                    animation="wave"
+                    variant="rounded"
+                  />
+                </Grid>
+                <Skeleton
+                  sx={{ height: "8rem", width: "8rem" }}
+                  animation="wave"
+                  variant="rounded"
+                />
+              </Grid>
+            </Grid>
+            <Grid item flex={1}>
+              <Grid item container flexDirection="column">
+                <Skeleton
+                  sx={{ height: "3rem", borderRadius: "1rem", width: "8rem" }}
+                  animation="wave"
+                  variant="text"
+                />
+                <Grid item container gap={0.5} flexDirection="column">
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "100%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "60%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         ))}
     </Grid>

@@ -36,7 +36,7 @@ const Trending = () => {
     category: "trending",
     from: value,
   });
-  console.log(array);
+
   const [count] = useState(array?.total_pages);
   const handleChange = (e, value) => {
     setPage(value);
@@ -127,7 +127,7 @@ const Trending = () => {
           </Grid>
           <Grid item container>
             {isLoading ? (
-              <Skeleton />
+              <Skeletons />
             ) : array?.posts?.length > 0 ? (
               <>
                 <List
@@ -150,20 +150,20 @@ const Trending = () => {
                     );
                   })}
                 </List>
-                {/* <Grid item container justifyContent={"center"}> */}
                 <Pagination
                   page={page}
                   count={count}
-                  // hidePrevButton={true}
-                  // hideNextButton={true}
                   sx={{ margin: "auto", py: 2 }}
-                  // boundaryCount={0}
                   onChange={handleChange}
                 />
-                {/* </Grid> */}
               </>
             ) : (
-              <Typography variant="h2" width="100%" textAlign="center">
+              <Typography
+                variant="h2"
+                sx={{ py: 3 }}
+                width="100%"
+                textAlign="center"
+              >
                 No Data yet
               </Typography>
             )}
@@ -184,5 +184,59 @@ const Trending = () => {
     </>
   );
 };
+
+function Skeletons() {
+  return (
+    <Grid item container gap={2}>
+      {Array(3)
+        .fill("undefined")
+        .map((i, index) => (
+          <Grid item container flexWrap={"nowrap"} gap={2}>
+            <Grid item>
+              <Grid item container gap={1}>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: "1rem", width: "1rem" }}
+                    animation="wave"
+                    variant="rounded"
+                  />
+                </Grid>
+                <Skeleton
+                  sx={{ height: "8rem", width: "8rem" }}
+                  animation="wave"
+                  variant="rounded"
+                />
+              </Grid>
+            </Grid>
+            <Grid item flex={1}>
+              <Grid item container flexDirection="column">
+                <Skeleton
+                  sx={{ height: "3rem", borderRadius: "1rem", width: "8rem" }}
+                  animation="wave"
+                  variant="text"
+                />
+                <Grid item container gap={0.5} flexDirection="column">
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "100%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "60%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 
 export default Trending;

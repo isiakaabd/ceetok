@@ -422,7 +422,7 @@ function Skeletons() {
       flexDirection="column"
       gap={2}
       // sx={{ , p: 0, overflow: "hidden" }}
-      sx={{ mt: 3, px: { xs: "1rem", md: "4rem" } }}
+      sx={{ mt: 3, px: { xs: "1rem", md: "4rem" }, py: 3 }}
     >
       <Grid item container sx={{ height: "25rem" }}>
         <Skeleton

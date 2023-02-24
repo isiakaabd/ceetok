@@ -105,9 +105,8 @@ export const muiTheme = createTheme({
     MuiAvatar: {
       styleOverrides: {
         root: {
-          fontSize: "2.5rem",
+          fontSize: "2rem",
           fontWeight: 500,
-          color: "success",
           backgroundColor: "#FF9B04",
         },
       },

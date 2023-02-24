@@ -94,19 +94,67 @@ const LeftTab = () => {
 };
 function Skeletons() {
   return (
-    <Grid item sx={{ width: "30rem" }} gap={3}>
-      <Grid container gap={2} overflow={"hidden"}>
-        {Array(7)
-          .fill(undefined)
-          .map((item, index) => (
-            <Grid item container flexWrap={"nowrap"} gap={2} key={index}>
-              <Skeleton
-                sx={{ height: "3rem", width: "100%" }}
-                animation="wave"
-                variant="rectangular"
-              />
-            </Grid>
-          ))}
+    <Grid
+      item
+      md={3}
+      sx={{
+        display: { md: "block", xs: "none" },
+        // width: "30rem",
+        padding: { xs: "1rem", md: "2rem" },
+
+        background: "white",
+        borderRadius: "0 2rem 2rem 0",
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+      }}
+      gap={3}
+    >
+      <Grid container flexDirection="column" gap={2} overflow={"hidden"}>
+        <Skeleton
+          sx={{ height: "4rem", borderRadius: "2rem", width: "100%" }}
+          animation="wave"
+          variant="rounded"
+        />
+        <Grid
+          item
+          container
+          flexDirection="column"
+          flexWrap={"nowrap"}
+          gap={1.5}
+        >
+          {Array(7)
+            .fill(undefined)
+            .map((item, index) => (
+              <Grid
+                item
+                container
+                flexWrap="nowrap"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid item xs={8}>
+                  <Skeleton
+                    key={index}
+                    sx={{ height: "1.5rem", width: "100%" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                </Grid>
+                <Grid item>
+                  <Skeleton
+                    key={index}
+                    sx={{ height: "1.5rem", width: "1.5rem" }}
+                    animation="wave"
+                    variant="circular"
+                  />
+                </Grid>
+              </Grid>
+            ))}
+        </Grid>
+        <Skeleton
+          sx={{ height: "3.5rem", width: "10rem" }}
+          animation="wave"
+          variant="rounded"
+        />
       </Grid>
     </Grid>
   );

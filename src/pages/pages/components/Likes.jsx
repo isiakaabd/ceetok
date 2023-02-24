@@ -1,9 +1,28 @@
-import { Grid, Checkbox, IconButton, Typography } from "@mui/material";
-import DeleteIcon from "assets/svgs/DeleteIcon";
-
+import {
+  Grid,
+  IconButton,
+  Typography,
+  Skeleton,
+  ListItem,
+  ListItemButton,
+  ListItemAvatar,
+  ListItemText,
+  List,
+} from "@mui/material";
+import parse from "html-react-parser";
 import Thumb from "assets/svgs/Thumb";
+import Paginations from "components/modals/Paginations";
+import { useState } from "react";
+import { useGetUsercontentLikeQuery } from "redux/slices/authSlice";
+import { DeleteOutline } from "@mui/icons-material";
 
 const Likes = () => {
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useGetUsercontentLikeQuery({ offset: page - 1 });
+  if (isLoading) return <Skeleton />;
+  console.log(data);
+  const { total_pages, likes } = data;
+  console.log(total_pages);
   return (
     <Grid
       item
@@ -17,74 +36,67 @@ const Likes = () => {
       }}
       flexDirection="column"
     >
-      <Grid item sx={{ mb: 4, mt: 2 }} alignSelf="flex-end">
-        <Grid container alignItems="center" gap={0.5}>
-          {/* <IconButton> */}
-          <DeleteIcon sx={{ fontSize: "2.5rem", mt: 1 }} />
-          {/* </IconButton> */}
-          <Typography fontSize="1.4rem" fontWeight={400} color="secondary">
-            Delete All
-          </Typography>
-          <Checkbox
-            defaultChecked
-            sx={{
-              "& .MuiSvgIcon-root": { fontSize: "2.5rem", color: "#9B9A9A" },
-            }}
-          />
-        </Grid>
-      </Grid>
-      <Grid item container gap={4} justifyContent="space-between">
-        {Array(20)
-          .fill(undefined)
-          .map((item, index) => (
-            <Grid
-              item
-              md={5.5}
-              xs={12}
-              key={index}
-              sx={{
-                p: 1,
-                cursor: "pointer",
-                ":hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                },
-              }}
-            >
-              <Grid container flexWrap="nowrap">
-                <Grid item sx={{ mr: 2 }}>
-                  <IconButton sx={{ border: "1px solid #9B9A9A" }}>
+      <IconButton size="large" sx={{ alignSelf: "flex-end" }}>
+        <DeleteOutline sx={{ fontSize: "3rem" }} />
+      </IconButton>
+
+      <List sx={{ maxWidth: "100%" }}>
+        {likes?.map(({ parent, parent_type }) => {
+          const likes = parent?.recent_likes?.map((like) => like?.full_name);
+
+          return (
+            <ListItem dense disableGutters>
+              <ListItemButton dense alignItems="flex-start">
+                <ListItemAvatar sx={{ minWidth: { md: "5rem", xs: "4rem" } }}>
+                  <IconButton size="small" sx={{ border: "1px solid #9B9A9A" }}>
                     <Thumb sx={{ fontSize: "2rem" }} />
                   </IconButton>
-                </Grid>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography
+                      color="color.text"
+                      fontWeight={600}
+                      component="p"
+                      fontSize={{ md: "1.8rem", xs: "1.4rem" }}
+                    >
+                      {likes
+                        ?.slice(0, likes.length >= 2 ? 2 : likes.length)
+                        .join(", ")}{" "}
+                      {` ${
+                        likes?.length > 2
+                          ? `and ${parent?.likes_count - 2} others`
+                          : ""
+                      } ${likes?.length >= 2 ? "like" : "likes"} your ${
+                        parent_type === "posts"
+                          ? "post"
+                          : parent_type === "comments"
+                          ? "comment"
+                          : parent_type
+                      }  `}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography
+                      variant="span"
+                      fontWeight={500}
+                      sx={{
+                        width: "max-content",
+                        fontSize: { md: "1.8rem", xs: "1.4rem" },
+                      }}
+                      className="likes-content"
+                    >
+                      {parse(parent?.comment || parent?.body)}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
 
-                {/* right */}
-                <Grid item container>
-                  <Grid item>
-                    <Grid flexDirection="column" container>
-                      <Typography
-                        color="secondary"
-                        fontWeight={500}
-                        fontSize={{ md: "1.9rem", xs: "1.4rem" }}
-                      >
-                        Nnaji Joshua, Gladys Jay{" "}
-                        <Typography variant="span" color="#9B9A9A" to="#">
-                          and 12 others Likes your Post.
-                        </Typography>
-                        <Typography
-                          variant="span"
-                          color="secondary"
-                          fontWeight={700}
-                        >
-                          “Sanwo Olu Not fit for 2nd Term”{" "}
-                        </Typography>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          ))}
-      </Grid>
+      <Paginations page={page} setPage={setPage} count={total_pages} />
     </Grid>
   );
 };

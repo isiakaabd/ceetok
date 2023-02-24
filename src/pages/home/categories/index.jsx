@@ -66,7 +66,12 @@ const Categories = () => {
       <Grid item container gap={3}>
         {categories?.map((item, index) => {
           return (
-            <Grid item container sx={{ border: "1px solid #C4C4C4", p: 2 }}>
+            <Grid
+              item
+              key={index}
+              container
+              sx={{ border: "1px solid #C4C4C4", p: 2 }}
+            >
               <Grid item container flexWrap="nowrap" alignItems="center">
                 <Typography
                   fontWeight={700}

@@ -305,6 +305,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               textAlign: "justify",
               // pl: 3,
             }}
+            className="likes-content"
           >
             {parse(body)}
           </Typography>

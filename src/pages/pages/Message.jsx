@@ -10,9 +10,7 @@ import {
   Typography,
   Skeleton,
 } from "@mui/material";
-import ArrowBack from "assets/svgs/ArrowBack";
-import { useNavigate } from "react-router-dom";
-import { Image } from "./components/SingleComment";
+// import ArrowBack from "assets/svgs/ArrowBack";
 import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quil";
@@ -23,11 +21,12 @@ import { useUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 
 const Message = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const ws = useMemo(() => new WebSocket("ws://3.80.211.23:5050"), []);
 
   const { data: profile, isLoading } = useUserProfileQuery();
+  console.log(profile);
 
   const token = useSelector((state) => state.auth.token);
 

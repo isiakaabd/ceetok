@@ -93,9 +93,7 @@ export const authSlice = api.injectEndpoints({
       // transformResponse: (response) => response.body.users,
       transformErrorResponse: (error) => error.data.message,
     }),
-    // /${username ? `?username=${username}` : ""}${
-    //   followers ? `&followed=true` : ""
-    // }
+
     followUser: builder.mutation({
       query: (body) => ({
         url: `/follow `,
@@ -175,13 +173,14 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
-    refreshToken: builder.mutation({
-      query: () => ({
-        url: "/user/logout",
-        method: "POST",
+
+    getUsercontentLike: builder.query({
+      query: ({ offset }) => ({
+        url: `/like/user?offset=${offset ? offset : 0}&limit=10`,
+        method: "GET",
       }),
-      invalidatesTags: ["user", "post", "announcement", "admin"],
-      transformResponse: (response) => response.message,
+      invalidatesTags: ["user", "admin"],
+      transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
   }),
@@ -196,6 +195,7 @@ export const {
   useUserProfileQuery,
   useAllUsersQuery,
   useGetUserSettingsQuery,
+  useGetUsercontentLikeQuery,
   useLogoutMutation,
   useGetNotificationsQuery,
   useUpdateUserSettingsMutation,

@@ -39,6 +39,9 @@ import { getImage, getTimeMoment } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import ArrowBack from "assets/svgs/ArrowBack";
+import { useSelector } from "react-redux";
+import { useReportPostMutation } from "redux/slices/postSlice";
+import Error from "./Error";
 const validationSchema = Yup.object({
   comment: Yup.string().required("Enter your Comment"),
 });
@@ -76,7 +79,7 @@ const ReplyComment = () => {
   };
   if (loadingComment || isLoading)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
-  if (err) return <p>Soemthing went wrong...</p>;
+  if (err) return <Error />;
 
   return (
     <>
@@ -110,7 +113,9 @@ const ReplyComment = () => {
               >
                 Comment
               </Typography>
-              <Typography>{parse(mainComment?.comment)}</Typography>
+              <Typography className="likes-content">
+                {parse(mainComment?.comment)}
+              </Typography>
             </Grid>
             <Typography fontWeight={700} sx={{ my: 2 }}>
               Replying to
@@ -202,6 +207,8 @@ function Single({ comments }) {
   const { edited, updatedAt, createdAt, user, user_id, comment, id } = comments;
   const { full_name, avatar } = user;
   // const token = useSelector((state) => state.auth.token);
+  const admin = useSelector((state) => state.auth.admin);
+  const [report] = useReportPostMutation();
   const navigate = useNavigate();
   const handleClicks = (id) => {
     navigate({
@@ -211,6 +218,7 @@ function Single({ comments }) {
   };
   const { data: profile } = useUserProfileQuery();
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  const [openReport, setOpenReport] = useState(false);
   const handleCloses = () => setAnchorEl(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const opens = Boolean(anchorEl);
@@ -258,6 +266,19 @@ function Single({ comments }) {
     //   })
     //   .catch((err) => toast.error(err));
     // setTimeout(() => handleClose(), 500);
+  };
+  const handleReport = async (values) => {
+    const { body } = values;
+    const { data, error } = await report({
+      parent_type: "comments",
+      parent_id: id,
+      reason: body,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => setOpenReport(false), 3000);
+    }
+    if (error) toast(error);
   };
   return (
     <>
@@ -383,11 +404,15 @@ function Single({ comments }) {
                           </MenuItem>
                         )}
 
-                        {check && (
+                        {check && !admin && (
                           <MenuItem
                             sx={{
                               display: "flex",
                               alignItems: "center",
+                            }}
+                            onClick={(e) => {
+                              handleCloses(e);
+                              setOpenReport(true);
                             }}
                           >
                             <ListItemIcon>
@@ -404,6 +429,7 @@ function Single({ comments }) {
                 <Typography
                   variant="h5"
                   sx={{ textAlign: "left", width: "98%" }}
+                  className="likes-content"
                 >
                   {parse(comment)}
                 </Typography>
@@ -427,6 +453,43 @@ function Single({ comments }) {
               />
             </Grid>
           </Form>
+        </Formik>
+      </NotificationModal>
+      <NotificationModal
+        isOpen={openReport}
+        handleClose={() => setOpenReport(false)}
+      >
+        <Formik
+          initialValues={{ body: "" }}
+          onSubmit={handleReport}
+          validationSchema={validationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Grid item container flexDirection="column" gap={4}>
+                <Typography
+                  color="#464646"
+                  sx={{
+                    textAlign: "center",
+                    fontSize: { md: "2rem", xs: "1.7rem" },
+                  }}
+                  fontWeight={700}
+                >
+                  Report Abuse
+                </Typography>
+                <Grid item>
+                  <Editor name="body" />
+                </Grid>
+                <Grid item>
+                  <CustomButton
+                    title={"Report"}
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                  />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
         </Formik>
       </NotificationModal>
     </>

@@ -8,7 +8,17 @@ const About = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { dob, gender, interests, createdAt, occupation } = data;
+  const {
+    dob,
+    gender,
+    post_count,
+    last_activity,
+    interests,
+    avg_post_per_day,
+    createdAt,
+    occupation,
+  } = data;
+  console.log(data);
   return (
     <Grid item container sx={{ background: "#fff", p: 2 }}>
       <Grid item md={8} xs={12}>
@@ -82,7 +92,7 @@ const About = () => {
               <Typography
                 sx={{ ml: "auto", fontSize: { md: "1.7rem", xs: "1.4rem" } }}
               >
-                120
+                {post_count || 0}
               </Typography>
             </Grid>
             <Grid item container alignItems="center">
@@ -96,7 +106,7 @@ const About = () => {
               <Typography
                 sx={{ ml: "auto", fontSize: { md: "1.7rem", xs: "1.4rem" } }}
               >
-                0.19
+                {avg_post_per_day || 0}
               </Typography>
             </Grid>
             <Divider />
@@ -162,7 +172,7 @@ const About = () => {
                 fontWeight={600}
                 color="secondary"
               >
-                10-10-2022
+                {getDate(last_activity)}
               </Typography>
             </Grid>
             <Grid item container alignItems="center">

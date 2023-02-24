@@ -147,17 +147,8 @@ export function Image({ person: { user } }) {
 }
 
 export function Text({ item, profile, displayDetail, type }) {
-  const {
-    user,
-    parent_type,
-    comment,
-    createdAt,
-    updatedAt,
-    body,
-    edited,
-    user_id,
-    id,
-  } = item;
+  const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
+    item;
   const admin = useSelector((state) => state.auth.admin);
   const { full_name, is_followed, is_blocked_by_me } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
@@ -236,7 +227,7 @@ export function Text({ item, profile, displayDetail, type }) {
   const handleReport = async (values) => {
     const { body } = values;
     const { data, error } = await report({
-      parent_type,
+      parent_type: "comments",
       parent_id: id,
       reason: body,
     });

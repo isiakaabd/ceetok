@@ -80,3 +80,11 @@ body {
 .payment_btn:hover {
   background: #333;
 }
+
+.likes-content > * {
+  word-wrap: anywhere;
+  white-space: pre-wrap;
+  max-width: max-content;
+  display: inline-flex;
+  text-align: justify;
+}

@@ -399,6 +399,7 @@ const SingleAnnoucement = () => {
                 color="#5F5C5C"
                 fontWeight={400}
                 fontSize={{ md: "2.4rem", xs: "1.5rem" }}
+                className="likes-content"
               >
                 {parse(body)}
               </Grid>{" "}

@@ -95,12 +95,21 @@ const UserAccount = () => {
                   height: { md: 32 },
                 }}
                 src={getImage(userProfile?.avatar)}
+                // alt={
+                //   userProfile?.full_name ||
+                //   (isLoading && admin ? "Admin" : "User")
+                // }
                 alt={
-                  (isLoading && admin ? "Admin" : "User") ||
                   userProfile?.full_name
+                    ? userProfile?.full_name
+                    : admin
+                    ? "Admin"
+                    : "User"
                 }
               >
-                {userProfile?.full_name?.slice(0, 1).toUpperCase() || admin
+                {userProfile?.full_name
+                  ? userProfile?.full_name?.slice(0, 1).toUpperCase()
+                  : admin
                   ? "A"
                   : "U"}
               </Avatar>
@@ -113,7 +122,15 @@ const UserAccount = () => {
             handleCloses={handleCloses}
             handleToggles={handleToggles}
           />
-          <Tooltips title={userProfile?.full_name}>
+          <Tooltips
+            title={
+              userProfile?.full_name
+                ? userProfile?.full_name
+                : admin
+                ? "Admin"
+                : "User"
+            }
+          >
             <Typography
               variant="h5"
               fontWeight={700}
@@ -126,7 +143,11 @@ const UserAccount = () => {
                 maxWidth: { xs: "12ch", sm: "100%" },
               }}
             >
-              {userProfile?.full_name || admin ? "Admin" : "User"}
+              {userProfile?.full_name
+                ? userProfile?.full_name
+                : admin
+                ? "Admin"
+                : "User"}
             </Typography>
           </Tooltips>
         </Grid>

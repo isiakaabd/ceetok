@@ -44,7 +44,8 @@ export const postSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
-      invalidatesTags: ["post"],
+      invalidatesTags: ["post", "comment"],
+      transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
     getAPost: builder.query({

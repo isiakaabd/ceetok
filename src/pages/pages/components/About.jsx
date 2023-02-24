@@ -6,7 +6,7 @@ import Error from "./Error";
 const About = () => {
   const { data, isLoading, error } = useUserProfileQuery();
 
-  if (true) return <Skeletons />;
+  if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { dob, gender, interests, createdAt, occupation } = data;
   return (

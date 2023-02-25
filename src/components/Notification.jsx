@@ -18,28 +18,37 @@ import { Delete, MoreVertOutlined } from "@mui/icons-material";
 import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
 import { useState } from "react";
+import Error from "pages/pages/components/Error";
 
 const Notification = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
-  if (isLoading) return <Skeleton />;
-  if (error) return <p>Something went wrong...</p>;
+  if (isLoading) return <Skeletons />;
+  if (error) return <Error />;
   const { total_pages, notifications } = data;
-
   return (
-    <Grid item container sx={{ p: 4, background: "#E5E5E5" }}>
+    <Grid item container sx={{ p: { md: 4, xs: 1 }, background: "#E5E5E5" }}>
       <Grid
         item
         container
         flexDirection="column"
-        gap={5}
-        sx={{ background: "#fff", px: "3rem", py: "2rem" }}
+        gap={3}
+        sx={{ background: "#fff", px: { md: "3rem", xs: ".5rem" }, py: "2rem" }}
       >
-        <Grid item container flexWrap={"nowrap"} justifyContent="space-between">
-          <Typography flex={2}>Notifications</Typography>
-          <Grid item flex={1}>
+        <Grid
+          item
+          container
+          flexDirection={{ md: "row", xs: "column" }}
+          alignItems="center"
+          gap={2}
+          justifyContent="space-between"
+        >
+          <Typography flex={1} variant="h2">
+            Notifications
+          </Typography>
+          <Grid item sx={{ width: "100%" }} flex={{ xs: 1 }}>
             <SearchComponent
               placeholder={"Search Username"}
               handleSubmit={{}}
@@ -58,6 +67,7 @@ const Notification = () => {
                       textDecoration: "none",
                       color: "text.primary",
                     }}
+                    disableGutters
                   >
                     <ListItemButton
                       sx={{
@@ -185,10 +195,94 @@ const Notification = () => {
           </Grid>
         </Grid>
 
-        <Paginations page={page} setPage={setPage} count={total_pages} />
+        {total_pages > 1 && (
+          <Paginations page={page} setPage={setPage} count={total_pages} />
+        )}
       </Grid>
     </Grid>
   );
 };
 
+function Skeletons() {
+  return (
+    <Grid
+      item
+      sx={{ p: 3, width: { md: "70%", xs: "100%" }, margin: "auto" }}
+      gap={3}
+      overflow={"hidden"}
+    >
+      <Grid
+        item
+        container
+        gap={2}
+        flexDirection={{ xs: "column", md: "row" }}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        flexWrap="nowrap"
+      >
+        <Grid item sx={{ width: "20%" }}>
+          <Skeleton
+            sx={{ height: "1rem", width: "100%", mr: 2 }}
+            animation="wave"
+            variant="text"
+          />
+        </Grid>
+        <Grid item sx={{ width: "80%" }}>
+          <Skeleton
+            sx={{ height: "3rem", borderRadius: "2rem", width: "100%" }}
+            animation="wave"
+            variant="rectangular"
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container flexDirection="column" sx={{ mt: 4 }} gap={2}>
+        {Array(7)
+          .fill(undefined)
+          .map((item, index) => (
+            <Grid
+              item
+              container
+              flexWrap="nowrap"
+              alignItems="center"
+              justifyContent="space-around"
+            >
+              <Grid item>
+                <Skeleton
+                  key={index}
+                  sx={{ height: "5rem", width: "5rem", mr: 2 }}
+                  animation="wave"
+                  variant="circular"
+                />
+              </Grid>
+              <Grid item xs={7}>
+                <Grid container gap={1} flexDirection={"column"}>
+                  <Skeleton
+                    key={index}
+                    sx={{ height: "1rem", width: "40%" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                  <Skeleton
+                    key={index}
+                    sx={{ height: ".8rem", width: "70%" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                </Grid>
+              </Grid>
+              <Grid item marginLeft="auto">
+                <Skeleton
+                  key={index}
+                  sx={{ height: "2rem", width: ".3rem" }}
+                  animation="wave"
+                  variant="rectangular"
+                />
+              </Grid>
+            </Grid>
+          ))}
+      </Grid>
+    </Grid>
+  );
+}
 export default Notification;

@@ -22,7 +22,7 @@ const Likes = () => {
   const { data, error, isLoading } = useGetUsercontentLikeQuery({
     offset: page - 1,
   });
-  if (isLoading) return <Skeleton />;
+  if (true) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, likes } = data;
 
@@ -111,5 +111,50 @@ const Likes = () => {
     </Grid>
   );
 };
+function Skeletons() {
+  return (
+    <Grid
+      sx={{ px: 2, py: 4 }}
+      item
+      flexDirection={"column"}
+      container
+      gap={3}
+      overflow={"hidden"}
+    >
+      <Grid item marginLeft="auto">
+        <Skeleton
+          sx={{ height: "2.5rem", width: "2rem" }}
+          animation="wave"
+          variant="rectangular"
+        />
+      </Grid>
+
+      <Grid container flexDirection="column" sx={{ mt: 4 }} gap={2}>
+        {Array(7)
+          .fill(undefined)
+          .map((item, index) => (
+            <Grid item container flexWrap="nowrap" alignItems="center">
+              <Grid item>
+                <Skeleton
+                  key={index}
+                  sx={{ height: "5rem", width: "5rem" }}
+                  animation="wave"
+                  variant="circular"
+                />
+              </Grid>
+              <Grid item container sx={{ ml: 1 }}>
+                <Skeleton
+                  key={index}
+                  sx={{ height: "6rem", width: "100%" }}
+                  animation="wave"
+                  variant="text"
+                />
+              </Grid>
+            </Grid>
+          ))}
+      </Grid>
+    </Grid>
+  );
+}
 
 export default Likes;

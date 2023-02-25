@@ -6,7 +6,9 @@ import FormikControl from "validation/FormikControl";
 import {
   CakeOutlined,
   FemaleOutlined,
+  PhoneOutlined,
   RoomOutlined,
+  SensorOccupiedOutlined,
 } from "@mui/icons-material";
 // import { ConfirmMail } from ".";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -53,12 +55,11 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   };
   const { data: profile, isLoading } = useUserProfileQuery();
 
-  const [updateProfile, { isLoading: loading }] =
-    useUserProfileUpdateMutation();
+  const [updateProfile] = useUserProfileUpdateMutation();
   const validationSchema = Yup.object({
     username: Yup.string("Enter Username").required("Required"),
     location: Yup.string("Enter location").required("Required"),
-    // phone: Yup.number("Enter Phone Number").required("Required"),
+    occupation: Yup.string("Enter Occupation").required("Required"),
     dob: Yup.string("Enter DOB").required("Required"),
     gender: Yup.string("Enter DOB").required("Required"),
     full_name: Yup.string("Enter  full Name").required("Required"),
@@ -67,18 +68,23 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   const handleSubmit = async (values) => {
     const {
       dob,
-      // location,
+      location,
       interests,
+      occupation,
       profile_pic,
       full_name,
       gender,
       username,
+      phone,
     } = values;
     const form = new FormData();
     let realGender = gender === "Male" ? "m" : "f";
     form.append("gender", realGender);
     form.append("dob", dob);
+    form.append("phone", phone);
     form.append("full_name", full_name);
+    form.append("occupation", occupation);
+    form.append("location", location);
     if (profile_pic) {
       form.append("profile_pic", profile_pic);
     }
@@ -117,6 +123,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     id,
     avatar,
     gender,
+    occupation,
     username,
   } = profile;
   const initialValues = {
@@ -128,6 +135,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     location: location || "",
     full_name: full_name || "",
     phone: phone || "",
+    occupation: occupation || "",
   };
 
   return (
@@ -145,7 +153,11 @@ const VerifyPage = ({ isOpen, handleClose }) => {
         enableReinitialize
         onSubmit={handleSubmit}
       >
-        {({ values, errors, setFieldValue }) => {
+        {({ values, errors, isSubmitting, setFieldValue }) => {
+          const interests = values.interests
+            .map((interest) => interest)
+            .join(", ");
+
           return (
             <Form>
               <Grid
@@ -338,27 +350,36 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                       <Grid
                         item
                         container
-                        // gap={2}
+                        gap={2}
                         flexWrap={{ md: "nowrap", xs: "wrap" }}
                       >
-                        <Grid item xs={12}>
-                          <FormikControl
-                            buttonStyle={{ background: "inherit" }}
-                            control="inputs"
-                            name="full_name"
-                            Icon={RoomOutlined}
-                            placeholder="Full Name"
-                          />
-                        </Grid>
-                        {/* <Grid item xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                           <FormikControl
                             buttonStyle={{ background: "inherit" }}
                             control="inputs"
                             name="phone"
-                            Icon={RoomOutlined}
+                            Icon={PhoneOutlined}
                             placeholder="Phone Number"
                           />
-                        </Grid> */}
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <FormikControl
+                            buttonStyle={{ background: "inherit" }}
+                            control="inputs"
+                            name="occupation"
+                            Icon={SensorOccupiedOutlined}
+                            placeholder="occupation"
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid item container>
+                        <FormikControl
+                          buttonStyle={{ background: "inherit" }}
+                          control="inputs"
+                          name="full_name"
+                          Icon={RoomOutlined}
+                          placeholder="Full Name"
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -435,11 +456,9 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                   >
                     Selected:
                     <Grid item container>
-                      {values.interests.map((interest) => (
-                        <Typography variant="span" sx={{ fontWeight: 400 }}>
-                          {interest} {" ,"}
-                        </Typography>
-                      ))}
+                      <Typography variant="span" sx={{ fontWeight: 400 }}>
+                        {interests}
+                      </Typography>
                     </Grid>
                   </Typography>
 
@@ -482,7 +501,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                     <CustomButton
                       title="Complete Registration"
                       width="30rem"
-                      isSubmitting={loading}
+                      isSubmitting={isSubmitting}
                       type="submit"
                     />
                   </Grid>

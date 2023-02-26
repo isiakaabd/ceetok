@@ -41,7 +41,7 @@ const Message = () => {
         token,
         chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
         limit: 20,
-        offset: 0,
+        offset: 1,
       })
     ); // load message related to certain chat
 

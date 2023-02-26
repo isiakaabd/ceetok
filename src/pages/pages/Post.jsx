@@ -22,6 +22,7 @@ import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
 import Quotes from "assets/svgs/Quote";
 import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
+import Error from "./components/Error";
 
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
@@ -174,13 +175,14 @@ const Post = () => {
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
   const [createQuote] = useCreateQuoteMutation();
   const navigate = useNavigate();
-  const { data: views } = useGetViewsQuery({
-    type: "posts",
-    parentId: data?.id,
-  });
 
   const [openShareModal, setOpenShareModal] = useState(false);
   const [changeCommentState, setChangeCommentState] = useState(true);
+
+  if (isLoading)
+    return <Skeleton animation="wave" height="12rem" width="100%" />;
+  if (error) return <Error />;
+  const { views_count, recent_views } = data;
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
@@ -212,10 +214,6 @@ const Post = () => {
       if (error) toast.error(error);
     }
   };
-
-  if (isLoading)
-    return <Skeleton animation="wave" height="12rem" width="100%" />;
-  if (error) return <p>Soemthing went wrong...</p>;
   return (
     <>
       <Grid item container gap={2} flexWrap="nowrap">
@@ -302,97 +300,102 @@ const Post = () => {
               <OtherConversation />
             )}
           </Grid>
-          <Grid
-            sx={{
-              mt: { md: 3, xs: 1.5 },
-              paddingInline: { xs: "1rem" },
-            }}
-          >
-            <Formik
-              initialValues={{ comment: "" }}
-              onSubmit={handleSubmit}
-              validationSchema={validationSchema}
+          {state && (
+            <Grid
+              sx={{
+                mt: { md: 3, xs: 1.5 },
+                paddingInline: { xs: "1rem" },
+              }}
             >
-              <Form>
-                {/* <Grid item container sx={{ background: "red" }}> */}
-                <Editor
-                  theme="snow"
-                  name="comment"
-                  value={""}
-                  placeholder="write something..."
-                />
-
-                <Grid
-                  item
-                  container
-                  sx={{ mt: 2 }}
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      color: "#9B9A9A",
-                      borderColor: "inherit",
-                      // border: "2px solid #9B9A9A",
-                      fontSize: "1.2rem",
-                      fontWeight: 700,
-                      padding: ".8rem 2rem",
-                      borderRadius: "3rem",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <CustomButton
-                    title="Post"
-                    variant="contained"
-                    width="10rem"
-                    type="submit"
-                    isSubmitting={loading}
+              <Formik
+                initialValues={{ comment: "" }}
+                onSubmit={handleSubmit}
+                validationSchema={validationSchema}
+              >
+                <Form>
+                  {/* <Grid item container sx={{ background: "red" }}> */}
+                  <Editor
+                    theme="snow"
+                    name="comment"
+                    value={""}
+                    placeholder="write something..."
                   />
-                </Grid>
-              </Form>
-            </Formik>
-          </Grid>
-          <Grid
-            item
-            container
-            alignItems="center"
-            sx={{ paddingInline: { xs: "1rem" } }}
-          >
-            <Typography
-              variant="span"
-              color="#FF9B04"
-              fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+
+                  <Grid
+                    item
+                    container
+                    sx={{ mt: 2 }}
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        color: "#9B9A9A",
+                        borderColor: "inherit",
+                        // border: "2px solid #9B9A9A",
+                        fontSize: "1.2rem",
+                        fontWeight: 700,
+                        padding: ".8rem 2rem",
+                        borderRadius: "3rem",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <CustomButton
+                      title="Post"
+                      variant="contained"
+                      width="10rem"
+                      type="submit"
+                      isSubmitting={loading}
+                    />
+                  </Grid>
+                </Form>
+              </Formik>
+            </Grid>
+          )}
+          {state && (
+            <Grid
+              item
+              container
+              alignItems="center"
+              sx={{ paddingInline: { xs: "1rem" } }}
             >
-              Viewing this Topic: &nbsp;&nbsp;
-            </Typography>
-            <Grid item>
-              <Grid container>
-                {views?.slice(0, 50)?.map((item, index) => (
-                  <Typography
-                    component={Link}
-                    to={`/user/profile/?id=${item.viewer?.user_id}`}
-                    key={index}
-                    sx={{ width: "max-content", mr: 0.5 }}
-                    color="secondary"
-                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                  >
-                    {item.viewer.full_name},
-                  </Typography>
-                ))}
-                {views?.length > 50 ? (
-                  <Typography
-                    variant="span"
-                    color="#FF9B04"
-                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                  >
-                    {`and ${views.length - 50}  guests`}
-                  </Typography>
-                ) : null}
+              <Typography
+                variant="span"
+                color="#FF9B04"
+                fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+              >
+                Viewing this Topic: &nbsp;&nbsp;
+              </Typography>
+              <Grid item>
+                <Grid container>
+                  {recent_views?.slice(0, 50)?.map((item, index) => (
+                    <Typography
+                      component={Link}
+                      to={`/user/profile/?id=${item.viewer?.user_id}`}
+                      key={index}
+                      sx={{ width: "max-content", mr: 0.5 }}
+                      color="secondary"
+                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                    >
+                      {item.viewer.full_name},
+                    </Typography>
+                  ))}
+
+                  {views_count?.length > 50 ? (
+                    <Typography
+                      variant="span"
+                      color="#FF9B04"
+                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                    >
+                      {`and ${views_count - 50}  guests`}
+                    </Typography>
+                  ) : null}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
       </Grid>
       <SocialMedia

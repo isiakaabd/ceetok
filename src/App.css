@@ -87,3 +87,7 @@ body {
   max-width: max-content;
   text-align: justify;
 }
+
+.menu-item-notification {
+  box-shadow: none !important;
+}

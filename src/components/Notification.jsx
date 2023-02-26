@@ -17,14 +17,25 @@ import SearchComponent from "./modals/SearchComponent";
 import { Delete, MoreVertOutlined } from "@mui/icons-material";
 import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Error from "pages/pages/components/Error";
+import { getImage } from "helpers";
 
 const Notification = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, notifications } = data;
@@ -58,131 +69,82 @@ const Notification = () => {
         <Grid item container>
           <Grid md={8} xs={12} sx={{ margin: "auto" }}>
             {notifications.length > 0 ? (
-              <List sx={{ width: "100%" }} dense>
-                {notifications?.map((item, index) => (
-                  <ListItem
-                    dense
-                    key={index}
-                    sx={{
-                      textDecoration: "none",
-                      color: "text.primary",
-                    }}
-                    disableGutters
-                  >
-                    <ListItemButton
-                      sx={{
-                        background: !item?.seen && "rgba(0, 0, 0, 0.04)",
-                      }}
+              <List sx={{ width: "100%" }} dense component="ol">
+                {notifications?.map((item, index) => {
+                  const { message, seen } = item;
+
+                  return (
+                    <ListItem
                       dense
-                    >
-                      <div
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <Avatar
-                            //   alt={full_name}
-                            //   src={getImage(avatar)}
-                            //   onClick={() => handleClicks(user_id)}
-                            sx={{ cursor: "pointer" }}
-                          >
-                            J{/* {full_name?.slice(0, 1).toUpperCase()} */}
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={
-                            <Grid
-                              item
-                              container
-                              flexDirection="column"
-                              alignItems="center"
+                      key={index}
+                      disablePadding
+                      secondaryAction={
+                        <>
+                          <ListItemIcon>
+                            <IconButton
+                              edge="start"
+                              id="basic-button"
+                              aria-controls={open ? "basic-menu" : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={open ? "true" : undefined}
+                              onClick={handleClick}
+                              sx={{ ml: { xs: "1rem" } }}
                             >
-                              <Grid
-                                item
-                                container
-                                justifyContent={"space-between"}
-                                flexWrap="nowrap"
-                                sx={{ overflow: "hidden" }}
-                              >
-                                <Grid
-                                  item
-                                  container
-                                  alignItems="center"
-                                  flexWrap="nowrap"
-                                >
-                                  <Typography
-                                    fontWeight={700}
-                                    sx={{
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      // flex: 0.5,
-                                    }}
-                                  >
-                                    {/* {full_name} */} Adekunle
-                                  </Typography>
+                              <MoreVertOutlined />
+                            </IconButton>
+                          </ListItemIcon>
+                          <Menu
+                            variant="menu"
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            className="menu-item-notification"
+                            onClose={handleClose}
+                            sx={{
+                              "& .MuiPaper-root": {
+                                boxShadow: "0px 0px 2px 2px rgba(0,0,0,0.01)",
+                              },
+                            }}
+                            MenuListProps={{
+                              "aria-labelledby": "basic-button",
+                            }}
+                          >
+                            <MenuItem
+                              // onClick={handleDeleteComment}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                              // disabled={check}
+                            >
+                              <ListItemIcon>
+                                <Delete sx={{ fontSize: "2rem" }} />
+                              </ListItemIcon>
 
-                                  <Grid item sx={{ ml: "auto" }}>
-                                    <IconButton
-                                      edge="start"
-                                      id="basic-button"
-                                      // aria-controls={
-                                      //   opens ? "basic-menu" : undefined
-                                      // }
-                                      aria-haspopup="true"
-                                      // aria-expanded={opens ? "true" : undefined}
-                                      // onClick={handleClick}
-                                      sx={{ ml: { xs: "1rem" } }}
-                                      //  sx={{ visibility: !check && "hidden" }}
-                                    >
-                                      <MoreVertOutlined />
-                                    </IconButton>
-                                    <Menu
-                                      id="basic-menu"
-                                      // anchorEl={anchorEl}
-                                      // open={opens}
-                                      // onClose={handleCloses}
-                                      MenuListProps={{
-                                        "aria-labelledby": "basic-button",
-                                      }}
-                                    >
-                                      <MenuItem
-                                        // onClick={handleDeleteComment}
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                        // disabled={check}
-                                      >
-                                        <ListItemIcon>
-                                          <Delete sx={{ fontSize: "2rem" }} />
-                                        </ListItemIcon>
-
-                                        <ListItemText sx={{ fontSize: "3rem" }}>
-                                          Delete
-                                        </ListItemText>
-                                      </MenuItem>
-                                    </Menu>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-
-                              <Typography
-                                component="h4"
-                                width="100%"
-                                textAlign="left"
-                              >
-                                {item?.message}
-                              </Typography>
-                            </Grid>
-                          }
-                        />
-                      </div>
-                    </ListItemButton>
-                  </ListItem>
-                ))}
+                              <ListItemText sx={{ fontSize: "3rem" }}>
+                                Delete
+                              </ListItemText>
+                            </MenuItem>
+                          </Menu>
+                        </>
+                      }
+                      sx={{
+                        textDecoration: "none",
+                        color: "text.primary",
+                      }}
+                      disableGutters
+                    >
+                      <ListItemButton
+                        sx={{
+                          background: !seen && "rgba(0, 0, 0, 0.04)",
+                        }}
+                        dense
+                      >
+                        <ListItemText primary={message} />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
               </List>
             ) : (
               <Typography

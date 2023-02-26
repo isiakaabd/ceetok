@@ -9,12 +9,15 @@ import {
 import Tooltips from "./ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const UserAccount = ({ status: userStatus }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const admin = useSelector((state) => state.auth.admin);
+  const loginStatus = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
   const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -55,32 +58,36 @@ const UserAccount = ({ status: userStatus }) => {
         flexWrap="nowrap"
         alignItems="center"
       >
-        <Tooltips title={"Notifications"}>
-          <IconButton
-            onClick={handleToggle}
-            ref={anchorRef}
-            id="composition-button"
-            aria-controls={open ? "composition-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-          >
-            <NotificationIcon
-              sx={{
-                fontSize: { md: "3rem", xs: "2.5rem" },
-                fill: "#9B9A9A",
-              }}
-            />
-          </IconButton>
-        </Tooltips>
-        <Notifications
-          open={open}
-          setOpen={setOpen}
-          anchorRef={anchorRef}
-          handleClose={handleClose}
-          handleToggle={handleToggle}
+        {loginStatus && (
+          <>
+            <Tooltips title={"Notifications"}>
+              <IconButton
+                onClick={() => navigate("/user/notifications")}
+                ref={anchorRef}
+                id="composition-button"
+                aria-controls={open ? "composition-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+              >
+                <NotificationIcon
+                  sx={{
+                    fontSize: { md: "3rem", xs: "2.5rem" },
+                    fill: "#9B9A9A",
+                  }}
+                />
+              </IconButton>
+            </Tooltips>
+            <Notifications
+              open={open}
+              setOpen={setOpen}
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              handleToggle={handleToggle}
 
-          //   handleToggles={handleToggles}
-        />
+              //   handleToggles={handleToggles}
+            />
+          </>
+        )}
         <Grid
           item
           container

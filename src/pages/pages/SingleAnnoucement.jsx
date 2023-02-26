@@ -167,7 +167,13 @@ const SingleAnnoucement = () => {
       toast.error(error);
     }
   };
-
+  const viewsArr = views?.slice(0, 50)?.map((item, index) => {
+    return {
+      name: item?.viewer?.fullname,
+      link: item?.viewer?.user_id,
+    };
+  });
+  console.log(viewsArr);
   return (
     <>
       {/* <Grid item container gap={2} flexWrap="nowrap">

@@ -13,19 +13,28 @@ import {
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getDate, getImage, getTime } from "helpers";
-import { useGetViewsQuery } from "redux/slices/postSlice";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 
 const AllPosts = ({ post, index, showUser }) => {
-  const { slug, id, user, media, title, category, views_count, updatedAt } =
-    post;
-  const { data } = useGetViewsQuery({ type: "posts", parentId: id });
+  const {
+    slug,
+    id,
+    user,
+    media,
+    title,
+    recent_views,
+    category,
+    views_count,
+    updatedAt,
+  } = post;
+
   const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   // const handleLogin = () => setOpen(true);
+
   function Skeletons() {
     return (
       <Grid item container gap={3} flexWrap={{ md: "nowrap", xs: "wrap" }}>
@@ -191,7 +200,7 @@ const AllPosts = ({ post, index, showUser }) => {
               <ListItemIcon sx={{ minWidth: 0 }}>
                 <RemoveRedEyeOutlined />
               </ListItemIcon>
-              <ListItemText disableTypography primary={data?.length} />
+              <ListItemText disableTypography primary={views_count} />
             </Grid>
             {/* </ListItem> */}
           </List>

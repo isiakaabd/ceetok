@@ -3,10 +3,9 @@ import SinglePosts from "pages/home/SinglePosts";
 import { useGetPostQuery } from "redux/slices/postSlice";
 const OtherConversation = () => {
   const { data: posts, isLoading } = useGetPostQuery({
-    offset: 0,
     category: "politics",
   });
-
+  console.log(posts);
   if (isLoading) return <Skeleton />;
   return (
     <Grid item container>
@@ -31,7 +30,7 @@ const OtherConversation = () => {
           Politics
         </Typography>
       </Grid>
-      {posts?.length > 0 ? (
+      {posts?.posts?.length > 0 ? (
         <List
           sx={{
             maxHeight: "80rem",
@@ -44,7 +43,7 @@ const OtherConversation = () => {
           }}
           xs={12}
         >
-          {posts?.map((post, index) => {
+          {posts?.posts?.map((post, index) => {
             return (
               <SinglePosts
                 key={index}
@@ -55,7 +54,12 @@ const OtherConversation = () => {
           })}
         </List>
       ) : (
-        <Typography variant="h2">No Data</Typography>
+        <Typography
+          variant="h2"
+          sx={{ py: 2, width: "100%", textAlign: "center" }}
+        >
+          No Data
+        </Typography>
       )}
     </Grid>
   );

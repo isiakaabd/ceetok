@@ -230,7 +230,7 @@ function Header() {
               {/* 3 */}
 
               {loginStatus ? (
-                <UserAccount />
+                <UserAccount status={loginStatus} />
               ) : (
                 <Box
                   sx={{

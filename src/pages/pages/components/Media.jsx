@@ -25,40 +25,20 @@ const Media = () => {
       sx={{
         mt: "2rem",
         py: 4,
-        px: 2,
+        px: { md: 2, xs: 1 },
         borderRadius: "2rem",
         backgroundColor: "#fff",
       }}
       flexDirection="column"
     >
-      <Grid item sx={{ mb: 4, mt: 2 }}>
-        <Grid container alignItems="center" gap={0.5}>
-          <IconButton edge="start" size="small">
-            <DeleteOutline sx={{ fontSize: "2rem" }} />
-          </IconButton>
+      <IconButton sx={{ alignSelf: "flex-end" }}>
+        <DeleteOutline sx={{ fontSize: "2rem" }} />
+      </IconButton>
 
-          <Typography
-            fontSize="2rem"
-            fontWeight={400}
-            lineHeight={2}
-            color="secondary"
-          >
-            Delete All
-          </Typography>
-          <IconButton edge="start" size="small">
-            <Checkbox
-              defaultChecked
-              sx={{
-                "& .MuiSvgIcon-root": { fontSize: "2rem", color: "#9B9A9A" },
-              }}
-            />
-          </IconButton>
-        </Grid>
-      </Grid>
       {isLoading ? (
         <Skeletons />
       ) : data?.media?.length > 0 ? (
-        <Grid item container gap={2}>
+        <Grid item container gap={{ md: 2, xs: 1 }}>
           {data?.media?.map((item, index) => (
             <Avatar
               key={index}

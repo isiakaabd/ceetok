@@ -85,6 +85,5 @@ body {
   word-wrap: anywhere;
   white-space: pre-wrap;
   max-width: max-content;
-  display: inline-flex;
   text-align: justify;
 }

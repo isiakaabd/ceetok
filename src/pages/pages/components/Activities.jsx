@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FilterList } from "@mui/icons-material";
+import { DeleteOutline, FilterList } from "@mui/icons-material";
 import {
   Button,
   ClickAwayListener,
@@ -12,17 +12,20 @@ import {
   Paper,
   Popper,
   Typography,
+  IconButton,
+  Skeleton,
 } from "@mui/material";
-import DeleteIcon from "assets/svgs/DeleteIcon";
 import SinglePosts from "pages/home/SinglePosts";
 import PrivateMessage from "./PrivateMessage";
 import { useLazyGetPostQuery } from "redux/slices/postSlice";
-import { useGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
+import { useLazyGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
 import SingleAnnoucements from "./SingleAnnoucements";
 import { useUserProfileQuery } from "redux/slices/authSlice";
+import { useParams } from "react-router-dom";
 
 const Activities = (props) => {
   const [open, setOpen] = useState(false);
+  const { id } = useParams();
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -62,34 +65,61 @@ const Activities = (props) => {
     data: [],
     type: "post",
   });
-  const [getPost, { data: posts }] = useLazyGetPostQuery();
-  const { data: annoucement } = useGetAnnoucementsQuery();
+  const [getPost, { data: posts, isLoading }] = useLazyGetPostQuery();
+  const [getAnnoucement, { data: annoucement, isLoading: loading }] =
+    useLazyGetAnnoucementsQuery();
 
   useEffect(() => {
-    if (profile?.id) {
-      // const fetchdata = async () => {
-      const { data } = getPost({ userId: profile?.id });
-      if (data) setState({ data: data?.posts, type: "post" });
-      // };
-      // fetchdata();
+    if (state.type === "post") {
+      const fetchdata = async () => {
+        if (id) {
+          await getPost({ userId: id });
+          if (posts) setState({ data: posts?.posts, type: "post" });
+          // };
+        } else {
+          await getPost({ userId: profile?.id });
+
+          if (posts) setState({ data: posts?.posts, type: "post" });
+        }
+      };
+
+      fetchdata();
     }
     //eslint-disable-next-line
-  }, [profile?.id, posts]);
-
+  }, [profile?.id, posts, state.type]);
   useEffect(() => {
-    if (posts) setState({ data: posts, type: "post" });
-  }, [posts]);
+    if (state.type === "annoucement") {
+      const fetchdata = async () => {
+        if (id) {
+          await getAnnoucement({ userId: id });
+          if (posts)
+            setState({ data: annoucement?.announcements, type: "annoucement" });
+          // };
+        } else {
+          await getAnnoucement({ userId: profile?.id });
+
+          if (posts)
+            setState({ data: annoucement?.announcements, type: "annoucement" });
+        }
+      };
+
+      fetchdata();
+    }
+    //eslint-disable-next-line
+  }, [profile?.id, posts, state.type]);
+
+  // useEffect(() => {
+  //   if (posts) setState({ data: posts, type: "post" });
+  // }, [posts]);
   const handleAnnoucement = (e) => {
     setState({
       type: "annoucement",
-      data: annoucement,
     });
     handleClose(e);
   };
   const handlePost = (e) => {
     setState({
       type: "post",
-      data: posts,
     });
     handleClose(e);
   };
@@ -107,7 +137,7 @@ const Activities = (props) => {
         flexDirection="column"
         height="100%"
       >
-        <Grid item sx={{ my: 2 }}>
+        <Grid item container flexWrap="nowrap" sx={{ my: 2 }}>
           <Grid container alignItems="center" gap={0.5}>
             <Button
               startIcon={<FilterList sx={{ fontSize: "2rem" }} />}
@@ -123,6 +153,9 @@ const Activities = (props) => {
               Filter
             </Button>
           </Grid>
+          <IconButton sx={{ ml: "auto" }}>
+            <DeleteOutline sx={{ fontSize: "2rem" }} />
+          </IconButton>
         </Grid>
         <Grid item container alignItems="center">
           <Typography sx={{ flex: 1, fontWeight: 600, fontSize: "1.7rem" }}>
@@ -132,27 +165,6 @@ const Activities = (props) => {
               ? "All Announcements"
               : null}
           </Typography>
-          <Grid item sx={{ mt: 2 }}>
-            <Grid container alignItems="center" gap={0.5}>
-              {/* <IconButton> */}
-              <DeleteIcon
-                sx={{ fontSize: "2.5rem", mt: 1, cursor: "pointer" }}
-              />
-              {/* </IconButton> */}
-              <Typography fontSize="1.4rem" fontWeight={400} color="secondary">
-                Delete All
-              </Typography>
-              <Checkbox
-                defaultChecked
-                sx={{
-                  "& .MuiSvgIcon-root": {
-                    fontSize: "2.5rem",
-                    color: "#9B9A9A",
-                  },
-                }}
-              />
-            </Grid>
-          </Grid>
         </Grid>
         <Popper
           open={open}
@@ -189,7 +201,9 @@ const Activities = (props) => {
             </Grow>
           )}
         </Popper>
-        {state.type === "post" ? (
+        {isLoading ? (
+          <Skeletons />
+        ) : state.type === "post" ? (
           state?.data?.length > 0 ? (
             <List
               sx={{
@@ -207,30 +221,35 @@ const Activities = (props) => {
               })}
             </List>
           ) : (
-            <Typography variant="h2">No Post yet</Typography>
+            <Typography
+              variant="h2"
+              sx={{ width: "100%", py: 2, textAlign: "center" }}
+            >
+              No Post yet
+            </Typography>
           )
         ) : null}
         {state.type === "annoucement" ? (
           <List
-            item
-            container
             sx={{
-              mt: 6,
-              gap: { md: 3, xs: 2 },
-              display: "grid",
-              gridTemplateColumns: {
-                md: "repeat(2,1fr)",
-                xs: "1fr",
-                // sm: "1fr 1fr",
-              },
+              gap: 2,
+              width: "100%",
             }}
+            dense
           >
-            {state?.data?.length > 0 ? (
+            {loading ? (
+              <Skeletons />
+            ) : state?.data?.length > 0 ? (
               state?.data?.map((item, index) => (
                 <SingleAnnoucements annoucements={item} key={index} />
               ))
             ) : (
-              <Typography variant="h2">No Annoucement yet</Typography>
+              <Typography
+                variant="h2"
+                sx={{ width: "100%", textAlign: "center" }}
+              >
+                No Annoucement yet
+              </Typography>
             )}
           </List>
         ) : null}
@@ -245,19 +264,9 @@ const Activities = (props) => {
           >
             Private Message
           </Typography>
-          <Grid item>
-            <Grid container alignItems="center" gap={0.5}>
-              {/* <IconButton> */}
-              <DeleteIcon
-                sx={{ fontSize: "2.5rem", mt: 1, cursor: "pointer" }}
-              />
-              {/* </IconButton> */}
-              <Typography fontSize="1.4rem" fontWeight={400} color="secondary">
-                Delete All
-              </Typography>
-              <Checkbox />
-            </Grid>
-          </Grid>
+          <IconButton sx={{ ml: "auto" }}>
+            <DeleteOutline sx={{ fontSize: "2rem" }} />
+          </IconButton>
         </Grid>
         <Grid
           item
@@ -279,5 +288,83 @@ const Activities = (props) => {
   );
 };
 Activities.propTypes = {};
+function Skeletons() {
+  return (
+    <Grid
+      item
+      container
+      flexDirection={"column"}
+      gap={2}
+      sx={{ padding: { md: "0", xs: "1rem" }, marginInline: "auto" }}
+      flexWrap={{ md: "nowrap", xs: "wrap" }}
+    >
+      <Grid
+        item
+        alignItems="center"
+        container
+        justifyContent={"space-between"}
+        flexWrap={"nowrap"}
+      >
+        <Skeleton
+          sx={{ height: "4rem", borderRadius: "2rem", width: "15rem" }}
+          animation="wave"
+          variant="rectangular"
+        />
+        <Skeleton
+          sx={{ height: "4rem", width: "12rem" }}
+          animation="wave"
+          variant="rounded"
+        />
+      </Grid>
+      {Array(5)
+        .fill(undefined)
+        .map((item, index) => (
+          <Grid item container flexWrap={"nowrap"} gap={2} key={index}>
+            <Grid item>
+              <Grid item container gap={1}>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: "1rem", width: "1rem" }}
+                    animation="wave"
+                    variant="rounded"
+                  />
+                </Grid>
+                <Skeleton
+                  sx={{ height: "8rem", width: "8rem" }}
+                  animation="wave"
+                  variant="rounded"
+                />
+              </Grid>
+            </Grid>
+            <Grid item flex={1}>
+              <Grid item container flexDirection="column">
+                <Skeleton
+                  sx={{ height: "3rem", borderRadius: "1rem", width: "8rem" }}
+                  animation="wave"
+                  variant="text"
+                />
+                <Grid item container gap={0.5} flexDirection="column">
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "100%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton
+                      sx={{ height: "1rem", width: "60%" }}
+                      animation="wave"
+                      variant="text"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+    </Grid>
+  );
+}
 
 export default Activities;

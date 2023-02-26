@@ -75,13 +75,13 @@ const VerifyPage = ({ isOpen, handleClose }) => {
       full_name,
       gender,
       username,
-      phone,
+      // phone,
     } = values;
     const form = new FormData();
     let realGender = gender === "Male" ? "m" : "f";
     form.append("gender", realGender);
     form.append("dob", dob);
-    form.append("phone", phone);
+    // form.append("phone", phone);
     form.append("full_name", full_name);
     form.append("occupation", occupation);
     form.append("location", location);
@@ -93,15 +93,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     interests.forEach((item, index) => {
       form.append(`interests[${index}]`, item);
     });
-    // const body = {
-    //   dob,
-    //   location,
-    //   interests,
-    //   full_name,
-    //   // phone,
-    //   gender: realGender,
-    //   username,
-    // };
+
     const { data, error } = await updateProfile(form);
     if (error) toast.error(error);
     if (data) {

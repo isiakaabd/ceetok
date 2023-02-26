@@ -193,6 +193,7 @@ export const {
   useListUsersQuery,
   useForgotPasswordMutation,
   useUserProfileQuery,
+  useLazyUserProfileQuery,
   useAllUsersQuery,
   useGetUserSettingsQuery,
   useGetUsercontentLikeQuery,

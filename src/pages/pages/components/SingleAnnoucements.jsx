@@ -9,8 +9,8 @@ import { getDate, getTime } from "helpers";
 const SingleAnnoucements = ({ annoucements }) => {
   const { title, createdAt, user } = annoucements;
   return (
-    <ListItem disableGutters disablePadding alignItems="flex-start">
-      <ListItemButton disableGutters dense>
+    <ListItem disablePadding dense alignItems="flex-start">
+      <ListItemButton dense>
         <ListItemText
           primary={title}
           primaryTypographyProps={{

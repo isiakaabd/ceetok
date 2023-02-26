@@ -1,4 +1,5 @@
-import { Avatar, Grid, Typography, Checkbox } from "@mui/material";
+import { DeleteOutline } from "@mui/icons-material";
+import { Avatar, Grid, Typography, Checkbox, IconButton } from "@mui/material";
 import DeleteIcon from "assets/svgs/DeleteIcon";
 import { Link } from "react-router-dom";
 const Mentions = (props) => {
@@ -15,22 +16,9 @@ const Mentions = (props) => {
       }}
       flexDirection="column"
     >
-      <Grid item sx={{ mb: 4, mt: 2 }} alignSelf="flex-end">
-        <Grid container alignItems="center" gap={0.5}>
-          {/* <IconButton> */}
-          <DeleteIcon sx={{ fontSize: "2.5rem", mt: 1 }} />
-          {/* </IconButton> */}
-          <Typography fontSize="1.4rem" fontWeight={400} color="secondary">
-            Delete All
-          </Typography>
-          <Checkbox
-            defaultChecked
-            sx={{
-              "& .MuiSvgIcon-root": { fontSize: "2.5rem", color: "#9B9A9A" },
-            }}
-          />
-        </Grid>
-      </Grid>
+      <IconButton sx={{ ml: "auto" }}>
+        <DeleteOutline sx={{ fontSize: "2rem" }} />
+      </IconButton>
       <Grid item container gap={4} justifyContent="space-between">
         {Array(6)
           .fill(undefined)

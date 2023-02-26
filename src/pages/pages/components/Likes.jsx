@@ -59,9 +59,9 @@ const Likes = () => {
                   <ListItemText
                     primary={
                       <Typography
-                        color="color.text"
                         fontWeight={600}
                         component="p"
+                        color="color.text"
                         fontSize={{ md: "1.8rem", xs: "1.4rem" }}
                       >
                         {likes

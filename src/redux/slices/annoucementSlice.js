@@ -23,8 +23,10 @@ export const annoucementSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     getAnnoucements: builder.query({
-      query: ({ page }) => ({
-        url: `announcement/?${page ? `&offset=${page}` : "&offset=0"}&limit=10`,
+      query: ({ page, userId }) => ({
+        url: `announcement/?${page ? `&offset=${page}` : "&offset=0"}&limit=10${
+          userId && `&user_id=${userId}`
+        }`,
         method: "GET",
       }),
       providesTags: ["announcement"],
@@ -69,5 +71,6 @@ export const {
   useDeleteAnnoucementsMutation,
   useGetAnnoucementQuery,
   useValidateAnnoucementMutation,
+  useLazyGetAnnoucementsQuery,
   useEditAnnoucementMutation,
 } = annoucementSlice;

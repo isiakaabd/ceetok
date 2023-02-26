@@ -1,21 +1,30 @@
 import { Avatar, Grid, IconButton, Typography } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Notifications from "./Notifications";
 import NotificationIcon from "assets/svgs/NotificationIcon";
-import { useUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useLazyUserProfileQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 
-const UserAccount = () => {
+const UserAccount = ({ status: userStatus }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const admin = useSelector((state) => state.auth.admin);
-  const { data: userProfile, isLoading } = useUserProfileQuery();
+  const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+  useEffect(() => {
+    if (userStatus) {
+      getProfile();
+    }
+    //eslint-disable-next-line
+  }, [userStatus]);
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {

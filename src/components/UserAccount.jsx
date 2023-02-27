@@ -15,8 +15,9 @@ const UserAccount = ({ status: userStatus }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
-  const admin = useSelector((state) => state.auth.admin);
-  const loginStatus = useSelector((state) => state.auth.token);
+  const state = useSelector((state) => state.auth);
+
+  console.log(state.user);
   const navigate = useNavigate();
   const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
   const handleToggle = () => {
@@ -49,6 +50,7 @@ const UserAccount = ({ status: userStatus }) => {
 
     setOpens(false);
   };
+  const { avatar, full_name } = state?.user;
   return (
     <Grid item>
       <Grid
@@ -58,7 +60,7 @@ const UserAccount = ({ status: userStatus }) => {
         flexWrap="nowrap"
         alignItems="center"
       >
-        {loginStatus && (
+        {state.token && (
           <>
             <Tooltips title={"Notifications"}>
               <IconButton
@@ -110,24 +112,15 @@ const UserAccount = ({ status: userStatus }) => {
                   width: { md: 32 },
                   height: { md: 32 },
                 }}
-                src={getImage(userProfile?.avatar)}
+                src={getImage(avatar || userProfile?.avatar)}
                 // alt={
                 //   userProfile?.full_name ||
                 //   (isLoading && admin ? "Admin" : "User")
                 // }
-                alt={
-                  userProfile?.full_name
-                    ? userProfile?.full_name
-                    : admin
-                    ? "Admin"
-                    : "User"
-                }
+                alt={full_name || userProfile?.full_name}
               >
-                {userProfile?.full_name
-                  ? userProfile?.full_name?.slice(0, 1).toUpperCase()
-                  : admin
-                  ? "A"
-                  : "U"}
+                {full_name?.slice(0, 1).toUpperCase() ||
+                  userProfile?.full_name?.slice(0, 1).toUpperCase()}
               </Avatar>
             </IconButton>
           </Tooltips>
@@ -138,15 +131,7 @@ const UserAccount = ({ status: userStatus }) => {
             handleCloses={handleCloses}
             handleToggles={handleToggles}
           />
-          <Tooltips
-            title={
-              userProfile?.full_name
-                ? userProfile?.full_name
-                : admin
-                ? "Admin"
-                : "User"
-            }
-          >
+          <Tooltips title={full_name || userProfile?.full_name}>
             <Typography
               variant="h5"
               fontWeight={700}
@@ -159,11 +144,7 @@ const UserAccount = ({ status: userStatus }) => {
                 maxWidth: { xs: "12ch", sm: "100%" },
               }}
             >
-              {userProfile?.full_name
-                ? userProfile?.full_name
-                : admin
-                ? "Admin"
-                : "User"}
+              {full_name || userProfile?.full_name}
             </Typography>
           </Tooltips>
         </Grid>

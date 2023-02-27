@@ -181,6 +181,7 @@ const Message = () => {
               display: "flex",
               flexDirection: "column",
               width: "100%",
+              mt: "auto",
             }}
           >
             {messages?.length > 0 ? (
@@ -198,7 +199,11 @@ const Message = () => {
               })
             ) : (
               <Typography
-                sx={{ textAlign: "center", width: "100%" }}
+                sx={{
+                  textAlign: "center",
+                  justifySelf: "center",
+                  width: "100%",
+                }}
                 variant="h2"
                 color="success"
               >

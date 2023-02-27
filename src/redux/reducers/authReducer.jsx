@@ -35,6 +35,7 @@ export const authSlice = createSlice({
       localStorage.clear();
       state.token = null;
       state.user = {};
+      state.auth = false;
       state.admin = null;
     },
   },

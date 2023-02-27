@@ -169,7 +169,6 @@ export const authSlice = api.injectEndpoints({
         url: "/user/logout",
         method: "POST",
       }),
-      invalidatesTags: ["user", "post", "announcement", "admin"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),

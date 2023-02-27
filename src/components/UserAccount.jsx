@@ -2,10 +2,7 @@ import { Avatar, Grid, IconButton, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import Notifications from "./Notifications";
 import NotificationIcon from "assets/svgs/NotificationIcon";
-import {
-  useLazyUserProfileQuery,
-  useUserProfileQuery,
-} from "redux/slices/authSlice";
+import { useLazyUserProfileQuery } from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
@@ -17,7 +14,7 @@ const UserAccount = ({ status: userStatus }) => {
   const anchorRefs = useRef(null);
   const state = useSelector((state) => state.auth);
 
-  console.log(state.user);
+  console.log(state.auth);
   const navigate = useNavigate();
   const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
   const handleToggle = () => {

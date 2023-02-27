@@ -11,8 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBack from "assets/svgs/ArrowBack";
-import DeleteIcon from "assets/svgs/DeleteIcon";
-import { SettingsOutlined } from "@mui/icons-material";
+import { DeleteOutline, SettingsOutlined } from "@mui/icons-material";
 const AllFriend = (props) => {
   return (
     <Grid
@@ -61,9 +60,9 @@ const AllFriend = (props) => {
             </Typography>
             <Grid item>
               <Grid item container alignItems="center" gap={0.5}>
-                {/* <IconButton> */}
-                <DeleteIcon sx={{ fontSize: "2.5rem", mt: 1 }} />
-                {/* </IconButton> */}
+                <IconButton edge="start">
+                  <DeleteOutline sx={{ fontSize: "2.5rem", mt: 1 }} />
+                </IconButton>
                 <Typography
                   fontSize="1.4rem"
                   fontWeight={400}

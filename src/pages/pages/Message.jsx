@@ -20,30 +20,53 @@ import { CustomButton } from "components";
 import { useSelector } from "react-redux";
 import { useUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const Message = () => {
   // const navigate = useNavigate();
+  const { id } = useParams();
   const [messages, setMessages] = useState([]);
+  const [chats, setChats] = useState([]);
   const ws = useMemo(() => new WebSocket("ws://3.80.211.23:5050"), []);
-  console.log(messages);
-  const { data: profile, isLoading } = useUserProfileQuery();
-
+  // const { data: profile, isLoading } = useUserProfileQuery();
+  const checkChatHistory = chats?.filter((item) => item.user_id === id);
   const token = useSelector((state) => state.auth.token);
-
+  const [chat_id, setChatId] = useState(null);
   // useEffect(() => {
+
   ws.addEventListener("open", () => {
     toast.success("Connection successful");
     ws.send(JSON.stringify({ type: "init", token }));
-    ws.send(JSON.stringify({ type: "chat", token, limit: 20, offset: 1 })); // previous chat hiostory
-    ws.send(
-      JSON.stringify({
-        type: "messages",
-        token,
-        chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
-        limit: 20,
-        offset: 1,
-      })
-    ); // load message related to certain chat
+    ws.send(JSON.stringify({ type: "chat", token }));
+    // ws.send(JSON.stringify({ type: "init_chat", token, user_id: id }));
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "init_chat",
+    //     user_id: profile?.id,
+    //     token,
+    //     limit: 20,
+    //     offset: 0,
+    //   })
+    // ); // previous chat hiostory
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "messages",
+    //     token,
+    //     limit: 20,
+    //     offset: 0,
+    //     user_id: id,
+    //   })
+    // ); // previous chat hiostory
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "init_chat",
+    //     token,
+    //     user_id: profile?.id,
+    //     //  "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
+    //     limit: 20,
+    //     offset: 0,
+    //   })
+    // ); // load message related to certain chat
 
     // ws.send(
     //   JSON.stringify({
@@ -57,40 +80,72 @@ const Message = () => {
   //eslint-disable-next-line
   // }, []);
   ws.addEventListener("message", ({ data }) => {
-    console.log(JSON.parse(data));
     const { type, body } = JSON.parse(data);
     if (type === "messages") return setMessages(body?.messages.reverse());
+    if (type === "chat" || type === "init_chat") return setChats(body?.chats);
   });
+
   // useEffect(() => {
   ws.onmessage = function ({ data }) {};
 
   //eslint-disable-next-line
   // }, []);
 
-  if (isLoading) return <Skeleton />;
+  // if (isLoading) return <Skeleton />;
 
   const handleSubmit = async (values, { resetForm }) => {
-    await ws.send(
-      JSON.stringify({
-        type: "send_message",
-        token,
-        // user_id: "20bd79b0-c2b1-4339-b14a-6559ef58713b",
-        chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
-        message: values.body,
-      })
-    );
-    await ws.send(
-      JSON.stringify({
-        type: "messages",
-        token,
-        chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
-        limit: 20,
-        offset: 1,
-      })
-    );
+    if (checkChatHistory.length > 0) {
+      const details = checkChatHistory[0];
+      ws.send(
+        JSON.stringify({
+          type: "send_message",
+          token,
+          chat_id: details.id,
+          message: values.body.trim(),
+        })
+      );
+
+      await ws.send(
+        JSON.stringify({
+          type: "messages",
+          token,
+          limit: 20,
+          offset: 1,
+          chat_id: details.id,
+        })
+      );
+    } else {
+      ws.send(
+        JSON.stringify({
+          type: "init_chat",
+          token,
+          user_id: id,
+          message: values.body.trim(),
+        })
+      );
+    }
+    // await ws.send(
+    //   JSON.stringify({
+    //     type: "send_message",
+    //     token,
+    //     // user_id: "20bd79b0-c2b1-4339-b14a-6559ef58713b",
+    //     chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
+    //     message: values.body,
+    //   })
+    // );
+    // await ws.send(
+    //   JSON.stringify({
+    //     type: "messages",
+    //     token,
+    //     user_id: profile?.id,
+    //     limit: 20,
+    //     offset: 1,
+    //   })
+    // );
 
     setTimeout(() => resetForm(), 400);
   };
+  console.log(messages);
   return (
     <Grid
       container
@@ -128,13 +183,15 @@ const Message = () => {
               width: "100%",
             }}
           >
-            {messages.length > 0 ? (
+            {messages?.length > 0 ? (
               messages?.map((message, index) => {
                 return (
                   <SingleChat
                     messages={
                       message?.last_message?.message || message?.message
                     }
+                    id={id}
+                    sender_id={message.sender_id}
                     key={index}
                   />
                 );
@@ -175,7 +232,8 @@ const Message = () => {
     </Grid>
   );
 };
-function SingleChat({ messages }) {
+function SingleChat({ messages, id, sender_id }) {
+  console.log(sender_id);
   const message = parse(messages);
   const counts = message.length;
 
@@ -191,16 +249,26 @@ function SingleChat({ messages }) {
 
   return (
     <ListItem
+      disableGutters
       sx={{
-        my: 2,
+        "&.MuiListItem-root": {
+          paddingInline: ".6rem",
+        },
+
+        my: ".5rem",
         border: "1px solid #9B9A9A",
-        borderRadius: "1rem",
+        borderRadius: ".7rem",
         maxWidth: "max-content",
-        marginLeft: "auto",
+
+        marginLeft: sender_id === id ? null : "auto",
+        backgroundColor: sender_id === id ? "#37D42A" : "#000",
+        borderColor: sender_id === id ? "#37D42A" : "#000",
+        color: "#fff",
         width: { md: "45%", xs: "70%", sm: "60%" },
       }}
     >
       <ListItemText
+        primaryTypographyProps={{ fontWeight: 600 }}
         primary={
           <Fragment>
             {state}{" "}

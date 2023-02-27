@@ -27,8 +27,10 @@ import { toast } from "react-toastify";
 import { useBanUsersMutation } from "redux/slices/adminSlice";
 import { useSelector } from "react-redux";
 import CustomizedTooltips from "components/ToolTips";
+import { useNavigate } from "react-router-dom";
 
 const ProfileItem = ({ profile }) => {
+  console.log(profile);
   const {
     full_name,
     is_blocked_by_me,
@@ -38,8 +40,9 @@ const ProfileItem = ({ profile }) => {
     username,
     banned,
   } = profile;
+  console.log(profile);
   const admin = useSelector((state) => state.auth.admin);
-
+  const navigate = useNavigate();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [banorUnban, { isLoading }] = useBanUsersMutation();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
@@ -235,6 +238,15 @@ const ProfileItem = ({ profile }) => {
                   {admin && (
                     <MenuItem onClick={handleClose}>Send Mail</MenuItem>
                   )}
+
+                  <MenuItem
+                    onClick={(e) => {
+                      navigate(`/user/message/${id}`);
+                      handleClose(e);
+                    }}
+                  >
+                    Send Message
+                  </MenuItem>
 
                   <MenuItem onClick={handleFollowUser}>
                     {following

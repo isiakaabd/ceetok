@@ -64,19 +64,7 @@ export const Details = ({
   handleLikePost,
 }) => {
   const [open, setOpen] = useState(false);
-  // const { data: numberOfLikes } = useGetLikesQuery({
-  //   type: "posts",
-  //   parentId: data?.id,
-  // });
 
-  // const handleLikePost = async () => {
-  //   const { data: dt } = await likePost({
-  //     parent_type: type ? type : "posts",
-  //     parent_id: data?.id,
-  //   });
-
-  //   if (dt) setLikeState(!likeState);
-  // };
   const [quote] = usePostCommentMutation();
 
   const handleSubmit = async (values) => {

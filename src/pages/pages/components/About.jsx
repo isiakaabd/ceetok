@@ -18,7 +18,7 @@ const About = () => {
     createdAt,
     occupation,
   } = data;
-  console.log(data);
+
   return (
     <Grid item container sx={{ background: "#fff", p: 2 }}>
       <Grid item md={8} xs={12}>

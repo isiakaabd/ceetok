@@ -22,6 +22,7 @@ const Likes = () => {
   const { data, error, isLoading } = useGetUsercontentLikeQuery({
     offset: page - 1,
   });
+
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, likes } = data;

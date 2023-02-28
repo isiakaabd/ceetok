@@ -8,32 +8,31 @@ import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const UserAccount = ({ status: userStatus }) => {
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
+const UserAccount = () => {
+  // const [open, setOpen] = useState(false);
+  // const anchorRef = useRef(null);
   const anchorRefs = useRef(null);
   const state = useSelector((state) => state.auth);
 
-  console.log(state.auth);
   const navigate = useNavigate();
   const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+  // const handleToggle = () => {
+  //   setOpen((prevOpen) => !prevOpen);
+  // };
   useEffect(() => {
-    if (userStatus) {
+    if (state.auth) {
       getProfile();
     }
     //eslint-disable-next-line
-  }, [userStatus]);
+  }, [state.auth]);
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
+  // const handleClose = (event) => {
+  //   if (anchorRef.current && anchorRef.current.contains(event.target)) {
+  //     return;
+  //   }
 
-    setOpen(false);
-  };
+  //   setOpen(false);
+  // };
   const [opens, setOpens] = useState(false);
 
   const handleToggles = () => {
@@ -57,15 +56,15 @@ const UserAccount = ({ status: userStatus }) => {
         flexWrap="nowrap"
         alignItems="center"
       >
-        {state.token && (
+        {state.auth && (
           <>
             <Tooltips title={"Notifications"}>
               <IconButton
                 onClick={() => navigate("/user/notifications")}
-                ref={anchorRef}
+                // ref={anchorRef}
                 id="composition-button"
-                aria-controls={open ? "composition-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
+                // aria-controls={open ? "composition-menu" : undefined}
+                // aria-expanded={open ? "true" : undefined}
                 aria-haspopup="true"
               >
                 <NotificationIcon
@@ -76,7 +75,7 @@ const UserAccount = ({ status: userStatus }) => {
                 />
               </IconButton>
             </Tooltips>
-            <Notifications
+            {/* <Notifications
               open={open}
               setOpen={setOpen}
               anchorRef={anchorRef}
@@ -84,7 +83,7 @@ const UserAccount = ({ status: userStatus }) => {
               handleToggle={handleToggle}
 
               //   handleToggles={handleToggles}
-            />
+            /> */}
           </>
         )}
         <Grid
@@ -110,10 +109,6 @@ const UserAccount = ({ status: userStatus }) => {
                   height: { md: 32 },
                 }}
                 src={getImage(avatar || userProfile?.avatar)}
-                // alt={
-                //   userProfile?.full_name ||
-                //   (isLoading && admin ? "Admin" : "User")
-                // }
                 alt={full_name || userProfile?.full_name}
               >
                 {full_name?.slice(0, 1).toUpperCase() ||

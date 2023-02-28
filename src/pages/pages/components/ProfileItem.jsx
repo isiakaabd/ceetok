@@ -30,7 +30,6 @@ import CustomizedTooltips from "components/ToolTips";
 import { useNavigate } from "react-router-dom";
 
 const ProfileItem = ({ profile }) => {
-  console.log(profile);
   const {
     full_name,
     is_blocked_by_me,
@@ -40,7 +39,7 @@ const ProfileItem = ({ profile }) => {
     username,
     banned,
   } = profile;
-  console.log(profile);
+
   const admin = useSelector((state) => state.auth.admin);
   const navigate = useNavigate();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
@@ -172,6 +171,7 @@ const ProfileItem = ({ profile }) => {
                   background: "#37D42A",
                   height: ".5rem",
                   borderRadius: "50%",
+                  marginRight: 1,
                 }}
               />
             </Grid>
@@ -197,7 +197,7 @@ const ProfileItem = ({ profile }) => {
             aria-haspopup="true"
             onClick={handleToggle}
           >
-            <SettingsOutlined sx={{ fontSize: "3rem", color: "#9B9A9A" }} />
+            <SettingsOutlined sx={{ fontSize: "2.5rem", color: "#9B9A9A" }} />
           </IconButton>
         </ListItemIcon>
       </ListItem>

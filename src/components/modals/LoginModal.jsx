@@ -11,7 +11,7 @@ import {
 
 import images from "assets";
 import { Form, Formik } from "formik/dist";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormikControl from "validation/FormikControl";
 import ForgottenPassword from "./ForgottenPassword";
 import Modals from "components/Modal";
@@ -23,35 +23,45 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { checkAdmin, loginAction } from "redux/reducers/authReducer";
 const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
-  const [loginUser, { isLoading }] = useLoginMutation();
-  const [state, setState] = useState(false);
+  const [loginUser, { isLoading, error, data }] = useLoginMutation();
+  const [state, setState] = useState(true);
   const [register, setRegister] = useState(false);
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // Validation
 
+  useEffect(() => {
+    if (data) {
+      toast.success(data.message);
+      dispatch(loginAction(data?.body));
+      setTimeout(() => {
+        handleClose();
+      }, 3000);
+    }
+    if (data?.body?.role === "admin") {
+      dispatch(checkAdmin(data?.body?.role));
+    }
+    if (error) toast.error(error);
+    //eslint-disable-next-line
+  }, [error, data]);
+
   const loginValidation = Yup.object({
-    email: Yup.string("Enter Email")
-      .email("Email is Required")
-      .required("Required"),
+    email: state
+      ? Yup.string("Enter Email")
+          .email("Enter Valid Email")
+          .required("Required")
+      : Yup.number("Enter Phone Number").required("Required"),
     password: Yup.string().required("Enter your password"),
   });
   const dispatch = useDispatch();
   const handleSubmit = async (values) => {
     const { email, password } = values;
-    const { data, error } = await loginUser({ email, password });
 
-    if (error) toast.error(error?.message);
-    if (data) {
-      toast.success(data.message);
-      dispatch(loginAction(data?.body));
-      if (data?.body?.role === "admin") {
-        dispatch(checkAdmin(data?.body?.role));
-      }
-      setTimeout(() => {
-        handleClose();
-      }, 3000);
+    if (state) {
+      await loginUser({ email, password });
+    } else {
+      await loginUser({ phone: email, password });
     }
   };
 

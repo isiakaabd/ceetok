@@ -60,6 +60,7 @@ export const Details = ({
   state,
   data,
   setOpenComment,
+  handleShare,
   setState,
   handleLikePost,
 }) => {
@@ -122,7 +123,10 @@ export const Details = ({
             text={data?.quotes_count}
             state={!state}
           />
-          <StyledButton Icon={<IosShareOutlined />} />
+          <StyledButton
+            Icon={<IosShareOutlined />}
+            onClick={() => handleShare(true)}
+          />
         </Grid>
       </Grid>
 
@@ -147,6 +151,7 @@ export const Details = ({
           )}
         </Formik>
       </NotificationModal>
+      <SocialMedia open={open} handleClose={() => setOpen(false)} />
     </>
   );
 };
@@ -155,22 +160,22 @@ const Post = () => {
   const [state, setState] = useState(true);
 
   const { data, isLoading, error } = useGetAPostQuery(postId);
+  const [postAComment, { isLoading: loading }] = usePostCommentMutation();
+  const [createQuote] = useCreateQuoteMutation();
 
   const validationSchema = Yup.object({
     comment: Yup.string().trim().required("Enter your Comment"),
   });
 
-  const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-  const [createQuote] = useCreateQuoteMutation();
   const navigate = useNavigate();
 
   const [openShareModal, setOpenShareModal] = useState(false);
   const [changeCommentState, setChangeCommentState] = useState(true);
 
-  if (isLoading)
-    return <Skeleton animation="wave" height="12rem" width="100%" />;
+  if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { views_count, recent_views } = data;
+  console.log(recent_views);
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
@@ -361,7 +366,7 @@ const Post = () => {
                   {recent_views?.slice(0, 50)?.map((item, index) => (
                     <Typography
                       component={Link}
-                      to={`/user/profile/?id=${item.viewer?.user_id}`}
+                      to={`/user/profile/?id=${item.viewer?.id}`}
                       key={index}
                       sx={{ width: "max-content", mr: 0.5 }}
                       color="secondary"
@@ -393,5 +398,241 @@ const Post = () => {
     </>
   );
 };
+function Skeletons() {
+  return (
+    <Grid
+      sx={{ px: 2, py: 4 }}
+      item
+      flexDirection={"column"}
+      container
+      gap={2}
+      overflow={"hidden"}
+    >
+      <Grid item container alignItems="center" flexWrap="nowrap" gap={4}>
+        <Grid item>
+          <Skeleton
+            sx={{ height: "2.5rem", width: "7rem" }}
+            animation="wave"
+            variant="rounded"
+          />
+        </Grid>
+        <Grid item>
+          <Skeleton
+            sx={{ height: "1rem", width: "8rem" }}
+            animation="wave"
+            variant="text"
+          />
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Skeleton
+          sx={{ height: "5rem", width: "100%" }}
+          animation="wave"
+          variant="rounded"
+        />
+      </Grid>
+      <Grid item sx={{ width: "40%" }}>
+        <Grid item container flexWrap={"nowrap"} gap={1}>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "5rem", width: "5rem" }}
+              animation="wave"
+              variant="circular"
+            />
+          </Grid>
+          <Grid item container gap={1} flexDirection={"column"}>
+            <Grid item>
+              <Skeleton
+                sx={{ height: ".9rem", width: "100%" }}
+                animation="wave"
+                variant="text"
+              />
+            </Grid>
+            <Grid item>
+              <Skeleton
+                sx={{ height: ".9rem", width: "100%" }}
+                animation="wave"
+                variant="text"
+              />
+            </Grid>
 
+            <Grid
+              item
+              justifyContent="space-between"
+              container
+              flexWrap="nowrap"
+            >
+              {Array(3)
+                .fill(undefined)
+                .map((i, index) => (
+                  <Grid item container key={index} flexWrap={"nowrap"}>
+                    <Grid item>
+                      <Skeleton
+                        sx={{ height: ".8rem", width: ".9rem" }}
+                        animation="wave"
+                        variant="text"
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Skeleton
+                        sx={{ height: ".8rem", width: ".9rem" }}
+                        animation="wave"
+                        variant="text"
+                      />
+                    </Grid>
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item container flexDirection="column">
+        <Grid item container justifyContent={"space-between"} flexWrap="nowrap">
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1rem", width: "6rem" }}
+              animation="wave"
+              variant="text"
+            />
+          </Grid>
+          <Grid item>
+            <Skeleton
+              sx={{ height: "1rem", width: "6rem" }}
+              animation="wave"
+              variant="text"
+            />
+          </Grid>
+        </Grid>
+        <Grid item container>
+          <Skeleton
+            sx={{ height: "15rem", width: "100%" }}
+            animation="wave"
+            variant="rounded"
+          />
+        </Grid>
+      </Grid>
+
+      {/* <Grid item container>
+        <Skeleton
+          sx={{ height: "4rem", width: "7rem" }}
+          animation="wave"
+          variant="text"
+        />
+      </Grid> */}
+      <Grid item container flexDirection={"column"}>
+        {Array(20)
+          .fill(undefined)
+          .map((i, index) => (
+            <Grid item key={index}>
+              <Skeleton
+                sx={{ height: ".6rem", width: "100%" }}
+                animation="wave"
+                variant="text"
+              />
+            </Grid>
+          ))}
+      </Grid>
+      <Grid item container>
+        <Skeleton
+          sx={{ height: ".08rem", width: "100%" }}
+          animation="wave"
+          variant="text"
+        />
+      </Grid>
+
+      <Grid item container sx={{ width: "90%" }}>
+        <Grid item container flexWrap="nowrap" justifyContent="space-around">
+          {Array(3)
+            .fill(undefined)
+            .map((i, index) => (
+              <Grid item container gap={0.5} key={index} flexWrap={"nowrap"}>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: "1.5rem", width: "2rem" }}
+                    animation="wave"
+                    variant="rectangular"
+                  />
+                </Grid>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: "1.5rem", width: "1rem" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                </Grid>
+              </Grid>
+            ))}
+        </Grid>
+      </Grid>
+      <Grid item container gap={2}>
+        {Array(5)
+          .fill(undefined)
+          .map((i, index) => (
+            <Grid item container gap={1} key={index} flexWrap={"nowrap"}>
+              <Grid item>
+                <Skeleton
+                  sx={{ height: "5rem", width: "5rem" }}
+                  animation="wave"
+                  variant="circular"
+                />
+              </Grid>
+              <Grid item container gap={1} flexDirection={"column"}>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: ".8rem", width: "8rem" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                </Grid>
+                <Grid item>
+                  <Skeleton
+                    sx={{ height: ".8rem", width: "25rem" }}
+                    animation="wave"
+                    variant="text"
+                  />
+                </Grid>
+                <Grid item container gap={1} flexWrap="nowrap">
+                  {Array(3)
+                    .fill(undefined)
+                    .map((i, index) => (
+                      <Grid
+                        item
+                        container
+                        alignItems="center"
+                        key={index}
+                        gap={0.5}
+                        flexWrap={"nowrap"}
+                      >
+                        <Grid item>
+                          <Skeleton
+                            sx={{ height: "1.5rem", width: "2rem" }}
+                            animation="wave"
+                            variant="rectangular"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Skeleton
+                            sx={{ height: "1.5rem", width: "1rem" }}
+                            animation="wave"
+                            variant="text"
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                </Grid>
+              </Grid>
+            </Grid>
+          ))}
+      </Grid>
+
+      <Grid container>
+        <Skeleton
+          sx={{ height: "12rem", width: "100%" }}
+          animation="wave"
+          variant="rounded"
+        />
+      </Grid>
+    </Grid>
+  );
+}
 export default Post;

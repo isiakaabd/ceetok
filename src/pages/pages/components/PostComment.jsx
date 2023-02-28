@@ -52,7 +52,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   const navigate = useNavigate();
   const { data: profile, isLoading } = useUserProfileQuery();
   const admin = useSelector((state) => state.auth.admin);
-
   const [open, setOpen] = useState(false);
   const [approvePost, { isLoading: approvalLoading }] =
     useApprovePostMutation();
@@ -139,8 +138,8 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   ];
   const [likePost] = useLikeAndUnlikePostMutation();
   if (isLoading) return <Skeleton />;
-  const { interests } = profile;
-  const check = interests?.includes(category?.toLowerCase());
+
+  const check = profile?.interests?.includes(category?.toLowerCase());
 
   const checkUser = profile?.id === user_id;
 

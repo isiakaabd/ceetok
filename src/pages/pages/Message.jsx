@@ -27,7 +27,11 @@ const Message = () => {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
-  const ws = useMemo(() => new WebSocket("ws://3.80.211.23:5050"), []);
+  console.log(process.env.REACT_APP_BASE_URL_CHAT);
+  const ws = useMemo(
+    () => new WebSocket(process.env.REACT_APP_BASE_URL_CHAT),
+    []
+  );
   // const { data: profile, isLoading } = useUserProfileQuery();
   const checkChatHistory = chats?.filter((item) => item.user_id === id);
   const token = useSelector((state) => state.auth.token);

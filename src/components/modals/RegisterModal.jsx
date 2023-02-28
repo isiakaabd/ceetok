@@ -3,7 +3,7 @@ import { Grid, Button, Typography, Divider } from "@mui/material";
 import images from "assets";
 import Modals from "components/Modal";
 import { Form, Formik } from "formik/dist";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormikControl from "validation/FormikControl";
 import Verification from "./Verification";
 import { Phoneverification } from "./Phoneverification";
@@ -30,31 +30,68 @@ const validationSchema = Yup.object({
 });
 
 const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
-  const [register] = useRegisterMutation();
+  const [register, { data, error }] = useRegisterMutation();
 
-  const [state] = useState(true);
+  const [state, setState] = useState(true);
+  const validationSchema = Yup.object({
+    email: state
+      ? Yup.string("Enter Email")
+          .email("Enter Valid Email")
+          .required("Required")
+      : Yup.number("Enter Phone Number")
+        .required("Required"),
+    name: Yup.string("Enter your Name").required("Required"),
+    password: Yup.string()
+      .required("Enter your password")
+      .min(8, "password too short")
+      .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
+      .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
+      .matches(/^(?=.*[0-9])/, "Must contain at least one number")
+      .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
+  });
   const dispatch = useDispatch();
   const [login, setLogin] = useState(false);
   const [showEmailVerification, setEmailVerifications] = useState(false);
   const [showPasswordVerification] = useState(false); //setShowPasswordVerification
-  const handleSubmit = async (values) => {
-    const { email, password, name } = values;
-    const { data, error } = await register({
-      email,
-      password,
-      full_name: name,
-    });
-    if (error) toast.error(error);
+
+  useEffect(() => {
     if (data) {
       toast.success(data.message);
-      dispatch(registerAction(data.body));
+      dispatch(registerAction(data?.body));
       setTimeout(() => {
         handleClose();
       }, 3000);
-      setTimeout(() => {
-        setLogin(true);
-      }, 5000);
     }
+
+    if (error) toast.error(error);
+    //eslint-disable-next-line
+  }, [error, data]);
+  const handleSubmit = async (values) => {
+    const { email, password, name } = values;
+    if (state) {
+      await register({
+        email,
+        password,
+        full_name: name,
+      });
+    } else {
+      await register({
+        phone: email,
+        password,
+        full_name: name,
+      });
+    }
+    // if (error) toast.error(error);
+    // if (data) {
+    //   toast.success(data.message);
+    //   dispatch(registerAction(data.body));
+    //   setTimeout(() => {
+    //     handleClose();
+    //   }, 3000);
+    //   setTimeout(() => {
+    //     setLogin(true);
+    //   }, 5000);
+    // }
   };
 
   return (
@@ -291,7 +328,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                               <Typography
                                 variant="span"
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
-                                // onClick={() => setState(!state)}
+                                onClick={() => setState(!state)}
                               >
                                 {state ? "Phone Number?" : "Email Address"}
                               </Typography>

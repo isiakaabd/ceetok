@@ -102,7 +102,7 @@ const Live = () => {
             sx={{ alignSelf: "flex-end", flexDirection: "column" }}
           >
             <Grid item>
-              <Grid container alignItems={"center"} gap={2}>
+              <Grid container alignItems={"center"} gap={2} sx={{ pb: 3 }}>
                 <RemoveRedEyeOutlined sx={{ color: "#fff" }} />{" "}
                 <Typography
                   color="#fff"

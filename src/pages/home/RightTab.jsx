@@ -9,6 +9,7 @@ import Filters from "components/modals/Filters";
 import LoginModal from "components/modals/LoginModal";
 import { useGetPostQuery } from "redux/slices/postSlice";
 import Paginations from "components/modals/Paginations";
+import Error from "pages/pages/components/Error";
 
 const RightTab = ({ setCreatePost, more }) => {
   // const posts = useSelector((state) => state.posts.posts);
@@ -39,12 +40,7 @@ const RightTab = ({ setCreatePost, more }) => {
   };
 
   if (isLoading) return <Skeletons />;
-  if (error)
-    return (
-      <Typography sx={{ px: { md: 4, xs: 1 } }} variant="h2">
-        Something went wrong...
-      </Typography>
-    );
+  if (error) return <Error />;
   return (
     <>
       <Grid
@@ -135,11 +131,13 @@ const RightTab = ({ setCreatePost, more }) => {
                 })}
               </List>
 
-              <Paginations
-                page={page}
-                setPage={setPage}
-                count={array?.total_pages}
-              />
+              {array?.total_pages > 1 && (
+                <Paginations
+                  page={page}
+                  setPage={setPage}
+                  count={array?.total_pages}
+                />
+              )}
               {/* </Grid> */}
             </>
           ) : (

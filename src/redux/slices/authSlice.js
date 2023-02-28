@@ -16,8 +16,8 @@ export const authSlice = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(body),
       }),
-      invalidatesTags: ["user", "post", "announcement", "admin"],
-      transformErrorResponse: (error) => error.message,
+
+      transformErrorResponse: (error) => error.data.message,
     }),
     forgotPassword: builder.mutation({
       query: (body) => ({
@@ -76,8 +76,10 @@ export const authSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     listUsers: builder.query({
-      query: ({ username }) => ({
-        url: `/user/list/?${username ? `username=${username}` : ""}`,
+      query: ({ username, followed, following }) => ({
+        url: `/user/list/?${followed ? `followed=${followed}` : ""}${
+          following ? `&following=${following}` : ""
+        }${username ? `&username=${username}` : ""}`,
         method: "GET",
       }),
       providesTags: ["user"],
@@ -98,6 +100,16 @@ export const authSlice = api.injectEndpoints({
       query: (body) => ({
         url: `/follow `,
         method: "POST",
+        body,
+      }),
+      invalidatesTags: ["user", "post"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.message,
+    }),
+    changePassword: builder.mutation({
+      query: (body) => ({
+        url: `/user/change-password `,
+        method: "PATCH",
         body,
       }),
       invalidatesTags: ["user", "post"],
@@ -172,6 +184,14 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    refreshToken: builder.mutation({
+      query: () => ({
+        url: "/user/refresh",
+        method: "POST",
+      }),
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
 
     getUsercontentLike: builder.query({
       query: ({ offset }) => ({
@@ -186,10 +206,12 @@ export const authSlice = api.injectEndpoints({
 });
 
 export const {
+  useChangePasswordMutation,
   useRegisterMutation,
   useLoginMutation,
   useBlockUserMutation,
   useListUsersQuery,
+  useLazyListUsersQuery,
   useForgotPasswordMutation,
   useUserProfileQuery,
   useLazyUserProfileQuery,

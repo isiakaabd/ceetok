@@ -18,17 +18,7 @@ import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 
 const AllPosts = ({ post, index, showUser }) => {
-  const {
-    slug,
-    id,
-    user,
-    media,
-    title,
-    recent_views,
-    category,
-    views_count,
-    updatedAt,
-  } = post;
+  const { slug, user, media, title, category, views_count, updatedAt } = post;
 
   const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();

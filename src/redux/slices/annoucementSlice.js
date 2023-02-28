@@ -25,7 +25,7 @@ export const annoucementSlice = api.injectEndpoints({
     getAnnoucements: builder.query({
       query: ({ page, userId }) => ({
         url: `announcement/?${page ? `&offset=${page}` : "&offset=0"}&limit=10${
-          userId && `&user_id=${userId}`
+          userId ? `&user_id=${userId}` : ""
         }`,
         method: "GET",
       }),

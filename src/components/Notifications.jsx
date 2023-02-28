@@ -1,7 +1,6 @@
 import { useRef, useEffect } from "react";
 
 import {
-  Stack,
   MenuList,
   ClickAwayListener,
   MenuItem,
@@ -12,32 +11,26 @@ import {
   Typography,
   ListItemIcon,
   Grid,
-  Menu,
-  Divider,
-  Avatar,
-  Skeleton,
 } from "@mui/material";
 import {
-  Message,
   PermIdentityOutlined,
   ShareOutlined,
   AddchartOutlined,
   PeopleOutlineOutlined,
-  ChatBubbleOutlineSharp,
   FavoriteBorderOutlined,
   ReplyOutlined,
   ManageAccountsOutlined,
   EmailOutlined,
-  PersonAdd,
-  Settings,
-  Logout,
   AccountCircleOutlined,
   LogoutOutlined,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutAction } from "redux/reducers/authReducer";
-import { useLogoutMutation, useUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useLazyUserProfileQuery,
+  useLogoutMutation,
+} from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 
 export default function Notifications({
@@ -52,7 +45,16 @@ export default function Notifications({
   anchorRefs,
   handleCloses,
 }) {
-  const { data: profile } = useUserProfileQuery();
+  const state = useSelector((state) => state.auth.auth);
+  const [getProfile, { data: profile }] = useLazyUserProfileQuery();
+
+  useEffect(() => {
+    if (state) {
+      getProfile();
+    }
+    //eslint-disable-next-line
+  }, [state]);
+
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
       event.preventDefault();

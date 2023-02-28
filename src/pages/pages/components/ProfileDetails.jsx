@@ -16,6 +16,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
   useFollowUserMutation,
+  useLazyListUsersQuery,
   useLazyOtherUserProfileQuery,
   useListUsersQuery,
   useUserProfileQuery,
@@ -26,6 +27,8 @@ import { useSelector } from "react-redux";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
 import Error from "./Error";
+import FormikControl from "validation/FormikControl";
+import { Form, Formik } from "formik/dist";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -49,14 +52,22 @@ const ProfileDetails = (props) => {
   const { data: userProfile, isLoading, isError } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
   const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
+  const admin = useSelector((state) => state.auth.admin);
+  const [follows, setFollows] = useState(false);
   const { data: users, isLoading: usersLoading } = useListUsersQuery({
     username: "",
+    followed: admin ? false : true,
+    // following: admin ? false : true,
   }); //
 
   // {
   //   followers: true,
   // }
-  const admin = useSelector((state) => state.auth.admin);
+  //   const handleSubmit=async()=>{
+  // listUser({
+
+  // })
+  //   }
   const condition = !id || dt?.id === userProfile?.id;
 
   const list = users;
@@ -183,7 +194,7 @@ const ProfileDetails = (props) => {
               <CustomSubTypography>post</CustomSubTypography>
             </Grid>
             <Grid item>
-              <CustomTypography>1.5k</CustomTypography>
+              <CustomTypography>{state?.likes || 0}</CustomTypography>
               <CustomSubTypography>Likes</CustomSubTypography>
             </Grid>
             <Grid item>
@@ -219,6 +230,10 @@ const ProfileDetails = (props) => {
               <CustomButton
                 component={Link}
                 width="10rem"
+                // onClick={() => {
+                //   !admin && setFollows(true);
+                //   refetch();
+                // }}
                 fontSize={{ md: "2.5rem", xs: "1.8rem" }}
                 // fontSize={{ md: "20rem", xs: "1.6rem" }}
                 title={" Update Settings"}
@@ -231,25 +246,58 @@ const ProfileDetails = (props) => {
 
         {condition && (
           <>
-            <Grid item container alignItems="center" sx={{ mt: 4, p: 2 }}>
+            <Grid
+              item
+              container
+              flexWrap="nowrap"
+              alignItems="center"
+              sx={{ mt: 4, p: 2 }}
+            >
               <Typography flex={1} sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
-                {admin ? "Users List" : "Friends List"}
+                {admin ? "Users List" : "Followers List"}
               </Typography>
-              {list?.length > 0 && (
-                <CustomButton
-                  title={"See All"}
-                  component={Link}
-                  onClick={() => {
-                    if (!admin) {
-                      listNumber > list.length
-                        ? setListNumber(list?.length)
-                        : setListNumber(listNumber + 5);
-                    }
-                  }}
-                  to={admin ? "/admin/all-users" : null}
-                  fontSize={{ md: "1.6rem", xs: "1.4rem" }}
-                />
-              )}
+              <Grid item>
+                {/* <Formik initialValues={{ option: "" }} onSubmit={handleSubmit}>
+                  <Form style={{ width: "100%" }}>
+                    <Grid item container>
+                      <FormikControl
+                        name="option"
+                        control="select"
+                        options={[
+                          {
+                            label: "All",
+                            value: "All",
+                          },
+                          {
+                            label: "Following",
+                            value: "Following",
+                          },
+                          {
+                            label: "Followers",
+                            value: "Following",
+                          },
+                        ]}
+                        placeholder="Filter By"
+                      />
+                    </Grid>
+                  </Form>
+                </Formik> */}
+                {list?.length > 0 && (
+                  <CustomButton
+                    title={"See All"}
+                    component={Link}
+                    onClick={() => {
+                      if (!admin) {
+                        listNumber > list.length
+                          ? setListNumber(list?.length)
+                          : setListNumber(listNumber + 5);
+                      }
+                    }}
+                    to={admin ? "/admin/all-users" : null}
+                    fontSize={{ md: "1.6rem", xs: "1.4rem" }}
+                  />
+                )}
+              </Grid>
             </Grid>
             {list?.length > 0 ? (
               <List sx={{ p: 2, maxWidth: "100%" }}>

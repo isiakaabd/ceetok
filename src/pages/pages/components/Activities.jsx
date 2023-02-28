@@ -5,7 +5,6 @@ import {
   ClickAwayListener,
   Grid,
   Grow,
-  Checkbox,
   List,
   MenuItem,
   MenuList,

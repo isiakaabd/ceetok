@@ -21,9 +21,9 @@ const baseQuery = fetchBaseQuery({
 const baseQuerywithAuth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   const refreshToken = localStorage.getItem("refresh_token");
-  const header = {
-    authorization: `bearer ${refreshToken}`,
-  };
+  // const header = {
+  //   authorization: `bearer ${refreshToken}`,
+  // };
   if (result?.error?.status === 403) {
     const refreshResult = await baseQuery(
       {

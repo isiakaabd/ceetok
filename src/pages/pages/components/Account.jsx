@@ -16,7 +16,6 @@ import {
   useChangePasswordMutation,
   useGetUserSettingsQuery,
   useUpdateUserSettingsMutation,
-  useUserProfileQuery,
 } from "redux/slices/authSlice";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -58,10 +57,10 @@ const Account = (props) => {
     // textAlign: "center",
   }));
   const { data: user, isLoading: loading } = useGetUserSettingsQuery();
-  const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
+  // const { data: profile, isLoading: profileLoading } = useUserProfileQuery();
   const [changePassword] = useChangePasswordMutation();
   const [updateProfile, { isLoading }] = useUpdateUserSettingsMutation();
-  if (loading || profileLoading) return <Skeleton />;
+  if (loading) return <Skeleton />;
 
   const {
     invisible_mode,

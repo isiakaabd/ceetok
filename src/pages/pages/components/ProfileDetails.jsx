@@ -16,7 +16,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
   useFollowUserMutation,
-  useLazyListUsersQuery,
   useLazyOtherUserProfileQuery,
   useListUsersQuery,
   useUserProfileQuery,
@@ -27,8 +26,6 @@ import { useSelector } from "react-redux";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
 import Error from "./Error";
-import FormikControl from "validation/FormikControl";
-import { Form, Formik } from "formik/dist";
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -53,7 +50,7 @@ const ProfileDetails = (props) => {
   const [state, setState] = useState(userProfile);
   const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
   const admin = useSelector((state) => state.auth.admin);
-  const [follows, setFollows] = useState(false);
+  // const [follows, setFollows] = useState(false);
   const { data: users, isLoading: usersLoading } = useListUsersQuery({
     username: "",
     followed: admin ? false : true,

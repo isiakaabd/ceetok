@@ -1,6 +1,5 @@
 import { DeleteOutline } from "@mui/icons-material";
 import { Avatar, Grid, Typography, Checkbox, IconButton } from "@mui/material";
-import DeleteIcon from "assets/svgs/DeleteIcon";
 import { Link } from "react-router-dom";
 const Mentions = (props) => {
   return (

@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Grid,
-  IconButton,
-  Checkbox,
-  Typography,
-  Skeleton,
-} from "@mui/material";
+import { Avatar, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { useAllMediaQuery } from "redux/slices/authSlice";
 import Paginations from "components/modals/Paginations";
 import { useState } from "react";

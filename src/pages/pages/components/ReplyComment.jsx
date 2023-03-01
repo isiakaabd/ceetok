@@ -250,23 +250,6 @@ function Single({ comments }) {
       handleCloses();
     }, 500);
     setEditComment(false);
-    // const form = new FormData();
-    // form.append("profile_pic", file);
-    // fetch("https://api.ceetok.live/user/edit", {
-    //   method: "PATCH",
-    //   body: form,
-    //   headers: {
-    //     // 👇 Set headers manually for single file upload
-    //     AUTHORIZATION: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   // .then((data) => console.log(data))
-    //   .then((data) => {
-    //     toast.success(data.message);
-    //   })
-    //   .catch((err) => toast.error(err));
-    // setTimeout(() => handleClose(), 500);
   };
   const handleReport = async (values) => {
     const { body } = values;

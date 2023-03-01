@@ -72,27 +72,13 @@ export default function ProfileImage({ avatar, name, condition }) {
     const dat = await updateProfile(form);
 
     toast.success(dat);
-    // C("https://api.ceetok.live/user/edit", {
-    //   method: "PATCH",
-    //   body: form,
-    //   headers: {
-    //     // 👇 Set headers manually for single file upload
-    //     AUTHORIZATION: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   // .then((data) => console.log(data))
-    //   .then((data) => {
-    //     refetch();
-    //     toast.success(data.message);
-    //   })
-    //   .catch((err) => toast.error(err));
+
     setTimeout(() => handleClose(), 500);
   }
   const handleRemoveImage = (e) => {
     const form = new FormData();
     form.append("profile_pic", null);
-    fetch("https://api.ceetok.live/user/edit", {
+    fetch(process.env.REACT_APP_EDIT, {
       method: "PATCH",
       body: JSON.stringify(form),
       headers: {

@@ -22,6 +22,7 @@ const RightTab = ({ setCreatePost, more }) => {
     data: array,
     error,
     isLoading,
+    isFetching,
   } = useGetPostQuery({ offset: page - 1, from: value, ...more });
 
   const open = Boolean(anchorEl);
@@ -98,7 +99,7 @@ const RightTab = ({ setCreatePost, more }) => {
               handleClose={handleClose}
             />
           </Grid>
-          {isLoading && page > 1 && (
+          {isFetching && (
             <Typography
               variant="h4"
               width={"100%"}

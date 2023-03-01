@@ -19,7 +19,9 @@ const Home = () => {
           container
           direction="column"
           gap={4}
-          sx={{ paddingInline: { xs: "1rem", md: "4rem" } }}
+          sx={{
+            paddingInline: { xs: "1rem", md: "4rem" },
+          }}
         >
           <Headings />
           {/* <Movie /> */}
@@ -30,6 +32,7 @@ const Home = () => {
             mt: 3,
             pb: "3rem",
             marginInline: "auto",
+            overflowX: "hidden",
             marginRight: { md: "4rem" },
             marginLeft: { md: "0" },
           }}

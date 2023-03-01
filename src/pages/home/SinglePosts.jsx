@@ -8,10 +8,11 @@ import {
   Avatar,
   ListItemIcon,
   ListItemButton,
+  Typography,
 } from "@mui/material";
-import { RemoveRedEyeOutlined } from "@mui/icons-material";
+import { RemoveRedEyeOutlined, StarOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getDate, getImage, getTime } from "helpers";
+import { getDate, getImage, getTime, getTimeMoment } from "helpers";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
@@ -22,90 +23,95 @@ const AllPosts = ({ post, index, showUser }) => {
   const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  // const handleLogin = () => setOpen(true);
-
-  // function Skeletons() {
-  //   return (
-  //     <Grid item container gap={3} flexWrap={{ md: "nowrap", xs: "wrap" }}>
-  //       {Array(3)
-  //         .fill(undefined)
-  //         .map((item, index) => (
-  //           <Grid item container gap={4} key={index}>
-  //             <Skeleton
-  //               sx={{ height: "15rem", width: "10rem" }}
-  //               animation="wave"
-  //               variant="rectangular"
-  //             />
-
-  //             <Skeleton
-  //               sx={{ height: "15rem", width: "100%" }}
-  //               animation="wave"
-  //               variant="rectangular"
-  //             />
-  //           </Grid>
-  //         ))}
-  //     </Grid>
-  //   );
-  // }
 
   return (
     <>
       <ListItemButton
-        button
-        // component={Link}
+        dense
         onClick={() =>
           loginStatus ? navigate(`/post/${slug}`) : setOpen(true)
         }
+        disableGutters={{ md: false, xs: true }}
+        sx={{ maxWidth: "100%" }}
       >
-        <ListItemText
-          primary={index}
-          primaryTypographyProps={{
-            mr: "3rem !important",
-            color: "#000",
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            display: {
-              md: "block",
-              xs: "none",
-            },
-          }}
-          sx={{
-            maxWidth: "max-content",
-          }}
-        />
-
-        <ListItemAvatar
-          sx={{
-            height: { md: "12rem", xs: "100%" },
-            width: { md: "11rem", xs: "5.3rem" },
-          }}
-        >
-          <Avatar
-            src={
-              media.length > 0 ? getImage(media[0]?.storage_path) : images.obi
-            }
-            alt="obi"
-            variant="rounded"
-            sx={{ height: "100%", width: "100%" }}
-          />
-        </ListItemAvatar>
-
-        <List
-          item
-          container
-          direction="column"
-          sx={{
-            flex: { md: 3, xs: 1 },
-            mx: { md: 3, xs: 1 },
-          }}
+        <ListItem
           dense
-          disablePadding
+          disableGutters
+          secondaryAction={
+            <Grid item container flexWrap="nowrap" gap={1} alignItems="center">
+              <ListItemIcon sx={{ minWidth: "1rem", m: 0 }}>
+                <RemoveRedEyeOutlined
+                  sx={{
+                    fontSize: "2.5rem",
+                    display: { md: "block", xs: "none" },
+                  }}
+                />
+              </ListItemIcon>
+              <div
+                style={{
+                  width: "2.5rem",
+                  height: "2.5rem",
+                  borderRadius: "50%",
+                  backgroundColor: "#D3D3D3",
+                  display: "flex",
+                  fontWeight: 700,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h5" sx={{ m: 0 }}>
+                  {views_count}
+                </Typography>
+              </div>
+            </Grid>
+          }
+          alignItems="flex-start"
         >
+          <ListItemIcon sx={{ minWidth: "2rem", mt: 0 }}>
+            <StarOutline />
+          </ListItemIcon>
+          <ListItemAvatar
+            sx={{
+              height: { md: "12rem", xs: "5.3rem" },
+              width: { md: "11rem", xs: "5.3rem" },
+              mr: 2,
+              mt: 0,
+            }}
+          >
+            <Avatar
+              src={getImage(media[0]?.storage_path)}
+              alt={title}
+              variant="rounded"
+              sx={{
+                height: "100%",
+                width: "100%",
+                fontSize: { md: "3rem", xs: "1.5rem" },
+              }}
+            >
+              {category?.slice(0, 1).toUpperCase()}
+            </Avatar>
+          </ListItemAvatar>
+
           <ListItemText
+            // primary={index + 1}
+            // primaryTypographyProps={{
+            //   mr: "3rem !important",
+            //   color: "#000",
+            //   fontSize: "1.5rem",
+            //   fontWeight: 700,
+            //   display: {
+            //     md: "block",
+            //     xs: "none",
+            //   },
+            // }}
+            // sx={{
+            //   maxWidth: "max-content",
+            // }}
             primary={category}
             primaryTypographyProps={{
               backgroundColor: "#FF9B04",
               padding: ".5rem 1.4rem",
+              mt: 0,
               borderRadius: "2rem",
               fontWeight: 700,
               width: "max-content",
@@ -116,118 +122,51 @@ const AllPosts = ({ post, index, showUser }) => {
                 maxWidth: "max-content",
               },
             }}
-            secondary={title}
-            secondaryTypographyProps={{
-              color: "#5F5C5C",
-              // mt: { md: 2, xs: 1 },
-              fontSize: { md: "2rem", xs: "1.2rem" },
-              fontWeight: { md: 700, xs: 600 },
-              width: "calc(98%)",
-              maxWidth: "100%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              display: "inlineBlock",
-            }}
-          />
-
-          <List
-            item
-            sx={{
-              display: { xs: "flex" },
-              fontSize: { md: "1.2rem", xs: "1rem" },
-              fontWeight: 400,
-            }}
-            disablePadding
-            dense
-          >
-            <ListItem
-              disableGutters
-              // disablePadding
-              sx={{ gap: { md: "2rem", xs: "1rem" } }}
-            >
-              {showUser ? (
-                <ListItemText
-                  disableTypography
+            secondary={
+              <>
+                <Typography
                   sx={{
+                    color: "#5F5C5C",
+                    // mt: { md: 2, xs: 1 },
                     fontSize: { md: "2rem", xs: "1.2rem" },
-                    maxWidth: "max-content",
+                    fontWeight: { md: 700, xs: 600 },
+                    width: "calc(98%)",
+                    maxWidth: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inlineBlock",
                   }}
                 >
-                  {user?.username || user?.email?.split("@")[0]}
-                </ListItemText>
-              ) : null}
-              <ListItemText
-                disableTypography
-                sx={{
-                  fontSize: { md: "2rem", xs: "1.2rem" },
-                  maxWidth: "max-content",
-                }}
-              >
-                {getDate(updatedAt)}
-              </ListItemText>
-              <ListItemText
-                disableTypography
-                sx={{
-                  fontSize: { md: "2rem", xs: "1.2rem" },
-                  maxWidth: "max-content",
-                }}
-              >
-                {getTime(updatedAt)}
-              </ListItemText>
-            </ListItem>
-            {/* <ListItem> */}
-            <Grid
-              item
-              sx={{
-                flexWrap: "nowrap",
-                alignItems: "center",
-                gap: 1,
-                display: { md: "none", xs: "flex" },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 0 }}>
-                <RemoveRedEyeOutlined />
-              </ListItemIcon>
-              <ListItemText disableTypography primary={views_count} />
-            </Grid>
-            {/* </ListItem> */}
-          </List>
-        </List>
-        <Grid
-          sx={{
-            flex: { sm: 0, md: 1 },
-            alignItems: "center",
-            display: { md: "flex", xs: "none" },
-            justifyContent: "center",
-            marginLeft: "auto",
-          }}
-        >
-          <div
-            style={{
-              width: "2.4rem",
-              height: "2.4rem",
-              borderRadius: "50%",
-              backgroundColor: "#D3D3D3",
-              display: "flex",
-              fontWeight: 700,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {views_count}
-          </div>
-        </Grid>
+                  {title}
+                </Typography>
+                <Grid item container flexWrap="nowrap" gap={2}>
+                  {showUser ? (
+                    <Typography
+                      sx={{
+                        fontSize: { md: "2rem", xs: "1.2rem" },
+                        maxWidth: "max-content",
+                      }}
+                    >
+                      {user?.username || user?.email?.split("@")[0]}
+                    </Typography>
+                  ) : null}
+                  <Typography
+                    sx={{
+                      fontSize: { md: "2rem", xs: "1.2rem" },
+                      maxWidth: "max-content",
+                    }}
+                  >
+                    {getTimeMoment(updatedAt)}
+                  </Typography>
+                </Grid>
+              </>
+            }
+            // secondaryTypographyProps={}
+          />
+        </ListItem>
       </ListItemButton>
-
-      {open && (
-        <LoginModal
-          handleClose={() => setOpen(false)}
-          // setIsLogin={setIsLogin}
-          // handleRegisterOpen={handleRegisterOpen}
-          isLogin={open}
-        />
-      )}
+      {open && <LoginModal handleClose={() => setOpen(false)} isLogin={open} />}
     </>
   );
 };

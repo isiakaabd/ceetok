@@ -31,6 +31,7 @@ const Filters = ({
   );
   const handleChange = (event) => {
     setValue(event.target.value);
+    handleClose();
   };
 
   return (

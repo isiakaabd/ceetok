@@ -15,19 +15,6 @@ import { toast } from "react-toastify";
 import CustomButton from "components/CustomButton";
 import { useDispatch } from "react-redux";
 import { registerAction } from "redux/reducers/authReducer";
-// const validationSchema = Yup.object({
-//   email: Yup.string("Enter Email")
-//     .email("Enter VAlid Email")
-//     .required("Required"),
-//   name: Yup.string("Enter your Name").required("Required"),
-//   password: Yup.string()
-//     .required("Enter your password")
-//     .min(8, "password too short")
-//     .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
-//     .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
-//     .matches(/^(?=.*[0-9])/, "Must contain at least one number")
-//     .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
-// });
 
 const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   const [register, { data, error }] = useRegisterMutation();
@@ -66,31 +53,20 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
     //eslint-disable-next-line
   }, [error, data]);
   const handleSubmit = async (values) => {
-    const { email, password, name } = values;
+    const { em, psd, full_name } = values;
     if (state) {
       await register({
-        email,
-        password,
-        full_name: name,
+        email: em,
+        password: psd,
+        full_name,
       });
     } else {
       await register({
-        phone: email,
-        password,
-        full_name: name,
+        phone: em,
+        password: psd,
+        full_name,
       });
     }
-    // if (error) toast.error(error);
-    // if (data) {
-    //   toast.success(data.message);
-    //   dispatch(registerAction(data.body));
-    //   setTimeout(() => {
-    //     handleClose();
-    //   }, 3000);
-    //   setTimeout(() => {
-    //     setLogin(true);
-    //   }, 5000);
-    // }
   };
 
   return (

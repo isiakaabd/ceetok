@@ -4,8 +4,7 @@ import { Grid, Typography } from "@mui/material";
 import { TextError } from "./TextError";
 
 const Input = (props) => {
-  const { label, name, type, borderRadius, helperText, styles, ...rest } =
-    props;
+  const { label, name, borderRadius, helperText, styles, ...rest } = props;
 
   return (
     <Grid container direction="column">

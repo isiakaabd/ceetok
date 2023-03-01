@@ -1,10 +1,8 @@
 import {
-  Avatar,
   Grid,
   IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -25,7 +23,7 @@ const Notification = () => {
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
-
+  console.log(data);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

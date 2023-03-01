@@ -34,13 +34,13 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
 
   const [state, setState] = useState(true);
   const validationSchema = Yup.object({
-    email: state
+    em: state
       ? Yup.string("Enter Email")
           .email("Enter Valid Email")
           .required("Required")
       : Yup.number("Enter Phone Number").required("Required"),
-    name: Yup.string("Enter your Name").required("Required"),
-    password: Yup.string()
+    full_name: Yup.string("Enter your Name").required("Required"),
+    psd: Yup.string()
       .required("Enter your password")
       .min(8, "password too short")
       .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
@@ -276,9 +276,9 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                     validationSchema={validationSchema}
                     enableReinitialize
                     initialValues={{
-                      email: "",
-                      name: "",
-                      password: "",
+                      em: "",
+                      full_name: "",
+                      psd: "",
                     }}
                     onSubmit={handleSubmit}
                   >
@@ -294,16 +294,16 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                             <Grid item container>
                               <FormikControl
                                 control="input"
-                                name="name"
+                                name="full_name"
                                 placeholder="Full Name"
                               />
                             </Grid>
                             <Grid item container>
                               <FormikControl
                                 control="input"
-                                name={"email"}
-                                type="email"
+                                name={"em"}
                                 autoComplete={false}
+                                autoSuggest={false}
                                 placeholder={
                                   state ? "Email Address" : "Phone number"
                                 }
@@ -312,7 +312,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                             <Grid item container>
                               <FormikControl
                                 control="input"
-                                name="password"
+                                name="psd"
                                 placeholder="Password"
                                 type="password"
                               />

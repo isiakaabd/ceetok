@@ -6,15 +6,13 @@ import { TextError } from "./TextError";
 const Input = (props) => {
   const { label, name, type, borderRadius, helperText, styles, ...rest } =
     props;
-  // const classes = useStyles();
+
   return (
     <Grid container direction="column">
       <Field
         name={name}
+        autoCapitalize={false}
         autoSuggest={false}
-        autoComplete={false}
-        type={type ? type : "text"}
-        {...rest}
         style={{
           minHeight: "4rem",
           borderRadius: borderRadius ? borderRadius : "1rem",
@@ -25,6 +23,7 @@ const Input = (props) => {
           color: "#828484",
           border: "1px solid rgba(0,0,0,0.2)",
         }}
+        {...rest}
       />
       {helperText && (
         <Typography

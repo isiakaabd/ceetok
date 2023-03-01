@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Grid, Typography, Icon } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useQuill } from "react-quilljs";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -9,7 +9,6 @@ import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 // import "highlight.js/styles/tomorrow-night.css";
 import { useFormikContext } from "formik/dist";
-import { useAddImageMutation } from "redux/slices/postSlice";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -95,7 +94,8 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     form.append("media", file);
 
     // const res = await uploadImage(form);
-    fetch("https://api.ceetok.live/post/upload-media", {
+    // process.env.REACT_APP_UPLOAD;
+    fetch(process.envREACT_APP_UPLOAD, {
       method: "POST",
       body: form,
       headers: {

@@ -15,19 +15,19 @@ import { toast } from "react-toastify";
 import CustomButton from "components/CustomButton";
 import { useDispatch } from "react-redux";
 import { registerAction } from "redux/reducers/authReducer";
-const validationSchema = Yup.object({
-  email: Yup.string("Enter Email")
-    .email("Enter VAlid Email")
-    .required("Required"),
-  name: Yup.string("Enter your Name").required("Required"),
-  password: Yup.string()
-    .required("Enter your password")
-    .min(8, "password too short")
-    .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
-    .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
-    .matches(/^(?=.*[0-9])/, "Must contain at least one number")
-    .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
-});
+// const validationSchema = Yup.object({
+//   email: Yup.string("Enter Email")
+//     .email("Enter VAlid Email")
+//     .required("Required"),
+//   name: Yup.string("Enter your Name").required("Required"),
+//   password: Yup.string()
+//     .required("Enter your password")
+//     .min(8, "password too short")
+//     .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase character")
+//     .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase character")
+//     .matches(/^(?=.*[0-9])/, "Must contain at least one number")
+//     .matches(/^(?=.*[!@#%&])/, "Must contain at least one special character"),
+// });
 
 const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   const [register, { data, error }] = useRegisterMutation();
@@ -38,8 +38,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
       ? Yup.string("Enter Email")
           .email("Enter Valid Email")
           .required("Required")
-      : Yup.number("Enter Phone Number")
-        .required("Required"),
+      : Yup.number("Enter Phone Number").required("Required"),
     name: Yup.string("Enter your Name").required("Required"),
     password: Yup.string()
       .required("Enter your password")
@@ -296,13 +295,15 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                               <FormikControl
                                 control="input"
                                 name="name"
-                                placeholder="Name"
+                                placeholder="Full Name"
                               />
                             </Grid>
                             <Grid item container>
                               <FormikControl
                                 control="input"
                                 name={"email"}
+                                type="email"
+                                autoComplete={false}
                                 placeholder={
                                   state ? "Email Address" : "Phone number"
                                 }

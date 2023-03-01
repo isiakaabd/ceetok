@@ -18,7 +18,10 @@ import Editor from "components/Quil";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { CustomButton } from "components";
 import { useSelector } from "react-redux";
-import { useOtherUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useOtherUserProfileQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { getImage } from "helpers";
@@ -27,59 +30,80 @@ import Error from "./components/Error";
 const Message = () => {
   // const navigate = useNavigate();
   const { id } = useParams();
-  const token = useSelector((state) => state.auth.token);
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
   const ws = useMemo(
     () => new WebSocket(process.env.REACT_APP_BASE_URL_CHAT),
     []
   );
-  const { data: profile, error, isLoading } = useOtherUserProfileQuery(id);
-
-  useEffect(() => {
-    console.log(233);
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-      toast.success("Connection successful");
-      ws.send(JSON.stringify({ type: "init", token }));
-      ws.send(JSON.stringify({ type: "chat", token }));
-      ws.send(
-        JSON.stringify({
-          type: "messages",
-          token,
-          limit: 10000,
-          offset: 2,
-          chat_id: id,
-        })
-      );
-    };
-
-    ws.onclose = (event) => {
-      console.log(`WebSocket closed with code ${event.code}: ${event.reason}`);
-      if (event.code === 1006) {
-        // handle abnormal close
-        // e.g., attempt to reconnect or display an error message
-      }
-    };
-    ws.onmessage = ({ data }) => {
-      const { type, body } = JSON.parse(data);
-      if (type === "messages") return setMessages(body?.messages.reverse());
-      if (type === "chat" || type === "init_chat") return setChats(body?.chats);
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, [ws, token, id]);
-
-  if (isLoading) return <Skeleton />;
-  if (error) return <Error />;
+  const { data: profile, isLoading, error } = useOtherUserProfileQuery(id);
+  const token = useSelector((state) => state.auth.token);
   const checkChatHistory = chats?.filter((item) => item.user_id === id);
 
   // useEffect(() => {
 
+  ws.addEventListener("open", () => {
+    toast.success("Connection successful");
+    ws.send(JSON.stringify({ type: "init", token }));
+    ws.send(JSON.stringify({ type: "chat", token }));
+    ws.send(
+      JSON.stringify({
+        type: "messages",
+        token,
+        limit: 10000,
+        offset: 2,
+        chat_id: id,
+      })
+    );
+    // ws.send(JSON.stringify({ type: "init_chat", token, user_id: id }));
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "init_chat",
+    //     user_id: profile?.id,
+    //     token,
+    //     limit: 20,
+    //     offset: 0,
+    //   })
+    // ); // previous chat hiostory
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "messages",
+    //     token,
+    //     limit: 20,
+    //     offset: 0,
+    //     user_id: id,
+    //   })
+    // ); // previous chat hiostory
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "init_chat",
+    //     token,
+    //     user_id: profile?.id,
+    //     //  "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
+    //     limit: 20,
+    //     offset: 0,
+    //   })
+    // ); // load message related to certain chat
+
+    // ws.send(
+    //   JSON.stringify({
+    //     type: "send_message",
+    //     token,
+    //     message: "Just testing here...",
+    //     chat_id: "423956ec-f1f1-4ee6-addf-73f93a6da2f7",
+    //   })
+    // );
+  });
   //eslint-disable-next-line
   // }, []);
+  ws.addEventListener("message", ({ data }) => {
+    const { type, body } = JSON.parse(data);
+    if (type === "messages") return setMessages(body?.messages.reverse());
+    if (type === "chat" || type === "init_chat") return setChats(body?.chats);
+  });
+
+  // useEffect(() => {
+  ws.onmessage = function ({ data }) {};
 
   //eslint-disable-next-line
   // }, []);
@@ -128,8 +152,9 @@ const Message = () => {
 
     setTimeout(() => resetForm(), 400);
   };
-  console.log(messages);
-  const { full_name, avatar } = profile;
+  if (isLoading) return <Skeleton />;
+  if (error) return <Error />;
+  const { avatar, full_name } = profile;
   return (
     <Grid
       container
@@ -152,8 +177,7 @@ const Message = () => {
         >
           <ListItemAvatar>
             <Avatar src={getImage(avatar)} alt={full_name}>
-              {full_name?.slice(0, 1).toUpperCase() ||
-                full_name?.slice(0, 1).toUpperCase()}
+              {full_name?.slice(0, 1).toUpperCase()}
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={full_name} />
@@ -229,7 +253,7 @@ function SingleChat({ messages, id, sender_id }) {
 
   const initial = 500;
   const [count, setCount] = useState(initial);
-  const [state] = useState(
+  const [state, setState] = useState(
     message
     // ?.slice(0, counts < initial ? count : initial)
   );

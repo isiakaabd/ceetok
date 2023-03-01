@@ -373,9 +373,9 @@ const CreatePost = ({
                       type={
                         uploadType === "annoucement"
                           ? "announcements"
-                          : // : type === "live"
-                            // ? "live"
-                            "posts"
+                          : type === "live"
+                          ? "live"
+                          : "posts"
                       }
                     />
                     {type === "live" && (

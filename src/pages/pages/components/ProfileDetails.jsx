@@ -11,7 +11,10 @@ import ProfileImage from "./ProfileImage";
 import Pen from "assets/svgs/Pen";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
-import { PersonAddAlt1Outlined } from "@mui/icons-material";
+import {
+  PersonAddAlt1Outlined,
+  PersonRemoveAlt1Outlined,
+} from "@mui/icons-material";
 import { Link, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
@@ -26,6 +29,18 @@ import { useSelector } from "react-redux";
 import CustomizedTooltips from "components/ToolTips";
 import { toast } from "react-toastify";
 import Error from "./Error";
+
+const Sk = () => {
+  return (
+    <Grid>
+      <Skeleton
+        sx={{ height: "1.4rem", width: "1.4rem" }}
+        animation="wave"
+        variant="rectangular"
+      />
+    </Grid>
+  );
+};
 
 const ProfileDetails = (props) => {
   const [searchParams] = useSearchParams();
@@ -45,13 +60,23 @@ const ProfileDetails = (props) => {
   );
 
   const [open, setOpen] = useState(false);
-  const [follow] = useFollowUserMutation();
-  const { data: userProfile, isLoading, isError } = useUserProfileQuery();
+  const [follow, { isLoading: followLoading }] = useFollowUserMutation();
+  const {
+    data: userProfile,
+    isLoading,
+    error: isError,
+  } = useUserProfileQuery();
   const [state, setState] = useState(userProfile);
-  const [fetchProfile, { data: dt }] = useLazyOtherUserProfileQuery();
+  const [fetchProfile, { data: dt, isLoading: load, error }] =
+    useLazyOtherUserProfileQuery();
+
   const admin = useSelector((state) => state.auth.admin);
   // const [follows, setFollows] = useState(false);
-  const { data: users, isLoading: usersLoading } = useListUsersQuery({
+  const {
+    data: users,
+    isLoading: usersLoading,
+    error: err,
+  } = useListUsersQuery({
     username: "",
     followed: admin ? false : true,
     // following: admin ? false : true,
@@ -68,12 +93,9 @@ const ProfileDetails = (props) => {
   const condition = !id || dt?.id === userProfile?.id;
 
   const list = users;
-  const handleFollowUser = async () => {
-    const { data, error } = await follow({ user_id: id });
-    toast.success(data?.message);
-    toast.error(error?.message);
-  };
+
   // console.log(userProfile.id, dt.id);
+
   useEffect(() => {
     if (id) {
       async function x() {
@@ -91,8 +113,14 @@ const ProfileDetails = (props) => {
   }, [userProfile, dt, id]);
   const [listNumber, setListNumber] = useState(5);
 
-  if (isLoading || usersLoading) return <Skeletons />;
-  if (isError) return <Error />;
+  if (isLoading || usersLoading || load) return <Skeletons />;
+  if (error || err || isError) return <Error />;
+  // const { is_followed } = dt;
+  const handleFollowUser = async () => {
+    const { data, error } = await follow({ user_id: id });
+    toast.success(data);
+    toast.error(error);
+  };
 
   // const { full_name, location, email, avatar, username, createdAt } = state;
   return (
@@ -132,6 +160,7 @@ const ProfileDetails = (props) => {
                 style={{
                   width: "1rem",
                   height: "1rem",
+                  marginLeft: ".5rem",
                   borderRadius: "50%",
                   backgroundColor: "#37D42A",
                 }}
@@ -142,21 +171,33 @@ const ProfileDetails = (props) => {
             </Typography>
             <Grid item>
               <Grid item container gap={2} alignItems="center">
-                <Typography color="#9B9A9A" fontWeight={700} fontSize="1.2rem">
+                <Typography color="#9B9A9A" fontWeight={700} fontSize="1.4rem">
                   {state?.username || state?.role}
                 </Typography>
-                {!condition && (
-                  <Grid item>
-                    <CustomizedTooltips title={"follow"}>
-                      <IconButton
-                        edge="start"
-                        size="small"
-                        onClick={handleFollowUser}
+                {followLoading ? (
+                  <Sk />
+                ) : (
+                  !condition && (
+                    <Grid item>
+                      <CustomizedTooltips
+                        title={dt?.is_followed ? "Unfollow" : "follow"}
                       >
-                        <PersonAddAlt1Outlined title="Follow" />
-                      </IconButton>
-                    </CustomizedTooltips>
-                  </Grid>
+                        <IconButton
+                          edge="start"
+                          size="small"
+                          onClick={handleFollowUser}
+                        >
+                          {dt?.is_followed ? (
+                            <PersonRemoveAlt1Outlined />
+                          ) : (
+                            <PersonAddAlt1Outlined
+                              title={dt?.is_followed ? "Unfollow" : "follow"}
+                            />
+                          )}
+                        </IconButton>
+                      </CustomizedTooltips>
+                    </Grid>
+                  )
                 )}
                 {condition && (
                   <Grid item>
@@ -191,7 +232,7 @@ const ProfileDetails = (props) => {
               <CustomSubTypography>post</CustomSubTypography>
             </Grid>
             <Grid item>
-              <CustomTypography>{state?.likes || 0}</CustomTypography>
+              <CustomTypography>{state?.likes_count || 0}</CustomTypography>
               <CustomSubTypography>Likes</CustomSubTypography>
             </Grid>
             <Grid item>
@@ -299,7 +340,7 @@ const ProfileDetails = (props) => {
             {list?.length > 0 ? (
               <List sx={{ p: 2, maxWidth: "100%" }}>
                 {list?.slice(0, listNumber)?.map((item) => (
-                  <ProfileItem profile={item} />
+                  <ProfileItem profile={item} condition={condition} />
                 ))}
               </List>
             ) : (

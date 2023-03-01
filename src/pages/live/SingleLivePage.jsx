@@ -32,6 +32,7 @@ import { LiveComment } from "./LiveComment";
 import { Details } from "pages/pages/Post";
 import { useLikeAndUnlikePostMutation } from "redux/slices/postSlice";
 import CreatePost from "pages/user/modals/CreatePost";
+import Error from "pages/pages/components/Error";
 
 const validationSchema = Yup.object({
   comment: Yup.string().trim().required("Enter your Comment"),
@@ -43,7 +44,7 @@ const SingleLivePage = () => {
   const admin = useSelector((state) => state.auth.admin);
   const [postAComment] = usePostCommentMutation();
   const [createQuote] = useCreateQuoteMutation();
-  const { data: post, isLoading: loading } = useGetLivePostQuery(slug);
+  const { data: post, isLoading: loading, error } = useGetLivePostQuery(slug);
   const [deletePost, { isLoading: deleting }] = useDeleteLivePostMutation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -54,7 +55,7 @@ const SingleLivePage = () => {
   const [likePost] = useLikeAndUnlikePostMutation();
   const [state, setState] = useState(true);
   if (loading) return <Skeleton />;
-
+  if (error) return <Error />;
   const handleSubmit = async (values, onSubmitProps) => {
     if (state) {
       const { data: dt, error } = await postAComment({

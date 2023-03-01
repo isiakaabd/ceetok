@@ -65,12 +65,14 @@ const Live = () => {
             p: { md: 4, xs: 2 },
             pb: { md: 0, xs: 3 },
             backgroundImage: `url(${
-              array?.pinned?.media.length > 0 &&
+              array?.pinned?.media?.length > 0 &&
               getImage(array?.pinned?.media[0]?.storage_path)
             })`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
             backgroundColor: "#044402",
             backgroundBlendMode: "overlay",
-            backgroundPosition: "center",
+            backgroundPosition: "cover",
             height: { md: "40rem", xs: "20rem" },
             borderRadius: { md: "2rem", xs: "1.2rem" },
             // "linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6))",

@@ -10,8 +10,9 @@ const Input = (props) => {
   return (
     <Grid container direction="column">
       <Field
-        id={name}
         name={name}
+        autoSuggest={false}
+        autoComplete={false}
         type={type ? type : "text"}
         {...rest}
         style={{

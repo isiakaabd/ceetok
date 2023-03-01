@@ -59,6 +59,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   const validationSchema = Yup.object({
     username: Yup.string("Enter Username").required("Required"),
     location: Yup.string("Enter location").required("Required"),
+    // phone: Yup.number("Enter Phone").required("Required"),
     occupation: Yup.string("Enter Occupation").required("Required"),
     dob: Yup.string("Enter DOB").required("Required"),
     gender: Yup.string("Enter DOB").required("Required"),
@@ -75,13 +76,13 @@ const VerifyPage = ({ isOpen, handleClose }) => {
       full_name,
       gender,
       username,
-      // phone,
+      phone,
     } = values;
     const form = new FormData();
     let realGender = gender === "Male" ? "m" : "f";
     form.append("gender", realGender);
     form.append("dob", dob);
-    // form.append("phone", phone);
+    form.append("phone", phone);
     form.append("full_name", full_name);
     form.append("occupation", occupation);
     form.append("location", location);
@@ -426,7 +427,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                         overflowY: { md: "hidden", xs: "scroll" },
                       }}
                     >
-                      {likes.map((item, index) => (
+                      {likes?.map((item, index) => (
                         <ChipItem
                           item={item}
                           key={index}

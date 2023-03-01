@@ -14,12 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import SearchComponent from "./modals/SearchComponent";
-import { Delete, MoreVertOutlined } from "@mui/icons-material";
+import { Delete, MoreVertOutlined, StarOutline } from "@mui/icons-material";
 import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Error from "pages/pages/components/Error";
-import { getImage } from "helpers";
 
 const Notification = () => {
   const [page, setPage] = useState(1);
@@ -70,13 +69,14 @@ const Notification = () => {
           <Grid md={8} xs={12} sx={{ margin: "auto" }}>
             {notifications.length > 0 ? (
               <List sx={{ width: "100%" }} dense component="ol">
-                {notifications?.map((item, index) => {
-                  const { message, seen } = item;
+                {notifications?.map((item) => {
+                  console.log(item);
+                  const { message, seen, id, owner_type, owner_id } = item;
 
                   return (
                     <ListItem
                       dense
-                      key={index}
+                      key={id}
                       disablePadding
                       secondaryAction={
                         <>
@@ -132,14 +132,27 @@ const Notification = () => {
                         textDecoration: "none",
                         color: "text.primary",
                       }}
-                      disableGutters
+                      disableGuttecommentsrs
                     >
                       <ListItemButton
                         sx={{
                           background: !seen && "rgba(0, 0, 0, 0.04)",
                         }}
                         dense
+                        to={
+                          owner_type === "user"
+                            ? `profile/?id=${owner_id}`
+                            : owner_type === "comments"
+                            ? `comment/?id=${owner_id}`
+                            : owner_type === "posts"
+                            ? `/post/${owner_id}`
+                            : null
+                        }
                       >
+                        <ListItemIcon>
+                          <StarOutline />
+                        </ListItemIcon>
+
                         <ListItemText primary={message} />
                       </ListItemButton>
                     </ListItem>

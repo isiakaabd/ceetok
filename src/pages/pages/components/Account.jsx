@@ -161,10 +161,9 @@ const Account = (props) => {
     if (data) toast.success(data);
     if (error) toast.error(error?.message);
     resetForm();
-    console.log(data, error);
   };
   return (
-    <Grid item container>
+    <Grid item container sx={{ mb: 3 }}>
       <Grid item md={10} xs={12} sx={{ p: { md: 3, xs: 1 } }}>
         <Formik
           initialValues={{
@@ -509,7 +508,7 @@ const Account = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item container>
+                <Grid item container sx={{ mt: 2 }}>
                   <Grid item xs={3}>
                     <CustomSubTypography
                       text="Ignore List"

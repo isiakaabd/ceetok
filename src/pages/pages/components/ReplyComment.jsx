@@ -48,7 +48,8 @@ const validationSchema = Yup.object({
 const ReplyComment = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
-  const { data: mainComment, isLoading } = useGetSingleCommentQuery(id);
+  const { data: mainComment, isLoading, error } = useGetSingleCommentQuery(id);
+  console.log(mainComment, error);
 
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
@@ -79,7 +80,7 @@ const ReplyComment = () => {
   };
   if (loadingComment || isLoading)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
-  if (err) return <Error />;
+  if (err || error) return <Error />;
 
   return (
     <>

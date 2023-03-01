@@ -6,11 +6,12 @@ import { DeleteOutline } from "@mui/icons-material";
 import { getImage } from "helpers";
 import Error from "./Error";
 const Media = () => {
-  const [page, setPage] = useState(0);
-  const { data, error, isLoading } = useAllMediaQuery(page);
+  const [page, setPage] = useState(1);
+  const { data, error, isLoading } = useAllMediaQuery(page - 1);
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+  const { total_pages, media } = data;
   return (
     <Grid
       item
@@ -30,9 +31,9 @@ const Media = () => {
 
       {isLoading ? (
         <Skeletons />
-      ) : data?.media?.length > 0 ? (
+      ) : media?.length > 0 ? (
         <Grid item container gap={{ md: 2, xs: 1 }}>
-          {data?.media?.map((item, index) => (
+          {media?.map((item, index) => (
             <Avatar
               key={index}
               src={getImage(item?.storage_path)}
@@ -47,7 +48,9 @@ const Media = () => {
         </Typography>
       )}
 
-      <Paginations page={page} setPage={setPage} count={data?.total_pages} />
+      {total_pages > 1 && (
+        <Paginations page={page} setPage={setPage} count={total_pages} />
+      )}
     </Grid>
   );
 };

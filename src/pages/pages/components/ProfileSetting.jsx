@@ -160,7 +160,7 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container>
+              {/* <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -184,7 +184,7 @@ const ProfileSetting = (props) => {
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
               <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
@@ -241,7 +241,7 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item container>
+              {/* <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>
                   <CustomSubTypography
                     fontSize={{ xs: "1.4rem" }}
@@ -258,7 +258,7 @@ const ProfileSetting = (props) => {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
               <Grid
                 item
                 container

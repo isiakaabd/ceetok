@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
 
-export default function ProfileImage({ avatar, name }) {
+export default function ProfileImage({ avatar, name, condition }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const token = useSelector((state) => state.auth.token);
@@ -108,9 +108,6 @@ export default function ProfileImage({ avatar, name }) {
       })
       .catch((err) => toast.error(err));
   };
-  // console.log(form);
-  // const { data, error } = await uploadImage(form);
-  // console.log(data, error);
 
   return (
     <Grid>
@@ -118,9 +115,11 @@ export default function ProfileImage({ avatar, name }) {
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         badgeContent={
-          <IconButton edge="start">
-            <Pen sx={{ fill: "#37D42A" }} />
-          </IconButton>
+          condition && (
+            <IconButton edge="start">
+              <Pen sx={{ fill: "#37D42A" }} />
+            </IconButton>
+          )
         }
         ref={anchorRef}
         id="composition-avatar"

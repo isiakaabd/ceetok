@@ -57,7 +57,7 @@ const App = () => {
 
             <Route path="/user" element={<PrivateRoute />}>
               <Route path="profile" element={<Profile />} />
-              <Route path="message/:id" element={<Message />} />
+              <Route path="message" element={<Message />} />
               {/* <Route path="create-post" element={<CreatePost />} /> */}
               <Route
                 path="create-annoucement"

@@ -6,12 +6,30 @@ import { CustomButton } from "components";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoverTokenMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
+  const [recoverToken, { isLoading }] = useRecoverTokenMutation();
   const token = searchParams.get("token");
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await recoverToken({
+        token,
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+      setTimeout(() => {
+        navigate({
+          pathname: "/auth/new-password",
+          search: `?token=${token}`,
+        });
+      }, 3000);
+    };
+    fetchData();
+    //eslint-disable-next-line
+  }, []);
 
-  const [recoverToken, { isLoading }] = useRecoverTokenMutation();
   const handleSubmit = async (values) => {
     const { token } = values;
     const { data, error } = await recoverToken({

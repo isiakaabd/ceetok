@@ -1,7 +1,5 @@
-import images from "assets";
 import {
   Grid,
-  List,
   ListItemText,
   ListItem,
   ListItemAvatar,
@@ -12,7 +10,7 @@ import {
 } from "@mui/material";
 import { RemoveRedEyeOutlined, StarOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getDate, getImage, getTime, getTimeMoment } from "helpers";
+import { getImage, getTimeMoment } from "helpers";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";

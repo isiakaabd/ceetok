@@ -175,7 +175,7 @@ const Post = () => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { views_count, recent_views } = data;
-  console.log(recent_views);
+
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {

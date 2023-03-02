@@ -23,7 +23,7 @@ const Notification = () => {
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
-  console.log(data);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -68,9 +68,8 @@ const Notification = () => {
             {notifications.length > 0 ? (
               <List sx={{ width: "100%" }} dense component="ol">
                 {notifications?.map((item) => {
-                  console.log(item);
-                  const { message, seen, id, owner_type, owner_id } = item;
-
+                  const { message, owner, seen, id, owner_type, owner_id } =
+                    item;
                   return (
                     <ListItem
                       dense
@@ -143,7 +142,9 @@ const Notification = () => {
                             : owner_type === "comments"
                             ? `comment/?id=${owner_id}`
                             : owner_type === "posts"
-                            ? `/post/${owner_id}`
+                            ? `/post/${owner?.slug}`
+                            : owner_type === "live"
+                            ? `/post/${owner?.slug}`
                             : null
                         }
                       >

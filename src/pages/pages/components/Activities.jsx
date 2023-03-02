@@ -207,6 +207,7 @@ const Activities = (props) => {
             <List
               sx={{
                 maxHeight: "80rem",
+                maxWidth: "100%",
                 overflowY: "scroll",
                 "&::-webkit-scrollbar": {
                   width: ".85rem",

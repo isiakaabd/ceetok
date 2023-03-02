@@ -1,16 +1,12 @@
 import { Grid, Typography } from "@mui/material";
 import { useState } from "react";
-import { Formik, Form } from "formik/dist";
-import FormikControl from "validation/FormikControl";
-import { CloseOutlined } from "@mui/icons-material";
-import Modals from "components/Modal";
 import CreatePassword from "./CreatePassword";
 import { CustomButton } from "components";
 import NotificationModal from "./NotificationModal";
 import { useSearchParams } from "react-router-dom";
 
 const ConfirmMail = ({ isOpen, handleClose }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [showCreatePassword, setShowCreatePassword] = useState(false);
   const email = searchParams.get("email");
   return (

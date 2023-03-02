@@ -1,9 +1,5 @@
-import {
-  AddCircleOutline,
-  SearchOutlined,
-  VerifiedOutlined,
-} from "@mui/icons-material";
-import { Button, Grid, List, Skeleton, Typography } from "@mui/material";
+import { SearchOutlined, VerifiedOutlined } from "@mui/icons-material";
+import { Grid, List, Skeleton, Typography } from "@mui/material";
 import Filters from "components/modals/Filters";
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
@@ -21,6 +17,7 @@ import {
 } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import Tooltips from "components/ToolTips";
+import { CustomButton } from "components";
 const Entertainment = () => {
   const [searchParams] = useSearchParams();
   const params = searchParams.get("category");
@@ -74,10 +71,12 @@ const Entertainment = () => {
         <Grid
           item
           container
+          // xs={11}
           sx={{
-            background: "#fff",
-            m: "2rem 4rem",
+            // m: "2rem 4rem",
             //   p:3,
+            paddingInline: { xs: "1rem", md: "4rem" },
+            // mx: "auto",
             borderRadius: "2rem",
           }}
         >
@@ -114,32 +113,50 @@ const Entertainment = () => {
               item
               container
               alignItems="center"
-              sx={{ background: "#F8F4F4", py: 2, px: "3rem" }}
+              justifyContent={"space-between"}
+              rowGap={2}
+              sx={{
+                background: "#F8F4F4",
+                py: 2,
+                px: { md: "3rem", xs: "1rem" },
+              }}
             >
-              <Grid item mr={3}>
-                <Button
-                  sx={{
-                    backgroundColor: "#37D42A",
-                    fontSize: { md: "1.2rem", xs: "1rem" },
-                    paddingInline: { md: "3rem", xs: "1rem" },
-                    borderRadius: 25,
-                    color: "#fff",
-                    fontWeight: 600,
-                    // ":hover": {
-                    //   background: "#37D42A",
-                    // },
-                  }}
-                  variant="contained"
-                  disableElevation
-                  startIcon={<AddCircleOutline />}
+              <Grid item>
+                <CustomButton
+                  // sx={{
+                  //   backgroundColor: "#37D42A",
+                  //   fontSize: { md: "1.2rem", xs: "1rem" },
+                  //   paddingInline: { md: "3rem", xs: "1rem" },
+                  //   borderRadius: 25,
+                  //   color: "#fff",
+                  //   fontWeight: 600,
+                  //   // ":hover": {
+                  //   //   background: "#37D42A",
+                  //   // },
+                  // }}
+                  // variant="contained"
+                  // disableElevation
+                  // startIcon={<AddCircleOutline />}
+                  sx={{ height: "4.3rem" }}
                   onClick={() =>
                     loginStatus ? setCreatePostModal(true) : setOpens(true)
                   }
-                >
-                  Create Post
-                </Button>
+                  title={"Create Post"}
+                />
+
+                {/* </Button> */}
               </Grid>
-              <Grid item xs={5}>
+              <Grid
+                item
+                xs={{ md: 10, xs: 12 }}
+                sx={{
+                  minWidth: {
+                    md: "40rem",
+                    xs: "100%",
+                  },
+                }}
+                order={{ md: 1, xs: 2 }}
+              >
                 <Grid item container>
                   <Formik initialValues={{ name: "" }}>
                     <Form style={{ width: "100%" }}>
@@ -158,7 +175,7 @@ const Entertainment = () => {
                   </Formik>
                 </Grid>
               </Grid>
-              <Grid item sx={{ ml: "auto" }}>
+              <Grid item order={1}>
                 <Filters
                   anchorEl={anchorEl}
                   setAnchorEl={setAnchorEl}
@@ -170,10 +187,14 @@ const Entertainment = () => {
                 />
               </Grid>
             </Grid>
-            <Grid item container sx={{ p: 3 }}>
+            <Grid
+              item
+              container
+              sx={{ py: 3, overflow: "hidden", maxWidth: "100%" }}
+            >
               <List
                 sx={{
-                  width: "100%",
+                  maxWidth: "100%",
                   maxHeight: "80rem",
                   overflowY: "scroll",
                   "&::-webkit-scrollbar": {

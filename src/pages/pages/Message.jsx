@@ -15,13 +15,10 @@ import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
 import Editor from "components/Quil";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { CustomButton } from "components";
 import { useSelector } from "react-redux";
-import {
-  useOtherUserProfileQuery,
-  useUserProfileQuery,
-} from "redux/slices/authSlice";
+import { useOtherUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { getImage } from "helpers";
@@ -29,6 +26,7 @@ import Error from "./components/Error";
 
 const Message = () => {
   // const navigate = useNavigate();
+  console.log(1);
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
@@ -51,7 +49,7 @@ const Message = () => {
         type: "messages",
         token,
         limit: 10000,
-        offset: 2,
+        offset: 0,
         chat_id: id,
       })
     );
@@ -253,7 +251,7 @@ function SingleChat({ messages, id, sender_id }) {
 
   const initial = 500;
   const [count, setCount] = useState(initial);
-  const [state, setState] = useState(
+  const [state] = useState(
     message
     // ?.slice(0, counts < initial ? count : initial)
   );

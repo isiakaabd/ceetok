@@ -1,24 +1,29 @@
-import { Avatar, Grid, IconButton, Typography } from "@mui/material";
+import { Avatar, Badge, Grid, IconButton, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import Notifications from "./Notifications";
-import NotificationIcon from "assets/svgs/NotificationIcon";
-import { useLazyUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useGetNotificationsQuery,
+  useLazyUserProfileQuery,
+} from "redux/slices/authSlice";
 import Tooltips from "./ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { NotificationsNoneOutlined } from "@mui/icons-material";
 
 const UserAccount = () => {
-  // const [open, setOpen] = useState(false);
-  // const anchorRef = useRef(null);
+  const { data } = useGetNotificationsQuery({
+    offset: 0,
+  });
+
   const anchorRefs = useRef(null);
   const state = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
-  const [getProfile, { data: userProfile }] = useLazyUserProfileQuery();
-  // const handleToggle = () => {
-  //   setOpen((prevOpen) => !prevOpen);
-  // };
+  const [getProfile, { data: userProfile }] = useLazyUserProfileQuery({
+    offset: 0,
+  });
+
   useEffect(() => {
     if (state.auth) {
       getProfile();
@@ -26,13 +31,6 @@ const UserAccount = () => {
     //eslint-disable-next-line
   }, [state.auth]);
 
-  // const handleClose = (event) => {
-  //   if (anchorRef.current && anchorRef.current.contains(event.target)) {
-  //     return;
-  //   }
-
-  //   setOpen(false);
-  // };
   const [opens, setOpens] = useState(false);
 
   const handleToggles = () => {
@@ -59,31 +57,34 @@ const UserAccount = () => {
         {state.auth && (
           <>
             <Tooltips title={"Notifications"}>
-              <IconButton
-                onClick={() => navigate("/user/notifications")}
-                // ref={anchorRef}
-                id="composition-button"
-                // aria-controls={open ? "composition-menu" : undefined}
-                // aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-              >
-                <NotificationIcon
+              <IconButton onClick={() => navigate("/user/notifications")}>
+                <Badge
+                  badgeContent={data?.unseen_count || 0}
+                  color="primary"
+                  showZero
+                  max={20}
                   sx={{
-                    fontSize: { md: "3rem", xs: "2.5rem" },
-                    fill: "#9B9A9A",
+                    color: "#9B9A9A",
+                    "& .MuiBadge-badge": {
+                      fontSize: "1.6rem",
+                      backgroundColor: "#FF9B04",
+                      width: "2.5rem",
+                      height: "2.5rem",
+                      borderRadius: "calc(2.5rem /2)",
+                      fontWeight: 600,
+                    },
                   }}
-                />
+                >
+                  <NotificationsNoneOutlined
+                    color="action"
+                    sx={{
+                      fontSize: { md: "3rem", xs: "2.5rem" },
+                      fill: "#9B9A9A",
+                    }}
+                  />
+                </Badge>
               </IconButton>
             </Tooltips>
-            {/* <Notifications
-              open={open}
-              setOpen={setOpen}
-              anchorRef={anchorRef}
-              handleClose={handleClose}
-              handleToggle={handleToggle}
-
-              //   handleToggles={handleToggles}
-            /> */}
           </>
         )}
         <Grid

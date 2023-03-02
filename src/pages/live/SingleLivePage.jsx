@@ -96,6 +96,7 @@ const SingleLivePage = () => {
     summary,
     id,
   } = post;
+  console.log(media);
   const handleInteraction = async () => {
     const { data, error } = await editLive({
       id,
@@ -308,9 +309,9 @@ const SingleLivePage = () => {
                 : images.adeleke
             }
             style={{
-              objectFit: "cover",
+              objectFit: "contain",
               width: "100%",
-              height: "60rem",
+              height: "10rem",
             }}
             alt={title}
           />

@@ -39,16 +39,6 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     syntax: {
       highlight: (text) => hljs.highlightAuto(text).value,
     },
-    // handlers: {
-    //   tweet: () => {
-    //     console.log("customControl was clicked");
-    //   },
-    // },
-    // fontsize: {
-    //   whitelist: [10, 12, 14, 16, 18, 20, 22, 24, 36],
-    // },
-
-    // blotFormatter: {},
   };
 
   const { quill, quillRef } = useQuill({
@@ -95,7 +85,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
 
     // const res = await uploadImage(form);
     // process.env.REACT_APP_UPLOAD;
-    fetch(process.envREACT_APP_UPLOAD, {
+    fetch(process.env.REACT_APP_UPLOAD, {
       method: "POST",
       body: form,
       headers: {
@@ -104,7 +94,6 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
       },
     })
       .then((res) => res.json())
-      // .then((data) => console.log(data))
       .then((data) => {
         toast.success(data.message);
         setFieldValue(upload_id, data.body.post_id);

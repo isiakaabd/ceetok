@@ -254,7 +254,7 @@ const Activities = (props) => {
           </List>
         ) : null}
 
-        <Grid item container alignItems="center" sx={{ py: 2 }}>
+        {/* <Grid item container alignItems="center" sx={{ py: 2 }}>
           <Typography
             sx={{
               flex: 1,
@@ -282,7 +282,7 @@ const Activities = (props) => {
           }}
         >
           <PrivateMessage />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

@@ -1,9 +1,43 @@
-import { Avatar, Divider, Grid, Typography } from "@mui/material";
+import { Avatar, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { CustomButton } from "components";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
+
 import images from "assets";
+import Fb from "assets/svgs/Fb";
+import Insta from "assets/svgs/Insta";
+import Linkedin from "assets/svgs/Linkedin";
+import Twitterr from "assets/svgs/Twitterr";
+import Utube from "assets/svgs/Utube";
+import { Link } from "react-router-dom";
 const ContactUs = () => {
+  const arr = [
+    {
+      id: 1,
+      Icon: Fb,
+      link: "#",
+    },
+    {
+      id: 2,
+      Icon: Insta,
+      link: "#",
+    },
+    {
+      id: 3,
+      Icon: Linkedin,
+      link: "#",
+    },
+    {
+      id: 4,
+      Icon: Twitterr,
+      link: "#",
+    },
+    {
+      id: 4,
+      Icon: Utube,
+      link: "#",
+    },
+  ];
   const { facebook, youtube, linkedin, twitter, instagram } = images;
   const icons = [facebook, youtube, linkedin, twitter, instagram];
   return (
@@ -152,13 +186,16 @@ const ContactUs = () => {
                 Join our community and get more updates
               </Typography>
               <Grid item container gap={4} sx={{ mt: 4 }}>
-                {icons.map((icon, index) => (
-                  <Avatar
-                    src={icon}
-                    key={index}
-                    variant="square"
-                    style={{ height: "3rem", width: "3rem" }}
-                  />
+                {arr.map((icon, index) => (
+                  <IconButton key={icon.id} component={Link} to={icon.link}>
+                    <icon.Icon sx={{ fontSize: "3rem" }} />
+                  </IconButton>
+                  // <Avatar
+                  //   src={icon}
+                  //   key={index}
+                  //   variant="square"
+                  //   style={{ height: "3rem", color: "red", width: "3rem" }}
+                  // />
                 ))}
               </Grid>
             </Grid>

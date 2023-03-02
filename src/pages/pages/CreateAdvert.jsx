@@ -181,6 +181,10 @@ const CreateAdvert = ({ handleClose, title }) => {
                         name="files"
                         multiple={values.format === "carousel" && true}
                       />
+                      <Typography fontWeight={700}>
+                        image size should be 75px by 95px and must not exceed
+                        1mb
+                      </Typography>
                     </Grid>
                     <Grid
                       item

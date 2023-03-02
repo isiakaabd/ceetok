@@ -1,5 +1,12 @@
 import { CloseOutlined } from "@mui/icons-material";
-import { Grid, Button, Typography, Divider } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  Divider,
+  Switch,
+  FormControlLabel,
+} from "@mui/material";
 import images from "assets";
 import Modals from "components/Modal";
 import { Form, Formik } from "formik/dist";
@@ -38,8 +45,8 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
   const dispatch = useDispatch();
   const [login, setLogin] = useState(false);
   const [showEmailVerification, setEmailVerifications] = useState(false);
-  const [showPasswordVerification] = useState(false); //setShowPasswordVerification
-
+  const [showPasswordVerification] = useState(false); //
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     if (data) {
       toast.success(data.message);
@@ -290,7 +297,7 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                                 control="input"
                                 name="psd"
                                 placeholder="Password"
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                               />
                             </Grid>
                             <Typography
@@ -310,13 +317,41 @@ const RegisterModal = ({ isOpen, handleClose, handleLoginOpen }) => {
                                 {state ? "Phone Number?" : "Email Address"}
                               </Typography>
                             </Typography>
-                            <div style={{ marginTop: 3 }}>
+                            <Grid
+                              item
+                              container
+                              justifyContent="space-between"
+                              alignItems="center"
+                              style={{ marginTop: { xs: 3 } }}
+                            >
+                              <FormControlLabel
+                                value={showPassword}
+                                sx={{
+                                  m: 0,
+                                  "& .MuiFormControlLabel-label": {
+                                    color: "#828484",
+                                    fontSize: "1rem",
+                                    fontweight: 500,
+                                  },
+                                }}
+                                control={
+                                  <Switch
+                                    color="success"
+                                    sx={{ m: 0, color: "#37D42A" }}
+                                    onChange={() =>
+                                      setShowPassword(!showPassword)
+                                    }
+                                  />
+                                }
+                                label="Show Password"
+                                labelPlacement="bottom"
+                              />
                               <CustomButton
                                 type="submit"
                                 title="Sign Up"
                                 isSubmitting={isSubmitting}
                               />
-                            </div>
+                            </Grid>
                             <Grid
                               item
                               sx={{

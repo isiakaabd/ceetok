@@ -6,6 +6,7 @@ import FormikControl from "validation/FormikControl";
 import {
   CakeOutlined,
   FemaleOutlined,
+  Person,
   PhoneOutlined,
   RoomOutlined,
   SensorOccupiedOutlined,
@@ -370,7 +371,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                           buttonStyle={{ background: "inherit" }}
                           control="inputs"
                           name="full_name"
-                          Icon={RoomOutlined}
+                          Icon={Person}
                           placeholder="Full Name"
                         />
                       </Grid>

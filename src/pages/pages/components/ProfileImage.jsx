@@ -101,7 +101,7 @@ export default function ProfileImage({ avatar, name, condition }) {
         overlap="circular"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         badgeContent={
-          condition && (
+          !condition && (
             <IconButton edge="start">
               <Pen sx={{ fill: "#37D42A" }} />
             </IconButton>

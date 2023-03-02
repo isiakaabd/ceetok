@@ -37,7 +37,6 @@ const Trending = () => {
     from: value,
   });
 
-  const [count] = useState(array?.total_pages);
   const handleChange = (e, value) => {
     setPage(value);
   };
@@ -111,7 +110,7 @@ const Trending = () => {
                     handleClick={handleClick}
                     handleClose={handleClose}
                   />
-                  <IconButton edge="start" size="small">
+                  {/* <IconButton edge="start" size="small">
                     <TuneOutlined
                       sx={{ fontSize: { md: "4rem", xs: "2rem" } }}
                     />
@@ -120,7 +119,7 @@ const Trending = () => {
                     <SettingsOutlined
                       sx={{ fontSize: { md: "4rem", xs: "2rem" } }}
                     />
-                  </IconButton>
+                  </IconButton> */}
                 </Grid>
               </Grid>
             </Grid>
@@ -150,12 +149,14 @@ const Trending = () => {
                     );
                   })}
                 </List>
-                <Pagination
-                  page={page}
-                  count={count}
-                  sx={{ margin: "auto", py: 2 }}
-                  onChange={handleChange}
-                />
+                {array?.total_pages > 1 && (
+                  <Pagination
+                    page={page}
+                    count={array?.total_pages}
+                    sx={{ margin: "auto", py: 2 }}
+                    onChange={handleChange}
+                  />
+                )}
               </>
             ) : (
               <Typography

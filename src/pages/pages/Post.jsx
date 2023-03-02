@@ -80,6 +80,15 @@ export const Details = ({
     comment: Yup.string("Enter Comment").trim().required("Required"),
   });
 
+  const baseUrl =
+    process.env === "development"
+      ? "https://localhost"
+      : " https://api.ceetok.live";
+  const dataVal = {
+    text: `${baseUrl}/post/${data?.slug}`,
+    title: "Link",
+  };
+  console.log(data);
   return (
     <>
       <Grid item container justifyContent="space-between" flexWrap="nowrap">
@@ -151,7 +160,12 @@ export const Details = ({
           )}
         </Formik>
       </NotificationModal>
-      <SocialMedia open={open} handleClose={() => setOpen(false)} />
+      <SocialMedia
+        open={open}
+        copyText={dataVal}
+        userId={data?.user_id}
+        handleClose={() => setOpen(false)}
+      />
     </>
   );
 };
@@ -174,7 +188,7 @@ const Post = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { views_count, recent_views } = data;
+  const { views_count, recent_views, user_id, slug } = data;
 
   const handleShare = () => setOpenShareModal(true);
 
@@ -206,6 +220,14 @@ const Post = () => {
       }
       if (error) toast.error(error);
     }
+  };
+  const baseUrl =
+    process.env === "development"
+      ? "https://localhost"
+      : " https://api.ceetok.live";
+  const dataVal = {
+    text: `${baseUrl}/post/${slug}`,
+    title: "Link",
   };
   return (
     <>
@@ -394,6 +416,8 @@ const Post = () => {
       <SocialMedia
         open={openShareModal}
         handleClose={() => setOpenShareModal(false)}
+        copyText={dataVal}
+        userId={user_id}
       />
     </>
   );

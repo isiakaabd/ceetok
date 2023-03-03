@@ -201,18 +201,7 @@ const Footer = () => {
                   Community
                 </ListItemText>
               </ListItem>
-              {/* <Grid item container gap={4} sx={{ mt: 4 }}>
-                {icons.map((icon, index) => (
-                  <IconButton>
-                    <img
-                      src={icon}
-                      key={index}
-                      alt="icon"
-                      style={{ height: "3rem", width: "3rem" }}
-                    />
-                  </IconButton>
-                ))}
-              </Grid> */}
+
               <Grid
                 item
                 container

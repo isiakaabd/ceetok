@@ -100,7 +100,7 @@ export default function CustomizedTables({ rows }) {
             <TableRow>
               <StyledTableCell>Username</StyledTableCell>
               <StyledTableCell align="left">Join Date</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
+              <StyledTableCell align="left">Email/Phone</StyledTableCell>
               <StyledTableCell align="left">Ban Status</StyledTableCell>
               <StyledTableCell align="left">Post</StyledTableCell>
               <StyledTableCell align="left">Last Activity</StyledTableCell>
@@ -184,12 +184,15 @@ function Rows({ row, state, ids, setIds }) {
     last_activity,
     post_count,
     avatar,
+    phone,
     id,
     createdAt,
     reputation,
     banned,
     email,
+    New,
   } = row;
+
   const [banorUnban, { isLoading }] = useBanUsersMutation();
   const [, { isLoading: sendingEmail }] = useSendEmailMutation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -237,24 +240,18 @@ function Rows({ row, state, ids, setIds }) {
               flexDirection="column"
               sx={{ overflow: "hidden" }}
             >
-              <Typography
-                sx={{
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  width: "95%",
-                  overflow: "hidden",
-                }}
-              >
-                {full_name}
-              </Typography>
-              <Typography fontSize="inherit">New Member</Typography>
+              <Typography>{full_name}</Typography>
+              {/* <Typography fontSize="inherit">New Member</Typography> */}
             </Grid>
           </Grid>
         </StyledTableCell>
         <StyledTableCell align="left">{getDate(createdAt)}</StyledTableCell>
-        <StyledTableCell align="left">{email}</StyledTableCell>
+        <StyledTableCell align="left">{email || phone}</StyledTableCell>
         <StyledTableCell align="left">
-          <Typography fontSize="inherit">
+          <Typography
+            fontSize="inherit"
+            sx={{ color: banned ? "red" : "green" }}
+          >
             {banned ? "Banned" : "Not Banned"}
           </Typography>
           {/* <VerifiedOutlined /> */}

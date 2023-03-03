@@ -76,14 +76,17 @@ export const authSlice = api.injectEndpoints({
       transformErrorResponse: (error) => error.data.message,
     }),
     listUsers: builder.query({
-      query: ({ username, followed, following }) => ({
-        url: `/user/list/?${followed ? `followed=${followed}` : ""}${
-          following ? `&following=${following}` : ""
-        }${username ? `&username=${username}` : ""}`,
+      query: ({ username, followed, offset, following }) => ({
+        url: `/user/list/?${`&offset=${offset ? offset : 0}`}${
+          followed ? `followed=${followed}` : ""
+        }${following ? `&following=${following}` : ""}${
+          username ? `&username=${username}` : ""
+        }
+        `,
         method: "GET",
       }),
       providesTags: ["user"],
-      transformResponse: (response) => response.body.users,
+      transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
 

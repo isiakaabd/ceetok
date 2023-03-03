@@ -1,8 +1,10 @@
 import {
+  Avatar,
   Grid,
   IconButton,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -17,6 +19,7 @@ import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
 import { useState } from "react";
 import Error from "pages/pages/components/Error";
+import { getImage } from "helpers";
 
 const Notification = () => {
   const [page, setPage] = useState(1);
@@ -35,7 +38,8 @@ const Notification = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { total_pages, notifications } = data;
+  const { total_pages, notifications, owner } = data;
+  console.log(data);
   return (
     <Grid item container sx={{ p: { md: 4, xs: 1 }, background: "#E5E5E5" }}>
       <Grid
@@ -68,8 +72,16 @@ const Notification = () => {
             {notifications.length > 0 ? (
               <List sx={{ width: "100%" }} dense component="ol">
                 {notifications?.map((item) => {
-                  const { message, owner, seen, id, owner_type, owner_id } =
-                    item;
+                  const {
+                    message,
+                    owner,
+                    seen,
+                    id,
+                    owner_type,
+
+                    owner_id,
+                  } = item;
+                  console.log(item);
                   return (
                     <ListItem
                       dense
@@ -145,12 +157,22 @@ const Notification = () => {
                             ? `/post/${owner?.slug}`
                             : owner_type === "live"
                             ? `/post/${owner?.slug}`
+                            : owner_type === "chat"
+                            ? `/user/message/${owner?.sender_id}`
                             : null
                         }
                       >
-                        <ListItemIcon>
+                        <ListItemAvatar>
+                          <Avatar
+                            alt={owner?.full_name}
+                            src={getImage(owner?.avatar)}
+                          >
+                            {owner?.full_name?.slice(0, 1).toUpperCase()}
+                          </Avatar>
+                        </ListItemAvatar>
+                        {/* <ListItemIcon>
                           <StarOutline />
-                        </ListItemIcon>
+                        </ListItemIcon> */}
 
                         <ListItemText primary={message} />
                       </ListItemButton>

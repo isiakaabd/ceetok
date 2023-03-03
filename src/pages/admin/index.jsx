@@ -5,18 +5,23 @@ import CustomizedTables from "./Table";
 import Paginations from "components/modals/Paginations";
 // import { useGetUsersQuery } from "redux/slices/adminSlice";
 import { useListUsersQuery } from "redux/slices/authSlice";
+import Error from "pages/pages/components/Error";
 
 const AllUsers = () => {
   const [username, setUserName] = useState("");
+
+  const [page, setPage] = useState(1);
   const { data, isLoading, isFetching, error } = useListUsersQuery({
     username,
+    offset: page - 1,
   });
   const handleSubmit = (values) => setUserName(values.name);
 
   // page, setPage, count;
-  const [page, setPage] = useState(1);
   if (isLoading) return <Skeleton />;
-  if (error) return <p>Something went wrong</p>;
+  if (error) return <Error />;
+  const { total_pages, users } = data;
+
   return (
     <Grid
       item
@@ -84,12 +89,12 @@ const AllUsers = () => {
           </Grid>
         </Grid>
         <Grid item container>
-          <CustomizedTables rows={data} />
+          <CustomizedTables rows={users} />
         </Grid>
 
-        {data?.length > 0 ? (
-          <Paginations page={page} setPage={setPage} count={10} />
-        ) : null}
+        {total_pages > 1 && (
+          <Paginations page={page} setPage={setPage} count={total_pages} />
+        )}
       </Grid>
     </Grid>
   );

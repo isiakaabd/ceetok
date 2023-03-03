@@ -73,7 +73,7 @@ const ProfileDetails = (props) => {
   const admin = useSelector((state) => state.auth.admin);
   // const [follows, setFollows] = useState(false);
   const {
-    data: users,
+    data,
     isLoading: usersLoading,
     error: err,
   } = useListUsersQuery({
@@ -90,9 +90,6 @@ const ProfileDetails = (props) => {
 
   // })
   //   }
-  const condition = !id || dt?.id === userProfile?.id;
-
-  const list = users;
 
   // console.log(userProfile.id, dt.id);
 
@@ -115,6 +112,9 @@ const ProfileDetails = (props) => {
 
   if (isLoading || usersLoading || load) return <Skeletons />;
   if (error || err || isError) return <Error />;
+  const { users } = data;
+  const condition = !id || dt?.id === userProfile?.id;
+  const list = users;
   // const { is_followed } = dt;
   const handleFollowUser = async () => {
     const { data, error } = await follow({ user_id: id });

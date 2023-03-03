@@ -26,11 +26,8 @@ export default function Notifications({
   open,
   opens,
   anchorRef,
-  setOpen,
   setOpens,
-  handleClose,
-  handleToggle,
-  anchorEls,
+
   anchorRefs,
   handleCloses,
 }) {
@@ -44,14 +41,6 @@ export default function Notifications({
     //eslint-disable-next-line
   }, [state]);
 
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    } else if (event.key === "Escape") {
-      setOpen(false);
-    }
-  }
   function handleListKeyDowns(event) {
     if (event.key === "Tab") {
       event.preventDefault();
@@ -159,81 +148,6 @@ export default function Notifications({
   // ];
   return (
     <>
-      <Popper
-        open={open}
-        anchorEl={anchorRef?.current}
-        role={undefined}
-        placement="bottom-start"
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom-start" ? "left top" : "left bottom",
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id="composition-menu"
-                  aria-labelledby="composition-button"
-                  onKeyDown={handleListKeyDown}
-                >
-                  {[].map((notification) => (
-                    <MenuItem sx={{ px: 4, py: 1.5 }}>
-                      <ListItemIcon>
-                        {
-                          <notification.Icon
-                            sx={{
-                              fontSize: "2.5rem",
-                              fontWeight: 400,
-                              borderColor: "#5F5C5C",
-                              color: "#5F5C5C",
-                              strokeWidth: 5,
-                              strokeOpacity: 0.1,
-                            }}
-                          />
-                        }
-                      </ListItemIcon>
-                      <ListItemText
-                        disableTypography
-                        sx={{
-                          fontSize: "1.4rem",
-                          fontWeight: 400,
-                          color: "#5F5C5C",
-                        }}
-                      >
-                        {notification.title}
-                      </ListItemText>
-                      <Grid
-                        sx={{
-                          width: "1.7rem",
-                          ml: 3,
-                          background:
-                            notification.number > 5 ? "#FF9B04" : "#37D42A",
-                          height: "1.7rem",
-                          borderRadius: "50%",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Typography fontSize="1rem" color="#fff">
-                          {notification.number}
-                        </Typography>
-                      </Grid>
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
       <Popper
         open={opens}
         anchorEl={anchorRefs?.current}

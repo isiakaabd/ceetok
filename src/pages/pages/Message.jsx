@@ -15,7 +15,7 @@ import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
 import Editor from "components/Quil";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { CustomButton } from "components";
 import { useSelector } from "react-redux";
 import { useOtherUserProfileQuery } from "redux/slices/authSlice";
@@ -28,78 +28,113 @@ const Message = () => {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
-  const ws = useMemo(
-    () => new WebSocket(process.env.REACT_APP_BASE_URL_CHAT),
-    []
-  );
+  // const ws = useMemo(
+  //   () => new WebSocket(process.env.REACT_APP_BASE_URL_CHAT),
+  //   []
+  // );
+
+  const [socket, setSocket] = useState(null);
   const { data: profile, isLoading, error } = useOtherUserProfileQuery(id);
   const token = useSelector((state) => state.auth.token);
   const checkChatHistory = chats?.filter((item) => item.user_id === id);
 
+  useEffect(() => {
+    // Create a new WebSocket instance when the component mounts
+    const newSocket = new WebSocket(process.env.REACT_APP_BASE_URL_CHAT);
+    setSocket(newSocket);
+
+    // Close the WebSocket connection when the component unmounts
+    return () => newSocket.close();
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // Handle incoming data from the WebSocket server
+      socket.onmessage = ({ data }) => {
+        console.log(JSON.parse(data));
+        console.log("there is message Ara Adugbo");
+        const { type, body } = JSON.parse(data);
+        if (type === "messages") return setMessages(body?.messages.reverse());
+        if (type === "send_message") {
+          setMessages([...messages, body.message]);
+        }
+        // return setMessages([...messages,body?.messages.reverse()]);
+        if (type === "chat" || type === "init_chat")
+          return setChats(body?.chats);
+        // const data = JSON.parse(event.data);
+        // handle incoming data
+      };
+      // socket.send(
+      //   JSON.stringify({
+      //     type: "messages",
+      //     token,
+      //     limit: 10000,
+      //     offset: 0,
+      //     chat_id: id,
+      //   })
+      // );
+
+      socket.addEventListener("open", () => {
+        toast.success("Connection successful");
+        socket.send(JSON.stringify({ type: "init", token }));
+        socket.send(JSON.stringify({ type: "chat", token }));
+        socket.send(
+          JSON.stringify({
+            type: "messages",
+            token,
+            limit: 10000,
+            offset: 0,
+            chat_id: id,
+          })
+        );
+      });
+
+      // Handle WebSocket errors
+      socket.onerror = (event) => {
+        console.log(event);
+        // handle errors
+      };
+    }
+  }, [socket, id, token, messages]);
+
+  // useEffect(() => {
+  //   socket.send(
+  //     JSON.stringify({
+  //       type: "messages",
+  //       token,
+  //       limit: 10000,
+  //       offset: 0,
+  //       chat_id: id,
+  //     })
+  //   );
+  // });
   // useEffect(() => {
 
-  ws.addEventListener("open", () => {
-    toast.success("Connection successful");
-    ws.send(JSON.stringify({ type: "init", token }));
-    ws.send(JSON.stringify({ type: "chat", token }));
-    ws.send(
-      JSON.stringify({
-        type: "messages",
-        token,
-        limit: 10000,
-        offset: 0,
-        chat_id: id,
-      })
-    );
-    // ws.send(JSON.stringify({ type: "init_chat", token, user_id: id }));
-    // ws.send(
-    //   JSON.stringify({
-    //     type: "init_chat",
-    //     user_id: profile?.id,
-    //     token,
-    //     limit: 20,
-    //     offset: 0,
-    //   })
-    // ); // previous chat hiostory
-    // ws.send(
-    //   JSON.stringify({
-    //     type: "messages",
-    //     token,
-    //     limit: 20,
-    //     offset: 0,
-    //     user_id: id,
-    //   })
-    // ); // previous chat hiostory
-    // ws.send(
-    //   JSON.stringify({
-    //     type: "init_chat",
-    //     token,
-    //     user_id: profile?.id,
-    //     //  "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
-    //     limit: 20,
-    //     offset: 0,
-    //   })
-    // ); // load message related to certain chat
-
-    // ws.send(
-    //   JSON.stringify({
-    //     type: "send_message",
-    //     token,
-    //     message: "Just testing here...",
-    //     chat_id: "423956ec-f1f1-4ee6-addf-73f93a6da2f7",
-    //   })
-    // );
-  });
+  // ws.addEventListener("open", () => {
+  //   toast.success("Connection successful");
+  //   ws.send(JSON.stringify({ type: "init", token }));
+  //   ws.send(JSON.stringify({ type: "chat", token }));
+  //   ws.send(
+  //     JSON.stringify({
+  //       type: "messages",
+  //       token,
+  //       limit: 10000,
+  //       offset: 0,
+  //       chat_id: id,
+  //     })
+  //   );
+  // });
   //eslint-disable-next-line
   // }, []);
-  ws.addEventListener("message", ({ data }) => {
-    const { type, body } = JSON.parse(data);
-    if (type === "messages") return setMessages(body?.messages.reverse());
-    if (type === "chat" || type === "init_chat") return setChats(body?.chats);
-  });
+
+  // ws.addEventListener("message", ({ data }) => {
+  //   const { type, body } = JSON.parse(data);
+  //   if (type === "messages") return setMessages(body?.messages.reverse());
+  //   if (type === "chat" || type === "init_chat") return setChats(body?.chats);
+  // });
 
   // useEffect(() => {
-  ws.onmessage = function ({ data }) {};
+  // ws.onmessage = function ({ data }) {};
 
   //eslint-disable-next-line
   // }, []);
@@ -109,7 +144,7 @@ const Message = () => {
   const handleSubmit = async (values, { resetForm }) => {
     if (checkChatHistory.length > 0) {
       const details = checkChatHistory[0];
-      ws.send(
+      socket.send(
         JSON.stringify({
           type: "send_message",
           token,
@@ -118,7 +153,7 @@ const Message = () => {
         })
       );
     } else {
-      ws.send(
+      socket.send(
         JSON.stringify({
           type: "init_chat",
           token,

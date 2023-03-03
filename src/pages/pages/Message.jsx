@@ -25,8 +25,6 @@ import { getImage } from "helpers";
 import Error from "./components/Error";
 
 const Message = () => {
-  // const navigate = useNavigate();
-  console.log(1);
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
@@ -185,7 +183,7 @@ const Message = () => {
           <List
             dense
             sx={{
-              p: 2,
+              p: { md: 2, xs: 1 },
               maxWidth: "100%",
               display: "flex",
               flexDirection: "column",
@@ -222,7 +220,7 @@ const Message = () => {
           </List>
         </Grid>
 
-        <Grid item container sx={{ p: 4 }}>
+        <Grid item container sx={{ p: { md: 4, xs: 1 } }}>
           <Formik initialValues={{ body: "" }} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form style={{ width: "100%" }}>

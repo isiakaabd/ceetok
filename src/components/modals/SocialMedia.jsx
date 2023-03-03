@@ -166,11 +166,9 @@ const SocialMedia = ({ open, handleClose, copyText, data, userId, url }) => {
         />
         <Grid item container justifyContent="space-between" alignItems="center">
           {socialItems.map((social, index) => (
-            // <a href={social.link} target="_blank" rel="noreferrer">
             <social.Button url={link} quote={data?.title}>
                <social.Icon size={32} round />
             </social.Button>
-            // </a>
           ))}
         </Grid>
       </Grid>

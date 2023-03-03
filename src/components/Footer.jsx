@@ -1,5 +1,6 @@
 import {
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -12,7 +13,39 @@ import LoginModal from "./modals/LoginModal";
 import { useState } from "react";
 import RegisterModal from "./modals/RegisterModal";
 import ForgottenPassword from "./modals/ForgottenPassword";
+import FormikControl from "validation/FormikControl";
+import { Formik, Form } from "formik/dist";
+import CustomButton from "./CustomButton";
+import {
+  WhatsappShareButton,
+  WhatsappIcon,
+  TwitterShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterIcon,
+  FacebookIcon,
+  FacebookShareButton,
+} from "react-share";
 
+const socialItems = [
+  {
+    Icon: FacebookIcon,
+    Button: FacebookShareButton,
+  },
+  {
+    Button: LinkedinShareButton,
+    Icon: LinkedinIcon,
+  },
+  {
+    // }&text=${encodeURI("Here is a post on " + data?.title)}`,
+    Icon: TwitterIcon,
+    Button: TwitterShareButton,
+  },
+  {
+    Icon: WhatsappIcon,
+    Button: WhatsappShareButton,
+  },
+];
 const Footer = () => {
   const { facebook, youtube, linkedin, twitter, instagram } = images;
   const [modal, setModal] = useState(false);
@@ -59,22 +92,32 @@ const Footer = () => {
       <Grid
         item
         container
-        sx={{ color: "#fff", paddingBottom: "4rem", background: "#044402" }}
+        sx={{
+          color: "#fff",
+          p: { md: "4rem", xs: "1rem" },
+          backgroundColor: "#044402",
+        }}
       >
         <Grid
           item
           container
           gap={4}
           sx={{
-            padding: "3rem",
-
+            // padding: "3rem",
+            mb: 2,
             flexWrap: { md: "nowrap", xs: "wrap" },
             flexDirection: { md: "row", xs: "column" },
           }}
         >
           <Grid item sx={{ flex: { md: 1.2, xs: 1 } }}>
             <img src={images.logo} alt="ceetok" style={{ width: "10rem" }} />
-            <Typography style={{ fontSize: "1.2rem", fontWeight: 500 }}>
+            <Typography
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: 500,
+                textAlign: "justify",
+              }}
+            >
               Tortor, lobortis semper viverra ac, molestie tortor laoreet amet
               euismod et diam quis aliquam consequat porttitor integer a nisl,
               in faucibus nunc et aenean turpis dui dignissim nec scelerisque
@@ -82,8 +125,8 @@ const Footer = () => {
               turpis nunc in turpis massa et
             </Typography>
           </Grid>
-          <Grid item sx={{ flex: { md: 1, xs: 1 } }}>
-            <List>
+          <Grid item>
+            <List sx={{ maxWidth: "max-content" }}>
               <ListItem dense disableGutters>
                 <ListItemText
                   primaryTypographyProps={{
@@ -95,21 +138,20 @@ const Footer = () => {
               </ListItem>
 
               {items.map((item, index) => (
-                <ListItem disableGutters disablePadding key={index}>
-                  <ListItemButton
-                    disableGutters
-                    disableRipple
-                    disableTouchRipple
-                    component={Link}
-                    to={item.route}
-                  >
-                    <ListItemText primary={item.name} />
-                  </ListItemButton>
-                </ListItem>
+                <ListItemButton
+                  disableGutters
+                  disableRipple
+                  key={index}
+                  disableTouchRipple
+                  component={Link}
+                  to={item.route}
+                >
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
               ))}
             </List>
           </Grid>
-          <Grid item sx={{ flex: { md: 1, xs: 1 } }}>
+          <Grid item sx={{ flex: { md: 1, xs: 0.5 } }}>
             <List>
               <ListItem dense disableGutters>
                 <ListItemText
@@ -149,7 +191,7 @@ const Footer = () => {
               ))}
             </List>
           </Grid>
-          <Grid item sx={{ flex: { md: 1.2, xs: 1 } }}>
+          <Grid item sx={{ flex: { md: 1.2, xs: 0.5 } }}>
             <List>
               <ListItem dense disableGutters>
                 <ListItemText
@@ -159,22 +201,35 @@ const Footer = () => {
                   Community
                 </ListItemText>
               </ListItem>
-              <Grid item container gap={4} sx={{ mt: 4 }}>
+              {/* <Grid item container gap={4} sx={{ mt: 4 }}>
                 {icons.map((icon, index) => (
-                  <img
-                    src={icon}
-                    key={index}
-                    alt="icon"
-                    style={{ height: "3rem", width: "3rem" }}
-                  />
+                  <IconButton>
+                    <img
+                      src={icon}
+                      key={index}
+                      alt="icon"
+                      style={{ height: "3rem", width: "3rem" }}
+                    />
+                  </IconButton>
+                ))}
+              </Grid> */}
+              <Grid
+                item
+                container
+                justifyContent="space-between"
+                // alignItems="center"
+              >
+                {socialItems.map((social, index) => (
+                  <ListItemButton disableGutters key={index}>
+                    <social.Button url={"#"} quote={"#"}>
+                       <social.Icon size={32} round />
+                    </social.Button>
+                  </ListItemButton>
                 ))}
               </Grid>
             </List>
           </Grid>
-          <Grid
-            item
-            sx={{ flex: { md: 2.5, xs: 1 }, mt: 3, order: { xs: 1, md: 5 } }}
-          >
+          <Grid item sx={{ flex: { md: 2.5, xs: 1 }, order: { xs: 1, md: 5 } }}>
             <List>
               <ListItem dense disableGutters>
                 <ListItemText
@@ -189,45 +244,50 @@ const Footer = () => {
                 </ListItemText>
               </ListItem>
 
-              <ListItemText sx={{ fontSize: "1.2rem" }}>
-                Join over 2,000 subscribers and get the latest and trending
-                updates{" "}
-              </ListItemText>
+              <ListItemText
+                sx={{ fontSize: "1.2rem" }}
+                primary={
+                  "Join over 2,000 subscribers and get the latest and trending updates"
+                }
+              />
             </List>
-            {/* <Grid
-            item
-            container
-            sx={{ height: "4rem", border: "transparent", flexWrap: "nowrap" }}
-          >
-            <input
-              type="text"
-              placeholder="Enter Email Address"
-              style={{
-                flex: 1,
-                outline: "none",
-                padding: "1rem 4rem 1rem 3rem",
-                height: "100%",
-                background: "transparent",
-                border: "1.5px solid #C4C4C4",
-                borderRadius: "2rem",
-                color: "#fff",
-              }}
-            />
-            <Button
-              style={{
-                background: "#37D42A",
-                borderRadius: "2rem",
-                padding: "0 2rem",
-                marginLeft: "-4rem",
-                fontSize: "1.2rem",
-                fontWeight: 700,
-                color: "#fff",
-              }}
-              variant="outlined"
-            >
-              Subscribe
-            </Button>
-          </Grid> */}
+            <Grid item container alignItems="center">
+              <Formik initialValues={{ address: "" }}>
+                <Form style={{ width: "100%" }}>
+                  <Grid
+                    item
+                    container
+                    gap={2}
+                    flexWrap="nowrap"
+                    alignItems="center"
+                    sx={{
+                      flexWrap: { sm: "nowrap", xs: "wrap" },
+                    }}
+                    flexDirection={{ xs: "column", sm: "row" }}
+                  >
+                    <Grid item flex={1} sx={{ width: "100%" }}>
+                      <Grid container>
+                        <FormikControl
+                          type="text"
+                          placeholder="Enter Email Address"
+                          name="address"
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <CustomButton
+                        type="submit"
+                        sx={{ minHeight: "4rem" }}
+                        height={"4rem"}
+                        width={"12rem"}
+                        title="Subscribe"
+                        borderRadius={0}
+                      />
+                    </Grid>
+                  </Grid>
+                </Form>
+              </Formik>
+            </Grid>
           </Grid>
         </Grid>
         <Typography

@@ -1,16 +1,9 @@
-import {
-  Grid,
-  IconButton,
-  List,
-  Pagination,
-  Skeleton,
-  Typography,
-} from "@mui/material";
+import { Grid, List, Pagination, Skeleton, Typography } from "@mui/material";
 import { useState } from "react";
 import SinglePosts from "../home/SinglePosts";
 import Heading from "./Heading";
 import SearchComponent from "components/modals/SearchComponent";
-import { SettingsOutlined, TuneOutlined } from "@mui/icons-material";
+// import { SettingsOutlined, TuneOutlined } from "@mui/icons-material";
 import { CustomButton } from "components";
 import Filters from "components/modals/Filters";
 import { useGetPostQuery } from "redux/slices/postSlice";

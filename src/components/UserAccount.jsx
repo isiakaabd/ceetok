@@ -66,11 +66,11 @@ const UserAccount = () => {
                   sx={{
                     color: "#9B9A9A",
                     "& .MuiBadge-badge": {
-                      fontSize: "1.6rem",
+                      fontSize: "1.4rem",
                       backgroundColor: "#FF9B04",
-                      width: "2.5rem",
-                      height: "2.5rem",
-                      borderRadius: "calc(2.5rem /2)",
+                      width: "3rem",
+                      height: "3rem",
+                      borderRadius: "1.5rem",
                       fontWeight: 600,
                     },
                   }}

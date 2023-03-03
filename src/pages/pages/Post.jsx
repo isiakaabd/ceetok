@@ -80,15 +80,12 @@ export const Details = ({
     comment: Yup.string("Enter Comment").trim().required("Required"),
   });
 
-  const baseUrl =
-    process.env === "development"
-      ? "https://localhost"
-      : " https://api.ceetok.live";
+  const baseUrl = process.env.REACT_APP_LIVE_LINK;
   const dataVal = {
     text: `${baseUrl}/post/${data?.slug}`,
     title: "Link",
   };
-  console.log(data);
+  console.log(baseUrl);
   return (
     <>
       <Grid item container justifyContent="space-between" flexWrap="nowrap">
@@ -221,10 +218,7 @@ const Post = () => {
       if (error) toast.error(error);
     }
   };
-  const baseUrl =
-    process.env === "development"
-      ? "https://localhost"
-      : " https://api.ceetok.live";
+  const baseUrl = process.env.REACT_APP_LIVE_LINK;
   const dataVal = {
     text: `${baseUrl}/post/${slug}`,
     title: "Link",
@@ -418,6 +412,7 @@ const Post = () => {
         handleClose={() => setOpenShareModal(false)}
         copyText={dataVal}
         userId={user_id}
+        data={data}
       />
     </>
   );

@@ -12,18 +12,7 @@ import {
   ListItemIcon,
   Grid,
 } from "@mui/material";
-import {
-  PermIdentityOutlined,
-  ShareOutlined,
-  AddchartOutlined,
-  PeopleOutlineOutlined,
-  FavoriteBorderOutlined,
-  ReplyOutlined,
-  ManageAccountsOutlined,
-  EmailOutlined,
-  AccountCircleOutlined,
-  LogoutOutlined,
-} from "@mui/icons-material";
+import { AccountCircleOutlined, LogoutOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAction } from "redux/reducers/authReducer";
@@ -46,7 +35,7 @@ export default function Notifications({
   handleCloses,
 }) {
   const state = useSelector((state) => state.auth.auth);
-  const [getProfile, { data: profile }] = useLazyUserProfileQuery();
+  const [getProfile] = useLazyUserProfileQuery();
 
   useEffect(() => {
     if (state) {

@@ -1,9 +1,7 @@
-import { Avatar, Divider, Grid, IconButton, Typography } from "@mui/material";
+import { Divider, Grid, IconButton, Typography } from "@mui/material";
 import { CustomButton } from "components";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
-
-import images from "assets";
 import Fb from "assets/svgs/Fb";
 import Insta from "assets/svgs/Insta";
 import Linkedin from "assets/svgs/Linkedin";
@@ -38,8 +36,6 @@ const ContactUs = () => {
       link: "#",
     },
   ];
-  const { facebook, youtube, linkedin, twitter, instagram } = images;
-  const icons = [facebook, youtube, linkedin, twitter, instagram];
   return (
     <Grid
       container

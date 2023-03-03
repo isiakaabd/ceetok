@@ -15,7 +15,6 @@ import {
   Skeleton,
 } from "@mui/material";
 import SinglePosts from "pages/home/SinglePosts";
-import PrivateMessage from "./PrivateMessage";
 import { useLazyGetPostQuery } from "redux/slices/postSlice";
 import { useLazyGetAnnoucementsQuery } from "redux/slices/annoucementSlice";
 import SingleAnnoucements from "./SingleAnnoucements";

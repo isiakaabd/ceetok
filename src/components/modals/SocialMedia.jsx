@@ -1,5 +1,3 @@
-import { Instagram } from "@mui/icons-material";
-
 import {
   Divider,
   Grid,
@@ -12,18 +10,23 @@ import {
   Typography,
 } from "@mui/material";
 
-import NotificationModal from "components/modals/NotificationModal";
-import Facebook from "assets/svgs/FacebookIcon";
-import Messenger from "assets/svgs/Messenger";
-import Twitter from "assets/svgs/Twitter";
-import WhatsApp from "assets/svgs/WhatsApp";
 import Copy from "assets/svgs/Copy";
 import Save from "assets/svgs/Save";
 import Share from "assets/svgs/Share";
 import Mail from "assets/svgs/Mail";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modals from "components/Modal";
 import useCopy from "hooks/useCopy";
+import {
+  WhatsappShareButton,
+  WhatsappIcon,
+  TwitterShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterIcon,
+  FacebookIcon,
+  FacebookShareButton,
+} from "react-share";
 const buttonStyles = {
   display: "flex",
   flexDirection: "column",
@@ -37,29 +40,29 @@ const primaryStyles = {
   wdith: "100%",
 };
 
-const SocialMedia = ({ open, handleClose, copyText, userId, url }) => {
+const baseUrl = process.env.REACT_APP_LIVE_LINK;
+const SocialMedia = ({ open, handleClose, copyText, data, userId, url }) => {
+  const link = `${baseUrl}/post/${data?.slug}`;
+
   const [, copyToClipboard] = useCopy();
-  const navigate = useNavigate();
+
   const socialItems = [
     {
-      link: `https://www.facebook.com/sharer/sharer.php?u=https://api.ceetok.live/post/have-trust-in-allah-1677684227501`,
-      Icon: Facebook,
+      Icon: FacebookIcon,
+      Button: FacebookShareButton,
     },
     {
-      link: "",
-      Icon: Instagram,
+      Button: LinkedinShareButton,
+      Icon: LinkedinIcon,
     },
     {
-      link: "",
-      Icon: Twitter,
+      // }&text=${encodeURI("Here is a post on " + data?.title)}`,
+      Icon: TwitterIcon,
+      Button: TwitterShareButton,
     },
     {
-      link: "",
-      Icon: WhatsApp,
-    },
-    {
-      link: "",
-      Icon: Messenger,
+      Icon: WhatsappIcon,
+      Button: WhatsappShareButton,
     },
   ];
   return (
@@ -80,7 +83,7 @@ const SocialMedia = ({ open, handleClose, copyText, userId, url }) => {
             disableRipple
             disableGutters={true}
             component={Link}
-            onClick={() => navigate(`user/profile/${userId}`)}
+            to={`/user/message/${userId}`}
             sx={{
               maxWidth: "max-content",
               px: 1,
@@ -163,16 +166,11 @@ const SocialMedia = ({ open, handleClose, copyText, userId, url }) => {
         />
         <Grid item container justifyContent="space-between" alignItems="center">
           {socialItems.map((social, index) => (
-            <IconButton
-              key={index}
-              onClick={() =>
-                navigate(
-                  `https://www.facebook.com/sharer/sharer.php?u=${copyText?.text}`
-                )
-              }
-            >
-              <social.Icon sx={{ fontSize: "3rem" }} />
-            </IconButton>
+            // <a href={social.link} target="_blank" rel="noreferrer">
+            <social.Button url={link} quote={data?.title}>
+               <social.Icon size={32} round />
+            </social.Button>
+            // </a>
           ))}
         </Grid>
       </Grid>

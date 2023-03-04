@@ -8,7 +8,7 @@ import {
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
@@ -85,7 +85,7 @@ export const Details = ({
     text: `${baseUrl}/post/${data?.slug}`,
     title: "Link",
   };
-  console.log(baseUrl);
+
   return (
     <>
       <Grid item container justifyContent="space-between" flexWrap="nowrap">
@@ -275,8 +275,6 @@ const Post = () => {
                 }}
                 onClick={() => setState(true)}
                 variant="outlined"
-
-                // sx={{color:{state ? "success" : "rgba(55, 212, 42, 0.5)"}}
               >
                 COMMENTS
               </Button>
@@ -531,13 +529,6 @@ function Skeletons() {
         </Grid>
       </Grid>
 
-      {/* <Grid item container>
-        <Skeleton
-          sx={{ height: "4rem", width: "7rem" }}
-          animation="wave"
-          variant="text"
-        />
-      </Grid> */}
       <Grid item container flexDirection={"column"}>
         {Array(20)
           .fill(undefined)

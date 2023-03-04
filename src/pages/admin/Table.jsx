@@ -190,7 +190,6 @@ function Rows({ row, state, ids, setIds }) {
     reputation,
     banned,
     email,
-    New,
   } = row;
 
   const [banorUnban, { isLoading }] = useBanUsersMutation();

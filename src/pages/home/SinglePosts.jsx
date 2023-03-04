@@ -30,7 +30,7 @@ const AllPosts = ({ post, index, showUser }) => {
           loginStatus ? navigate(`/post/${slug}`) : setOpen(true)
         }
         disableGutters={{ md: false, xs: true }}
-        sx={{ maxWidth: "100%" }}
+        sx={{ maxWidth: "100%", px: { md: 0.5, xs: 0 } }}
       >
         <ListItem
           dense

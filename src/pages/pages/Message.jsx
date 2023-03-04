@@ -15,7 +15,7 @@ import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
 import Editor from "components/Quil";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { CustomButton } from "components";
 import { useSelector } from "react-redux";
 import { useOtherUserProfileQuery } from "redux/slices/authSlice";

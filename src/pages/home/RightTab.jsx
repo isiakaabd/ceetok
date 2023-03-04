@@ -46,106 +46,113 @@ const RightTab = ({ setCreatePost, more }) => {
     <>
       <Grid
         item
-        container
         md={9}
         xs={12}
         sx={{
-          borderRadius: "2rem ",
+          borderRadius: "2rem",
           padding: { md: "0", xs: "1rem" },
           marginInline: "auto",
+          outline: "2px solid red",
+          overflowX: "hidden",
+          maxWidth: "100%",
         }}
-        gap={2}
-        flexDirection="column"
-        alignItems="flex-start"
       >
-        <Grid item container flexDirection="column">
-          <Grid
-            item
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            flexWrap="nowrap"
-            sx={{ mb: 1 }}
-          >
-            <Button
-              background={"#37D42A"}
-              sx={{
-                backgroundColor: "#37D42A",
-                fontSize: { md: "1.9rem", xs: "1.4rem" },
-                paddingInline: { md: "3rem", xs: "1.2rem" },
-                borderRadius: 25,
-                color: "#fff",
-                fontWeight: 600,
-                height: "100%",
-                ":hover": {
-                  background: "#37D42A",
-                },
-              }}
-              variant="contained"
-              disableElevation
-              startIcon={<AddCircleOutline />}
-              onClick={handleCreatePost}
+        <Grid container gap={2} flexDirection="column" alignItems="flex-start">
+          <Grid item container flexDirection="column">
+            <Grid
+              item
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              flexWrap="nowrap"
+              sx={{ mb: 1 }}
             >
-              Create Post
-            </Button>
-
-            <Filters
-              anchorEl={anchorEl}
-              setAnchorEl={setAnchorEl}
-              open={open}
-              value={value}
-              setValue={setValue}
-              handleClick={handleClick}
-              handleClose={handleClose}
-            />
-          </Grid>
-          {isFetching && (
-            <Typography
-              variant="h4"
-              width={"100%"}
-              fontWeight={600}
-              sx={{ color: "#37D42A" }}
-              textAlign="center"
-            >
-              Loading...
-            </Typography>
-          )}
-        </Grid>
-        <Grid item container>
-          {array?.posts?.length > 0 ? (
-            <>
-              <List
-                dense
+              <Button
+                background={"#37D42A"}
                 sx={{
-                  maxHeight: "120rem",
-                  overflowY: "scroll",
-                  width: "100%",
-                  "&::-webkit-scrollbar": {
-                    width: ".85rem",
-                    display: "none",
+                  backgroundColor: "#37D42A",
+                  fontSize: { md: "1.9rem", xs: "1.4rem" },
+                  paddingInline: { md: "3rem", xs: "1.2rem" },
+                  borderRadius: 25,
+                  color: "#fff",
+                  fontWeight: 600,
+                  height: "100%",
+                  ":hover": {
+                    background: "#37D42A",
                   },
                 }}
-                xs={12}
+                variant="contained"
+                disableElevation
+                startIcon={<AddCircleOutline />}
+                onClick={handleCreatePost}
               >
-                {array?.posts?.map((post, index) => {
-                  return <SinglePosts key={index} index={index} post={post} />;
-                })}
-              </List>
+                Create Post
+              </Button>
 
-              {array?.total_pages > 1 && (
-                <Paginations
-                  page={page}
-                  setPage={setPage}
-                  count={array?.total_pages}
-                />
-              )}
-              {/* </Grid> */}
-            </>
-          ) : (
-            <Typography variant="h2" sx={{ width: "100%" }} textAlign="center">
-              No Data yet
-            </Typography>
-          )}
+              <Filters
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+                open={open}
+                value={value}
+                setValue={setValue}
+                handleClick={handleClick}
+                handleClose={handleClose}
+              />
+            </Grid>
+            {isFetching && (
+              <Typography
+                variant="h4"
+                width={"100%"}
+                fontWeight={600}
+                sx={{ color: "#37D42A" }}
+                textAlign="center"
+              >
+                Loading...
+              </Typography>
+            )}
+          </Grid>
+          <Grid item container>
+            {array?.posts?.length > 0 ? (
+              <>
+                <List
+                  dense
+                  sx={{
+                    maxHeight: "120rem",
+                    overflowY: "scroll",
+                    width: "100%",
+                    "&::-webkit-scrollbar": {
+                      width: ".8rem",
+                      display: "none",
+                      ml: 0.4,
+                    },
+                  }}
+                >
+                  {array?.posts?.map((post, index) => {
+                    return (
+                      <SinglePosts key={index} index={index} post={post} />
+                    );
+                  })}
+                </List>
+
+                {array?.total_pages > 1 && (
+                  <Paginations
+                    page={page}
+                    setPage={setPage}
+                    count={array?.total_pages}
+                  />
+                )}
+                {/* </Grid> */}
+              </>
+            ) : (
+              <Typography
+                variant="h2"
+                sx={{ width: "100%" }}
+                textAlign="center"
+              >
+                No Data yet
+              </Typography>
+            )}
+          </Grid>
         </Grid>
       </Grid>
       {register && (

@@ -1,6 +1,5 @@
 import {
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -47,14 +46,12 @@ const socialItems = [
   },
 ];
 const Footer = () => {
-  const { facebook, youtube, linkedin, twitter, instagram } = images;
   const [modal, setModal] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const handleRegisterClose = () => setModal(false);
   const handleLoginClose = () => setIsLogin(false);
-  const icons = [facebook, youtube, linkedin, twitter, instagram];
   const items = [
     {
       name: "Terms & Condtions",

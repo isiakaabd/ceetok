@@ -8,9 +8,7 @@ import {
   Paper,
   Popper,
   ListItemText,
-  Typography,
   ListItemIcon,
-  Grid,
 } from "@mui/material";
 import { AccountCircleOutlined, LogoutOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";

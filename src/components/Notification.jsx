@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchComponent from "./modals/SearchComponent";
-import { Delete, MoreVertOutlined, StarOutline } from "@mui/icons-material";
+import { Delete, MoreVertOutlined } from "@mui/icons-material";
 import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
 import { useState } from "react";
@@ -38,7 +38,7 @@ const Notification = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { total_pages, notifications, owner } = data;
+  const { total_pages, notifications } = data;
   console.log(data);
   return (
     <Grid item container sx={{ p: { md: 4, xs: 1 }, background: "#E5E5E5" }}>

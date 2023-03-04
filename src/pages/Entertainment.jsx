@@ -123,20 +123,6 @@ const Entertainment = () => {
             >
               <Grid item>
                 <CustomButton
-                  // sx={{
-                  //   backgroundColor: "#37D42A",
-                  //   fontSize: { md: "1.2rem", xs: "1rem" },
-                  //   paddingInline: { md: "3rem", xs: "1rem" },
-                  //   borderRadius: 25,
-                  //   color: "#fff",
-                  //   fontWeight: 600,
-                  //   // ":hover": {
-                  //   //   background: "#37D42A",
-                  //   // },
-                  // }}
-                  // variant="contained"
-                  // disableElevation
-                  // startIcon={<AddCircleOutline />}
                   sx={{ height: "4.3rem" }}
                   onClick={() =>
                     loginStatus ? setCreatePostModal(true) : setOpens(true)

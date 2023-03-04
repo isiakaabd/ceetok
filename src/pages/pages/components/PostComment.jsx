@@ -21,13 +21,13 @@ import {
   Typography,
   List,
   Skeleton,
+  Avatar,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FormikControl from "validation/FormikControl";
 import UserProfile from "../UserProfile";
-import images from "assets";
 import {
   useDeleteAPostMutation,
   useLikeAndUnlikePostMutation,
@@ -288,13 +288,14 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             </Typography>
           </Tooltips>
         </Grid>
-        <img
-          src={
-            media?.length > 0 ? getImage(media[0]?.storage_path) : images.obi2
-          }
-          style={{ width: "100%" }}
+        <Avatar
+          src={getImage(media[0]?.storage_path)}
+          style={{ width: "100%", minHeight: "20rem" }}
           alt={category}
-        />
+          variant="square"
+        >
+          {category?.slice(0, 1).toUpperCase()}
+        </Avatar>
         <Grid container item flexDirection="column" rowGap={2}>
           <Typography
             color="secondary"

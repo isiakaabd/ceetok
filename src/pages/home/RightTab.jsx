@@ -52,7 +52,6 @@ const RightTab = ({ setCreatePost, more }) => {
           borderRadius: "2rem",
           padding: { md: "0", xs: "1rem" },
           marginInline: "auto",
-          outline: "2px solid red",
           overflowX: "hidden",
           maxWidth: "100%",
         }}

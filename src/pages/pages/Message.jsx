@@ -10,7 +10,6 @@ import {
   Typography,
   Skeleton,
 } from "@mui/material";
-// import ArrowBack from "assets/svgs/ArrowBack";
 import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
@@ -21,17 +20,13 @@ import { useSelector } from "react-redux";
 import { useOtherUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { getImage } from "helpers";
+import { getImage, getTimeMoment } from "helpers";
 import Error from "./components/Error";
 
 const Message = () => {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
-  // const ws = useMemo(
-  //   () => new WebSocket(process.env.REACT_APP_BASE_URL_CHAT),
-  //   []
-  // );
 
   const [socket, setSocket] = useState(null);
   const { data: profile, isLoading, error } = useOtherUserProfileQuery(id);
@@ -49,31 +44,6 @@ const Message = () => {
 
   useEffect(() => {
     if (socket) {
-      // Handle incoming data from the WebSocket server
-      socket.onmessage = ({ data }) => {
-        console.log(JSON.parse(data));
-        console.log("there is message Ara Adugbo");
-        const { type, body } = JSON.parse(data);
-        if (type === "messages") return setMessages(body?.messages.reverse());
-        if (type === "send_message") {
-          setMessages([...messages, body.message]);
-        }
-        // return setMessages([...messages,body?.messages.reverse()]);
-        if (type === "chat" || type === "init_chat")
-          return setChats(body?.chats);
-        // const data = JSON.parse(event.data);
-        // handle incoming data
-      };
-      // socket.send(
-      //   JSON.stringify({
-      //     type: "messages",
-      //     token,
-      //     limit: 10000,
-      //     offset: 0,
-      //     chat_id: id,
-      //   })
-      // );
-
       socket.addEventListener("open", () => {
         toast.success("Connection successful");
         socket.send(JSON.stringify({ type: "init", token }));
@@ -82,67 +52,51 @@ const Message = () => {
           JSON.stringify({
             type: "messages",
             token,
-            limit: 10000,
+            limit: 20,
             offset: 0,
             chat_id: id,
           })
         );
       });
+      socket.onmessage = ({ data }) => {
+        const { type, body, messages: mess } = JSON.parse(data);
+        if (type === "messages") return setMessages(body?.messages.reverse());
+        if (type === "message") {
+          const newArr = mess.reverse();
+          setMessages([...newArr]);
+        }
+        if (type === "send_message") {
+          const message = body.messages.reverse();
 
+          setMessages([...message]);
+        }
+        // return setMessages([...messages,body?.messages.reverse()]);
+        if (type === "chat") return setChats(body?.chats);
+        if (type === "init_chat") return setMessages(checkChatHistory[0]);
+        // const data = JSON.parse(event.data);
+        // handle incoming data
+      };
       // Handle WebSocket errors
+      socket.onclose = (event) => {
+        console.log(event.code);
+        if (event.code !== 1000) {
+          console.error(
+            "WebSocket connection closed with error:",
+            event.reason
+          );
+        }
+      };
+
       socket.onerror = (event) => {
         console.log(event);
         // handle errors
       };
     }
-  }, [socket, id, token, messages]);
-
-  // useEffect(() => {
-  //   socket.send(
-  //     JSON.stringify({
-  //       type: "messages",
-  //       token,
-  //       limit: 10000,
-  //       offset: 0,
-  //       chat_id: id,
-  //     })
-  //   );
-  // });
-  // useEffect(() => {
-
-  // ws.addEventListener("open", () => {
-  //   toast.success("Connection successful");
-  //   ws.send(JSON.stringify({ type: "init", token }));
-  //   ws.send(JSON.stringify({ type: "chat", token }));
-  //   ws.send(
-  //     JSON.stringify({
-  //       type: "messages",
-  //       token,
-  //       limit: 10000,
-  //       offset: 0,
-  //       chat_id: id,
-  //     })
-  //   );
-  // });
-  //eslint-disable-next-line
-  // }, []);
-
-  // ws.addEventListener("message", ({ data }) => {
-  //   const { type, body } = JSON.parse(data);
-  //   if (type === "messages") return setMessages(body?.messages.reverse());
-  //   if (type === "chat" || type === "init_chat") return setChats(body?.chats);
-  // });
-
-  // useEffect(() => {
-  // ws.onmessage = function ({ data }) {};
-
-  //eslint-disable-next-line
-  // }, []);
-
-  // if (isLoading) return <Skeleton />;
+    //eslint-disable-next-line
+  }, [socket]);
 
   const handleSubmit = async (values, { resetForm }) => {
-    if (checkChatHistory.length > 0) {
+    if (checkChatHistory?.length > 0) {
       const details = checkChatHistory[0];
       socket.send(
         JSON.stringify({
@@ -162,30 +116,13 @@ const Message = () => {
         })
       );
     }
-    // await ws.send(
-    //   JSON.stringify({
-    //     type: "send_message",
-    //     token,
-    //     // user_id: "20bd79b0-c2b1-4339-b14a-6559ef58713b",
-    //     chat_id: "7fa5e405-e67b-40b8-8a3b-d8768e69d2d4",
-    //     message: values.body,
-    //   })
-    // );
-    // await ws.send(
-    //   JSON.stringify({
-    //     type: "messages",
-    //     token,
-    //     user_id: profile?.id,
-    //     limit: 20,
-    //     offset: 1,
-    //   })
-    // );
 
-    setTimeout(() => resetForm(), 400);
+    setTimeout(() => resetForm(), 500);
   };
   if (isLoading) return <Skeleton />;
   if (error) return <Error />;
-  const { avatar, full_name } = profile;
+  const { avatar, full_name, last_activity } = profile;
+  console.log(profile);
   return (
     <Grid
       container
@@ -211,7 +148,14 @@ const Message = () => {
               {full_name?.slice(0, 1).toUpperCase()}
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={full_name} />
+          <ListItemText
+            primary={<Typography variant="h4">{full_name}</Typography>}
+            secondary={
+              <Typography variant="h6">
+                Last Seen:{getTimeMoment(last_activity)} ago
+              </Typography>
+            }
+          />
         </ListItem>
 
         <Grid item container sx={{ height: "50vh", overflowY: "scroll" }}>
@@ -230,9 +174,7 @@ const Message = () => {
               messages?.map((message, index) => {
                 return (
                   <SingleChat
-                    messages={
-                      message?.last_message?.message || message?.message
-                    }
+                    messages={message}
                     id={id}
                     sender_id={message.sender_id}
                     key={index}
@@ -280,21 +222,16 @@ const Message = () => {
   );
 };
 function SingleChat({ messages, id, sender_id }) {
-  const message = parse(messages);
-
-  const initial = 500;
-  const [count, setCount] = useState(initial);
-  const [state] = useState(
-    message
-    // ?.slice(0, counts < initial ? count : initial)
-  );
-  // useEffect(() => {
-  //   setState(message);
-  // }, [count, message]);
+  const message = parse(messages?.message);
+  console.log(getTimeMoment(messages?.last_activity));
+  // const messageLength = messages.message.length;
+  // const initial = 500;
+  // const [count, setCount] = useState(initial);
 
   return (
     <ListItem
       disableGutters
+      disablePadding
       sx={{
         "&.MuiListItem-root": {
           paddingInline: ".6rem",
@@ -316,15 +253,12 @@ function SingleChat({ messages, id, sender_id }) {
         primaryTypographyProps={{ fontWeight: 600 }}
         primary={
           <Fragment>
-            {state}{" "}
-            {message.length > initial && state.length !== message.length && (
+            <M message={message} />
+            {/* {messageLength > initial && (
               <Typography
                 onClick={() => {
-                  if (
-                    message.length - (count + initial - 200) <
-                    initial - 100
-                  ) {
-                    setCount(message.length);
+                  if (messageLength - initial < initial) {
+                    setCount(messageLength);
                   } else setCount(count + initial);
                 }}
                 sx={{ cursor: "pointer" }}
@@ -333,12 +267,15 @@ function SingleChat({ messages, id, sender_id }) {
               >
                 ...Read More
               </Typography>
-            )}
+            )} */}
           </Fragment>
         }
       />
     </ListItem>
   );
 }
+const M = ({ message }) => {
+  return message;
+};
 
 export default Message;

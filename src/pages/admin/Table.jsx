@@ -32,6 +32,7 @@ import FormikControl from "validation/FormikControl";
 import Editor from "components/Quil";
 import { CustomButton } from "components";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#F1F0F0",
@@ -191,7 +192,7 @@ function Rows({ row, state, ids, setIds }) {
     banned,
     email,
   } = row;
-
+  const navigate = useNavigate();
   const [banorUnban, { isLoading }] = useBanUsersMutation();
   const [, { isLoading: sendingEmail }] = useSendEmailMutation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -199,9 +200,8 @@ function Rows({ row, state, ids, setIds }) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setAnchorEl(null);
+
   const handleBanUser = async (e) => {
     const { data, error } = await banorUnban({
       users: [id],
@@ -295,6 +295,9 @@ function Rows({ row, state, ids, setIds }) {
             </MenuItem>
             <MenuItem onClick={handleCheck}>
               {sendingEmail ? "Sending" : "Send Mail"}
+            </MenuItem>
+            <MenuItem onClick={() => navigate(`/user/message/${id}`)}>
+              Send Message
             </MenuItem>
           </Menu>
         </StyledTableCell>

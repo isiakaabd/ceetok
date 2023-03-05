@@ -9,18 +9,20 @@ import {
   MenuItem,
   IconButton,
   Grid,
+  Skeleton,
 } from "@mui/material";
 import Pen from "assets/svgs/Pen";
 import { getImage } from "helpers";
 import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useUserProfileUpdateMutation } from "redux/slices/authSlice";
+import {
+  useDeleteUserProfilePicsMutation,
+  useUserProfileUpdateMutation,
+} from "redux/slices/authSlice";
 
 export default function ProfileImage({ avatar, name, condition }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const token = useSelector((state) => state.auth.token);
   // /user/edit
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -42,7 +44,8 @@ export default function ProfileImage({ avatar, name, condition }) {
       setOpen(false);
     }
   }
-  const [updateProfile] = useUserProfileUpdateMutation();
+  const [updateProfile, { isLoading: load }] = useUserProfileUpdateMutation();
+  const [deletePics, { isLoading }] = useDeleteUserProfilePicsMutation();
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open);
@@ -75,24 +78,10 @@ export default function ProfileImage({ avatar, name, condition }) {
 
     setTimeout(() => handleClose(), 500);
   }
-  const handleRemoveImage = (e) => {
-    const form = new FormData();
-    form.append("profile_pic", null);
-    fetch(process.env.REACT_APP_EDIT, {
-      method: "PATCH",
-      body: JSON.stringify(form),
-      headers: {
-        // 👇 Set headers manually for single file upload
-        AUTHORIZATION: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      // .then((data) => console.log(data))
-      .then((data) => {
-        toast.success("Image Removed Successfully");
-        setTimeout(() => handleClose(e), 500);
-      })
-      .catch((err) => toast.error(err));
+  const handleRemoveImage = async (e) => {
+    const { data, error } = await deletePics();
+    if (data) toast.success(data);
+    if (error) toast.error(error || "Something went wrong...");
   };
 
   return (
@@ -115,18 +104,26 @@ export default function ProfileImage({ avatar, name, condition }) {
         onClick={handleToggle}
         sx={{ background: "white" }}
       >
-        <Avatar
-          alt={name}
-          src={getImage(avatar)}
-          sx={{
-            width: "10rem",
-            fontSize: { md: "3rem", xs: "2.5rem" },
-            height: "10rem",
-            objectFit: "contain",
-          }}
-        >
-          {name?.slice(0, 1)?.toUpperCase()}
-        </Avatar>
+        {isLoading || load ? (
+          <Skeleton
+            variant="circular"
+            sx={{ width: "10rem", height: "10rem" }}
+            animation="wave"
+          />
+        ) : (
+          <Avatar
+            alt={name}
+            src={getImage(avatar)}
+            sx={{
+              width: "10rem",
+              height: "10rem",
+              fontSize: { md: "3rem", xs: "2.5rem" },
+              objectFit: "contain",
+            }}
+          >
+            {name?.slice(0, 1)?.toUpperCase()}
+          </Avatar>
+        )}
       </Badge>
 
       <Popper

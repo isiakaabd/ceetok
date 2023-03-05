@@ -178,6 +178,15 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    deleteUserProfilePics: builder.mutation({
+      query: () => ({
+        url: "/user/delete-dp",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
 
     logout: builder.mutation({
       query: () => ({
@@ -226,6 +235,7 @@ export const {
   useUpdateUserSettingsMutation,
   useUnBlockUserMutation,
   useFollowUserMutation,
+  useDeleteUserProfilePicsMutation,
   useAllMediaQuery,
   useOtherUserProfileQuery,
   useLazyOtherUserProfileQuery,

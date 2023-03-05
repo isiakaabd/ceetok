@@ -409,19 +409,23 @@ const SingleLivePage = () => {
           </Typography>
           <Grid item>
             <Grid container>
-              {views?.slice(0, 50)?.map((item, index) => (
-                <Typography
-                  component={Link}
-                  to={`/user/profile/?id=${item.viewer?.user_id}`}
-                  key={index}
-                  sx={{ width: "max-content", mr: 0.5 }}
-                  color="secondary"
-                  fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                >
-                  {item.viewer.full_name},
-                </Typography>
-              ))}
-              {views?.length > 50 ? (
+              {views
+                ?.filter((value) => value.viewer !== "guest")
+                ?.slice(0, 50)
+                ?.map((item, index) => (
+                  <Typography
+                    component={Link}
+                    to={`/user/profile/?id=${item.viewer?.user_id}`}
+                    key={index}
+                    sx={{ width: "max-content", mr: 0.5 }}
+                    color="secondary"
+                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                  >
+                    {item.viewer.full_name},
+                  </Typography>
+                ))}
+              {views?.filter((value) => value.viewer !== "guest").length >
+              50 ? (
                 <Typography
                   variant="span"
                   color="#FF9B04"

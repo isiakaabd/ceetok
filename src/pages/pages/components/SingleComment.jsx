@@ -124,9 +124,9 @@ const SingleComment = ({ item, icons, profile, type }) => {
   );
 };
 export function Image({ person: { user } }) {
-  const { full_name, avatar, user_id } = user;
+  const { full_name, avatar, id } = user;
   const navigate = useNavigate();
-  const handleClicks = (id) => {
+  const handleClicks = () => {
     navigate({
       pathname: "/user/profile",
       search: `?id=${id}`,
@@ -137,7 +137,7 @@ export function Image({ person: { user } }) {
       <Avatar
         alt={full_name}
         src={getImage(avatar)}
-        onClick={() => handleClicks(user_id)}
+        onClick={handleClicks}
         sx={{ cursor: "pointer" }}
       >
         {full_name?.slice(0, 1).toUpperCase()}

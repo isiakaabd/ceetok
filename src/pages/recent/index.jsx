@@ -25,11 +25,13 @@ const Recent = () => {
           {/* <Movie /> */}
         </Grid>
         <Grid
+          item
           container
           sx={{
             mt: 3,
             pb: "3rem",
             marginInline: "auto",
+            overflowX: "hidden",
             marginRight: { md: "4rem" },
             marginLeft: { md: "0" },
           }}

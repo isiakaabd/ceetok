@@ -167,153 +167,9 @@ const SingleAnnoucement = () => {
       toast.error(error);
     }
   };
-  const viewsArr = views?.slice(0, 50)?.map((item, index) => {
-    return {
-      name: item?.viewer?.fullname,
-      link: item?.viewer?.user_id,
-    };
-  });
-  console.log(viewsArr);
+
   return (
     <>
-      {/* <Grid item container gap={2} flexWrap="nowrap">
-        <Grid item xs={1} display={{ md: "block", xs: "none" }}>
-          <Grid container justifyContent="center">
-            <IconButton>
-              <ArrowBackOutlined
-                sx={{
-                  fontSize: "3rem",
-                  background: "#fff",
-                  borderRadius: ".5rem",
-                  color: "#9B9A9A",
-                }}
-              />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          md={10}
-          xs={12}
-          sx={{
-            mb: 8,
-            mt: 2,
-            pb: 3,
-            background: "#fff",
-            borderRadius: { md: "2rem", xs: 0 },
-            // m: 2,
-            mx: "auto",
-          }}
-        >
-          <Grid item container>
-            <Grid
-              item
-              container
-              alignItems="center"
-              sx={{ my: 3, paddingInline: { xs: "1rem", md: "4rem" } }}
-            >
-              <Button
-                sx={{
-                  mr: 4,
-                  border: state ? "1px solid #37D42A" : "none",
-                  borderRadius: state ? ".8rem" : "none",
-                  color: state ? "#37D42A" : "rgba(55, 212, 42, 0.5)",
-                  fontWeight: state ? 700 : 400,
-                  ":hover,:focus": {
-                    border: state ? "1px solid #37D42A" : "none",
-                    background: "transparent",
-                  },
-                }}
-                onClick={() => setState(true)}
-                variant="outlined"
-
-                // sx={{color:{state ? "success" : "rgba(55, 212, 42, 0.5)"}}
-              >
-                COMMENTS
-              </Button>
-              <Button
-                onClick={() => setState(false)}
-                sx={{
-                  mr: 2,
-                  border: !state ? "1px solid #37D42A" : "none",
-                  borderRadius: !state ? ".8rem" : "none",
-                  fontWeight: !state ? 700 : 400,
-                  color: !state ? "#37D42A" : "rgba(55, 212, 42, 0.5)",
-                  ":hover,:focus": {
-                    border: !state ? "1px solid #37D42A" : "none",
-                    background: "transparent",
-                  },
-                }}
-                variant="outlined"
-              >
-                Other Conversation
-              </Button>
-            </Grid>
-            {state ? (
-              <Comment handleShare={handleShare} data={data} />
-            ) : (
-              <OtherConversation />
-            )}
-          </Grid>
-          <Grid
-            sx={{
-              mt: { md: 3, xs: 1.5 },
-              paddingInline: { xs: "1rem", md: "4rem" },
-            }}
-          >
-            <Formik
-              initialValues={{ comment: "" }}
-              onSubmit={handleSubmit}
-              validationSchema={validationSchema}
-            >
-              <Form>
-                <Editor
-                  theme="snow"
-                  name="comment"
-                  value={""}
-                  placeholder="write something..."
-                />
-
-                <Grid
-                  item
-                  container
-                  sx={{ mt: 2 }}
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      color: "#9B9A9A",
-                      borderColor: "inherit",
-                      // border: "2px solid #9B9A9A",
-                      fontSize: "1.2rem",
-                      fontWeight: 700,
-                      padding: ".8rem 2rem",
-                      borderRadius: "3rem",
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <CustomButton
-                    title="Post"
-                    variant="contained"
-                    width="10rem"
-                    type="submit"
-                    isSubmitting={loading}
-                  />
-                </Grid>
-              </Form>
-            </Formik>
-          </Grid>
-    
-        </Grid>
-      </Grid>
-      <SocialMedia
-        open={openShareModal}
-        handleClose={() => setOpenShareModal(false)}
-      /> */}
-
       <Grid
         item
         container
@@ -455,7 +311,6 @@ const SingleAnnoucement = () => {
           <Grid
             sx={{
               mt: { md: 3, xs: 1.5 },
-              // paddingInline: { xs: "1rem", md: "4rem" },
             }}
           >
             <Formik
@@ -518,19 +373,22 @@ const SingleAnnoucement = () => {
             </Typography>
             <Grid item>
               <Grid container>
-                {views?.slice(0, 50)?.map((item, index) => (
-                  <Typography
-                    component={Link}
-                    to={`/user/profile/?id=${item.viewer?.user_id}`}
-                    key={index}
-                    sx={{ width: "max-content", mr: 0.5 }}
-                    color="secondary"
-                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                  >
-                    {" "}
-                    {item.viewer.full_name},
-                  </Typography>
-                ))}
+                {views
+                  ?.filter((value) => value.viewer !== "guest")
+                  .slice(0, 50)
+                  ?.map((item, index) => (
+                    <Typography
+                      component={Link}
+                      to={`/user/profile/?id=${item.viewer?.user_id}`}
+                      key={index}
+                      sx={{ width: "max-content", mr: 0.5 }}
+                      color="secondary"
+                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                    >
+                      {" "}
+                      {item.viewer.full_name},
+                    </Typography>
+                  ))}
                 {views?.length > 50 ? (
                   <Typography
                     variant="span"

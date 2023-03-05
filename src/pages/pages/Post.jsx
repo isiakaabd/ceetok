@@ -377,18 +377,25 @@ const Post = () => {
               </Typography>
               <Grid item>
                 <Grid container>
-                  {recent_views?.slice(0, 50)?.map((item, index) => (
-                    <Typography
-                      component={Link}
-                      to={`/user/profile/?id=${item.viewer?.id}`}
-                      key={index}
-                      sx={{ width: "max-content", mr: 0.5 }}
-                      color="secondary"
-                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                    >
-                      {item.viewer.full_name},
-                    </Typography>
-                  ))}
+                  {recent_views
+                    ?.slice(0, 50)
+                    ?.filter((value) => value.viewer !== "guest")
+                    .map((item, index) => (
+                      <Typography
+                        component={Link}
+                        to={`/user/profile/?id=${item.viewer?.id}`}
+                        key={index}
+                        sx={{ width: "max-content", mr: 0.5 }}
+                        color="secondary"
+                        fontSize={{
+                          md: "1.8rem",
+                          xs: "1.5rem",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {item.viewer.full_name},
+                      </Typography>
+                    ))}
 
                   {views_count?.length > 50 ? (
                     <Typography
@@ -418,11 +425,13 @@ const Post = () => {
 function Skeletons() {
   return (
     <Grid
-      sx={{ px: 2, py: 4 }}
+      sx={{ px: 2, py: 4, margin: "auto" }}
       item
       flexDirection={"column"}
       container
       gap={2}
+      md={10}
+      xs={12}
       overflow={"hidden"}
     >
       <Grid item container alignItems="center" flexWrap="nowrap" gap={4}>

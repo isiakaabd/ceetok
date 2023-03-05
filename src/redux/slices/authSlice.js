@@ -78,7 +78,7 @@ export const authSlice = api.injectEndpoints({
     listUsers: builder.query({
       query: ({ username, followed, offset, following }) => ({
         url: `/user/list/?${`&offset=${offset ? offset : 0}`}${
-          followed ? `followed=${followed}` : ""
+          followed ? `&followed=${followed}` : ""
         }${following ? `&following=${following}` : ""}${
           username ? `&username=${username}` : ""
         }

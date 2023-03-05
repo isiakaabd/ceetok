@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 
-const AllPosts = ({ post, index, showUser }) => {
+const AllPosts = ({ post, showUser }) => {
   const { slug, user, media, title, category, views_count, updatedAt } = post;
 
   const loginStatus = useSelector((state) => state.auth.token);
@@ -34,7 +34,6 @@ const AllPosts = ({ post, index, showUser }) => {
       >
         <ListItem
           dense
-          disableGutters
           secondaryAction={
             <Grid item container flexWrap="nowrap" gap={1} alignItems="center">
               <ListItemIcon sx={{ minWidth: "1rem", m: 0 }}>
@@ -146,7 +145,9 @@ const AllPosts = ({ post, index, showUser }) => {
                         maxWidth: "max-content",
                       }}
                     >
-                      {user?.username || user?.email?.split("@")[0]}
+                      {user?.username ||
+                        user?.email?.split("@")[0] ||
+                        user?.full_name}
                     </Typography>
                   ) : null}
                   <Typography

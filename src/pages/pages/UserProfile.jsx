@@ -7,6 +7,7 @@ import { CloseOutlined } from "@mui/icons-material";
 import { Form, Formik } from "formik/dist";
 import FormikControl from "validation/FormikControl";
 import { getDate, getImage, getTime } from "helpers";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = ({ data }) => {
   const anchorRef = useRef(null);
@@ -17,9 +18,9 @@ const UserProfile = ({ data }) => {
     createdAt,
     likes_count,
     get_notifications,
-    user: { full_name, avatar, username, followers_count },
+    user: { full_name, avatar, username, id, followers_count },
   } = data;
-
+  const navigate = useNavigate();
   return (
     <>
       <Grid
@@ -36,7 +37,13 @@ const UserProfile = ({ data }) => {
       >
         <Grid item>
           <Avatar
-            sx={{ alignItems: "center" }}
+            onClick={() =>
+              navigate({
+                pathname: "/user/profile",
+                search: `?id=${id}`,
+              })
+            }
+            sx={{ alignItems: "center", cursor: "pointer" }}
             alt={full_name}
             src={getImage(avatar)}
           >

@@ -5,7 +5,6 @@ const OtherConversation = () => {
   const { data: posts, isLoading } = useGetPostQuery({
     category: "politics",
   });
-  console.log(posts);
   if (isLoading) return <Skeleton />;
   return (
     <Grid item container>

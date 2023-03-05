@@ -47,7 +47,7 @@ const LeftTab = () => {
                 key={index}
                 component={Link}
                 alignItems="flex-start"
-                to={`/posts/?category=${item.name}`}
+                to={`/posts/?category=${item.slug}`}
               >
                 <ListItemText
                   primary={item?.name}

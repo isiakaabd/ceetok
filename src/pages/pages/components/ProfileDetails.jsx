@@ -12,10 +12,11 @@ import Pen from "assets/svgs/Pen";
 import { styled } from "@mui/material/styles";
 import { CustomButton } from "components";
 import {
+  MailOutline,
   PersonAddAlt1Outlined,
   PersonRemoveAlt1Outlined,
 } from "@mui/icons-material";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ProfileItem from "./ProfileItem";
 import {
   useFollowUserMutation,
@@ -58,7 +59,7 @@ const ProfileDetails = (props) => {
       textAlign: "center",
     })
   );
-
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [follow, { isLoading: followLoading }] = useFollowUserMutation();
   const {
@@ -199,6 +200,17 @@ const ProfileDetails = (props) => {
                     </Grid>
                   )
                 )}
+                {!condition && (
+                  <CustomizedTooltips title="Send Message">
+                    <IconButton
+                      onClick={(e) => navigate(`/user/message/${id}`)}
+                      edge="start"
+                      size="small"
+                    >
+                      <MailOutline />
+                    </IconButton>
+                  </CustomizedTooltips>
+                )}
                 {condition && (
                   <Grid item>
                     <Grid container alignItems="center">
@@ -280,8 +292,7 @@ const ProfileDetails = (props) => {
             </Grid>
           )}
         </Grid>
-        <Divider sx={{ border: "1px solid #9B9A9A" }} />
-
+        {condition && <Divider sx={{ border: "1px solid #9B9A9A" }} />}
         {condition && (
           <>
             <Grid

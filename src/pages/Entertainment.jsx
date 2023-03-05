@@ -183,6 +183,7 @@ const Entertainment = () => {
                   maxWidth: "100%",
                   maxHeight: "80rem",
                   overflowY: "scroll",
+                  width: "100%",
                   "&::-webkit-scrollbar": {
                     width: ".85rem",
                     display: "none",
@@ -201,28 +202,31 @@ const Entertainment = () => {
             </Grid>
             {array?.posts?.length > 0 && (
               <Grid item container sx={{ p: 3 }}>
-                {array?.posts?.slice(0, 50).map((item, index) => {
-                  return item.recent_views.map((numbers) => {
-                    return (
-                      //  numbers?.viewer.map((view) => (
-                      <Typography
-                        component={Link}
-                        to={`/${index}`}
-                        key={index}
-                        sx={{ width: "max-content", mr: 0.5 }}
-                        color="secondary"
-                        fontSize={{
-                          md: "1.8rem",
-                          xs: "1.5rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {numbers?.viewer?.full_name}
-                      </Typography>
-                    );
-                    // ));
-                  });
-                })}
+                {array?.posts
+                  ?.filter((value) => value !== undefined)
+                  .slice(0, 50)
+                  .map((item, index) => {
+                    return item.recent_views.map((numbers) => {
+                      return (
+                        //  numbers?.viewer.map((view) => (
+                        <Typography
+                          component={Link}
+                          to={`/${index}`}
+                          key={index}
+                          sx={{ width: "max-content", mr: 0.5 }}
+                          color="secondary"
+                          fontSize={{
+                            md: "1.8rem",
+                            xs: "1.5rem",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {numbers?.viewer?.full_name}
+                        </Typography>
+                      );
+                      // ));
+                    });
+                  })}
                 {array?.posts?.length >= 50 && (
                   <Typography
                     variant="span"

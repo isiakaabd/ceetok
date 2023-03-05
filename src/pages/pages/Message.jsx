@@ -60,7 +60,8 @@ const Message = () => {
       });
       socket.onmessage = ({ data }) => {
         const { type, body, messages: mess } = JSON.parse(data);
-        if (type === "messages") return setMessages(body?.messages.reverse());
+        console.log(JSON.parse(data));
+        if (type === "messages") return setMessages(body?.messages?.reverse());
         if (type === "message") {
           const newArr = mess.reverse();
           setMessages([...newArr]);
@@ -72,7 +73,11 @@ const Message = () => {
         }
         // return setMessages([...messages,body?.messages.reverse()]);
         if (type === "chat") return setChats(body?.chats);
-        if (type === "init_chat") return setMessages(checkChatHistory[0]);
+        if (type === "init_chat") {
+          const x = body?.chats?.find((item) => item.reciever_id === id);
+
+          return setMessages(x?.last_message);
+        }
         // const data = JSON.parse(event.data);
         // handle incoming data
       };
@@ -122,7 +127,8 @@ const Message = () => {
   if (isLoading) return <Skeleton />;
   if (error) return <Error />;
   const { avatar, full_name, last_activity } = profile;
-  console.log(profile);
+  const time = getTimeMoment(last_activity);
+
   return (
     <Grid
       container
@@ -152,7 +158,8 @@ const Message = () => {
             primary={<Typography variant="h4">{full_name}</Typography>}
             secondary={
               <Typography variant="h6">
-                Last Seen:{getTimeMoment(last_activity)} ago
+                {time === "now" ? "Status:" : "Last Seen: "}
+                {time === "now" ? ` Online` : `${time} ago`}
               </Typography>
             }
           />

@@ -14,7 +14,7 @@ import { MoreVertOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
 import Editor from "components/Quil";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { CustomButton } from "components";
 import { useSelector } from "react-redux";
 import { useOtherUserProfileQuery } from "redux/slices/authSlice";
@@ -24,6 +24,7 @@ import { getImage, getTimeMoment } from "helpers";
 import Error from "./components/Error";
 
 const Message = () => {
+  const ref = useRef(null);
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
@@ -48,6 +49,16 @@ const Message = () => {
         toast.success("Connection successful");
         socket.send(JSON.stringify({ type: "init", token }));
         socket.send(JSON.stringify({ type: "chat", token }));
+        if (checkChatHistory.length === 0) {
+          socket.send(
+            JSON.stringify({
+              type: "init_chat",
+              token,
+              user_id: id,
+              message: `<h1> Welcome to Ceektok </h1>`,
+            })
+          );
+        }
         socket.send(
           JSON.stringify({
             type: "messages",
@@ -60,7 +71,7 @@ const Message = () => {
       });
       socket.onmessage = ({ data }) => {
         const { type, body, messages: mess } = JSON.parse(data);
-        console.log(JSON.parse(data));
+
         if (type === "messages") return setMessages(body?.messages?.reverse());
         if (type === "message") {
           const newArr = mess.reverse();
@@ -75,7 +86,6 @@ const Message = () => {
         if (type === "chat") return setChats(body?.chats);
         if (type === "init_chat") {
           const x = body?.chats?.find((item) => item.reciever_id === id);
-
           return setMessages(x?.last_message);
         }
         // const data = JSON.parse(event.data);
@@ -83,7 +93,6 @@ const Message = () => {
       };
       // Handle WebSocket errors
       socket.onclose = (event) => {
-        console.log(event.code);
         if (event.code !== 1000) {
           console.error(
             "WebSocket connection closed with error:",
@@ -93,7 +102,7 @@ const Message = () => {
       };
 
       socket.onerror = (event) => {
-        console.log(event);
+        console.error(event);
         // handle errors
       };
     }
@@ -111,20 +120,28 @@ const Message = () => {
           message: values.body.trim(),
         })
       );
-    } else {
-      socket.send(
-        JSON.stringify({
-          type: "init_chat",
-          token,
-          user_id: id,
-          message: values.body.trim(),
-        })
-      );
     }
+    //  else {
+    //   socket.send(
+    //     JSON.stringify({
+    //       type: "init_chat",
+    //       token,
+    //       user_id: id,
+    //       message: values.body.trim(),
+    //     })
+    //   );
+    // }
 
     setTimeout(() => resetForm(), 500);
   };
-  if (isLoading) return <Skeleton />;
+  const scrollToBottom = () => {
+    ref?.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { avatar, full_name, last_activity } = profile;
   const time = getTimeMoment(last_activity);
@@ -140,7 +157,7 @@ const Message = () => {
         background: "#E5E5E5",
       }}
     >
-      <Paper>
+      <Paper sx={{ maxWidth: "100%" }}>
         <ListItem
           component="div"
           secondaryAction={
@@ -165,15 +182,24 @@ const Message = () => {
           />
         </ListItem>
 
-        <Grid item container sx={{ height: "50vh", overflowY: "scroll" }}>
+        <Grid
+          item
+          container
+          flexDirection={"column"}
+          sx={{ height: "50vh", overflowY: "scroll" }}
+        >
           <List
             dense
             sx={{
               p: { md: 2, xs: 1 },
+              py: 1,
+              overflowWrap: "anywhere",
+              wordWrap: "wrap",
               maxWidth: "100%",
+              width: "100%",
               display: "flex",
               flexDirection: "column",
-              width: "100%",
+
               mt: "auto",
             }}
           >
@@ -201,10 +227,10 @@ const Message = () => {
                 No Message Here, Be the First to Send Message
               </Typography>
             )}
+            <div ref={ref} />
           </List>
         </Grid>
-
-        <Grid item container sx={{ p: { md: 4, xs: 1 } }}>
+        <Grid item container sx={{ p: { md: 2, xs: 1 } }}>
           <Formik initialValues={{ body: "" }} onSubmit={handleSubmit}>
             {({ isSubmitting }) => (
               <Form style={{ width: "100%" }}>
@@ -230,7 +256,6 @@ const Message = () => {
 };
 function SingleChat({ messages, id, sender_id }) {
   const message = parse(messages?.message);
-  console.log(getTimeMoment(messages?.last_activity));
   // const messageLength = messages.message.length;
   // const initial = 500;
   // const [count, setCount] = useState(initial);
@@ -284,5 +309,65 @@ function SingleChat({ messages, id, sender_id }) {
 const M = ({ message }) => {
   return message;
 };
+function Skeletons() {
+  return (
+    <Grid item container sx={{ p: 3, width: "100%" }}>
+      <Grid item container gap={1} flexDirection="column">
+        <Grid item container flexWrap="nowrap">
+          <Grid item sx={{ mr: 1 }}>
+            <Skeleton
+              variant="circular"
+              sx={{ height: "5rem", width: "5rem" }}
+            />
+          </Grid>
+          <Grid item flex={1}>
+            <Grid item container flexDirection="column">
+              <Skeleton variant="text" sx={{ height: "1rem", width: "20%" }} />
+              <Skeleton variant="text" sx={{ height: ".9rem", width: "15%" }} />
+            </Grid>
+          </Grid>
+          <Grid item sx={{ ml: "auto" }}>
+            <Grid item container gap={0.01} flexDirection={"column"}>
+              <Grid item>
+                <Skeleton
+                  variant="circular"
+                  sx={{ height: ".5rem", width: ".5rem" }}
+                />
+              </Grid>
+              <Grid item>
+                <Skeleton
+                  variant="circular"
+                  sx={{ height: ".5rem", width: ".5rem" }}
+                />
+              </Grid>
+              <Grid item>
+                <Skeleton
+                  variant="circular"
+                  sx={{ height: ".5rem", width: ".5rem" }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
 
+        <Grid item container flexDirection="column">
+          {Array(18)
+            .fill(undefined)
+            .map((item, index) => (
+              <Grid item>
+                <Skeleton
+                  key={index}
+                  variant="text"
+                  sx={{ height: ".8rem", width: "100%" }}
+                />
+              </Grid>
+            ))}
+          <Grid item container flexDirection="column">
+            <Skeleton variant="text" sx={{ height: "30rem", width: "100%" }} />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
 export default Message;

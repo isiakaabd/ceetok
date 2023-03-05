@@ -39,6 +39,8 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     syntax: {
       highlight: (text) => hljs.highlightAuto(text).value,
     },
+
+    // link: true,
   };
 
   const { quill, quillRef } = useQuill({
@@ -69,14 +71,6 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   const token = useSelector((state) => state.auth.token);
   const { setFieldValue, errors, values } = useFormikContext();
 
-  // const theme = 'bubble';
-
-  // Insert Image(selected by user) to quill
-  // const insertToEditor = (url) => {
-  //   const range = quill.getSelection();
-  //   quill.insertEmbed(range.index, "image", url);
-  // };
-
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
   const saveToServer = async (file) => {
     const form = new FormData();
@@ -101,6 +95,12 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
       .catch((err) => toast.error(err));
 
     // insertToEditor(res.uploadedImageUrl);
+  };
+  const addLink = () => {
+    const url = window.prompt("Enter the URL");
+    // const text = quill.getSelection(true).text;
+    quill.format("link", url, "user");
+    quill.formatText(quill.getSelection(), { link: url }, "user");
   };
 
   // Open Dialog to select Image File
@@ -139,6 +139,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     if (quill) {
       // Add custom handler for Image Upload
       quill.getModule("toolbar").addHandler("image", selectLocalImage);
+      quill.getModule("toolbar").addHandler("link", addLink);
     }
 
     //eslint-disable-next-line

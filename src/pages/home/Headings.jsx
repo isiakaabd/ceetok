@@ -4,7 +4,7 @@ import Error from "pages/pages/components/Error";
 import { useGetStatsQuery } from "redux/slices/authSlice";
 const Headings = () => {
   const { data, isLoading, error } = useGetStatsQuery();
-  console.log(data);
+
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { member_count, stats } = data;

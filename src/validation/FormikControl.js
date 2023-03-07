@@ -11,7 +11,7 @@ import SwitchComponent from "./Switch";
 import { UploadComponent } from "./Files";
 import CheckBox from "./Checkboxs";
 import TextArea from "./Textarea";
-// import Files from "./File";
+import Radios from "./Radios";
 // import Files2 from "./File2";
 // import DateTimePicker from "./DateTimePicker";
 
@@ -31,6 +31,8 @@ const FormikControl = ({ control, ...rest }) => {
       return <UploadComponent {...rest} />;
     case "checkbox":
       return <CheckBox {...rest} />;
+    case "radio":
+      return <Radios {...rest} />;
     case "textarea":
       return <TextArea {...rest} />;
     default:

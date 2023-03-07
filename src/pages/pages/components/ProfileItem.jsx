@@ -1,9 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  MailOutline,
-  PersonAddAlt1Outlined,
-  SettingsOutlined,
-} from "@mui/icons-material";
+import { PersonAddAlt1Outlined, SettingsOutlined } from "@mui/icons-material";
 import {
   Avatar,
   ClickAwayListener,
@@ -141,7 +137,6 @@ const ProfileItem = ({ profile }) => {
   };
   const handleSendMail = async (values) => {
     const { subject, body } = values;
-    console.log(id);
     const { data, error } = await sendMail({
       users: [id],
       subject,

@@ -90,9 +90,6 @@ const ProfileDetails = (props) => {
   // listUser({
 
   // })
-  //   }
-
-  // console.log(userProfile.id, dt.id);
 
   useEffect(() => {
     if (id) {

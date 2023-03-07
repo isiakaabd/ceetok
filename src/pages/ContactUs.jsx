@@ -8,6 +8,16 @@ import Linkedin from "assets/svgs/Linkedin";
 import Twitterr from "assets/svgs/Twitterr";
 import Utube from "assets/svgs/Utube";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
+import { useContactAdminMutation } from "redux/slices/authSlice";
+import { toast } from "react-toastify";
+
+const validationSchema = Yup.object({
+  textarea: Yup.string("Enter Your Message").required("Required"),
+  name: Yup.string("Enter Your Name").required("Required"),
+  registration: Yup.string().required("Required"),
+  email: Yup.string().email("Enter Valid Email").required("Required"),
+});
 const ContactUs = () => {
   const arr = [
     {
@@ -36,6 +46,20 @@ const ContactUs = () => {
       link: "#",
     },
   ];
+
+  const [sendAdminMessage, { isLoading }] = useContactAdminMutation();
+  const handleSubmit = async (values, { resetForm }) => {
+    const { textarea, name, email, registration } = values;
+    const { data, error } = await sendAdminMessage({
+      name,
+      email,
+      subject: registration,
+      text: textarea,
+    });
+    if (data) toast.success(data);
+    if (error) toast.success(error);
+    setTimeout(() => resetForm(), 3000);
+  };
   return (
     <Grid
       container
@@ -84,15 +108,14 @@ const ContactUs = () => {
                 Send an Email to the Administrator
               </Typography>
               <Formik
+                onSubmit={handleSubmit}
                 initialValues={{
-                  registration: false,
-                  feedback: false,
+                  registration: "registration",
+                  textarea: "",
                   name: "",
                   email: "",
-                  other: true,
-                  advert: false,
-                  textarea: "",
                 }}
+                validationSchema={validationSchema}
               >
                 <Form>
                   <Grid item container gap={2}>
@@ -116,58 +139,70 @@ const ContactUs = () => {
                         mt: 4,
                         color: "#5F5C5C",
                         textAlign: "justify",
-                        fontSize: { md: "2rem", xs: "1.8rem", sm: "1.4rem" },
+                        fontSize: {
+                          md: "2rem",
+                          xs: "1.8rem",
+                          sm: "1.4rem",
+                        },
                       }}
                       fontWeight={500}
                     >
                       Subject
                     </Typography>
-
-                    <Grid item container flexDirection={"column"} gap={2}>
-                      <Grid item container gap={2} alignItems="center">
+                    <Grid item container flexDirection="column" gap={2}>
+                      <Grid
+                        item
+                        container
+                        flexWrap={{ md: "nowrap", xs: "wrap" }}
+                        gap={1}
+                      >
                         <Grid item>
                           <FormikControl
                             name="registration"
-                            control={"checkbox"}
+                            control={"radio"}
                             label="Registration Problem"
                           />
                         </Grid>
                         <Grid item>
                           <FormikControl
-                            name="feedback"
-                            control={"checkbox"}
+                            name="registration"
+                            control={"radio"}
                             label="Feedback"
                           />
                         </Grid>
-                      </Grid>
-                      <Grid item container gap={2} alignItems="center">
+
                         <Grid item>
                           <FormikControl
-                            name="advert"
-                            control={"checkbox"}
+                            name="registration"
+                            control={"radio"}
                             label="Advert"
                           />
                         </Grid>
                         <Grid item>
                           <FormikControl
-                            name="other"
-                            control={"checkbox"}
+                            name="registration"
+                            control={"radio"}
                             label="Others"
                           />
                         </Grid>
                       </Grid>
+                      {/* </RadioGroup> */}
+
                       <Grid item container>
-                        <Grid item container>
-                          <FormikControl
-                            name="textarea"
-                            control={"textarea"}
-                            rows={8}
-                            placeholder="Enter Message here"
-                          />
-                        </Grid>
+                        <FormikControl
+                          name="textarea"
+                          control={"textarea"}
+                          rows={8}
+                          placeholder="Enter Message here"
+                        />
                       </Grid>
                       <Grid item>
-                        <CustomButton title="Send" borderRadius={"0px"} />
+                        <CustomButton
+                          title="Send"
+                          type="submit"
+                          isSubmitting={isLoading}
+                          borderRadius={"0px"}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>

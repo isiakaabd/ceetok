@@ -185,7 +185,6 @@ const Notifications = (props) => {
               notify_on_replies_to_your_discussions,
             },
           }) => {
-            console.log(email);
             return (
               <Form style={{ width: "100%" }}>
                 <Grid item container gap={2}>

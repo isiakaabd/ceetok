@@ -13,7 +13,6 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import SearchComponent from "./modals/SearchComponent";
 import { Delete, MoreVertOutlined } from "@mui/icons-material";
 import { useGetNotificationsQuery } from "redux/slices/authSlice";
 import Paginations from "./modals/Paginations";
@@ -26,7 +25,6 @@ const Notification = () => {
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -39,7 +37,7 @@ const Notification = () => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, notifications } = data;
-  console.log(data);
+
   return (
     <Grid item container sx={{ p: { md: 4, xs: 1 }, background: "#E5E5E5" }}>
       <Grid
@@ -60,12 +58,6 @@ const Notification = () => {
           <Typography flex={1} variant="h2">
             Notifications
           </Typography>
-          <Grid item sx={{ width: "100%" }} flex={{ xs: 1 }}>
-            <SearchComponent
-              placeholder={"Search Username"}
-              handleSubmit={{}}
-            />
-          </Grid>
         </Grid>
         <Grid item container>
           <Grid md={8} xs={12} sx={{ margin: "auto" }}>
@@ -78,7 +70,7 @@ const Notification = () => {
                     seen,
                     id,
                     owner_type,
-
+                    creator,
                     owner_id,
                   } = item;
                   console.log(item);
@@ -164,10 +156,11 @@ const Notification = () => {
                       >
                         <ListItemAvatar>
                           <Avatar
-                            alt={owner?.full_name}
-                            src={getImage(owner?.avatar)}
+                            alt={owner?.full_name || creator?.full_name}
+                            src={getImage(owner?.avatar || creator?.avatar)}
                           >
-                            {owner?.full_name?.slice(0, 1).toUpperCase()}
+                            {owner?.full_name?.slice(0, 1).toUpperCase() ||
+                              creator?.full_name?.slice(0, 1).toUpperCase()}
                           </Avatar>
                         </ListItemAvatar>
                         {/* <ListItemIcon>

@@ -44,7 +44,7 @@ body {
   width: 100%;
 }
 .ql-text > * {
-  color: rgba(0, 0, 0, 0.87);
+  color: #111b21;
   max-width: 95%;
   word-break: break-all;
   display: inline-block;
@@ -90,4 +90,19 @@ body {
 
 .menu-item-notification {
   box-shadow: none !important;
+}
+.ql-toolbar {
+  width: 100%;
+  position: fixed;
+  position: sticky;
+  background-color: #fff;
+  z-index: 300;
+  top: 0;
+}
+.chat-message > * {
+  color: #111b21 !important;
+  word-wrap: anywhere;
+  white-space: pre-wrap;
+  max-width: max-content;
+  text-align: justify;
 }

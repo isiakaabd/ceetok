@@ -9,25 +9,33 @@ import {
   List,
   Typography,
   Skeleton,
+  Toolbar,
+  AppBar,
 } from "@mui/material";
-import { MoreVertOutlined } from "@mui/icons-material";
+import { MoreVertOutlined, SendOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
 import Editor from "components/Quil";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { CustomButton } from "components";
+import { useEffect, useRef, useState } from "react";
+
 import { useSelector } from "react-redux";
 import { useOtherUserProfileQuery } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { getImage, getTimeMoment } from "helpers";
 import Error from "./components/Error";
+import * as Yup from "yup";
 
+const validationSchema = Yup.object({
+  body: Yup.string("Enter Your Message").required("Required"),
+});
 const Message = () => {
   const ref = useRef(null);
+
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
+
+  const [chats, setChats] = useState(null);
 
   const [socket, setSocket] = useState(null);
   const { data: profile, isLoading, error } = useOtherUserProfileQuery(id);
@@ -49,16 +57,7 @@ const Message = () => {
         toast.success("Connection successful");
         socket.send(JSON.stringify({ type: "init", token }));
         socket.send(JSON.stringify({ type: "chat", token }));
-        if (checkChatHistory.length === 0) {
-          socket.send(
-            JSON.stringify({
-              type: "init_chat",
-              token,
-              user_id: id,
-              message: `<h1> Welcome to Ceektok </h1>`,
-            })
-          );
-        }
+
         socket.send(
           JSON.stringify({
             type: "messages",
@@ -108,6 +107,21 @@ const Message = () => {
     }
     //eslint-disable-next-line
   }, [socket]);
+  useEffect(() => {
+    if (chats && checkChatHistory?.length === 0) {
+      socket.addEventListener("open", () => {
+        socket.send(
+          JSON.stringify({
+            type: "init_chat",
+            token,
+            user_id: id,
+            message: `<h4> Welcome to Ceektok </h4>`,
+          })
+        );
+      });
+    }
+    //eslint-disable-next-line
+  }, [socket, chats]);
 
   const handleSubmit = async (values, { resetForm }) => {
     if (checkChatHistory?.length > 0) {
@@ -120,7 +134,9 @@ const Message = () => {
           message: values.body.trim(),
         })
       );
+      setTimeout(() => resetForm(), 500);
     }
+
     //  else {
     //   socket.send(
     //     JSON.stringify({
@@ -131,8 +147,6 @@ const Message = () => {
     //     })
     //   );
     // }
-
-    setTimeout(() => resetForm(), 500);
   };
   const scrollToBottom = () => {
     ref?.current?.scrollIntoView({ behavior: "smooth" });
@@ -154,39 +168,52 @@ const Message = () => {
       gap={3}
       sx={{
         p: { md: "4rem", xs: "1rem" },
+        pb: 0,
         background: "#E5E5E5",
       }}
     >
-      <Paper sx={{ maxWidth: "100%" }}>
-        <ListItem
-          component="div"
-          secondaryAction={
-            <IconButton edge="end" aria-label="more-icon">
-              <MoreVertOutlined />
-            </IconButton>
-          }
+      <Paper sx={{ maxWidth: "100%", position: "relative" }}>
+        <AppBar
+          position="sticky"
+          sx={{
+            bottom: "auto",
+            background: "#f0f2f5",
+            color: "#111b21",
+            top: 0,
+          }}
         >
-          <ListItemAvatar>
-            <Avatar src={getImage(avatar)} alt={full_name}>
-              {full_name?.slice(0, 1).toUpperCase()}
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Typography variant="h4">{full_name}</Typography>}
-            secondary={
-              <Typography variant="h6">
-                {time === "now" ? "Status:" : "Last Seen: "}
-                {time === "now" ? ` Online` : `${time} ago`}
-              </Typography>
-            }
-          />
-        </ListItem>
+          <Toolbar>
+            <ListItem
+              component="div"
+              secondaryAction={
+                <IconButton edge="end" aria-label="more-icon">
+                  <MoreVertOutlined />
+                </IconButton>
+              }
+            >
+              <ListItemAvatar>
+                <Avatar src={getImage(avatar)} alt={full_name}>
+                  {full_name?.slice(0, 1).toUpperCase()}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Typography variant="h4">{full_name}</Typography>}
+                secondary={
+                  <Typography variant="h6">
+                    {time === "now" ? "Status:" : "Last Seen: "}
+                    {time === "now" ? ` Online` : `${time} ago`}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </Toolbar>
+        </AppBar>
 
         <Grid
           item
           container
           flexDirection={"column"}
-          sx={{ height: "50vh", overflowY: "scroll" }}
+          sx={{ height: "90vh", overflowY: "scroll" }}
         >
           <List
             dense
@@ -197,6 +224,7 @@ const Message = () => {
               wordWrap: "wrap",
               maxWidth: "100%",
               width: "100%",
+              background: "#efeae2",
               display: "flex",
               flexDirection: "column",
 
@@ -227,39 +255,54 @@ const Message = () => {
                 No Message Here, Be the First to Send Message
               </Typography>
             )}
-            <div ref={ref} />
+            <div ref={ref} style={{ background: "#efeae2" }} />
           </List>
         </Grid>
-        <Grid item container sx={{ p: { md: 2, xs: 1 } }}>
-          <Formik initialValues={{ body: "" }} onSubmit={handleSubmit}>
-            {({ isSubmitting }) => (
-              <Form style={{ width: "100%" }}>
-                <Grid item container flexDirection={"column"} gap={4}>
-                  <Grid item>
-                    <Editor name="body" />
+        <AppBar
+          position="sticky"
+          sx={{ top: "auto", background: "#f0f2f5", bottom: 0 }}
+        >
+          <Toolbar>
+            <Grid item container sx={{ p: { md: 2, xs: 1 } }}>
+              <Formik
+                initialValues={{ body: "" }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                <Form style={{ width: "100%" }}>
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    gap={{ md: 4, xs: 1 }}
+                  >
+                    <Grid item flex={1}>
+                      <Editor name="body" value="" />
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        siz={{ md: "large", xs: "small" }}
+                        type="submit"
+                        role="button"
+                      >
+                        <SendOutlined
+                          sx={{ fontSize: { md: "3rem", xs: "2rem" } }}
+                        />
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <CustomButton
-                      title={"Send"}
-                      isSubmitting={isSubmitting}
-                      type="submit"
-                    />
-                  </Grid>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
-        </Grid>
+                </Form>
+              </Formik>
+            </Grid>
+          </Toolbar>
+        </AppBar>
       </Paper>
     </Grid>
   );
 };
 function SingleChat({ messages, id, sender_id }) {
-  const message = parse(messages?.message);
-  // const messageLength = messages.message.length;
-  // const initial = 500;
-  // const [count, setCount] = useState(initial);
-
+  const { createdAt, message: mess } = messages;
+  const message = parse(mess);
   return (
     <ListItem
       disableGutters
@@ -268,46 +311,43 @@ function SingleChat({ messages, id, sender_id }) {
         "&.MuiListItem-root": {
           paddingInline: ".6rem",
         },
-
+        boxShadow: "0 1px .5px rgba(11,20,26,.13)",
         my: ".5rem",
         border: "1px solid #9B9A9A",
         borderRadius: ".7rem",
         maxWidth: "max-content",
 
         marginLeft: sender_id === id ? null : "auto",
-        backgroundColor: sender_id === id ? "#37D42A" : "#000",
-        borderColor: sender_id === id ? "#37D42A" : "#000",
-        color: "#fff",
+        backgroundColor: sender_id === id ? "#fff" : "#d9fdd3",
+        borderColor: sender_id === id ? "#fff" : "#d9fdd3",
+        color: "#11b211",
         width: { md: "45%", xs: "70%", sm: "60%" },
       }}
     >
       <ListItemText
-        primaryTypographyProps={{ fontWeight: 600 }}
+        primaryTypographyProps={{ fontWeight: 600, color: "#11b211" }}
         primary={
-          <Fragment>
+          <Grid item container gap={1}>
             <M message={message} />
-            {/* {messageLength > initial && (
-              <Typography
-                onClick={() => {
-                  if (messageLength - initial < initial) {
-                    setCount(messageLength);
-                  } else setCount(count + initial);
-                }}
-                sx={{ cursor: "pointer" }}
-                color="error"
-                variant="span"
-              >
-                ...Read More
-              </Typography>
-            )} */}
-          </Fragment>
+            <Typography
+              fontSize={"1rem"}
+              sx={{
+                ml: "auto",
+                color: "#667781",
+                pl: 1,
+                alignSelf: "flex-end",
+              }}
+            >
+              {getTimeMoment(createdAt)}
+            </Typography>
+          </Grid>
         }
       />
     </ListItem>
   );
 }
 const M = ({ message }) => {
-  return message;
+  return <p className="chat-message">{message}</p>;
 };
 function Skeletons() {
   return (
@@ -353,10 +393,9 @@ function Skeletons() {
         <Grid item container flexDirection="column">
           {Array(18)
             .fill(undefined)
-            .map((item, index) => (
-              <Grid item>
+            .map((_, index) => (
+              <Grid item key={index}>
                 <Skeleton
-                  key={index}
                   variant="text"
                   sx={{ height: ".8rem", width: "100%" }}
                 />

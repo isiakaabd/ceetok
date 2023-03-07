@@ -68,7 +68,7 @@ const CreatePost = ({
     category: data?.category,
     text: data?.body,
   };
-  // console.log(data.body);
+
   const handleEditPost = async (values, onSubmitProps) => {
     const { title, category, text } = values;
     const details = {

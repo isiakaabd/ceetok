@@ -26,7 +26,6 @@ const Likes = () => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, likes } = data;
-
   return (
     <Grid
       item
@@ -91,7 +90,9 @@ const Likes = () => {
                         }}
                         className="likes-content"
                       >
-                        {parse(parent?.comment || parent?.body)}
+                        {parse(
+                          parent?.comment || parent?.body || "Nothing here..."
+                        )}
                       </Typography>
                     }
                   />

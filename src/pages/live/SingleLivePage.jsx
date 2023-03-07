@@ -96,7 +96,6 @@ const SingleLivePage = () => {
     summary,
     id,
   } = post;
-  console.log(media);
   const handleInteraction = async () => {
     const { data, error } = await editLive({
       id,

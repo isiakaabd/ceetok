@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Grid, Typography } from "@mui/material";
 import { useQuill } from "react-quilljs";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -7,7 +6,6 @@ import javascript from "highlight.js/lib/languages/javascript";
 import BlotFormatter from "quill-blot-formatter";
 import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-// import "highlight.js/styles/tomorrow-night.css";
 import { useFormikContext } from "formik/dist";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
@@ -131,10 +129,11 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     }
   }, [value, quill]);
   useEffect(() => {
-    if (quill && !values[name]) {
+    if (quill && values[name] === "") {
       quill.setContents([{ insert: "\n" }]);
+      // setFieldError(name, "required");
     }
-  }, [values, quill, name]);
+  }, [quill, values, name]);
   useEffect(() => {
     if (quill) {
       // Add custom handler for Image Upload
@@ -148,22 +147,33 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
 
   return (
     <>
-      <Grid
+      <div
         item
         container
-        sx={{ border: "2px solid #C4C4C4", borderRadius: "1.2rem" }}
+        style={{
+          border: ".5px solid #C4C4C4",
+          maxHeight: "12rem",
+          borderRadius: "1.2rem",
+          overflowY: "scroll",
+          position: "relative",
+          "&::-webkit-scrollbar": {
+            width: ".85rem",
+            display: "none",
+          },
+          scrollbarColor: "transparent",
+        }}
         flexDirection="column"
       >
-        <Grid ref={quillRef} onClick={(e) => e.stopPropagation()} />
+        <div ref={quillRef} style={{ position: "relative" }} />
 
-        <Typography
+        {/* <Typography
           color="#9B9A9A"
           component="div"
-          sx={{ p: 2, fontSize: { md: "1.3rem", sm: "1rem" } }}
+          sx={{ p: 1, fontSize: { md: "1.3rem", sm: "1rem" } }}
         >
           Message
-        </Typography>
-      </Grid>
+        </Typography> */}
+      </div>
       {errors[name] && <TextError>{errors[name]}</TextError>}
     </>
   );

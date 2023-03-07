@@ -49,7 +49,6 @@ const ReplyComment = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const { data: mainComment, isLoading, error } = useGetSingleCommentQuery(id);
-  console.log(mainComment, error);
 
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();

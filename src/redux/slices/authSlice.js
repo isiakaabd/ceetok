@@ -214,6 +214,16 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
+    contactAdmin: builder.mutation({
+      query: (body) => ({
+        url: `/open/contact-us`,
+        method: "POST",
+        body,
+      }),
+
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -222,6 +232,7 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useBlockUserMutation,
+  useContactAdminMutation,
   useListUsersQuery,
   useLazyListUsersQuery,
   useForgotPasswordMutation,

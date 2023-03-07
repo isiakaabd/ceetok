@@ -1,6 +1,13 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Skeleton, Typography } from "@mui/material";
 import { getDate, getTime } from "helpers";
+import Error from "pages/pages/components/Error";
+import { useGetStatsQuery } from "redux/slices/authSlice";
 const Headings = () => {
+  const { data, isLoading, error } = useGetStatsQuery();
+  console.log(data);
+  if (isLoading) return <Skeletons />;
+  if (error) return <Error />;
+  const { member_count, stats } = data;
   return (
     <Grid
       item
@@ -25,7 +32,7 @@ const Headings = () => {
           container
           justifyContent={"center"}
           gap={3}
-          sx={{ fontSize: "clamp(1rem, 8vw, 1.2rem)" }}
+          sx={{ fontSize: "clamp(1.2rem, 8vw, 1.6rem)" }}
         >
           <Typography style={{ fontWeight: 700, font: "inherit" }}>
             Stats:{" "}
@@ -33,7 +40,7 @@ const Headings = () => {
               variant="span"
               style={{ fontWeight: 500, font: "inherit" }}
             >
-              2,943,466
+              {stats || 0}
             </Typography>{" "}
           </Typography>
           <Typography style={{ fontWeight: 700, font: "inherit" }}>
@@ -42,7 +49,7 @@ const Headings = () => {
               variant="span"
               style={{ fontWeight: 500, font: "inherit" }}
             >
-              7,128,053 topics.
+              {member_count || 0}
             </Typography>
           </Typography>
           <Typography style={{ fontWeight: 700, font: "inherit" }}>
@@ -70,4 +77,11 @@ const Headings = () => {
   );
 };
 
+function Skeletons() {
+  return (
+    <Grid item container sx={{ height: "14rem" }}>
+      <Skeleton variant="rounded" sx={{ height: "100%", width: "100%" }} />
+    </Grid>
+  );
+}
 export default Headings;

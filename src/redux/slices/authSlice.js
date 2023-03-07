@@ -224,11 +224,21 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getStats: builder.query({
+      query: () => ({
+        url: `/open/stats`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
 export const {
   useChangePasswordMutation,
+  useGetStatsQuery,
   useRegisterMutation,
   useLoginMutation,
   useBlockUserMutation,

@@ -73,7 +73,7 @@ const Notification = () => {
                     creator,
                     owner_id,
                   } = item;
-                  console.log(item);
+
                   return (
                     <ListItem
                       dense

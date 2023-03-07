@@ -25,13 +25,13 @@ import { useParams } from "react-router-dom";
 import { getImage, getTimeMoment } from "helpers";
 import Error from "./components/Error";
 import * as Yup from "yup";
-
+import { useQuill } from "react-quilljs";
 const validationSchema = Yup.object({
   body: Yup.string("Enter Your Message").required("Required"),
 });
 const Message = () => {
   const ref = useRef(null);
-
+  const { quill, quillRef } = useQuill();
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
 
@@ -123,7 +123,8 @@ const Message = () => {
     //eslint-disable-next-line
   }, [socket, chats]);
 
-  const handleSubmit = async (values, { resetForm }) => {
+  const handleSubmit = async (values, props) => {
+    console.log(props);
     if (checkChatHistory?.length > 0) {
       const details = checkChatHistory[0];
       socket.send(
@@ -134,7 +135,9 @@ const Message = () => {
           message: values.body.trim(),
         })
       );
-      setTimeout(() => resetForm(), 500);
+      // quill.setContents([{ insert: "\n" }]);
+      props.setFieldValue("body", "");
+      setTimeout(() => props.resetForm(), 500);
     }
 
     //  else {

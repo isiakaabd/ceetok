@@ -11,6 +11,12 @@ import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 Quill.register(BlotFormatter, true);
+// const validation = Yup.object({
+//   title: Yup.string("Enter Title").required("Required"),
+//   category: Yup.string("Enter Category").required("Required"),
+//   text: Yup.string("Enter Category").required("Required"),
+//   // name: Yup.string("Enter Your name").required("Name is ").trim(),
+// });
 
 hljs.registerLanguage("javascript", javascript);
 const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
@@ -133,7 +139,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
       quill.setContents([{ insert: "\n" }]);
       // setFieldError(name, "required");
     }
-  }, [quill, values, name]);
+  }, [values, name, quill]);
   useEffect(() => {
     if (quill) {
       // Add custom handler for Image Upload

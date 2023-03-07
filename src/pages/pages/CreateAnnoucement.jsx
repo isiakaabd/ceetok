@@ -12,12 +12,6 @@ import ChipItems from "components/ChipItems";
 import PaymentModal from "components/modals/PaymentModal";
 
 const CreateAnnoucement = ({ handleClose, open, title, data }) => {
-  // const validation = Yup.object({
-  //   title: Yup.string("Enter Title").required("Required"),
-  //   category: Yup.string("Enter Category").required("Required"),
-  //   text: Yup.string("Enter Category").required("Required"),
-  //   // name: Yup.string("Enter Your name").required("Name is ").trim(),
-  // });
   //   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const handleCloseModal = () => setOpenModal(false);

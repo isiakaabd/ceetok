@@ -159,7 +159,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
         container
         style={{
           border: ".5px solid #C4C4C4",
-          maxHeight: "12rem",
+          maxHeight: "15rem",
           borderRadius: "1.2rem",
           overflowY: "scroll",
           position: "relative",

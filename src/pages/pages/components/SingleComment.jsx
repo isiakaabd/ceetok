@@ -525,8 +525,8 @@ function Detail({ item }) {
             />
 
             <StyledButton
-              onClick={() => {
-                token ? handleLikePost() : setIsLogin(true);
+              onClick={(e) => {
+                token ? handleLikePost(e) : setIsLogin(true);
               }}
               color={likeState ? "#f00" : ""}
               Icon={

@@ -128,8 +128,17 @@ const UserProfile = ({ data }) => {
         </Grid>
       </Grid>
 
-      <PopOvers anchorRef={anchorRef} open={open} setOpen={setOpen}>
-        <Grid item container flexDirection="column" sx={{ px: 1 }}>
+      <PopOvers
+        anchorRef={anchorRef}
+        open={open}
+        setOpen={setOpen}
+        sx={{
+          "& .MuiPopper-root": {
+            zIndex: 500,
+          },
+        }}
+      >
+        <Grid item container flexDirection="column" sx={{ px: 1, zIndex: 900 }}>
           <Grid item sx={{ marginLeft: "auto" }}>
             <IconButton onClick={handleClose}>
               <CloseOutlined />

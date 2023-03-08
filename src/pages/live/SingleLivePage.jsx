@@ -54,6 +54,7 @@ const SingleLivePage = () => {
   const [editLive, { isLoading }] = useEditLivePostMutation();
   const [likePost] = useLikeAndUnlikePostMutation();
   const [state, setState] = useState(true);
+  const token = useSelector((state) => state.auth.token);
   if (loading) return <Skeleton />;
   if (error) return <Error />;
   const handleSubmit = async (values, onSubmitProps) => {
@@ -96,6 +97,7 @@ const SingleLivePage = () => {
     summary,
     id,
   } = post;
+  console.log(views);
   const handleInteraction = async () => {
     const { data, error } = await editLive({
       id,
@@ -153,6 +155,8 @@ const SingleLivePage = () => {
     }
     if (error) toast.error(error);
   };
+  const viewers = views?.filter((value) => value.viewer !== "guest");
+  console.log(viewers);
   return (
     <>
       <Grid
@@ -162,7 +166,8 @@ const SingleLivePage = () => {
         gap={3}
         sx={{
           p: { md: "4rem", xs: "1rem" },
-          background: "#E5E5E5",
+          background: "#fff",
+          //  "#E5E5E5",
         }}
       >
         <Grid item container>
@@ -305,12 +310,13 @@ const SingleLivePage = () => {
             src={
               media?.length > 0
                 ? getImage(media[0]?.storage_path)
-                : images.adeleke
+                : images.defaults
             }
             style={{
               objectFit: "contain",
               width: "100%",
-              height: "10rem",
+              maxWidth: "100%",
+              height: "auto",
             }}
             alt={title}
           />
@@ -337,7 +343,7 @@ const SingleLivePage = () => {
           state={state}
           setState={setState}
         />
-        {allow_interaction ? (
+        {allow_interaction && token ? (
           <Grid
             sx={{
               mt: { md: 3, xs: 1.5 },
@@ -398,23 +404,23 @@ const SingleLivePage = () => {
             </Typography>
           </Grid>
         )}
-        <Grid item container alignItems="center">
-          <Typography
-            variant="span"
-            color="#FF9B04"
-            fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-          >
-            Viewing this Topic: &nbsp;&nbsp;
-          </Typography>
-          <Grid item>
-            <Grid container>
-              {views
-                ?.filter((value) => value.viewer !== "guest")
-                ?.slice(0, 50)
-                ?.map((item, index) => (
+        {viewers?.length > 0 && (
+          <Grid item container alignItems="center">
+            <Typography
+              variant="span"
+              color="#FF9B04"
+              fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+            >
+              Viewing this Topic: &nbsp;&nbsp;
+            </Typography>
+            <Grid item>
+              <Grid container>
+                {viewers?.slice(0, 50)?.map((item, index) => (
                   <Typography
                     component={Link}
-                    to={`/user/profile/?id=${item.viewer?.user_id}`}
+                    to={
+                      token ? `/user/profile/?id=${item.viewer?.user_id}` : null
+                    }
                     key={index}
                     sx={{ width: "max-content", mr: 0.5 }}
                     color="secondary"
@@ -423,19 +429,19 @@ const SingleLivePage = () => {
                     {item.viewer.full_name},
                   </Typography>
                 ))}
-              {views?.filter((value) => value.viewer !== "guest").length >
-              50 ? (
-                <Typography
-                  variant="span"
-                  color="#FF9B04"
-                  fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                >
-                  {`and ${views.length - 50}  guests`}
-                </Typography>
-              ) : null}
+                {viewers.length > 50 ? (
+                  <Typography
+                    variant="span"
+                    color="#FF9B04"
+                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                  >
+                    {`and ${viewers.length - 50}  guests`}
+                  </Typography>
+                ) : null}
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
       <CreatePost
         open={editModal}

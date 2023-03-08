@@ -60,6 +60,7 @@ import {
   useEditQuoteMutation,
 } from "redux/slices/quoteSlice";
 import { useSelector } from "react-redux";
+import LoginModal from "components/modals/LoginModal";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -149,6 +150,8 @@ export function Image({ person: { user } }) {
 export function Text({ item, profile, displayDetail, type }) {
   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
     item;
+  const [isLogin, setIsLogin] = useState(false);
+  const token = useSelector((state) => state.auth.token);
   const admin = useSelector((state) => state.auth.admin);
   const { full_name, is_followed, is_blocked_by_me } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
@@ -288,121 +291,124 @@ export function Text({ item, profile, displayDetail, type }) {
                     Edited
                   </Typography>
                 )}
-                <Grid item sx={{ ml: "auto" }}>
-                  <IconButton
-                    edge="start"
-                    id="basic-button"
-                    aria-controls={opens ? "basic-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={opens ? "true" : undefined}
-                    onClick={handleClick}
-                    sx={{ ml: { xs: "1rem" } }}
-                    //  sx={{ visibility: !check && "hidden" }}
-                  >
-                    <MoreVertOutlined />
-                  </IconButton>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={opens}
-                    onClose={handleCloses}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                  >
-                    {!check && (
-                      <MenuItem
-                        onClick={handleDeleteComment}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        disabled={check}
-                      >
-                        <ListItemIcon>
-                          <Delete sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
+                {token && (
+                  <Grid item sx={{ ml: "auto" }}>
+                    <IconButton
+                      edge="start"
+                      id="basic-button"
+                      aria-controls={opens ? "basic-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={opens ? "true" : undefined}
+                      onClick={handleClick}
+                      sx={{ ml: { xs: "1rem" } }}
+                      //  sx={{ visibility: !check && "hidden" }}
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={opens}
+                      onClose={handleCloses}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      {!check && (
+                        <MenuItem
+                          onClick={handleDeleteComment}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          disabled={check}
+                        >
+                          <ListItemIcon>
+                            <Delete sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
 
-                        <ListItemText sx={{ fontSize: "3rem" }}>
-                          {isLoading || deleting ? "Deleting" : "Delete"}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {!check && (
-                      <MenuItem
-                        onClick={handleEditComment}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        disabled={check}
-                      >
-                        <ListItemIcon>
-                          <Edit sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
+                          <ListItemText sx={{ fontSize: "3rem" }}>
+                            {isLoading || deleting ? "Deleting" : "Delete"}
+                          </ListItemText>
+                        </MenuItem>
+                      )}
+                      {!check && (
+                        <MenuItem
+                          onClick={handleEditComment}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          disabled={check}
+                        >
+                          <ListItemIcon>
+                            <Edit sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
 
-                        <ListItemText sx={{ fontSize: "3rem" }}>
-                          Edit
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && !admin && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={(e) => {
-                          handleCloses(e);
-                          setOpenReport(true);
-                        }}
-                      >
-                        <ListItemIcon>
-                          <ReportOutlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>Report</ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={handleBlockUser}
-                      >
-                        <ListItemIcon>
-                          <BlockOutlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>
-                          {blocking
-                            ? "Blocking..."
-                            : unblocking
-                            ? "Unblocking..."
-                            : `${is_blocked_by_me ? "Unblock" : "Block"} User`}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={handleFollowUser}
-                      >
-                        <ListItemIcon>
-                          <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>
-                          {following
-                            ? "Following"
-                            : `${is_followed ? "Unfollow" : "Follow"} User`}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                  </Menu>
-                </Grid>
+                          <ListItemText sx={{ fontSize: "3rem" }}>
+                            Edit
+                          </ListItemText>
+                        </MenuItem>
+                      )}
+                      {check && !admin && (
+                        <MenuItem
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onClick={(e) => {
+                            token ? setOpenReport(true) : handleCloses(e);
+                          }}
+                        >
+                          <ListItemIcon>
+                            <ReportOutlined sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
+                          <ListItemText>Report</ListItemText>
+                        </MenuItem>
+                      )}
+                      {check && (
+                        <MenuItem
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onClick={handleBlockUser}
+                        >
+                          <ListItemIcon>
+                            <BlockOutlined sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
+                          <ListItemText>
+                            {blocking
+                              ? "Blocking..."
+                              : unblocking
+                              ? "Unblocking..."
+                              : `${
+                                  is_blocked_by_me ? "Unblock" : "Block"
+                                } User`}
+                          </ListItemText>
+                        </MenuItem>
+                      )}
+                      {check && (
+                        <MenuItem
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onClick={handleFollowUser}
+                        >
+                          <ListItemIcon>
+                            <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
+                          </ListItemIcon>
+                          <ListItemText>
+                            {following
+                              ? "Following"
+                              : `${is_followed ? "Unfollow" : "Follow"} User`}
+                          </ListItemText>
+                        </MenuItem>
+                      )}
+                    </Menu>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
 
@@ -459,6 +465,14 @@ export function Text({ item, profile, displayDetail, type }) {
           setOpen(false);
         }}
       />
+      {isLogin && (
+        <LoginModal
+          handleClose={() => setIsLogin(false)}
+          setIsLogin={setIsLogin}
+          // handleRegisterOpen={handleRegisterOpen}
+          isLogin={isLogin}
+        />
+      )}
     </>
   );
 }
@@ -467,7 +481,8 @@ Text.defaultProps = {
 };
 function Detail({ item }) {
   const { id, recent_quotes, quotes_count, likes_count } = item;
-
+  const token = useSelector((state) => state.auth.token);
+  const [isLogin, setIsLogin] = useState(false);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
   const { data: repliedComment } = useGetPostCommentsQuery({
@@ -493,42 +508,51 @@ function Detail({ item }) {
 
   return (
     <>
-      <Grid item container justifyContent="space-between" flexWrap="nowrap">
-        <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
-          <StyledButton
-            text={repliedComment?.length}
-            onClick={(e) => {
-              navigate(`/user/comment/?id=${id}`);
-            }}
-            Icon={<ChatBubbleOutline />}
-          />
+      <Grid item md={6} xs={8}>
+        <Grid item container justifyContent="space-between" flexWrap="nowrap">
+          <Grid
+            item
+            container
+            flexWrap="nowrap"
+            justifyContent={"space-between"}
+          >
+            <StyledButton
+              text={repliedComment?.length}
+              onClick={(e) => {
+                token ? navigate(`/user/comment/?id=${id}`) : setIsLogin(true);
+              }}
+              Icon={<ChatBubbleOutline />}
+            />
 
-          <StyledButton
-            onClick={handleLikePost}
-            color={likeState ? "#f00" : ""}
-            Icon={
-              likeState ? (
-                <Favorite sx={{ fill: "#f00" }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )
-            }
-            text={likes_count}
-          />
-          <StyledButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpenQuoteModal(true);
-            }}
-            Icon={<Quotes />}
-            text={quotes_count}
-          />
+            <StyledButton
+              onClick={() => {
+                token ? handleLikePost() : setIsLogin(true);
+              }}
+              color={likeState ? "#f00" : ""}
+              Icon={
+                likeState ? (
+                  <Favorite sx={{ fill: "#f00" }} />
+                ) : (
+                  <FavoriteBorderOutlined />
+                )
+              }
+              text={likes_count}
+            />
+            <StyledButton
+              onClick={(e) => {
+                e.stopPropagation();
+                token ? setOpenQuoteModal(true) : setIsLogin(true);
+              }}
+              Icon={<Quotes />}
+              text={quotes_count}
+            />
 
-          <StyledButton
-            text="Share"
-            Icon={<IosShareOutlined />}
-            onClick={(e) => e.stopPropagation()}
-          />
+            <StyledButton
+              text="Share"
+              Icon={<IosShareOutlined />}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </Grid>
         </Grid>
       </Grid>
       <Grid item container flexDirection={"column"} sx={{ mt: 3 }}>
@@ -589,6 +613,14 @@ function Detail({ item }) {
         handleClose={(e) => setOpenQuoteModal(false)}
         item={item}
       />
+      {isLogin && (
+        <LoginModal
+          handleClose={() => setIsLogin(false)}
+          setIsLogin={setIsLogin}
+          // handleRegisterOpen={handleRegisterOpen}
+          isLogin={isLogin}
+        />
+      )}
     </>
   );
 }

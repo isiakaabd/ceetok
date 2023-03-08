@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import CreatePost from "pages/user/modals/CreatePost";
 import { useGetLivePostsQuery } from "redux/slices/adminSlice";
 import { getImage } from "helpers";
+import Error from "pages/pages/components/Error";
 const Live = () => {
   const theme = useTheme();
   const admin = useSelector((state) => state.auth.admin);
@@ -35,17 +36,14 @@ const Live = () => {
 
   const [open, setOpen] = useState(false);
   if (isLoading) return <Skeletons />;
-  // if (error)
-  //   return (
-  //     <Typography variant="h2" textAlign="center">
-  //       {error || "Something went Wrong..."}
-  //     </Typography>
-  //   );
-  // const {
+  if (error) <Error />;
+  const {
+    body: { pinned, posts },
+    message,
+  } = array;
 
-  //   posts,
-  // } = array;
-  const summaries = array?.posts.filter((item) => item.summary);
+  const summaries = posts?.filter((item) => item.summary);
+
   const truncate = (words, maxlength) => {
     if (words.split("").length > maxlength) {
       return `${words.slice(0, maxlength)}…`;
@@ -65,8 +63,8 @@ const Live = () => {
             p: { md: 4, xs: 2 },
             pb: { md: 0, xs: 3 },
             backgroundImage: `url(${
-              array?.pinned?.media?.length > 0 &&
-              getImage(array?.pinned?.media[0]?.storage_path)
+              pinned?.media?.length > 0 &&
+              getImage(pinned?.media[0]?.storage_path)
             })`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -104,30 +102,33 @@ const Live = () => {
             sx={{ alignSelf: "flex-end", flexDirection: "column" }}
           >
             <Grid item>
-              <Grid container alignItems={"center"} gap={2} sx={{ pb: 3 }}>
-                <RemoveRedEyeOutlined sx={{ color: "#fff" }} />{" "}
-                <Typography
-                  color="#fff"
-                  fontSize={{ md: "1.9rem", xs: "1rem" }}
-                  fontWeight={400}
-                >
-                  <Typography fontWeight={700} variant="span">
-                    {array?.pinned?.views_count || 0}
-                  </Typography>{" "}
-                  viewing this page
-                </Typography>
-              </Grid>
+              {posts.length > 0 && (
+                <Grid container alignItems={"center"} gap={2} sx={{ pb: 3 }}>
+                  <RemoveRedEyeOutlined sx={{ color: "#fff" }} />{" "}
+                  <Typography
+                    color="#fff"
+                    fontSize={{ md: "1.9rem", xs: "1rem" }}
+                    fontWeight={400}
+                  >
+                    <Typography fontWeight={700} variant="span">
+                      {pinned?.views_count || 0}
+                    </Typography>{" "}
+                    viewing this page
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
             <Typography
               color={"#fff"}
               fontWeight={700}
               fontSize={{ md: "5rem", xs: "1.5rem" }}
-              component={!error && Link}
-              to={array?.pinned?.slug || "#"}
+              component={pinned?.title && Link}
+              to={pinned?.slug || "#"}
             >
-              {array?.pinned?.title
-                ? parse(array?.pinned?.title)
-                : error && "Something went wrong"}
+              {pinned?.title
+                ? parse(pinned?.title)
+                : posts?.length === 0 && message}
+              {/* // : error && "Something went wrong"} */}
             </Typography>
           </Grid>
         </Grid>
@@ -194,7 +195,7 @@ const Live = () => {
               }}
               alignItems={"center"}
             >
-              {!error ? (
+              {posts.length > 0 ? (
                 <Grid item container flexDirection={"column"} flex={1}>
                   <Typography
                     sx={{ fontSize: { md: "3rem", xs: "1.8rem", sm: "2rem" } }}
@@ -228,13 +229,13 @@ const Live = () => {
                       fontSize: { md: "1.5rem", xs: "1.2rem" },
                     }}
                     onClick={() => setOpen(true)}
-                    title={error ? "Go Live" : "Get Involved"}
+                    title={posts.length > 0 ? "Go Live" : "Get Involved"}
                   />
                 </Grid>
               )}
             </Grid>
             <Grid item container sx={{ height: "100%" }}>
-              {array?.posts?.length > 0 ? (
+              {posts?.length > 0 ? (
                 <List
                   item
                   gap={3}
@@ -248,7 +249,7 @@ const Live = () => {
                     },
                   }}
                 >
-                  {array?.posts?.map((item, index) => (
+                  {posts?.map((item, index) => (
                     <ListItem item key={index}>
                       <ListItemButton
                         alignItems="flex-start"

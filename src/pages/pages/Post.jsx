@@ -23,6 +23,7 @@ import SocialMedia from "components/modals/SocialMedia";
 import Quotes from "assets/svgs/Quote";
 import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
+import { useSelector } from "react-redux";
 
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
@@ -169,7 +170,7 @@ export const Details = ({
 const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
-
+  const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
   const [createQuote] = useCreateQuoteMutation();
@@ -223,6 +224,7 @@ const Post = () => {
     text: `${baseUrl}/post/${slug}`,
     title: "Link",
   };
+  const viewers = recent_views?.filter((value) => value.viewer !== "guest");
   return (
     <>
       <Grid item container gap={2} flexWrap="nowrap">
@@ -293,7 +295,7 @@ const Post = () => {
                 }}
                 variant="outlined"
               >
-                Other Conversation
+                Other Conversations
               </Button>
             </Grid>
             {state ? (
@@ -307,7 +309,7 @@ const Post = () => {
               <OtherConversation />
             )}
           </Grid>
-          {state && (
+          {state && token && (
             <Grid
               sx={{
                 mt: { md: 3, xs: 1.5 },
@@ -361,7 +363,7 @@ const Post = () => {
               </Formik>
             </Grid>
           )}
-          {state && (
+          {state && viewers.length > 0 && (
             <Grid
               item
               container
@@ -377,33 +379,30 @@ const Post = () => {
               </Typography>
               <Grid item>
                 <Grid container>
-                  {recent_views
-                    ?.slice(0, 50)
-                    ?.filter((value) => value.viewer !== "guest")
-                    .map((item, index) => (
-                      <Typography
-                        component={Link}
-                        to={`/user/profile/?id=${item.viewer?.id}`}
-                        key={index}
-                        sx={{ width: "max-content", mr: 0.5 }}
-                        color="secondary"
-                        fontSize={{
-                          md: "1.8rem",
-                          xs: "1.5rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {item.viewer.full_name},
-                      </Typography>
-                    ))}
+                  {viewers?.slice(0, 50).map((item, index) => (
+                    <Typography
+                      component={Link}
+                      to={`/user/profile/?id=${item.viewer?.id}`}
+                      key={index}
+                      sx={{ width: "max-content", mr: 0.5 }}
+                      color="secondary"
+                      fontSize={{
+                        md: "1.8rem",
+                        xs: "1.5rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {item.viewer.full_name},
+                    </Typography>
+                  ))}
 
-                  {views_count?.length > 50 ? (
+                  {viewers?.length > 50 ? (
                     <Typography
                       variant="span"
                       color="#FF9B04"
                       fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
                     >
-                      {`and ${views_count - 50}  guests`}
+                      {`and ${viewers - 50}  guests`}
                     </Typography>
                   ) : null}
                 </Grid>

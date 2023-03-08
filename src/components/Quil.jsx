@@ -112,6 +112,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
+    input.setAttribute("multiple", true);
     input.click();
 
     input.onchange = (e) => {

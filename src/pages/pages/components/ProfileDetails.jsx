@@ -210,19 +210,23 @@ const ProfileDetails = (props) => {
                 )}
                 {condition && (
                   <Grid item>
-                    <Grid container alignItems="center">
-                      <Typography
+                    {/* <Grid container alignItems="center"> */}
+                    {/* <Typography
                         color="#9B9A9A"
                         // variant="span"
                         fontWeight={500}
-                        fontSize="1rem"
+                        fontSize="2rem"
                       >
                         Edit
-                      </Typography>{" "}
-                      <IconButton onClick={() => setOpen(true)}>
-                        <Pen sx={{ color: "#9B9A9A", fontSize: "1rem" }} />
-                      </IconButton>
-                    </Grid>
+                      </Typography>{" "} */}
+                    <IconButton
+                      onClick={() => setOpen(true)}
+                      size="small"
+                      edge="start"
+                    >
+                      <Pen sx={{ color: "#9B9A9A", fontSize: "1.8rem" }} />
+                    </IconButton>
+                    {/* </Grid> */}
                   </Grid>
                 )}
               </Grid>

@@ -37,6 +37,7 @@ import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import { Details } from "../Post";
 import {
+  useLazyUserProfileQuery,
   useUserProfileQuery,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
@@ -45,12 +46,20 @@ import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
+import images from "assets";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, recent_quotes, recent_comments, media } =
     data;
 
   const navigate = useNavigate();
-  const { data: profile, isLoading } = useUserProfileQuery();
+  const token = useSelector((state) => state.auth.token);
+  const [getProfile, { data: profile, isLoading }] = useLazyUserProfileQuery();
+  useEffect(() => {
+    if (token) {
+      getProfile();
+    }
+    //eslint-disable-next-line
+  }, [token]);
   const admin = useSelector((state) => state.auth.admin);
   const [open, setOpen] = useState(false);
   const [approvePost, { isLoading: approvalLoading }] =
@@ -138,11 +147,11 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   ];
   const [likePost] = useLikeAndUnlikePostMutation();
   if (isLoading) return <Skeleton />;
-
-  const check = profile?.interests?.includes(category?.toLowerCase());
+  const { defaults } = images;
 
   const checkUser = profile?.id === user_id;
 
+  const check = profile?.interests?.includes(category?.toLowerCase());
   async function handleCheck() {
     const { interests } = profile;
     if (!check) {
@@ -222,11 +231,15 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                         border="2px solid #fff"
                         options={[
                           {
-                            label: "Male",
+                            label: "2 Weeks",
                             value: "Male",
                           },
                           {
-                            label: "Female",
+                            label: "3 Weeks",
+                            value: "Female",
+                          },
+                          {
+                            label: "Today",
                             value: "Female",
                           },
                         ]}
@@ -255,11 +268,13 @@ export const Comment = ({ handleShare, data, state, setState }) => {
           </Grid>
         </Grid>
         {/* user Profile */}
+        {/* {token && ( */}
         <Grid item md={12} xs={12} sm={12} sx={{ my: 3 }}>
           <UserProfile data={data} />
         </Grid>
+        {/* )} */}
       </Grid>
-      <Grid item md={8} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
+      <Grid item md={9} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
         <Grid
           container
           alignItems="center"
@@ -274,28 +289,37 @@ export const Comment = ({ handleShare, data, state, setState }) => {
           >
             {category}
           </Typography>
-          <Tooltips title={check ? "unfollow" : "Follow"}>
-            <Typography
-              fontWeight={500}
-              component="a"
-              onClick={handleCheck}
-              sx={{ display: "flex", cursor: "pointer", alignItems: "center" }}
-              fontSize="2rem"
-              color={check ? "#37D42A" : "#FF9B04"}
-            >
-              {updating ? "Updating..." : check ? "Followed" : "Follow"}
-              {check && <VerifiedOutlined />}
-            </Typography>
-          </Tooltips>
+          {token && (
+            <Tooltips title={check ? "unfollow" : "Follow"}>
+              <Typography
+                fontWeight={500}
+                component="a"
+                onClick={handleCheck}
+                sx={{
+                  display: "flex",
+                  cursor: "pointer",
+                  alignItems: "center",
+                }}
+                fontSize="2rem"
+                color={check ? "#37D42A" : "#FF9B04"}
+              >
+                {updating ? "Updating..." : check ? "Followed" : "Follow"}
+                {check && <VerifiedOutlined />}
+              </Typography>
+            </Tooltips>
+          )}
         </Grid>
         <Avatar
-          src={getImage(media[0]?.storage_path)}
-          style={{ width: "100%", minHeight: "20rem" }}
+          src={getImage(media[0]?.storage_path) || defaults}
+          sx={{
+            width: "100%",
+            height: "auto",
+            objectFit: "cover",
+            // maxHeight: "0rem",
+          }}
           alt={category}
           variant="square"
-        >
-          {category?.slice(0, 1).toUpperCase()}
-        </Avatar>
+        />
         <Grid container item flexDirection="column" rowGap={2}>
           <Typography
             color="secondary"

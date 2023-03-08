@@ -40,7 +40,7 @@ const Headings = () => {
               variant="span"
               style={{ fontWeight: 500, font: "inherit" }}
             >
-              {stats || 0}
+              {`${stats || 0} ${stats > 0 ? "Topics" : "Topic"}`}
             </Typography>{" "}
           </Typography>
           <Typography style={{ fontWeight: 700, font: "inherit" }}>

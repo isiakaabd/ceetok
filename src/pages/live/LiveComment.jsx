@@ -22,7 +22,10 @@ import { useDeleteAPostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 
-import { useUserProfileQuery } from "redux/slices/authSlice";
+import {
+  useLazyUserProfileQuery,
+  useUserProfileQuery,
+} from "redux/slices/authSlice";
 
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
@@ -30,10 +33,14 @@ import SingleComment from "pages/pages/components/SingleComment";
 export const LiveComment = ({ handleShare, data, state, setState }) => {
   const { id, recent_comments, recent_quotes } = data;
 
+  const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
-  const { data: profile, isLoading } = useUserProfileQuery();
+  const [getProfile, { data: profile, isLoading }] = useLazyUserProfileQuery();
   const admin = useSelector((state) => state.auth.admin);
-
+  useEffect(() => {
+    if (token) getProfile();
+    //eslint-disable-next-line
+  }, [token]);
   const [open, setOpen] = useState(false);
   const [approvePost, { isLoading: approvalLoading }] =
     useApprovePostMutation();

@@ -59,6 +59,9 @@ export default function PopOvers({ anchorRef, open, setOpen, children }) {
       placement="bottom-start"
       transition
       disablePortal
+      sx={{
+        zIndex: 400,
+      }}
     >
       {({ TransitionProps, placement }) => (
         <Grow

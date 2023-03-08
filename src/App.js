@@ -50,9 +50,8 @@ const App = () => {
             <Route path="/categories" element={<Categories />} />
             <Route path="/auth/reset-password" element={<ResetPassword />} />
             <Route path="/auth/new-password" element={<NewPassword />} />
-            <Route path="/post" element={<PrivateRoute />}>
-              <Route path=":postId" element={<Post />} />
-            </Route>
+            {/* <Route path="/post" element={<PrivateRoute />}></Route> */}
+            <Route path="/post/:postId" element={<Post />} />
             <Route path="/posts" element={<Entertainment />} />
 
             <Route path="/user" element={<PrivateRoute />}>

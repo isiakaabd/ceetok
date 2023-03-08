@@ -107,7 +107,10 @@ export const muiTheme = createTheme({
         root: {
           fontSize: "2rem",
           fontWeight: 500,
-          backgroundColor: "#FF9B04",
+          "& .MuiAvatar-img": {
+            objectFit: "contain",
+          },
+          // backgroundColor: "#FF9B04",
         },
       },
     },

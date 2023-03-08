@@ -1,4 +1,5 @@
 import logo from "./images/logo.png";
+import defaults from "./images/defaults.png";
 import vedio from "./images/vedio.png";
 import play from "./images/play.png";
 import obi from "./images/obi.png";
@@ -27,6 +28,7 @@ export default {
   image04,
   dp,
   adeleke,
+  defaults,
   bitcoin,
   gmail,
   payment,

@@ -286,7 +286,7 @@ const Footer = () => {
           }}
           variant="p"
         >
-          Copyright - Ceetok (C) 2022
+          Copyright - Ceetok (C) 2023
         </Typography>
       </Grid>
       {modal && (

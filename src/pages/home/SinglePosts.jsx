@@ -14,11 +14,12 @@ import { getImage, getTimeMoment } from "helpers";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
+import images from "assets";
 
 const AllPosts = ({ post, showUser }) => {
   const { slug, user, media, title, category, views_count, updatedAt } = post;
-
-  const loginStatus = useSelector((state) => state.auth.token);
+  const { defaults } = images;
+  // const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -26,9 +27,7 @@ const AllPosts = ({ post, showUser }) => {
     <>
       <ListItemButton
         dense
-        onClick={() =>
-          loginStatus ? navigate(`/post/${slug}`) : setOpen(true)
-        }
+        onClick={() => navigate(`/post/${slug}`)}
         disableGutters={{ md: false, xs: true }}
         sx={{ maxWidth: "100%", px: { md: 0.5, xs: 0 } }}
       >
@@ -76,7 +75,7 @@ const AllPosts = ({ post, showUser }) => {
             }}
           >
             <Avatar
-              src={getImage(media[0]?.storage_path)}
+              src={getImage(media[0]?.storage_path) || defaults}
               alt={title}
               variant="rounded"
               sx={{
@@ -84,9 +83,7 @@ const AllPosts = ({ post, showUser }) => {
                 width: "100%",
                 fontSize: { md: "3rem", xs: "1.5rem" },
               }}
-            >
-              {category?.slice(0, 1).toUpperCase()}
-            </Avatar>
+            />
           </ListItemAvatar>
 
           <ListItemText

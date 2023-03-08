@@ -117,50 +117,51 @@ const Trending = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item container>
-            {isLoading ? (
-              <Skeletons />
-            ) : array?.posts?.length > 0 ? (
-              <>
-                <List
-                  dense
-                  sx={{
-                    maxHeight: "120rem",
-                    overflowY: "scroll",
-                    width: "100%",
-                    "&::-webkit-scrollbar": {
-                      width: ".85rem",
-                      display: "none",
-                    },
-                  }}
-                  xs={12}
+          <Grid item md={11} xs={12} sx={{ margin: "auto" }}>
+            <Grid item container>
+              {isLoading ? (
+                <Skeletons />
+              ) : array?.posts?.length > 0 ? (
+                <>
+                  <List
+                    dense
+                    sx={{
+                      maxHeight: "120rem",
+                      overflowY: "scroll",
+                      width: "100%",
+                      "&::-webkit-scrollbar": {
+                        width: ".85rem",
+                        display: "none",
+                      },
+                    }}
+                  >
+                    {/* {posts.length > 0 ? ( */}
+                    {array?.posts?.map((post, index) => {
+                      return (
+                        <SinglePosts key={index} index={index} post={post} />
+                      );
+                    })}
+                  </List>
+                  {array?.total_pages > 1 && (
+                    <Pagination
+                      page={page}
+                      count={array?.total_pages}
+                      sx={{ margin: "auto", py: 2 }}
+                      onChange={handleChange}
+                    />
+                  )}
+                </>
+              ) : (
+                <Typography
+                  variant="h2"
+                  sx={{ py: 3 }}
+                  width="100%"
+                  textAlign="center"
                 >
-                  {/* {posts.length > 0 ? ( */}
-                  {array?.posts?.map((post, index) => {
-                    return (
-                      <SinglePosts key={index} index={index} post={post} />
-                    );
-                  })}
-                </List>
-                {array?.total_pages > 1 && (
-                  <Pagination
-                    page={page}
-                    count={array?.total_pages}
-                    sx={{ margin: "auto", py: 2 }}
-                    onChange={handleChange}
-                  />
-                )}
-              </>
-            ) : (
-              <Typography
-                variant="h2"
-                sx={{ py: 3 }}
-                width="100%"
-                textAlign="center"
-              >
-                No Data yet
-              </Typography>
-            )}
+                  No Data yet
+                </Typography>
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

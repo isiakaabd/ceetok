@@ -1,10 +1,10 @@
 {
 "name" : "Ceetok",
 "short_name" : "Ceetok",
-"description" : "Social Media you cant trust",
+"description" : "Social Media you can trust",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },

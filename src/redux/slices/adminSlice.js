@@ -96,7 +96,7 @@ export const adminSlice = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["admin"],
-      transformResponse: (response) => response.body,
+      // transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
     editLivePost: builder.mutation({

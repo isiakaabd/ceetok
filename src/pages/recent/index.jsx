@@ -39,7 +39,7 @@ const Recent = () => {
           gap={3}
         >
           <LeftTab />
-          <RightTab setCreatePost={setCreatePost} more={{ latest: true }} />
+          <RightTab setCreatePost={setCreatePost} more={{ recent: true }} />
         </Grid>
         {/* Adevert */}
         <Advert />

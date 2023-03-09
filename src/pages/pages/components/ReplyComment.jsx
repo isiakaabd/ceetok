@@ -52,7 +52,7 @@ const ReplyComment = () => {
 
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-
+  const [page] = useState(0);
   const {
     data: repliedComment,
     isLoading: loadingComment,
@@ -60,6 +60,7 @@ const ReplyComment = () => {
   } = useGetPostCommentsQuery({
     type: "comments",
     parentId: id,
+    offset: page,
   });
   const navigate = useNavigate();
   const [openShareModal, setOpenShareModal] = useState(false);

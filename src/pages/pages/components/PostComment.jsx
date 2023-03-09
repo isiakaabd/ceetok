@@ -38,7 +38,6 @@ import CreatePost from "pages/user/modals/CreatePost";
 import { Details } from "../Post";
 import {
   useLazyUserProfileQuery,
-  useUserProfileQuery,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
@@ -46,22 +45,82 @@ import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
+import useInfiniteScroll from "react-infinite-scroll-hook";
 import images from "assets";
+import {
+  useGetPostCommentsQuery,
+  useLazyGetPostCommentsQuery,
+} from "redux/slices/commentSlice";
+import {
+  useGetPostQuotesQuery,
+  useGetUserQuotesQuery,
+} from "redux/slices/quoteSlice";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, recent_quotes, recent_comments, media } =
     data;
+  const [page, setPage] = useState(0);
+  // const {
+  //   data: comments,
+  //   error,
+  //   isFetching,
+  // } = useGetPostCommentsQuery({
+  //   parent_type: "posts",
+  //   parentId: id,
+  //   offset: page,
+  // });
+  // const hasNextPage = page + 1 < comments?.total_pages;
 
+  // const [sentryRef] = useInfiniteScroll({
+  //   loading: isFetching,
+  //   hasNextPage,
+  //   onLoadMore: () => setPage((page) => page + 1),
+  //   // When there is an error, we stop infinite loading.
+  //   // It can be reactivated by setting "error" state as undefined.
+  //   disabled: !!error,
+  //   rootMargin: "0px 0px 200px 0px",
+  // });
+
+  const admin = useSelector((state) => state.auth.admin);
+  // const targetRef = useRef(null);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
   const [getProfile, { data: profile, isLoading }] = useLazyUserProfileQuery();
+
+  // const [commentsArray, setCommentsArray] = useState();
+
   useEffect(() => {
     if (token) {
       getProfile();
     }
     //eslint-disable-next-line
   }, [token]);
-  const admin = useSelector((state) => state.auth.admin);
+
+  // useEffect(() => {
+  //   const options = {
+  //     root: null,
+  //     rootMargin: "800px",
+  //     threshold: 1,
+  //   };
+
+  //   const observer = new IntersectionObserver((entry) => {
+  //     if (entry[0].isIntersecting && hasNextPage) {
+  //       setPage((page) => page + 1);
+  //       console.log("intersecting");
+  //     }
+  //   }, options);
+
+  //   if (targetRef.current) {
+  //     observer.observe(targetRef.current);
+  //   }
+
+  //   // Cleanup function
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, [hasNextPage, setPage]);
+
   const [open, setOpen] = useState(false);
+
   const [approvePost, { isLoading: approvalLoading }] =
     useApprovePostMutation();
   const [editPostModal, setEditPostModal] = useState(false);
@@ -146,7 +205,9 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     },
   ];
   const [likePost] = useLikeAndUnlikePostMutation();
+
   if (isLoading) return <Skeleton />;
+
   const { defaults } = images;
 
   const checkUser = profile?.id === user_id;
@@ -358,35 +419,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             >
               Comments
             </Typography>
-            <Grid
-              item
-              container
-              sx={{
-                maxHeight: { xs: "70rem" },
-                overflowY: "scroll",
-                "&::-webkit-scrollbar": {
-                  width: ".85rem",
-                  display: "none",
-                },
-              }}
-            >
-              {recent_comments?.length > 0 ? (
-                <List sx={{ width: "100%" }} dense>
-                  {recent_comments?.map((item) => (
-                    <SingleComment
-                      icons={icons}
-                      key={item.id}
-                      item={item}
-                      profile={profile}
-                    />
-                  ))}
-                </List>
-              ) : (
-                <Grid item container>
-                  <Typography>No comments available</Typography>
-                </Grid>
-              )}
-            </Grid>
+            <AllComments profile={profile} id={id} icons={icons} />
           </Grid>
         ) : (
           <Grid item container>
@@ -398,36 +431,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             >
               Quotes
             </Typography>
-            <Grid
-              item
-              container
-              sx={{
-                maxHeight: { xs: "70rem" },
-                overflowY: "scroll",
-                "&::-webkit-scrollbar": {
-                  width: ".85rem",
-                  display: "none",
-                },
-              }}
-            >
-              {recent_quotes?.length > 0 ? (
-                <List sx={{ width: "100%" }} dense>
-                  {recent_quotes?.map((item) => (
-                    <SingleComment
-                      icons={icons}
-                      key={item.id}
-                      item={item}
-                      profile={profile}
-                      type="quote"
-                    />
-                  ))}
-                </List>
-              ) : (
-                <Grid item container>
-                  <Typography>No Quotes available</Typography>
-                </Grid>
-              )}
-            </Grid>
+            <AllQuotes id={id} icons={icons} profile={profile} />
           </Grid>
         )}
       </Grid>
@@ -500,3 +504,152 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     </>
   );
 };
+function AllComments({ id, profile, icons }) {
+  const [page, setPage] = useState(0);
+  const {
+    data: comments,
+    error,
+    isFetching,
+  } = useGetPostCommentsQuery({
+    parent_type: "posts",
+    parentId: id,
+    offset: page,
+  });
+  // const hasNextPage = page + 1 < comments?.total_pages;
+
+  // const [sentryRef] = useInfiniteScroll({
+  //   loading: isFetching,
+  //   hasNextPage,
+  //   onLoadMore: () => setPage((page) => page + 1),
+  //   // When there is an error, we stop infinite loading.
+  //   // It can be reactivated by setting "error" state as undefined.
+  //   disabled: !!error,
+  //   rootMargin: "0px 0px 200px 0px",
+  // });
+  return (
+    <>
+      <Grid
+        item
+        container
+        flexDirection="column"
+        sx={{
+          maxHeight: { xs: "70rem" },
+          overflowY: "scroll",
+          "&::-webkit-scrollbar": {
+            width: ".85rem",
+            display: "none",
+          },
+        }}
+        // ref={root}
+      >
+        {comments?.comments?.length > 0 ? (
+          <Grid item container flexDirection="column">
+            <List sx={{ width: "100%" }} dense>
+              {comments?.comments?.map((item) => (
+                <SingleComment
+                  icons={icons}
+                  key={item.id}
+                  item={item}
+                  profile={profile}
+                />
+              ))}
+              {/* {hasNextPage && <div ref={sentryRef} />} */}
+              {/* {!hasNextPage && (
+                <Typography
+                  fontWeight={700}
+                  width="100%"
+                  textAlign="center"
+                  variant="h5"
+                >
+                  No More comment
+                </Typography>
+              )} */}
+            </List>
+          </Grid>
+        ) : (
+          <Grid item container>
+            <Typography>No comments available</Typography>
+          </Grid>
+        )}
+      </Grid>
+      {/* {isFetching && hasNextPage && (
+        <Typography width="100%" textAlign="center" variant="h4">
+          Loading more comments...
+        </Typography>
+      )} */}
+    </>
+  );
+}
+
+function AllQuotes({ id, icons, profile }) {
+  const [page, setPage] = useState(0);
+  const {
+    data: quotes,
+    error,
+    isFetching,
+  } = useGetPostQuotesQuery({
+    parent_type: "posts",
+    parentId: id,
+    offset: page,
+  });
+
+  // const hasNextPage = page + 1 < quotes?.total_pages;
+
+  // const [sentryRef] = useInfiniteScroll({
+  //   loading: isFetching,
+  //   hasNextPage,
+  //   onLoadMore: () => setPage((page) => page + 1),
+  //   disabled: !!error,
+  //   rootMargin: "0px 0px 200px 0px",
+  // });
+  return (
+    <>
+      <Grid
+        item
+        container
+        sx={{
+          maxHeight: { xs: "70rem" },
+          overflowY: "scroll",
+          "&::-webkit-scrollbar": {
+            width: ".85rem",
+            display: "none",
+          },
+        }}
+      >
+        {quotes?.quotes?.length > 0 ? (
+          <List sx={{ width: "100%" }} dense>
+            {quotes?.quotes?.map((item) => (
+              <SingleComment
+                icons={icons}
+                key={item.id}
+                item={item}
+                profile={profile}
+                type="quote"
+              />
+            ))}
+            {/* {hasNextPage && <div ref={sentryRef} />}
+            {!hasNextPage && (
+              <Typography
+                fontWeight={700}
+                width="100%"
+                textAlign="center"
+                variant="h5"
+              >
+                No more Quotes
+              </Typography>
+            )} */}
+          </List>
+        ) : (
+          <Grid item container>
+            <Typography>No Quotes available</Typography>
+          </Grid>
+        )}
+      </Grid>
+      {/* {isFetching && hasNextPage && (
+        <Typography width="100%" textAlign="center" variant="h4">
+          Loading more qotes...
+        </Typography>
+      )} */}
+    </>
+  );
+}

@@ -3,19 +3,19 @@ import { api } from ".";
 export const commentSlice = api.injectEndpoints({
   endpoints: (builder) => ({
     getPostQuotes: builder.query({
-      query: ({ parentId, limit, type }) => ({
+      query: ({ parentId, type, offset }) => ({
         url: `/quote?parent_type=${
           type ? type : "posts"
-        }&parent_id=${parentId}&limit=${limit ? limit : 10}`,
+        }&parent_id=${parentId}&limit=10&offset=${offset}`,
         method: "GET",
       }),
-      providesTags: ["quote", "comment", "post"],
-      transformResponse: (response) => response.body.quotes,
+      providesTags: ["quote", "post"],
+      transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
     getUserQuotes: builder.query({
       query: (offset) => ({
-        url: `/quote/user/?&limit=10&offset=${offset ? offset : 0}`,
+        url: `/quote/user/?&limit=10&offset=${offset}`,
         method: "GET",
       }),
       providesTags: ["quote", "user"],
@@ -28,7 +28,7 @@ export const commentSlice = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["quote", "comment", "admin", "post"],
+      invalidatesTags: ["quote"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -38,7 +38,7 @@ export const commentSlice = api.injectEndpoints({
         method: "DELETE",
         body,
       }),
-      invalidatesTags: ["quote", "comment", "admin", "post"],
+      invalidatesTags: ["quote"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -49,7 +49,7 @@ export const commentSlice = api.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["comment", "quote", "admin", "post"],
+      invalidatesTags: ["quote"],
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
@@ -61,5 +61,6 @@ export const {
   useCreateQuoteMutation,
   useDeleteQuoteMutation,
   useEditQuoteMutation,
+  useGetPostQuotesQuery,
   useGetUserQuotesQuery,
 } = commentSlice;

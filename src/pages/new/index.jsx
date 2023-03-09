@@ -38,7 +38,7 @@ const New = () => {
           gap={3}
         >
           <LeftTab />
-          <RightTab setCreatePost={setCreatePost} />
+          <RightTab setCreatePost={setCreatePost} more={{ latest: true }} />
         </Grid>
         {/* Adevert */}
         <Advert />

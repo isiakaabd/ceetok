@@ -22,10 +22,7 @@ import { useDeleteAPostMutation } from "redux/slices/postSlice";
 import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 
-import {
-  useLazyUserProfileQuery,
-  useUserProfileQuery,
-} from "redux/slices/authSlice";
+import { useLazyUserProfileQuery } from "redux/slices/authSlice";
 
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";

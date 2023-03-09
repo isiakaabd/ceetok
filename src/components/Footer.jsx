@@ -25,6 +25,7 @@ import {
   FacebookIcon,
   FacebookShareButton,
 } from "react-share";
+import { useSelector } from "react-redux";
 
 const socialItems = [
   {
@@ -46,12 +47,14 @@ const socialItems = [
   },
 ];
 const Footer = () => {
+  const token = useSelector((state) => state.auth.token);
   const [modal, setModal] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-
+  const id = process.env.REACT_APP_ADMIN_ID;
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const handleRegisterClose = () => setModal(false);
   const handleLoginClose = () => setIsLogin(false);
+
   const items = [
     {
       name: "Terms & Condtions",
@@ -61,27 +64,28 @@ const Footer = () => {
       name: "Contact Us",
       route: "/contact-us",
     },
-    {
-      name: "Message Moderator",
-      route: "/message-us",
-    },
+
     {
       name: "Privacy Policy",
       route: "/privacy",
     },
+    {
+      name: "Message Moderator",
+      route: "#",
+    },
   ];
   const items2 = [
     {
-      name: "Sign Up",
-      route: "#",
+      name: token ? "Trending" : "Sign Up",
+      route: token && "/trending",
     },
     {
-      name: "Login",
-      route: "#",
+      name: token ? "Live Updates" : "Login",
+      route: token && "/live",
     },
     {
-      name: "Forgotten Password",
-      route: "#",
+      name: token ? "Recent Topic" : "Forgotten Password",
+      route: token && "/recent",
     },
   ];
   return (
@@ -141,7 +145,14 @@ const Footer = () => {
                   key={index}
                   disableTouchRipple
                   component={Link}
-                  to={item.route}
+                  to={
+                    item.name === "Message Moderator" && token
+                      ? `user/message/${id}`
+                      : item.route
+                  }
+                  onClick={() => {
+                    if (!token) setIsLogin(true);
+                  }}
                 >
                   <ListItemText primary={item.name} />
                 </ListItemButton>

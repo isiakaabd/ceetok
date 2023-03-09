@@ -15,6 +15,7 @@ import SearchComponent from "components/modals/SearchComponent";
 
 const LeftTab = () => {
   const { data: categories, isLoading } = useGetCategoriesQuery();
+  console.log(categories);
   // const navigate = useNavigate();
   const handleSubmit = async () => {};
   if (isLoading) return <Skeletons />;

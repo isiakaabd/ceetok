@@ -98,6 +98,7 @@ const SingleComment = ({ item, icons, profile, type }) => {
         sx={{
           "& .MuiListItemText-root": {
             m: 0,
+            px: 2,
           },
           textDecoration: "none",
           color: "text.primary",
@@ -485,9 +486,11 @@ function Detail({ item }) {
   const [isLogin, setIsLogin] = useState(false);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
+  const [page] = useState(0);
   const { data: repliedComment } = useGetPostCommentsQuery({
     type: "comments",
     parentId: id,
+    offset: page,
   });
 
   const handleLikePost = async (e) => {
@@ -508,7 +511,7 @@ function Detail({ item }) {
 
   return (
     <>
-      <Grid item md={6} xs={8}>
+      <Grid item md={6} xs={10} sm={8}>
         <Grid item container justifyContent="space-between" flexWrap="nowrap">
           <Grid
             item

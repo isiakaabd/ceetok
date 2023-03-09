@@ -170,6 +170,7 @@ export const Details = ({
 const Post = () => {
   const { postId } = useParams();
   const [state, setState] = useState(true);
+  const [page, setPage] = useState(0);
   const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
@@ -186,7 +187,7 @@ const Post = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { views_count, recent_views, user_id, slug } = data;
+  const { recent_views, user_id, slug } = data;
 
   const handleShare = () => setOpenShareModal(true);
 
@@ -304,6 +305,8 @@ const Post = () => {
                 data={data}
                 state={changeCommentState}
                 setState={setChangeCommentState}
+                page={page}
+                setPage={setPage}
               />
             ) : (
               <OtherConversation />
@@ -311,6 +314,9 @@ const Post = () => {
           </Grid>
           {state && token && (
             <Grid
+              item
+              md={7}
+              xs={12}
               sx={{
                 mt: { md: 3, xs: 1.5 },
                 paddingInline: { xs: "1rem" },
@@ -364,47 +370,53 @@ const Post = () => {
             </Grid>
           )}
           {state && viewers.length > 0 && (
-            <Grid
-              item
-              container
-              alignItems="center"
-              sx={{ paddingInline: { xs: "1rem" } }}
-            >
-              <Typography
-                variant="span"
-                color="#FF9B04"
-                fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+            <Grid item md={7} xs={12}>
+              <Grid
+                item
+                container
+                alignItems="center"
+                sx={{ paddingInline: { xs: "1rem" } }}
               >
-                Viewing this Topic: &nbsp;&nbsp;
-              </Typography>
-              <Grid item>
-                <Grid container>
-                  {viewers?.slice(0, 50).map((item, index) => (
-                    <Typography
-                      component={Link}
-                      to={`/user/profile/?id=${item.viewer?.id}`}
-                      key={index}
-                      sx={{ width: "max-content", mr: 0.5 }}
-                      color="secondary"
-                      fontSize={{
-                        md: "1.8rem",
-                        xs: "1.5rem",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {item.viewer.full_name},
-                    </Typography>
-                  ))}
+                <Typography
+                  variant="span"
+                  color="#FF9B04"
+                  fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+                >
+                  Viewing this Topic: &nbsp;&nbsp;
+                </Typography>
+                <Grid item>
+                  <Grid container>
+                    {viewers?.slice(0, 50).map((item, index) => (
+                      <Typography
+                        component={Link}
+                        to={`/user/profile/?id=${item.viewer?.id}`}
+                        key={index}
+                        sx={{ width: "max-content", mr: 0.5 }}
+                        color="secondary"
+                        fontSize={{
+                          md: "1.8rem",
+                          xs: "1.5rem",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {item.viewer.full_name},
+                      </Typography>
+                    ))}
 
-                  {viewers?.length > 50 ? (
-                    <Typography
-                      variant="span"
-                      color="#FF9B04"
-                      fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                    >
-                      {`and ${viewers - 50}  guests`}
-                    </Typography>
-                  ) : null}
+                    {viewers?.length > 50 ? (
+                      <Typography
+                        variant="span"
+                        color="#FF9B04"
+                        fontSize={{
+                          md: "1.8rem",
+                          xs: "1.5rem",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {`and ${viewers - 50}  guests`}
+                      </Typography>
+                    ) : null}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

@@ -11,7 +11,6 @@ import {
 import { RemoveRedEyeOutlined, StarOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getImage, getTimeMoment } from "helpers";
-import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 import images from "assets";

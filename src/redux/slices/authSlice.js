@@ -233,12 +233,22 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getMentions: builder.query({
+      query: ({ offset }) => ({
+        url: `/mention?offset=${offset ? offset : 0}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
 export const {
   useChangePasswordMutation,
   useGetStatsQuery,
+  useGetMentionsQuery,
   useRegisterMutation,
   useLoginMutation,
   useBlockUserMutation,

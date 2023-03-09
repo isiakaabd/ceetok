@@ -398,10 +398,10 @@ const Announcement = () => {
 
     setOpenCreatePost(true);
   };
-  const [page, setPage] = useState(0);
-  const { data: annoucements, isLoading } = useGetAnnoucementsQuery({ page });
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useGetAnnoucementsQuery({ page: page - 1 });
   if (isLoading) return <Skeleton />;
-
+  const { announcements, total_pages } = data;
   return (
     <>
       <Grid
@@ -514,7 +514,7 @@ const Announcement = () => {
         </Grid>
 
         {/* list */}
-        {annoucements?.announcements?.length > 0 ? (
+        {announcements?.length > 0 ? (
           <Grid
             item
             container
@@ -527,7 +527,7 @@ const Announcement = () => {
               background: "White",
             }}
           >
-            {annoucements?.announcements?.map((item, index) => {
+            {announcements?.map((item, index) => {
               const {
                 payment,
                 slug,
@@ -608,13 +608,9 @@ const Announcement = () => {
           </Typography>
         )}
 
-        <Grid item container>
-          <Paginations
-            setPage={setPage}
-            page={page}
-            count={annoucements?.total_pages || 5}
-          />
-        </Grid>
+        {total_pages > 1 && (
+          <Paginations setPage={setPage} page={page} count={total_pages} />
+        )}
       </Grid>
 
       {modal && (

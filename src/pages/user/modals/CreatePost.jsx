@@ -116,7 +116,8 @@ const CreatePost = ({
         toast.success(data.message);
         onSubmitProps.resetForm();
         onSubmitProps.setFieldValue("text", "");
-        setTimeout(() => handleCreateOpen(), 3000);
+        setTimeout(() => handleClose(), 2000);
+        setTimeout(() => handleCreateOpen(), 4000);
       }
       if (error) toast.error(error);
     } else {
@@ -126,10 +127,13 @@ const CreatePost = ({
         body: text,
       });
       if (data) {
-        toast.success(data.message);
+        toast.success(
+          "your announcement has been submitted... Please proceed to payment"
+        );
         onSubmitProps.resetForm();
         onSubmitProps.setFieldValue("text", "");
-        setTimeout(() => handleCreateOpen(), 3000);
+        setTimeout(() => handleClose(), 2000);
+        setTimeout(() => handleCreateOpen(), 4000);
       }
       if (error) toast.error(error);
     }

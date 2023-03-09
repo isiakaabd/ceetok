@@ -106,6 +106,6 @@ body {
   max-width: max-content;
   text-align: justify;
 }
-.ql-text > p[data-content*="@"] {
-  color: blue !important;
+.mention {
+  color: #37d42a !important;
 }

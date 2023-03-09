@@ -89,6 +89,13 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile, type }) => {
+  const x = (message) => {
+    const messageWithMentions = message.replace(
+      /@\w+/g,
+      '<span class="mention">$&</span>'
+    );
+    return messageWithMentions;
+  };
   return (
     <>
       <ListItem
@@ -240,6 +247,13 @@ export function Text({ item, profile, displayDetail, type }) {
       setTimeout(() => setOpenReport(false), 3000);
     }
     if (error) toast(error);
+  };
+  const x = (message) => {
+    const messageWithMentions = message.replace(
+      /@\w+/g,
+      '<a class="mention" href="#">$&</a>'
+    );
+    return messageWithMentions;
   };
 
   return (
@@ -413,7 +427,7 @@ export function Text({ item, profile, displayDetail, type }) {
               </Grid>
             </Grid>
 
-            <div className="ql-text">{parse(comment || body)}</div>
+            <div className="ql-text">{parse(x(comment || body))}</div>
           </Grid>
         }
         secondary={

@@ -45,20 +45,20 @@ import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
-import useInfiniteScroll from "react-infinite-scroll-hook";
+// import useInfiniteScroll from "react-infinite-scroll-hook";
 import images from "assets";
 import {
   useGetPostCommentsQuery,
-  useLazyGetPostCommentsQuery,
+  // useLazyGetPostCommentsQuery,
 } from "redux/slices/commentSlice";
 import {
   useGetPostQuotesQuery,
-  useGetUserQuotesQuery,
+  // useGetUserQuotesQuery,
 } from "redux/slices/quoteSlice";
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, recent_quotes, recent_comments, media } =
-    data;
-  const [page, setPage] = useState(0);
+  const { id, category, user_id, body, media } = data;
+  // recent_quotes, recent_comments,
+  // const [page, setPage] = useState(0);
   // const {
   //   data: comments,
   //   error,
@@ -237,7 +237,13 @@ export const Comment = ({ handleShare, data, state, setState }) => {
 
     // setLikeState(!likeState);
   };
-
+  const x = (message) => {
+    const messageWithMentions = message.replace(
+      /@\w+/g,
+      `<a class="mention" href="#">$&</a>`
+    );
+    return messageWithMentions;
+  };
   return (
     <>
       <Grid item container>
@@ -386,13 +392,13 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             color="secondary"
             sx={{
               fontWeight: 400,
-              fontSize: { md: "2rem", sm: "1rem" },
+              fontSize: { md: "2rem", sm: "1.6rem", xs: "1.2rem`" },
               textAlign: "justify",
               // pl: 3,
             }}
             className="likes-content"
           >
-            {parse(body)}
+            {parse(x(body))}
           </Typography>
         </Grid>
         <Grid item md={7} xs={12} sx={{ color: "#5F5C5C", mt: 3 }}>
@@ -515,6 +521,7 @@ function AllComments({ id, profile, icons }) {
     parentId: id,
     offset: page,
   });
+
   // const hasNextPage = page + 1 < comments?.total_pages;
 
   // const [sentryRef] = useInfiniteScroll({

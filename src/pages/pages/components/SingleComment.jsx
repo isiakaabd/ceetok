@@ -89,13 +89,13 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile, type }) => {
-  const x = (message) => {
-    const messageWithMentions = message.replace(
-      /@\w+/g,
-      '<span class="mention">$&</span>'
-    );
-    return messageWithMentions;
-  };
+  // const x = (message) => {
+  //   const messageWithMentions = message.replace(
+  //     /@\w+/g,
+  //     '<span class="mention">$&</span>'
+  //   );
+  //   return messageWithMentions;
+  // };
   return (
     <>
       <ListItem

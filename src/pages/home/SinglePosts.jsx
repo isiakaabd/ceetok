@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemButton,
   Typography,
+  Badge,
 } from "@mui/material";
 import { RemoveRedEyeOutlined, StarOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +34,14 @@ const AllPosts = ({ post, showUser }) => {
         <ListItem
           dense
           secondaryAction={
-            <Grid item container flexWrap="nowrap" gap={1} alignItems="center">
+            <Grid
+              item
+              container
+              flexWrap="nowrap"
+              gap={{ md: "4rem" }}
+              sx={{ mr: { md: 2, xs: 1 } }}
+              alignItems="center"
+            >
               <ListItemIcon sx={{ minWidth: "1rem", m: 0 }}>
                 <RemoveRedEyeOutlined
                   sx={{
@@ -42,7 +50,25 @@ const AllPosts = ({ post, showUser }) => {
                   }}
                 />
               </ListItemIcon>
-              <div
+              <Badge
+                badgeContent={views_count}
+                color="primary"
+                showZero
+                max={100}
+                sx={{
+                  color: "#9B9A9A",
+                  "& .MuiBadge-badge": {
+                    fontSize: "1.4rem",
+                    backgroundColor: "#D3D3D3",
+                    width: "3.4rem",
+                    height: "3.4rem",
+                    borderRadius: "1.7rem",
+                    fontWeight: 600,
+                  },
+                }}
+              />
+              {/* </Badge> */}
+              {/* <div
                 style={{
                   width: "2.5rem",
                   height: "2.5rem",
@@ -57,7 +83,7 @@ const AllPosts = ({ post, showUser }) => {
                 <Typography variant="h5" sx={{ m: 0 }}>
                   {views_count}
                 </Typography>
-              </div>
+              </div> */}
             </Grid>
           }
           alignItems="flex-start"

@@ -351,7 +351,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
           justifyContent="space-between"
           sx={{
             paddingInline: { xs: "1rem", md: "1.5rem" },
-            background: "red",
           }}
           flexWrap="nowrap"
         >
@@ -401,21 +400,18 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               variant="square"
             />
           ) : media?.length === 1 && media[0]?.type === "video" ? (
-            <div className="player-wrapper">
-              <ReactPlayer
-                url={getImage(media[0]?.storage_path)}
-                // pip
-                light={<img src={defaults} alt="Thumbnail" />}
-                // stopOnUnmount
-                controls={true}
-                volume={0.6}
-                width="100%"
-                height="50rem"
-                className="react-player"
-                style={{ maxheight: "10rem" }}
-              />
-            </div>
+            // <div className="player-wrapper">
+            <ReactPlayer
+              url={getImage(media[0]?.storage_path)}
+              controls={true}
+              volume={0.6}
+              width="100%"
+              height="auto"
+              // className="react-player"
+              // style={{ maxheight: "10rem" }}
+            />
           ) : (
+            // </div>
             <Avatar
               src={defaults}
               sx={{

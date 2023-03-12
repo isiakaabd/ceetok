@@ -1,6 +1,7 @@
 import { getImage } from "helpers";
 import { Grid, ImageListItem, ImageList } from "@mui/material";
 import shadows from "@mui/material/styles/shadows";
+import ReactPlayer from "react-player";
 
 export default function MasonryImageList({ itemData }) {
   return (
@@ -29,7 +30,7 @@ export default function MasonryImageList({ itemData }) {
             className="imageList-item"
             rows={item.rows || 1}
           >
-            <>
+            {item.type === "image" ? (
               <img
                 src={`${getImage(item?.storage_path)}`}
                 style={{
@@ -40,7 +41,17 @@ export default function MasonryImageList({ itemData }) {
                 alt={item.title}
                 loading="lazy"
               />
-            </>
+            ) : (
+              <ReactPlayer
+                url={getImage(item?.storage_path)}
+                controls={true}
+                volume={0.6}
+                width="100%"
+                height="auto"
+                // className="react-player"
+                // style={{ maxheight: "10rem" }}
+              />
+            )}
           </ImageListItem>
         ))}
       </ImageList>

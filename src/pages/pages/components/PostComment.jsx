@@ -43,6 +43,7 @@ import {
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
 import { getImage } from "helpers";
+import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
 // import useInfiniteScroll from "react-infinite-scroll-hook";
@@ -58,7 +59,6 @@ import {
 import MasonryImageList from "./ImageList";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
-  console.log(media);
   // recent_quotes, recent_comments,
   // const [page, setPage] = useState(0);
   // const {
@@ -345,10 +345,14 @@ export const Comment = ({ handleShare, data, state, setState }) => {
       </Grid>
       <Grid item md={9} xs={12}>
         <Grid
+          item
           container
           alignItems="center"
           justifyContent="space-between"
-          sx={{ paddingInline: { xs: "1rem", md: "1.5rem" } }}
+          sx={{
+            paddingInline: { xs: "1rem", md: "1.5rem" },
+            background: "red",
+          }}
           flexWrap="nowrap"
         >
           <Typography
@@ -379,35 +383,52 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             </Tooltips>
           )}
         </Grid>
-        {media?.length >= 2 ? (
-          <MasonryImageList
-            itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
-          />
-        ) : media?.length === 1 ? (
-          <Avatar
-            src={getImage(media[0]?.storage_path)}
-            sx={{
-              width: "100%",
-              height: "auto",
-              objectFit: "cover",
-              // maxHeight: "0rem",
-            }}
-            alt={category}
-            variant="square"
-          />
-        ) : (
-          <Avatar
-            src={defaults}
-            sx={{
-              width: "100%",
-              height: "auto",
-              objectFit: "cover",
-              // maxHeight: "0rem",
-            }}
-            alt={category}
-            variant="square"
-          />
-        )}
+        <Grid item container sx={{ p: { xs: "1rem" } }}>
+          {media?.length >= 2 ? (
+            <MasonryImageList
+              itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+            />
+          ) : media?.length === 1 && media[0]?.type === "image" ? (
+            <Avatar
+              src={getImage(media[0]?.storage_path)}
+              sx={{
+                width: "100%",
+                height: "auto",
+                objectFit: "cover",
+                // maxHeight: "0rem",
+              }}
+              alt={category}
+              variant="square"
+            />
+          ) : media?.length === 1 && media[0]?.type === "video" ? (
+            <div className="player-wrapper">
+              <ReactPlayer
+                url={getImage(media[0]?.storage_path)}
+                // pip
+                light={<img src={defaults} alt="Thumbnail" />}
+                // stopOnUnmount
+                controls={true}
+                volume={0.6}
+                width="100%"
+                height="50rem"
+                className="react-player"
+                style={{ maxheight: "10rem" }}
+              />
+            </div>
+          ) : (
+            <Avatar
+              src={defaults}
+              sx={{
+                width: "100%",
+                height: "auto",
+                objectFit: "cover",
+                // maxHeight: "0rem",
+              }}
+              alt={category}
+              variant="square"
+            />
+          )}
+        </Grid>
         <Grid
           container
           item
@@ -538,7 +559,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   );
 };
 function AllComments({ id, profile, icons }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const {
     data: comments,
     error,
@@ -546,7 +567,7 @@ function AllComments({ id, profile, icons }) {
   } = useGetPostCommentsQuery({
     parent_type: "posts",
     parentId: id,
-    offset: page,
+    offset: page - 1,
   });
 
   // const hasNextPage = page + 1 < comments?.total_pages;
@@ -616,7 +637,7 @@ function AllComments({ id, profile, icons }) {
 }
 
 function AllQuotes({ id, icons, profile }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const {
     data: quotes,
     error,
@@ -624,7 +645,7 @@ function AllQuotes({ id, icons, profile }) {
   } = useGetPostQuotesQuery({
     parent_type: "posts",
     parentId: id,
-    offset: page,
+    offset: page - 1,
   });
 
   // const hasNextPage = page + 1 < quotes?.total_pages;

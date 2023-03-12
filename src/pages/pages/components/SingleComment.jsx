@@ -89,6 +89,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 
 const SingleComment = ({ item, icons, profile, type }) => {
+  console.log(item);
   // const x = (message) => {
   //   const messageWithMentions = message.replace(
   //     /@\w+/g,
@@ -233,7 +234,7 @@ export function Text({ item, profile, displayDetail, type }) {
     if (error) toast.success(error);
   };
   const validationSchema = Yup.object({
-    body: Yup.string("").required("Required"),
+    body: Yup.string().required("Required"),
   });
   const handleReport = async (values) => {
     const { body } = values;

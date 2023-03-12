@@ -24,7 +24,7 @@ const RightTab = ({ setCreatePost, more }) => {
     isLoading,
     isFetching,
   } = useGetPostQuery({ offset: page - 1, from: value, ...more });
-
+  console.log(array);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

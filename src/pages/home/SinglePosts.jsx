@@ -17,7 +17,8 @@ import LoginModal from "components/modals/LoginModal";
 import images from "assets";
 
 const AllPosts = ({ post, showUser }) => {
-  const { slug, user, media, title, category, views_count, updatedAt } = post;
+  const { slug, user, type, media, title, category, views_count, updatedAt } =
+    post;
   const { defaults } = images;
   // const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
@@ -99,16 +100,26 @@ const AllPosts = ({ post, showUser }) => {
               mt: 0,
             }}
           >
-            <Avatar
-              src={getImage(media[0]?.storage_path) || defaults}
-              alt={title}
-              variant="rounded"
-              sx={{
-                height: "100%",
-                width: "100%",
-                fontSize: { md: "3rem", xs: "1.5rem" },
-              }}
-            />
+            {media[0]?.type === "image" ? (
+              <Avatar
+                src={getImage(media[0]?.storage_path) || defaults}
+                alt={title}
+                variant="rounded"
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  fontSize: { md: "3rem", xs: "1.5rem" },
+                }}
+              />
+            ) : (
+              <video
+                style={{ width: "100%", height: "100%" }}
+                src={getImage(media[0]?.storage_path)}
+                autoPlay
+                loop
+                muted
+              />
+            )}
           </ListItemAvatar>
 
           <ListItemText

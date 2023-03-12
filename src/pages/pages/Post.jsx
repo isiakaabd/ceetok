@@ -24,6 +24,7 @@ import Quotes from "assets/svgs/Quote";
 import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
@@ -173,8 +174,10 @@ const Post = () => {
   const [page, setPage] = useState(0);
   const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
-  const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-  const [createQuote] = useCreateQuoteMutation();
+  const [postAComment, { isLoading: loading, error: errs, data: dts }] =
+    usePostCommentMutation();
+  const [createQuote, { error: quoteError, data: quoteData }] =
+    useCreateQuoteMutation();
 
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
@@ -184,40 +187,55 @@ const Post = () => {
 
   const [openShareModal, setOpenShareModal] = useState(false);
   const [changeCommentState, setChangeCommentState] = useState(true);
-
+  useEffect(() => {
+    if (dts || quoteData) {
+      toast.success(dts);
+    } else if (errs || quoteError) {
+      toast.error(dts || "something went wrong, try again...");
+    }
+  }, [errs, quoteError, quoteData, dts]);
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+  console.log(data);
   const { recent_views, user_id, slug } = data;
 
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
+    const { upload_id, comment } = values;
     const { id } = data;
     if (changeCommentState) {
-      const { data: dt, error } = await postAComment({
-        parent_id: id,
-        parent_type: "posts",
-        comment: values.comment,
-      });
-      if (dt) {
-        toast.success(dt);
-        onSubmitProps.resetForm();
-      }
-      if (error) {
-        toast.error("something went wrong, try again...");
+      if (upload_id) {
+        await postAComment({
+          parent_id: id,
+          parent_type: "posts",
+          comment,
+          id: upload_id,
+        });
+      } else {
+        await postAComment({
+          parent_id: id,
+          parent_type: "posts",
+          comment,
+        });
       }
     } else {
-      const { data, error } = await createQuote({
-        body: values.comment,
-        parent_id: id,
-        parent_type: "posts",
-      });
-      if (data) {
-        toast.success(data);
-        onSubmitProps.resetForm();
+      if (upload_id) {
+        await createQuote({
+          body: comment,
+          parent_id: id,
+          parent_type: "posts",
+          id: upload_id,
+        });
+      } else {
+        await createQuote({
+          body: comment,
+          parent_id: id,
+          parent_type: "posts",
+        });
       }
-      if (error) toast.error(error);
     }
+    onSubmitProps.resetForm();
   };
   const baseUrl = process.env.REACT_APP_LIVE_LINK;
   const dataVal = {
@@ -322,50 +340,56 @@ const Post = () => {
               }}
             >
               <Formik
-                initialValues={{ comment: "" }}
+                initialValues={{ comment: "", upload_id: "" }}
                 onSubmit={handleSubmit}
                 validationSchema={validationSchema}
               >
-                <Form>
-                  {/* <Grid item container sx={{ background: "red" }}> */}
-                  <Editor
-                    theme="snow"
-                    name="comment"
-                    value={""}
-                    type={"comments"}
-                    placeholder="Make a comment..."
-                  />
+                {({ values }) => {
+                  console.log(values);
+                  return (
+                    <Form>
+                      {/* <Grid item container sx={{ background: "red" }}> */}
+                      <Editor
+                        theme="snow"
+                        name="comment"
+                        value={""}
+                        type={"comments"}
+                        upload_id={"upload_id"}
+                        placeholder="Make a comment..."
+                      />
 
-                  <Grid
-                    item
-                    container
-                    sx={{ mt: 2 }}
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        color: "#9B9A9A",
-                        borderColor: "inherit",
-                        // border: "2px solid #9B9A9A",
-                        fontSize: "1.2rem",
-                        fontWeight: 700,
-                        padding: ".8rem 2rem",
-                        borderRadius: "3rem",
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <CustomButton
-                      title="Post"
-                      variant="contained"
-                      width="10rem"
-                      type="submit"
-                      isSubmitting={loading}
-                    />
-                  </Grid>
-                </Form>
+                      <Grid
+                        item
+                        container
+                        sx={{ mt: 2 }}
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            color: "#9B9A9A",
+                            borderColor: "inherit",
+                            // border: "2px solid #9B9A9A",
+                            fontSize: "1.2rem",
+                            fontWeight: 700,
+                            padding: ".8rem 2rem",
+                            borderRadius: "3rem",
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <CustomButton
+                          title="Post"
+                          variant="contained"
+                          width="10rem"
+                          type="submit"
+                          isSubmitting={loading}
+                        />
+                      </Grid>
+                    </Form>
+                  );
+                }}
               </Formik>
             </Grid>
           )}

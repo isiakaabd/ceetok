@@ -51,8 +51,7 @@ export const commentSlice = api.injectEndpoints({
 
       invalidatesTags: ["comment", "post"],
       transformResponse: (response) => response.message,
-
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     editComment: builder.mutation({
       query: (body) => ({
@@ -62,7 +61,7 @@ export const commentSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["comment", "post", "admin"],
       transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     deleteComment: builder.mutation({
       query: (body) => ({
@@ -71,7 +70,7 @@ export const commentSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["comment"],
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     updateComment: builder.mutation({
       query: (body) => ({

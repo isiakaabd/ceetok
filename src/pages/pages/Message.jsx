@@ -15,7 +15,7 @@ import {
 import { MoreVertOutlined, SendOutlined } from "@mui/icons-material";
 import { Formik, Form } from "formik/dist";
 import parse from "html-react-parser";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { useEffect, useRef, useState } from "react";
 
 import { useSelector } from "react-redux";

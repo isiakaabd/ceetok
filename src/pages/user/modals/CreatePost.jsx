@@ -1,6 +1,6 @@
 import { Typography, Grid, Button } from "@mui/material";
 import { CustomButton } from "components";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import "react-quill/dist/quill.snow.css";

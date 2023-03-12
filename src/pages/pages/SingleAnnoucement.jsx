@@ -22,7 +22,7 @@ import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import images from "assets";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 
 import {

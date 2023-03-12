@@ -33,7 +33,7 @@ import CustomizedTooltips from "components/ToolTips";
 import { useNavigate } from "react-router-dom";
 import NotificationModal from "components/modals/NotificationModal";
 import { CustomButton } from "components";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { Formik, Form } from "formik/dist";
 import * as Yup from "yup";
 import FormikControl from "validation/FormikControl";

@@ -23,10 +23,10 @@ body {
 }
 .ql-toolbar.ql-snow,
 .ql-container.ql-snow {
-  border: 0 !important;
+  /* border: 0 !important; */
 }
 .ql-editor {
-  min-height: 10rem !important;
+  height: 10rem !important;
 }
 .ql-editor > * {
   word-break: break-all !important;
@@ -37,8 +37,7 @@ body {
   font-size: 1.4rem;
   line-height: 1.5;
   letter-spacing: 0.00938em;
-
-  color: #828484;
+  color: #111b21;
 }
 .ql-text {
   width: 100%;
@@ -108,4 +107,29 @@ body {
 }
 .mention {
   color: #37d42a !important;
+}
+
+.imageList {
+  display: grid !important;
+  gap: 1.5rem !important;
+  grid-template-columns: repeat(3, 1fr);
+}
+.imageList > * {
+  display: inline-block !important;
+  height: 100% !important;
+  width: 100% !important;
+  /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.01) !important; */
+  /* grid-template-columns: repeat(3, 1fr); */
+}
+.imageList-item:first-child {
+  grid-row: span 2;
+  display: inline-block;
+}
+.imageList-item:nth-child(2) {
+  grid-row: span 1;
+  grid-column: 2/3;
+}
+.imageList-item:nth-child(3) {
+  grid-row: 2/3;
+  grid-column: 2/3;
 }

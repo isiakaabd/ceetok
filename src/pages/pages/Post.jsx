@@ -10,7 +10,7 @@ import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 import OtherConversation from "./components/OtherConversation";
 import NotificationModal from "components/modals/NotificationModal";
@@ -78,7 +78,7 @@ export const Details = ({
   };
 
   const validationSchema = Yup.object({
-    comment: Yup.string("Enter Comment").trim().required("Required"),
+    comment: Yup.string("Enter Comment").required("Required"),
   });
 
   const baseUrl = process.env.REACT_APP_LIVE_LINK;
@@ -177,7 +177,7 @@ const Post = () => {
   const [createQuote] = useCreateQuoteMutation();
 
   const validationSchema = Yup.object({
-    comment: Yup.string().trim().required("Enter your Comment"),
+    comment: Yup.string().required("Enter your Comment"),
   });
 
   const navigate = useNavigate();
@@ -201,7 +201,6 @@ const Post = () => {
       });
       if (dt) {
         toast.success(dt);
-        // quill.setContents([{ insert: "\n" }]);
         onSubmitProps.resetForm();
       }
       if (error) {
@@ -333,7 +332,8 @@ const Post = () => {
                     theme="snow"
                     name="comment"
                     value={""}
-                    placeholder="write something..."
+                    type={"comments"}
+                    placeholder="Make a comment..."
                   />
 
                   <Grid

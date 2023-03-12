@@ -29,7 +29,7 @@ import {
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import FormikControl from "validation/FormikControl";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";

@@ -22,6 +22,7 @@ import { useLoginMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { checkAdmin, loginAction } from "redux/reducers/authReducer";
+import { useNavigate } from "react-router-dom";
 const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
   const [loginUser, { isLoading, error, data }] = useLoginMutation();
   const [state, setState] = useState(true);
@@ -55,6 +56,7 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
     password: Yup.string().required("Enter your password"),
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = async (values) => {
     const { email, password } = values;
 
@@ -146,7 +148,8 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
                       alt="facebook icon"
                     />
                   </IconButton>
-                  <IconButton>
+                  {/* ${process.env.REACT_APP_BASE_URL} */}
+                  <IconButton onClick={() => navigate(`/auth/social/google`)}>
                     <img
                       src={images.gmail}
                       style={{

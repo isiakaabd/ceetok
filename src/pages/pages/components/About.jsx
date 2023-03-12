@@ -8,6 +8,7 @@ const About = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+
   const {
     dob,
     gender,
@@ -24,7 +25,7 @@ const About = () => {
       <Grid item md={8} xs={12}>
         <Grid item container gap={4} flexDirection={"column"} sx={{ py: 2 }}>
           {/* Bio */}
-          <Grid>
+          <Grid item>
             <Typography
               variant="secondary"
               fontSize={{ md: "2rem", xs: "1.7rem" }}

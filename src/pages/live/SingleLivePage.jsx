@@ -20,7 +20,7 @@ import {
 } from "redux/slices/adminSlice";
 import images from "assets";
 import { CustomButton } from "components";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { Form, Formik } from "formik/dist";
 import * as Yup from "yup";
 import { toast } from "react-toastify";

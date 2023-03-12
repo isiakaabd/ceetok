@@ -55,8 +55,10 @@ import {
   useGetPostQuotesQuery,
   // useGetUserQuotesQuery,
 } from "redux/slices/quoteSlice";
+import MasonryImageList from "./ImageList";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
+  console.log(media);
   // recent_quotes, recent_comments,
   // const [page, setPage] = useState(0);
   // const {
@@ -341,11 +343,12 @@ export const Comment = ({ handleShare, data, state, setState }) => {
         </Grid>
         {/* )} */}
       </Grid>
-      <Grid item md={9} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
+      <Grid item md={9} xs={12}>
         <Grid
           container
           alignItems="center"
           justifyContent="space-between"
+          sx={{ paddingInline: { xs: "1rem", md: "1.5rem" } }}
           flexWrap="nowrap"
         >
           <Typography
@@ -354,7 +357,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             sx={{ whiteSpace: "nowrap" }}
             fontWeight="700"
           >
-            {category}
+            {category.slice(0, 1).toUpperCase() + category.slice(1)}
           </Typography>
           {token && (
             <Tooltips title={check ? "unfollow" : "Follow"}>
@@ -376,18 +379,42 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             </Tooltips>
           )}
         </Grid>
-        <Avatar
-          src={getImage(media[0]?.storage_path) || defaults}
-          sx={{
-            width: "100%",
-            height: "auto",
-            objectFit: "cover",
-            // maxHeight: "0rem",
-          }}
-          alt={category}
-          variant="square"
-        />
-        <Grid container item flexDirection="column" rowGap={2}>
+        {media?.length >= 2 ? (
+          <MasonryImageList
+            itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+          />
+        ) : media?.length === 1 ? (
+          <Avatar
+            src={getImage(media[0]?.storage_path)}
+            sx={{
+              width: "100%",
+              height: "auto",
+              objectFit: "cover",
+              // maxHeight: "0rem",
+            }}
+            alt={category}
+            variant="square"
+          />
+        ) : (
+          <Avatar
+            src={defaults}
+            sx={{
+              width: "100%",
+              height: "auto",
+              objectFit: "cover",
+              // maxHeight: "0rem",
+            }}
+            alt={category}
+            variant="square"
+          />
+        )}
+        <Grid
+          container
+          item
+          flexDirection="column"
+          rowGap={2}
+          sx={{ paddingInline: { xs: "1rem", md: "1.5rem" } }}
+        >
           <Typography
             color="secondary"
             sx={{

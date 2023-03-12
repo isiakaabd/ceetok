@@ -52,7 +52,7 @@ import {
 import Quotes from "assets/svgs/Quote";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 import {
   useCreateQuoteMutation,

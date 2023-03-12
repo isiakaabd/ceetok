@@ -59,9 +59,8 @@ const UserAccount = () => {
             <Tooltips title={"Notifications"}>
               <IconButton onClick={() => navigate("/user/notifications")}>
                 <Badge
-                  badgeContent={data?.unseen_count || 0}
+                  badgeContent={data?.unseen_count}
                   color="primary"
-                  showZero
                   max={20}
                   sx={{
                     color: "#9B9A9A",

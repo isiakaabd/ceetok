@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useEditCommentMutation } from "redux/slices/commentSlice";
 import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 import { useEditQuoteMutation } from "redux/slices/quoteSlice";
 

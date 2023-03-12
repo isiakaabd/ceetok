@@ -13,24 +13,24 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <CssBaseline />
-      <App />
-      <ToastContainer
-        style={{ fontSize: "1.8rem" }}
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <CssBaseline />
+    <App />
+    <ToastContainer
+      style={{ fontSize: "1.8rem" }}
+      position="top-right"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
+  </Provider>
+  // </React.StrictMode>
 );
 
 serviceWorkerRegistration.register();

@@ -22,7 +22,7 @@ import {
 import { Formik, Form } from "formik/dist";
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Editor from "components/Quil";
+import Editor from "components/Quill";
 import { CustomButton } from "components";
 import parse from "html-react-parser";
 import { toast } from "react-toastify";

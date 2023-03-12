@@ -3,14 +3,14 @@ import { useQuill } from "react-quilljs";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
 
-import BlotFormatter from "quill-blot-formatter";
-import { Quill } from "react-quill";
+// import BlotFormatter from "quill-blot-formatter";
+// import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useFormikContext } from "formik/dist";
 import { TextError } from "validation/TextError";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-Quill.register(BlotFormatter, true);
+// Quill.register(BlotFormatter, true);
 // const validation = Yup.object({
 //   title: Yup.string("Enter Title").required("Required"),
 //   category: Yup.string("Enter Category").required("Required"),
@@ -76,13 +76,17 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   const { setFieldValue, errors, values } = useFormikContext();
 
   // Upload Image to Image Server such as AWS S3, Cloudinary, Cloud Storage, etc..
-  const saveToServer = async (file) => {
+  const saveToServer = async (files) => {
     const form = new FormData();
     form.append("type", type);
-    form.append("media", file);
+    if (files.length === 1) {
+      form.append("media", files[0]);
+    } else {
+      for (let i = 0; i < files.length; i++) {
+        form.append("media", files[i]);
+      }
+    }
 
-    // const res = await uploadImage(form);
-    // process.env.REACT_APP_UPLOAD;
     fetch(process.env.REACT_APP_UPLOAD, {
       method: "POST",
       body: form,
@@ -102,7 +106,6 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   };
   const addLink = () => {
     const url = window.prompt("Enter the URL");
-    // const text = quill.getSelection(true).text;
     quill.format("link", url, "user");
     quill.formatText(quill.getSelection(), { link: url }, "user");
   };
@@ -116,7 +119,19 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     input.click();
 
     input.onchange = (e) => {
-      const file = input.files[0];
+      const file = input.files;
+      saveToServer(file);
+    };
+  };
+  const selectLocalVideo = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "video/mp4,video/x-m4v,video/*");
+    input.setAttribute("multiple", true);
+    input.click();
+
+    input.onchange = (e) => {
+      const file = input.files;
       saveToServer(file);
     };
   };
@@ -138,13 +153,13 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   useEffect(() => {
     if (quill && values[name] === "") {
       quill.setContents([{ insert: "\n" }]);
-      // setFieldError(name, "required");
     }
   }, [values, name, quill]);
   useEffect(() => {
     if (quill) {
       // Add custom handler for Image Upload
       quill.getModule("toolbar").addHandler("image", selectLocalImage);
+      quill.getModule("toolbar").addHandler("video", selectLocalVideo);
       quill.getModule("toolbar").addHandler("link", addLink);
     }
 
@@ -159,7 +174,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
         container
         style={{
           border: ".5px solid #C4C4C4",
-          maxHeight: "15rem",
+
           borderRadius: "1.2rem",
           overflowY: "scroll",
           position: "relative",
@@ -171,7 +186,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
         }}
         flexDirection="column"
       >
-        <div ref={quillRef} style={{ position: "relative" }} />
+        <div ref={quillRef} />
 
         {/* <Typography
           color="#9B9A9A"

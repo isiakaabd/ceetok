@@ -350,7 +350,6 @@ function Header() {
         <LoginModal
           handleClose={handleLoginClose}
           setIsLogin={setIsLogin}
-          // handleRegisterOpen={handleRegisterOpen}
           isLogin={isLogin}
         />
       )}

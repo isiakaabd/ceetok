@@ -9,8 +9,7 @@ const Paginations = ({ page, setPage, count }) => {
   return (
     <Pagination
       page={page}
-      defaultPage={1}
-      count={count + 1}
+      count={count}
       color="success"
       size="medium"
       sx={{

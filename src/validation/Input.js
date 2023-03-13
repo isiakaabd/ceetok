@@ -19,7 +19,7 @@ const Input = (props) => {
           padding: "0.5rem 1.5rem",
           width: "100%",
           ...styles,
-          color: "#828484",
+          color: "#111b21",
           border: "1px solid rgba(0,0,0,0.2)",
         }}
         {...rest}

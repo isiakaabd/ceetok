@@ -102,7 +102,7 @@ const AllPosts = ({ post, showUser }) => {
           >
             {media[0]?.type === "image" ? (
               <Avatar
-                src={getImage(media[0]?.storage_path) || defaults}
+                src={getImage(media[0]?.storage_path)}
                 alt={title}
                 variant="rounded"
                 sx={{
@@ -111,13 +111,25 @@ const AllPosts = ({ post, showUser }) => {
                   fontSize: { md: "3rem", xs: "1.5rem" },
                 }}
               />
-            ) : (
+            ) : media[0]?.type === "video" ? (
+              // ||
               <video
                 style={{ width: "100%", height: "100%" }}
                 src={getImage(media[0]?.storage_path)}
                 autoPlay
                 loop
                 muted
+              />
+            ) : (
+              <Avatar
+                src={defaults}
+                alt={title}
+                variant="rounded"
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  fontSize: { md: "3rem", xs: "1.5rem" },
+                }}
               />
             )}
           </ListItemAvatar>

@@ -246,6 +246,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     );
     return messageWithMentions;
   };
+  console.log(media);
   return (
     <>
       <Grid item container>

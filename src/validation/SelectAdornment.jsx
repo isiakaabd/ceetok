@@ -29,7 +29,7 @@ const Text = ({
       {...rest}
       sx={{
         borderRadius: borderRadius ? borderRadius : "3rem",
-        color: color ? color : "#828484",
+        color: color ? color : "#111b21",
         height: height ? height : "4rem",
         border: border,
         paddingInline: " 1rem",

@@ -21,7 +21,7 @@ const Text = ({
       alignItems="center"
       sx={{
         borderRadius: borderRadius ? borderRadius : "3rem",
-        color: "#828484",
+        color: "#111b21",
         border: border ? border : "1px solid rgba(0,0,0,0.2)",
         height: height ? height : "4rem",
         flexDirection: order ? "row-reverse" : "row",

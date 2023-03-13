@@ -178,10 +178,11 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
           borderRadius: "1.2rem",
           overflowY: "scroll",
           position: "relative",
-          "&::-webkit-scrollbar": {
-            width: ".85rem",
+          "&::WebkitScrollbar": {
+            width: ".1rem",
             display: "none",
           },
+          scrollbarWidth: ".1rem",
           scrollbarColor: "transparent",
         }}
         flexDirection="column"

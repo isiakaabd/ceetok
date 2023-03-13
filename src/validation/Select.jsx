@@ -17,14 +17,14 @@ export const Formiks = ({
       displayEmpty
       {...rest}
       renderValue={(value) => (
-        <Typography color="#828484">
+        <Typography color="#111b21">
           {value || defaultValue || placeholder}
         </Typography>
       )}
       // placeholder={placeholder}
       sx={{
         borderRadius: borderRadius ? borderRadius : "1rem",
-        color: "#828484",
+        color: "#111b21",
         height: "4rem",
 
         "&:active,&:focus": {

@@ -345,7 +345,6 @@ const Post = () => {
                 validationSchema={validationSchema}
               >
                 {({ values }) => {
-                  console.log(values);
                   return (
                     <Form>
                       {/* <Grid item container sx={{ background: "red" }}> */}

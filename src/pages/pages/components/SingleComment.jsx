@@ -61,7 +61,9 @@ import {
 } from "redux/slices/quoteSlice";
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
-
+import MasonryImageList from "./ImageList";
+import ReactPlayer from "react-player";
+import images from "assets";
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
     item
@@ -87,7 +89,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "2rem", xs: ".9rem" },
   fontWeight: 600,
 }));
-
+const { defaults } = images;
 const SingleComment = ({ item, icons, profile, type }) => {
   console.log(item);
   // const x = (message) => {
@@ -157,8 +159,18 @@ export function Image({ person: { user } }) {
 }
 
 export function Text({ item, profile, displayDetail, type }) {
-  const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
-    item;
+  const {
+    user,
+    comment,
+    media,
+    createdAt,
+    updatedAt,
+    body,
+    edited,
+    user_id,
+    id,
+  } = item;
+  console.log(media);
   const [isLogin, setIsLogin] = useState(false);
   const token = useSelector((state) => state.auth.token);
   const admin = useSelector((state) => state.auth.admin);
@@ -427,8 +439,43 @@ export function Text({ item, profile, displayDetail, type }) {
                 )}
               </Grid>
             </Grid>
-
-            <div className="ql-text">{parse(x(comment || body))}</div>
+            <Grid item container flexDirection={"column"} flexWrap="nowrap">
+              <div className="ql-text">{parse(x(comment || body))}</div>
+              <Grid item container sx={{ p: { xs: "1rem" } }}>
+                {media?.length >= 2 ? (
+                  <MasonryImageList
+                    itemData={media?.slice(
+                      0,
+                      media.length > 4 ? 3 : media.length
+                    )}
+                  />
+                ) : media?.length === 1 && media[0]?.type === "image" ? (
+                  <Avatar
+                    src={getImage(media[0]?.storage_path)}
+                    sx={{
+                      width: "100%",
+                      height: "auto",
+                      objectFit: "cover",
+                      // maxHeight: "0rem",
+                    }}
+                    // alt={category}
+                    variant="square"
+                  />
+                ) : media?.length === 1 && media[0]?.type === "video" ? (
+                  // <div className="player-wrapper">
+                  <ReactPlayer
+                    url={getImage(media[0]?.storage_path)}
+                    controls={true}
+                    volume={0.6}
+                    width="100%"
+                    height="auto"
+                    // className="react-player"
+                    // style={{ maxheight: "10rem" }}
+                  />
+                ) : null}
+              </Grid>
+              {/* <MasonryImageList itemData={media} /> */}
+            </Grid>
           </Grid>
         }
         secondary={

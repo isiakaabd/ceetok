@@ -25,7 +25,13 @@ import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-
+import useDocumentTitle from "hooks/useDocument";
+import parse from "html-react-parser";
+import useFavIcon from "hooks/useFavIcon";
+import images from "assets";
+import { getImage } from "helpers";
+import { Helmet } from "react-helmet";
+const { defaults } = images;
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
     item
@@ -174,6 +180,11 @@ const Post = () => {
   const [page, setPage] = useState(0);
   const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
+  // let imgs = data?.media?[0].type==="image"?data?.media[0]?.storage_path
+  // : "";
+  // console.log(data);
+  // useDocumentTitle(data?.title);
+  // useFavIcon(getImage(data?.media[0]?.storage_path) || defaults);
   const [postAComment, { isLoading: loading, error: errs, data: dts }] =
     usePostCommentMutation();
   const [createQuote, { error: quoteError, data: quoteData }] =
@@ -196,7 +207,6 @@ const Post = () => {
   }, [errs, quoteError, quoteData, dts]);
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  console.log(data);
   const { recent_views, user_id, slug } = data;
 
   const handleShare = () => setOpenShareModal(true);
@@ -242,9 +252,27 @@ const Post = () => {
     text: `${baseUrl}/post/${slug}`,
     title: "Link",
   };
+
+  console.log(getImage(data?.media[0]?.storage_path));
   const viewers = recent_views?.filter((value) => value.viewer !== "guest");
   return (
     <>
+      <Helmet>
+        <title>{data?.title}</title>
+        <link
+          rel="icon"
+          id="icon"
+          href={getImage(data?.media[0]?.storage_path) || defaults}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={getImage(data?.media[0]?.storage_path) || defaults}
+        />
+        <meta name="description" content={122} />
+        <meta name="title" content={data?.title} />
+      </Helmet>
       <Grid item container gap={2} flexWrap="nowrap">
         <Grid item xs={1} display={{ md: "block", xs: "none" }}>
           <Grid container justifyContent="center">
@@ -344,51 +372,47 @@ const Post = () => {
                 onSubmit={handleSubmit}
                 validationSchema={validationSchema}
               >
-                {({ values }) => {
-                  return (
-                    <Form>
-                      {/* <Grid item container sx={{ background: "red" }}> */}
-                      <Editor
-                        theme="snow"
-                        name="comment"
-                        value={""}
-                        type={"comments"}
-                        upload_id={"upload_id"}
-                        placeholder="Make a comment..."
-                      />
+                <Form>
+                  {/* <Grid item container sx={{ background: "red" }}> */}
+                  <Editor
+                    theme="snow"
+                    name="comment"
+                    value={""}
+                    type={"comments"}
+                    upload_id={"upload_id"}
+                    placeholder="Make a comment..."
+                  />
 
-                      <Grid
-                        item
-                        container
-                        sx={{ mt: 2 }}
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            color: "#9B9A9A",
-                            borderColor: "inherit",
-                            // border: "2px solid #9B9A9A",
-                            fontSize: "1.2rem",
-                            fontWeight: 700,
-                            padding: ".8rem 2rem",
-                            borderRadius: "3rem",
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <CustomButton
-                          title="Post"
-                          variant="contained"
-                          width="10rem"
-                          type="submit"
-                          isSubmitting={loading}
-                        />
-                      </Grid>
-                    </Form>
-                  );
-                }}
+                  <Grid
+                    item
+                    container
+                    sx={{ mt: 2 }}
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        color: "#9B9A9A",
+                        borderColor: "inherit",
+                        // border: "2px solid #9B9A9A",
+                        fontSize: "1.2rem",
+                        fontWeight: 700,
+                        padding: ".8rem 2rem",
+                        borderRadius: "3rem",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <CustomButton
+                      title="Post"
+                      variant="contained"
+                      width="10rem"
+                      type="submit"
+                      isSubmitting={loading}
+                    />
+                  </Grid>
+                </Form>
               </Formik>
             </Grid>
           )}

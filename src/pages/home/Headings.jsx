@@ -24,7 +24,7 @@ const Headings = () => {
     >
       <Typography variant="h1">Welcome to Ceetok</Typography>
       <Typography variant="h2" sx={{ mt: "1rem" }}>
-        As e dey hot...
+        Where conversations come to life
       </Typography>
 
       <Grid item sx={{ mt: 2 }}>

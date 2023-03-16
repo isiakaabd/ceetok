@@ -1,41 +1,27 @@
-import { Button, Grid, Skeleton, Typography } from "@mui/material";
-import Filters from "components/modals/Filters";
+import { Grid, List, Skeleton, Typography } from "@mui/material";
+
 import { useState } from "react";
-import { useGetCategoriesQuery, useGetPostQuery } from "redux/slices/postSlice";
+import { useGetPostQuery } from "redux/slices/postSlice";
 import SinglePosts from "pages/home/SinglePosts";
-import { NavigateNext } from "@mui/icons-material";
-import { CustomButton } from "components";
+
+import Paginations from "components/modals/Paginations";
+import GroupedSelect from "components/modals/GroupSelect";
 const Categories = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const [value, setValue] = useState("");
-  const { data: AllPosts, isLoading: loading } = useGetPostQuery({
-    from: value,
+  const [page, setPage] = useState(1);
+
+  const [category, setCategory] = useState("");
+
+  const {
+    data: AllPosts,
+    isLoading: loading,
+    isFetching,
+  } = useGetPostQuery({
+    offset: page - 1,
+    category,
   });
-  const { data: categories, isLoading } = useGetCategoriesQuery();
-  //   const [getPost, { data }] = useLazyGetPostQuery();
-  //   console.log(state, 123);
-  //   useEffect(() => {
-  //     if (categories) {
-  //       categories?.map(async (i) => {
-  //         const { data } = await getPost({ category: i.name.toLowerCase() });
-  //         if (data) {
-  //           setState([...state, data]);
-  //         }
-  //         // console.log(data);
-  //       });
+  if (loading) return <Skeleton />;
+  const { posts, total_pages } = AllPosts;
 
-  //       //   console.log(z());
-  //     }
-  //   }, [categories]);
-
-  if ((isLoading, loading)) return <Skeleton />;
   return (
     <Grid item container sx={{ p: { md: 4, xs: 1 } }}>
       <Grid item container flexWrap="nowrap" alignItems="center" sx={{ mb: 3 }}>
@@ -49,22 +35,64 @@ const Categories = () => {
         >
           All Categories
         </Typography>
+        {isFetching && (
+          <Typography
+            flex={1}
+            variant="h4"
+            sx={{ color: "#37D42A" }}
+            color="success"
+          >
+            Loading...
+          </Typography>
+        )}
 
         <Grid item>
-          <Filters
-            anchorEl={anchorEl}
-            setAnchorEl={setAnchorEl}
-            open={open}
-            value={value}
-            setValue={setValue}
-            handleClick={handleClick}
-            handleClose={handleClose}
+          <GroupedSelect
+            category={category}
+            setCategory={setCategory}
+            setPage={setPage}
           />
         </Grid>
       </Grid>
+      <Grid item container>
+        {posts?.length > 0 ? (
+          <>
+            <List
+              dense
+              sx={{
+                maxHeight: "120rem",
+                overflowY: "scroll",
+                width: "100%",
+                "&::-webkit-scrollbar": {
+                  width: ".8rem",
+                  display: "none",
+                  ml: 0.4,
+                },
+              }}
+            >
+              {posts?.map((post, index) => {
+                return <SinglePosts key={index} index={index} post={post} />;
+              })}
+            </List>
 
-      <Grid item container gap={3}>
-        {categories?.map((item, index) => {
+            {total_pages > 1 && (
+              <Paginations
+                page={page}
+                setPage={setPage}
+                count={AllPosts?.total_pages}
+              />
+            )}
+            {/* </Grid> */}
+          </>
+        ) : (
+          <Typography variant="h2" sx={{ width: "100%" }} textAlign="center">
+            No Data yet
+          </Typography>
+        )}
+      </Grid>
+
+      {/* <Grid item container gap={3}> */}
+      {/* {categories?.map((item, index) => {
           return (
             <Grid
               item
@@ -129,8 +157,8 @@ const Categories = () => {
               </Grid>
             </Grid>
           );
-        })}
-      </Grid>
+        })} */}
+      {/* </Grid> */}
     </Grid>
   );
 };

@@ -12,19 +12,23 @@ import Paginations from "components/modals/Paginations";
 import Error from "pages/pages/components/Error";
 
 const RightTab = ({ setCreatePost, more }) => {
-  // const posts = useSelector((state) => state.posts.posts);
   const [register, setRegister] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [value, setValue] = useState("");
   const loginStatus = useSelector((state) => state.auth.token);
   const [page, setPage] = useState(1);
+  const [approved, setApproved] = useState(false);
   const {
     data: array,
     error,
     isLoading,
     isFetching,
-  } = useGetPostQuery({ offset: page - 1, from: value, ...more });
-  console.log(array);
+  } = useGetPostQuery({
+    offset: page - 1,
+    from: value,
+    approved,
+    ...more,
+  });
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -93,6 +97,8 @@ const RightTab = ({ setCreatePost, more }) => {
                 setAnchorEl={setAnchorEl}
                 open={open}
                 value={value}
+                post={approved}
+                setPost={setApproved}
                 setValue={setValue}
                 handleClick={handleClick}
                 handleClose={handleClose}
@@ -101,8 +107,7 @@ const RightTab = ({ setCreatePost, more }) => {
             {isFetching && (
               <Typography
                 variant="h4"
-                width={"100%"}
-                fontWeight={600}
+                flex={1}
                 sx={{ color: "#37D42A" }}
                 textAlign="center"
               >

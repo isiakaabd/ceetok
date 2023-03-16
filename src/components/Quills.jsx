@@ -17,7 +17,6 @@ const TOOLBAR_OPTIONS = [
 ];
 
 export default function Editor(props) {
-  console.log(props);
   const [value, setValue] = useState(props.value || "");
   const reactQuillRef = useRef(null);
 

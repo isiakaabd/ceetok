@@ -25,9 +25,7 @@ import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import useDocumentTitle from "hooks/useDocument";
-import parse from "html-react-parser";
-import useFavIcon from "hooks/useFavIcon";
+
 import images from "assets";
 import { getImage } from "helpers";
 import { Helmet } from "react-helmet";
@@ -253,7 +251,6 @@ const Post = () => {
     title: "Link",
   };
 
-  console.log(getImage(data?.media[0]?.storage_path));
   const viewers = recent_views?.filter((value) => value.viewer !== "guest");
   return (
     <>

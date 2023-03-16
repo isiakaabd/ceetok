@@ -14,12 +14,13 @@ const About = () => {
     gender,
     post_count,
     last_activity,
+    tags_count,
+    mention_count,
     interests,
     avg_post_per_day,
     createdAt,
     occupation,
   } = data;
-
   return (
     <Grid item container sx={{ background: "#fff", p: 2 }}>
       <Grid item md={8} xs={12}>
@@ -248,7 +249,11 @@ const About = () => {
                 fontWeight={600}
                 color="secondary"
               >
-                20 Post(s)
+                {mention_count > 1
+                  ? `${mention_count} Posts`
+                  : mention_count === 1
+                  ? `${mention_count} Post`
+                  : "No Post"}
               </Typography>
             </Grid>
             <Grid item container alignItems="center">
@@ -264,7 +269,11 @@ const About = () => {
                 fontWeight={600}
                 color="secondary"
               >
-                102 Thread (s)
+                {tags_count > 1
+                  ? `${tags_count} Tags`
+                  : tags_count === 1
+                  ? `${tags_count} Tag`
+                  : "No Tag"}
               </Typography>
             </Grid>
           </Grid>

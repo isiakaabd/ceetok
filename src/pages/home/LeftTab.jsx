@@ -125,13 +125,13 @@ function Skeletons() {
               <Grid
                 item
                 container
+                key={index}
                 flexWrap="nowrap"
                 alignItems="center"
                 justifyContent="space-between"
               >
                 <Grid item xs={8}>
                   <Skeleton
-                    key={index}
                     sx={{ height: "1.5rem", width: "100%" }}
                     animation="wave"
                     variant="text"

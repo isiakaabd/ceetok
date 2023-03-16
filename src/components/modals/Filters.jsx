@@ -11,10 +11,13 @@ import {
 import { FilterList } from "@mui/icons-material";
 import { StyledMenu } from "pages/Announcement";
 import { getDates } from "helpers";
+import { useSelector } from "react-redux";
 
 const Filters = ({
   anchorEl,
   setAnchorEl,
+  post,
+  setPost,
   value,
   setValue,
   open,
@@ -23,7 +26,7 @@ const Filters = ({
 }) => {
   const today = new Date();
   const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-
+  const admin = useSelector((state) => state.auth.admin);
   const lastMonth = new Date(
     today.getFullYear(),
     today.getMonth() - 1,
@@ -31,6 +34,10 @@ const Filters = ({
   );
   const handleChange = (event) => {
     setValue(event.target.value);
+    handleClose();
+  };
+  const handleChanges = (event) => {
+    setPost(event.target.value);
     handleClose();
   };
 
@@ -95,54 +102,40 @@ const Filters = ({
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Divider orientation="vertical" flexItem xsx={{ p: 2 }} />
-          <Grid item container>
-            <FormControl sx={{ px: 2 }}>
-              <FormLabel id="demo-radio-buttons-group-label">Show</FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="All"
-                name="radio-buttons-group"
-              >
-                <FormControlLabel value="All" control={<Radio />} label="All" />
-                <FormControlLabel
-                  value="Discussion only"
-                  control={<Radio />}
-                  label="Discussion only"
-                />
-                <FormControlLabel
-                  value="Photo only"
-                  control={<Radio />}
-                  label="Photo only"
-                />
-                <FormControlLabel
-                  value="Photo only"
-                  control={<Radio />}
-                  label="Photo only"
-                />
-                <FormControlLabel
-                  value="Videos only"
-                  control={<Radio />}
-                  label="Videos only"
-                />
-                <FormControlLabel
-                  value="Links only"
-                  control={<Radio />}
-                  label="Links only"
-                />
-                <FormControlLabel
-                  value="Polls only"
-                  control={<Radio />}
-                  label="Polls only"
-                />
-                <FormControlLabel
-                  value="Events only"
-                  control={<Radio />}
-                  label="Events only"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
+          {admin && (
+            <>
+              <Divider orientation="vertical" flexItem sx={{ p: 2 }} />
+              <Grid item container>
+                <FormControl sx={{ px: 2 }}>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Post
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="filters by approved, unapproved post"
+                    value={post}
+                    name="radio-buttons-group"
+                    onChange={handleChanges}
+                  >
+                    <FormControlLabel
+                      value=""
+                      control={<Radio />}
+                      label="All"
+                    />
+                    <FormControlLabel
+                      label="Approved"
+                      control={<Radio />}
+                      value={true}
+                    />
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio />}
+                      label="Unapproved"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            </>
+          )}
         </Grid>
       </StyledMenu>
     </>

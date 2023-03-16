@@ -42,69 +42,85 @@ const Mentions = () => {
         <IconButton sx={{ ml: "auto" }}>
           <DeleteOutline sx={{ fontSize: "2rem" }} />
         </IconButton>
-        <List dense>
-          {mentions.map((item, index) => {
-            const {
-              parent: { comment, user, body, slug },
-              parent_type,
-            } = item;
-            return (
-              <ListItemButton
-                alignItems="flex-start"
-                item
-                component={Link}
-                to={`${parent_type === "posts" ? `/post/${slug}` : null}`}
-                key={index}
-              >
-                <ListItemAvatar>
-                  <Avatar src={getImage(user?.avatar)} alt={user?.full_name}>
-                    {user?.full_name?.slice(0, 1).toUpperCase()}
-                  </Avatar>
-                </ListItemAvatar>
+        {mentions?.length < 0 ? (
+          <List dense>
+            {mentions?.map((item, index) => {
+              const {
+                parent,
+                // : { comment, body,  },
+                parent_type,
+              } = item;
+              return (
+                <ListItemButton
+                  alignItems="flex-start"
+                  item
+                  component={Link}
+                  to={`${
+                    parent_type === "posts" ? `/post/${parent?.slug}` : null
+                  }`}
+                  key={index}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      src={getImage(parent?.user?.avatar)}
+                      alt={parent?.user?.full_name}
+                    >
+                      {parent?.user?.full_name?.slice(0, 1).toUpperCase()}
+                    </Avatar>
+                  </ListItemAvatar>
 
-                <ListItemText
-                  primaryTypographyProps={{
-                    fontWeight: 600,
+                  <ListItemText
+                    primaryTypographyProps={{
+                      fontWeight: 600,
 
-                    color: "color.text",
-                    fontSize: { md: "1.8rem", xs: "1.4rem" },
-                  }}
-                  primary={
-                    <>
-                      <Typography variant="span">
-                        {user?.full_name} mentioned{" "}
-                      </Typography>
-                      <Typography variant="span">
-                        {`you in a ${
-                          parent_type === "posts"
-                            ? "post"
-                            : parent_type === "comments"
-                            ? "comment"
-                            : parent_type
-                        }.`}
-                      </Typography>
-                    </>
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        variant="span"
-                        fontWeight={500}
-                        sx={{
-                          width: "max-content",
-                          fontSize: { md: "1.8rem", xs: "1.4rem" },
-                        }}
-                        className="likes-content"
-                      >
-                        {parse(comment || body || "something went wrong...")}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItemButton>
-            );
-          })}
-        </List>
+                      color: "color.text",
+                      fontSize: { md: "1.8rem", xs: "1.4rem" },
+                    }}
+                    primary={
+                      <>
+                        <Typography variant="span">
+                          {parent?.user?.full_name} mentioned{" "}
+                        </Typography>
+                        <Typography variant="span">
+                          {`you in a ${
+                            parent_type === "posts"
+                              ? "post"
+                              : parent_type === "comments"
+                              ? "comment"
+                              : parent_type
+                          }.`}
+                        </Typography>
+                      </>
+                    }
+                    secondary={
+                      <>
+                        <Typography
+                          variant="span"
+                          fontWeight={500}
+                          sx={{
+                            width: "max-content",
+                            fontSize: { md: "1.8rem", xs: "1.4rem" },
+                          }}
+                          className="likes-content"
+                        >
+                          {parse(
+                            parent?.comment ||
+                              parent?.body ||
+                              "something went wrong..."
+                          )}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItemButton>
+              );
+            })}
+          </List>
+        ) : (
+          <Typography variant="h2" sx={{ width: "100%", textAlign: "center" }}>
+            No Data Yet
+          </Typography>
+        )}
 
         {total_pages > 1 && (
           <Paginations page={page} setPage={setPage} count={total_pages} />

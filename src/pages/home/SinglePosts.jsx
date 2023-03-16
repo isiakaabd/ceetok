@@ -17,8 +17,7 @@ import LoginModal from "components/modals/LoginModal";
 import images from "assets";
 
 const AllPosts = ({ post, showUser }) => {
-  const { slug, user, type, media, title, category, views_count, updatedAt } =
-    post;
+  const { slug, user, media, title, category, views_count, updatedAt } = post;
   const { defaults } = images;
   // const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
@@ -173,7 +172,7 @@ const AllPosts = ({ post, showUser }) => {
                     fontSize: { md: "2rem", xs: "1.2rem" },
                     fontWeight: { md: 700, xs: 600 },
                     width: "calc(98%)",
-                    maxWidth: "100%",
+                    maxWidth: "90%",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",

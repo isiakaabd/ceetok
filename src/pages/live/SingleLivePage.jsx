@@ -97,7 +97,7 @@ const SingleLivePage = () => {
     summary,
     id,
   } = post;
-  console.log(views);
+
   const handleInteraction = async () => {
     const { data, error } = await editLive({
       id,
@@ -156,7 +156,7 @@ const SingleLivePage = () => {
     if (error) toast.error(error);
   };
   const viewers = views?.filter((value) => value.viewer !== "guest");
-  console.log(viewers);
+
   return (
     <>
       <Grid

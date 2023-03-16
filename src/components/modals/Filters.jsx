@@ -26,12 +26,12 @@ const Filters = ({
 }) => {
   const today = new Date();
   const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const admin = useSelector((state) => state.auth.admin);
   const lastMonth = new Date(
     today.getFullYear(),
     today.getMonth() - 1,
     today.getDate()
   );
+  const admin = useSelector((state) => state.auth.admin);
   const handleChange = (event) => {
     setValue(event.target.value);
     handleClose();

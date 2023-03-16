@@ -106,7 +106,7 @@ function Skeletons() {
       }}
       gap={3}
     >
-      <Grid container flexDirection="column" gap={2} overflow={"hidden"}>
+      <Grid item container flexDirection="column" gap={2} overflow={"hidden"}>
         <Skeleton
           sx={{ height: "4rem", borderRadius: "2rem", width: "100%" }}
           animation="wave"
@@ -125,13 +125,13 @@ function Skeletons() {
               <Grid
                 item
                 container
+                key={index}
                 flexWrap="nowrap"
                 alignItems="center"
                 justifyContent="space-between"
               >
                 <Grid item xs={8}>
                   <Skeleton
-                    key={index}
                     sx={{ height: "1.5rem", width: "100%" }}
                     animation="wave"
                     variant="text"

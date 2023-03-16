@@ -1,42 +1,86 @@
-import { Grid, Typography } from "@mui/material";
-import React from "react";
-import images from "assets";
-
+import { Avatar, Grid, Typography } from "@mui/material";
+import { useGetPostQuery } from "redux/slices/postSlice";
+import parser from "html-react-parser";
+import { Link } from "react-router-dom";
+import { getImage } from "helpers";
 const Heading = () => {
+  const { data: array, isLoading } = useGetPostQuery({
+    category: "trending",
+  });
+  if (isLoading) return;
+  const { posts } = array;
+  const post = posts?.at(0);
+
   return (
-    <Grid
-      item
-      container
-      flexWrap="nowrap"
-      sx={{
-        maxHeight: "30rem",
-        borderRadius: "1.5rem",
-        px: "4rem",
-        alignItems: "center",
-        background: "#044402",
-      }}
-    >
-      <Grid item flex={{ md: 1, xs: 2 }}>
-        <Typography
-          fontWeight={700}
-          fontSize={{ md: "5.5rem", color: "#fff", xs: "2rem" }}
+    <Grid item container>
+      <Grid
+        item
+        container
+        flexWrap="nowrap"
+        alignItems="center"
+        sx={{
+          maxHeight: "30rem",
+          borderRadius: "1.5rem",
+          px: "4rem",
+          alignItems: "center",
+          background: "#044402",
+          // p: { md: 4, xs: 2 },
+          // pb: { md: 0, xs: 3 },
+
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundColor: "#044402",
+          backgroundBlendMode: "overlay",
+          backgroundPosition: "cover",
+          // height: { md: "40rem", xs: "20rem" },
+          // borderRadius: { md: "2rem", xs: "1.2rem" },
+        }}
+      >
+        <Grid
+          item
+          flex={{ md: 1, xs: 2 }}
+          sx={{ minHeight: "20rem", height: "100%" }}
         >
-          BITCOIN FALLS BACK TO $10,000
-        </Typography>
-      </Grid>
-      <Grid item flex={{ md: 1, xs: 1, height: "100%" }}>
-        <Grid container sx={{ height: "100%" }}>
-          <img
-            src={images.bitcoin}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              // height: { md: "20rem", xs: "10rem" },
-            }}
-            alt="bitcoin"
-          />
+          <Grid item container sx={{ height: "100%" }} alignItems="center">
+            <Typography
+              fontWeight={700}
+              component={post ? Link : null}
+              to={`/post/${post?.slug}`}
+              sx={{
+                color: "#fff",
+                // width: "calc(98%)",
+                // maxWidth: "90%",
+                // overflow: "hidden",
+                // textOverflow: "ellipsis",
+                // whiteSpace: "nowrap",
+              }}
+              fontSize={{ md: "4rem", xs: "2rem" }}
+            >
+              {post ? parser(post?.title) : "No Trending Post yet"}
+            </Typography>
+          </Grid>
         </Grid>
+        {post?.media?.length > 0 && (
+          <Grid item flex={{ md: 1, xs: 1, height: "100%" }}>
+            <Grid container sx={{ height: "100%" }}>
+              <Avatar
+                src={
+                  post?.media?.length > 0 &&
+                  getImage(post?.media[0]?.storage_path)
+                }
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  padding: { md: "2rem", xs: "1rem" },
+                  borderRadius: "1.2rem",
+                  // height: { md: "20rem", xs: "10rem" },
+                }}
+                alt={post?.title}
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

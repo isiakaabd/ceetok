@@ -6,7 +6,6 @@ function getFaviconEl() {
 
 function useFavIcon(icon) {
   useEffect(() => {
-    console.log(getFaviconEl());
     const favicon = getFaviconEl();
     favicon.href = icon;
   }, [icon]);

@@ -119,11 +119,9 @@ const Footer = () => {
                 textAlign: "justify",
               }}
             >
-              Tortor, lobortis semper viverra ac, molestie tortor laoreet amet
-              euismod et diam quis aliquam consequat porttitor integer a nisl,
-              in faucibus nunc et aenean turpis dui dignissim nec scelerisque
-              ullamcorper eu neque, augue quam quis lacus pretium eros est amet
-              turpis nunc in turpis massa et
+              Join the conversation and share your perspective on pressing and
+              trivial social issues with a community of engaged and diverse
+              individuals.
             </Typography>
           </Grid>
           <Grid item>

@@ -63,7 +63,7 @@ import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
 import MasonryImageList from "./ImageList";
 import ReactPlayer from "react-player";
-import images from "assets";
+// import images from "assets";
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
     item
@@ -89,9 +89,8 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontSize: { md: "2rem", xs: ".9rem" },
   fontWeight: 600,
 }));
-const { defaults } = images;
+
 const SingleComment = ({ item, icons, profile, type }) => {
-  console.log(item);
   // const x = (message) => {
   //   const messageWithMentions = message.replace(
   //     /@\w+/g,
@@ -170,7 +169,7 @@ export function Text({ item, profile, displayDetail, type }) {
     user_id,
     id,
   } = item;
-  console.log(media);
+
   const [isLogin, setIsLogin] = useState(false);
   const token = useSelector((state) => state.auth.token);
   const admin = useSelector((state) => state.auth.admin);

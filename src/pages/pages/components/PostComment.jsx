@@ -151,7 +151,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     }
   }
 
-  const handleDeleteTopic = async () => {
+  const handleDeleteTopic = async (e) => {
     const { data, error } = await deletePost({ id });
     if (data) {
       toast.success(data);
@@ -160,15 +160,15 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     if (error) {
       toast.error(error);
     }
-    handleClose();
+    handleClose(e);
   };
-  const handleApproveTopic = async () => {
+  const handleApproveTopic = async (e) => {
     const { data, error } = await approvePost({
       id,
     });
     if (data) {
       toast.success(data);
-      handleClose();
+      handleClose(e);
     }
     if (error) toast.error(error);
   };
@@ -559,8 +559,8 @@ function AllComments({ id, profile, icons }) {
   const [page, setPage] = useState(1);
   const {
     data: comments,
-    error,
-    isFetching,
+    // error,
+    // isFetching,
   } = useGetPostCommentsQuery({
     parent_type: "posts",
     parentId: id,

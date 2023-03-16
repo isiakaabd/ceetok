@@ -19,22 +19,27 @@ export const postSlice = api.injectEndpoints({
         recent,
         userId,
         offset,
+        approved,
         from,
         direction,
+        //  ${`&approved=${approved}`}
       }) => ({
-        url: `post/?${category ? `category=${category}` : ""}${
+        url: `post/?${offset ? `&offset=${offset}` : "&offset=0"}&limit=10
+        ${category ? `&category=${category}` : ""}${
           from ? `&from=${from}` : ""
-        }${offset ? `&offset=${offset}` : "&offset=0"}&limit=10${
-          userId ? `&user_id=${userId}` : ""
-        } ${direction ? `&from_direction=${direction}` : ""} 
+        }${approved ? `&approved=${approved}` : ""}     
+        ${userId ? `&user_id=${userId}` : ""} ${
+          direction ? `&from_direction=${direction}` : ""
+        } 
          ${latest ? `&latest=${latest}` : ""}   ${
           recent ? `&recent=${recent}` : ""
         } 
+        
         `,
 
         method: "GET",
       }),
-      keepUnusedDataFor: 5000,
+      // keepUnusedDataFor: 5000,
       providesTags: ["post"],
       transformResponse: (response) => response.body,
       // transformErrorResponse: (error) => error.data.message,

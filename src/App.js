@@ -30,6 +30,7 @@ import GuideLine from "pages/GuideLine";
 import Privacy from "pages/Privacy";
 import ContactUs from "pages/ContactUs";
 import Notification from "components/Notification";
+import Page404 from "pages/404";
 
 const App = () => {
   return (
@@ -75,6 +76,7 @@ const App = () => {
             <Route path="admin" element={<AdminRoute />}>
               <Route path="all-users" element={<AllUsers />} />
             </Route>
+            <Route path="*" element={<Page404 />} />
           </Routes>
           <div style={{ marginTop: "auto" }}>
             <Footer />

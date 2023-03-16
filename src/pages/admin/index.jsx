@@ -59,6 +59,7 @@ const AllUsers = () => {
             container
             gap={1}
             flex={1}
+            flexWrap="nowwrap"
             sx={{ display: { md: "flex", xs: "none" } }}
           >
             {["All", "A", "B", "C", "E", "F", "G"].map((item) => (
@@ -77,7 +78,7 @@ const AllUsers = () => {
             ))}
           </Grid>
           {isFetching && (
-            <Typography variant="h4" color="success">
+            <Typography variant="h4" sx={{ color: "#37D42A", flex: 1 }}>
               Loading...
             </Typography>
           )}

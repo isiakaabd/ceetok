@@ -56,7 +56,7 @@ const Quotes = () => {
         // sx={{ }}
       >
         {isFetching && (
-          <Typography varinat="h4" fontWeight={700}>
+          <Typography varinat="h4" sx={{ color: "#37D42A" }}>
             Loading...
           </Typography>
         )}

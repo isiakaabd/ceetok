@@ -1,9 +1,5 @@
-// import React from "react";
 import Input from "./Input";
 import Selects from "./Select";
-// import Checkboxes from "./Checkboxs";
-// import DateComponent from "./Date";
-// import Textarea from "./Textarea";
 import PropTypes from "prop-types";
 import InputsAdornment from "./InputsAdornment";
 import SelectAdornment from "./SelectAdornment";
@@ -12,8 +8,6 @@ import { UploadComponent } from "./Files";
 import CheckBox from "./Checkboxs";
 import TextArea from "./Textarea";
 import Radios from "./Radios";
-// import Files2 from "./File2";
-// import DateTimePicker from "./DateTimePicker";
 
 const FormikControl = ({ control, ...rest }) => {
   switch (control) {

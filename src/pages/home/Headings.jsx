@@ -24,7 +24,13 @@ const Headings = () => {
       }}
     >
       <Typography variant="h1">Welcome to Ceetok</Typography>
-      <Typography variant="h2" sx={{ mt: "1rem" }}>
+      <Typography
+        sx={{
+          fontSize: "clamp(1.2rem, 8vw, 1.5rem)",
+          mt: "1rem",
+          textAlign: "center",
+        }}
+      >
         Where conversations come to life
       </Typography>
 

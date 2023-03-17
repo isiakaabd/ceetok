@@ -107,7 +107,7 @@ const SingleComment = ({ item, icons, profile, type }) => {
         sx={{
           "& .MuiListItemText-root": {
             m: 0,
-            px: 2,
+            pr: { md: 2, xs: 1 },
           },
           textDecoration: "none",
           color: "text.primary",

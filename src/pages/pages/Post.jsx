@@ -5,6 +5,7 @@ import {
   IosShareOutlined,
   ChatBubbleOutline,
 } from "@mui/icons-material";
+import parse from "html-react-parser";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
@@ -25,10 +26,8 @@ import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import images from "assets";
-import { getImage } from "helpers";
-import { Helmet } from "react-helmet";
-const { defaults } = images;
+import Seo from "components/Seo";
+
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
     item
@@ -204,8 +203,9 @@ const Post = () => {
   }, [errs, quoteError, quoteData, dts]);
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  const { recent_views, user_id, slug } = data;
-
+  const { recent_views, user_id, slug, body, category, user, title, media } =
+    data;
+  console.log(data);
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
@@ -251,24 +251,18 @@ const Post = () => {
   };
 
   const viewers = recent_views?.filter((value) => value.viewer !== "guest");
+
+  const tempElement = document.createElement("div");
+  tempElement.innerHTML = body;
   return (
     <>
-      <Helmet>
-        <title>{data?.title}</title>
-        <link
-          rel="icon"
-          id="icon"
-          href={getImage(data?.media[0]?.storage_path) || defaults}
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href={getImage(data?.media[0]?.storage_path) || defaults}
-        />
-        <meta name="description" content={122} />
-        <meta name="title" content={data?.title} />
-      </Helmet>
+      <Seo
+        title={title}
+        image={media[0]?.storage_path}
+        name={user?.full_name}
+        description={tempElement?.textContent}
+        type={category}
+      />
       <Grid item container gap={2} flexWrap="nowrap">
         <Grid item xs={1} display={{ md: "block", xs: "none" }}>
           <Grid container justifyContent="center">

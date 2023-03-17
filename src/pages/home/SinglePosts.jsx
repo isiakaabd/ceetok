@@ -148,6 +148,7 @@ const AllPosts = ({ post, showUser }) => {
             // sx={{
             //   maxWidth: "max-content",
             // }}
+
             primary={category}
             primaryTypographyProps={{
               backgroundColor: "#FF9B04",
@@ -159,7 +160,6 @@ const AllPosts = ({ post, showUser }) => {
               color: "#fff",
               display: {
                 md: "block",
-                // xs: "none",
                 maxWidth: "max-content",
               },
             }}
@@ -172,7 +172,7 @@ const AllPosts = ({ post, showUser }) => {
                     fontSize: { md: "2rem", xs: "1.2rem" },
                     fontWeight: { md: 700, xs: 600 },
                     width: "calc(98%)",
-                    maxWidth: "90%",
+                    maxWidth: { md: "90%", xs: "98%" },
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -205,6 +205,7 @@ const AllPosts = ({ post, showUser }) => {
                 </Grid>
               </>
             }
+            secondaryTypographyProps={{ p: 0 }}
             // secondaryTypographyProps={}
           />
         </ListItem>

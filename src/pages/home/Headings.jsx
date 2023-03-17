@@ -7,6 +7,7 @@ const Headings = () => {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+
   const { member_count, stats } = data;
   return (
     <Grid

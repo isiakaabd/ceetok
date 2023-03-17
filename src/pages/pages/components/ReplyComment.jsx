@@ -49,19 +49,19 @@ const ReplyComment = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const { data: mainComment, isLoading, error } = useGetSingleCommentQuery(id);
-
   // mutation and queries
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-  const [page] = useState(0);
+  const [page] = useState(1);
   const {
     data: repliedComment,
     isLoading: loadingComment,
     error: err,
   } = useGetPostCommentsQuery({
     type: "comments",
-    parentId: id,
-    offset: page,
+    parentId: mainComment?.id,
+    offset: page - 1,
   });
+
   const navigate = useNavigate();
   const [openShareModal, setOpenShareModal] = useState(false);
   const handleSubmit = async (values, { setFieldValue }) => {
@@ -130,9 +130,9 @@ const ReplyComment = () => {
               </Typography>
             </Typography>
             <Grid item container>
-              {repliedComment?.length > 0 ? (
+              {repliedComment?.comments?.length > 0 ? (
                 <List dense sx={{ width: "100%" }}>
-                  {repliedComment?.map((comments) => (
+                  {repliedComment?.comments?.map((comments) => (
                     <Single comments={comments} />
                   ))}
                 </List>

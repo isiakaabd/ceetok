@@ -151,7 +151,7 @@ const AllPosts = ({ post, showUser }) => {
 
             primary={category}
             primaryTypographyProps={{
-              backgroundColor: "#FF9B04",
+              backgroundColor: "#37D42A",
               padding: ".5rem 1.4rem",
               mt: 0,
               borderRadius: "2rem",

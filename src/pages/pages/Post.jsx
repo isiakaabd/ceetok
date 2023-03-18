@@ -5,7 +5,7 @@ import {
   IosShareOutlined,
   ChatBubbleOutline,
 } from "@mui/icons-material";
-import parse from "html-react-parser";
+// import parse from "html-react-parser";
 import { Button, Grid, IconButton, Typography, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
@@ -205,7 +205,6 @@ const Post = () => {
   if (error) return <Error />;
   const { recent_views, user_id, slug, body, category, user, title, media } =
     data;
-  console.log(data);
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {

@@ -319,9 +319,7 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
                               New Here?{" "}
                               <Typography
                                 variant="span"
-                                onClick={() => {
-                                  setRegister(true);
-                                }}
+                                onClick={() => setRegister(true)}
                                 sx={{ color: "#37D42A", cursor: "pointer" }}
                               >
                                 Signup{" "}

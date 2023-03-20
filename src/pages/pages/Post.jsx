@@ -176,11 +176,6 @@ const Post = () => {
   const [page, setPage] = useState(0);
   const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
-  // let imgs = data?.media?[0].type==="image"?data?.media[0]?.storage_path
-  // : "";
-  // console.log(data);
-  // useDocumentTitle(data?.title);
-  // useFavIcon(getImage(data?.media[0]?.storage_path) || defaults);
   const [postAComment, { isLoading: loading, error: errs, data: dts }] =
     usePostCommentMutation();
   const [createQuote, { error: quoteError, data: quoteData }] =

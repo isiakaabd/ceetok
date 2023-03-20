@@ -338,22 +338,22 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                         ]}
                       />
                     </Grid>
-                    {/* {(checkUser || admin) && ( */}
-                    <Grid item>
-                      <IconButton
-                        ref={anchorRef}
-                        id="composition-avatar"
-                        aria-controls={open ? "composition-menu" : undefined}
-                        aria-expanded={open ? "true" : undefined}
-                        aria-haspopup="true"
-                        onClick={handleToggle}
-                      >
-                        <TuneOutlined
-                          sx={{ fontSize: "2.5rem", color: "#fff" }}
-                        />
-                      </IconButton>
-                    </Grid>
-                    {/* )} */}
+                    {token && (
+                      <Grid item>
+                        <IconButton
+                          ref={anchorRef}
+                          id="composition-avatar"
+                          aria-controls={open ? "composition-menu" : undefined}
+                          aria-expanded={open ? "true" : undefined}
+                          aria-haspopup="true"
+                          onClick={handleToggle}
+                        >
+                          <TuneOutlined
+                            sx={{ fontSize: "2.5rem", color: "#fff" }}
+                          />
+                        </IconButton>
+                      </Grid>
+                    )}
                   </Grid>
                 </Form>
               </Formik>

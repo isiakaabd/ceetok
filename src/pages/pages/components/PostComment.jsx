@@ -8,6 +8,7 @@ import {
   TuneOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
+import * as Yup from "yup";
 import {
   Divider,
   Grid,
@@ -31,6 +32,7 @@ import UserProfile from "../UserProfile";
 import {
   useDeleteAPostMutation,
   useLikeAndUnlikePostMutation,
+  useReportPostMutation,
 } from "redux/slices/postSlice";
 import { VerifiedOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
@@ -57,6 +59,11 @@ import {
   // useGetUserQuotesQuery,
 } from "redux/slices/quoteSlice";
 import MasonryImageList from "./ImageList";
+import NotificationModal from "components/modals/NotificationModal";
+import Editor from "components/Quill";
+import { CustomButton } from "components";
+import Paginations from "components/modals/Paginations";
+import Error from "./Error";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
   // recent_quotes, recent_comments,
@@ -207,7 +214,8 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     },
   ];
   const [likePost] = useLikeAndUnlikePostMutation();
-
+  const [handlereport, setHandleReport] = useState(false);
+  const [report] = useReportPostMutation();
   if (isLoading) return <Skeleton />;
 
   const { defaults } = images;
@@ -246,7 +254,22 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     );
     return messageWithMentions;
   };
-
+  const validationSchema = Yup.object({
+    body: Yup.string().required("Required"),
+  });
+  const handleReport = async (values) => {
+    const { body } = values;
+    const { data, error } = await report({
+      parent_type: "posts",
+      parent_id: id,
+      reason: body,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => setHandleReport(false), 3000);
+    }
+    if (error) toast(error);
+  };
   return (
     <>
       <Grid item container>
@@ -315,22 +338,22 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                         ]}
                       />
                     </Grid>
-                    {(checkUser || admin) && (
-                      <Grid item>
-                        <IconButton
-                          ref={anchorRef}
-                          id="composition-avatar"
-                          aria-controls={open ? "composition-menu" : undefined}
-                          aria-expanded={open ? "true" : undefined}
-                          aria-haspopup="true"
-                          onClick={handleToggle}
-                        >
-                          <TuneOutlined
-                            sx={{ fontSize: "2.5rem", color: "#fff" }}
-                          />
-                        </IconButton>
-                      </Grid>
-                    )}
+                    {/* {(checkUser || admin) && ( */}
+                    <Grid item>
+                      <IconButton
+                        ref={anchorRef}
+                        id="composition-avatar"
+                        aria-controls={open ? "composition-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleToggle}
+                      >
+                        <TuneOutlined
+                          sx={{ fontSize: "2.5rem", color: "#fff" }}
+                        />
+                      </IconButton>
+                    </Grid>
+                    {/* )} */}
                   </Grid>
                 </Form>
               </Formik>
@@ -529,23 +552,73 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                         : "Approve Topic"}
                     </MenuItem>
                   )}
-                  <MenuItem onClick={handleClose}>Close Topic</MenuItem>
-                  <MenuItem
-                    onClick={handleDeleteTopic}
-                    sx={{
-                      fontWeight: deleteLoading && 700,
-                      color: deleteLoading && "red",
-                    }}
-                  >
-                    {deleteLoading ? "Deleting..." : "Delete Topic"}
-                  </MenuItem>
+                  {(!admin || !checkUser) && (
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose(e);
+                        setHandleReport(true);
+                      }}
+                    >
+                      Report Topic
+                    </MenuItem>
+                  )}
+                  {(check || admin) && (
+                    <MenuItem
+                      onClick={handleDeleteTopic}
+                      sx={{
+                        fontWeight: deleteLoading && 700,
+                        color: deleteLoading && "red",
+                      }}
+                    >
+                      {deleteLoading ? "Deleting..." : "Delete Topic"}
+                    </MenuItem>
+                  )}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
           </Grow>
         )}
       </Popper>
-
+      <NotificationModal
+        isOpen={handlereport}
+        handleClose={(e) => {
+          handleClose(e);
+          setHandleReport(false);
+        }}
+      >
+        <Formik
+          initialValues={{ body: "" }}
+          onSubmit={handleReport}
+          validationSchema={validationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Grid item container flexDirection="column" gap={4}>
+                <Typography
+                  color="#464646"
+                  sx={{
+                    textAlign: "center",
+                    fontSize: { md: "2rem", xs: "1.7rem" },
+                  }}
+                  fontWeight={700}
+                >
+                  Report Abuse
+                </Typography>
+                <Grid item>
+                  <Editor name="body" placeholder={"Report Abuse..."} />
+                </Grid>
+                <Grid item>
+                  <CustomButton
+                    title={"Report"}
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                  />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </NotificationModal>
       <CreatePost
         open={editPostModal}
         handleClose={() => setEditPostModal(false)}
@@ -559,7 +632,8 @@ function AllComments({ id, profile, icons }) {
   const [page, setPage] = useState(1);
   const {
     data: comments,
-    // error,
+    error,
+    isLoading,
     // isFetching,
   } = useGetPostCommentsQuery({
     parent_type: "posts",
@@ -578,6 +652,8 @@ function AllComments({ id, profile, icons }) {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
+  if (isLoading) return <Skeletons />;
+  if (error) return <Error />;
   return (
     <>
       <Grid
@@ -623,7 +699,15 @@ function AllComments({ id, profile, icons }) {
             <Typography>No comments available</Typography>
           </Grid>
         )}
+        {comments?.total_pages > 1 && (
+          <Paginations
+            page={page}
+            setPage={setPage}
+            count={comments?.total_pages}
+          />
+        )}
       </Grid>
+
       {/* {isFetching && hasNextPage && (
         <Typography width="100%" textAlign="center" variant="h4">
           Loading more comments...
@@ -638,7 +722,7 @@ function AllQuotes({ id, icons, profile }) {
   const {
     data: quotes,
     error,
-    isFetching,
+    isLoading,
   } = useGetPostQuotesQuery({
     parent_type: "posts",
     parentId: id,
@@ -654,6 +738,8 @@ function AllQuotes({ id, icons, profile }) {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
+  if (isLoading) return <Skeletons />;
+  if (error) return <Error />;
   return (
     <>
       <Grid
@@ -696,6 +782,13 @@ function AllQuotes({ id, icons, profile }) {
             <Typography>No Quotes available</Typography>
           </Grid>
         )}
+        {quotes?.total_pages > 1 && (
+          <Paginations
+            page={page}
+            setPage={setPage}
+            count={quotes?.total_pages}
+          />
+        )}
       </Grid>
       {/* {isFetching && hasNextPage && (
         <Typography width="100%" textAlign="center" variant="h4">
@@ -705,3 +798,66 @@ function AllQuotes({ id, icons, profile }) {
     </>
   );
 }
+const Skeletons = () => {
+  return (
+    <Grid item container flexDirection="column" gap={2}>
+      {Array(3)
+        .fill(undefined)
+        .map((_, index) => (
+          <Grid item key={index} container flexWrap={"nowrap"} gap={1}>
+            <Grid item>
+              <Skeleton
+                sx={{ height: "5rem", width: "5rem" }}
+                animation="wave"
+                variant="circular"
+              />
+            </Grid>
+            <Grid item container gap={1} flexDirection={"column"}>
+              <Grid item>
+                <Skeleton
+                  sx={{ height: ".9rem", width: "100%" }}
+                  animation="wave"
+                  variant="text"
+                />
+              </Grid>
+              <Grid item>
+                <Skeleton
+                  sx={{ height: ".9rem", width: "100%" }}
+                  animation="wave"
+                  variant="text"
+                />
+              </Grid>
+
+              <Grid
+                item
+                justifyContent="space-between"
+                container
+                flexWrap="nowrap"
+              >
+                {Array(3)
+                  .fill(undefined)
+                  .map((i, index) => (
+                    <Grid item container key={index} flexWrap={"nowrap"}>
+                      <Grid item>
+                        <Skeleton
+                          sx={{ height: ".8rem", width: ".9rem" }}
+                          animation="wave"
+                          variant="text"
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Skeleton
+                          sx={{ height: ".8rem", width: ".9rem" }}
+                          animation="wave"
+                          variant="text"
+                        />
+                      </Grid>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Grid>
+          </Grid>
+        ))}
+    </Grid>
+  );
+};

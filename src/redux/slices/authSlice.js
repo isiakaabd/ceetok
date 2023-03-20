@@ -242,6 +242,15 @@ export const authSlice = api.injectEndpoints({
       transformResponse: (response) => response.body,
       transformErrorResponse: (error) => error.data.message,
     }),
+    getInfractions: builder.query({
+      query: ({ offset }) => ({
+        url: `/infraction?&limit=10&offset=${offset ? offset : 0}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) => response.body,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
@@ -254,6 +263,7 @@ export const {
   useBlockUserMutation,
   useContactAdminMutation,
   useListUsersQuery,
+  useGetInfractionsQuery,
   useLazyListUsersQuery,
   useForgotPasswordMutation,
   useUserProfileQuery,

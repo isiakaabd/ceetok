@@ -10,7 +10,7 @@ import { useGetPostQuery } from "redux/slices/postSlice";
 import CreatePost from "pages/user/modals/CreatePost";
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
-import { getImage } from "helpers";
+// import { getImage } from "helpers";
 import Paginations from "components/modals/Paginations";
 const Trending = () => {
   const [anchorEl, setAnchorEl] = useState(null);

@@ -193,7 +193,9 @@ const Entertainment = () => {
               >
                 {array?.posts?.length > 0 ? (
                   array.posts?.map((post, index) => {
-                    return <SinglePosts key={index} post={post} />;
+                    return (
+                      <SinglePosts key={index} post={post} index={index} />
+                    );
                   })
                 ) : (
                   <Typography>No Result </Typography>

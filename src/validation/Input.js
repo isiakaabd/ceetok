@@ -4,7 +4,15 @@ import { Grid, Typography } from "@mui/material";
 import { TextError } from "./TextError";
 
 const Input = (props) => {
-  const { label, name, borderRadius, helperText, styles, ...rest } = props;
+  const {
+    label,
+    name,
+    borderRadius,
+    helperText,
+    helperTextColor,
+    styles,
+    ...rest
+  } = props;
 
   return (
     <Grid container direction="column">
@@ -27,7 +35,7 @@ const Input = (props) => {
       {helperText && (
         <Typography
           variant="span"
-          color="#9B9A9A"
+          color={helperTextColor ? helperTextColor : "#9B9A9A"}
           fontSize={{ md: "1.2rem", xs: "1rem" }}
         >
           {helperText}

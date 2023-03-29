@@ -45,6 +45,7 @@ import {
   useUserProfileQuery,
 } from "redux/slices/authSlice";
 import SingleComment from "./components/SingleComment";
+import { useSelector } from "react-redux";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -126,6 +127,7 @@ const SingleAnnoucement = () => {
     type: "announcements",
     parentId: data?.id,
   });
+  const token = useSelector((state) => state.auth.token);
 
   // const [openShareModal, setOpenShareModal] = useState(false);
   // const handleShare = () => setOpenShareModal(true);
@@ -358,49 +360,55 @@ const SingleAnnoucement = () => {
               </Form>
             </Formik>
           </Grid>
-          <Grid
-            item
-            container
-            alignItems="center"
-            sx={{ mt: 2, paddingInline: { xs: "3rem", md: "6rem" } }}
-          >
-            <Typography
-              variant="span"
-              color="#FF9B04"
-              fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+          {token && (
+            <Grid
+              item
+              container
+              alignItems="center"
+              sx={{ mt: 2, paddingInline: { xs: "3rem", md: "6rem" } }}
             >
-              Viewing this Topic: &nbsp;&nbsp;
-            </Typography>
-            <Grid item>
-              <Grid container>
-                {views
-                  ?.filter((value) => value.viewer !== "guest")
-                  .slice(0, 50)
-                  ?.map((item, index) => (
+              <Typography
+                variant="span"
+                color="#FF9B04"
+                fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
+              >
+                Viewing this Topic: &nbsp;&nbsp;
+              </Typography>
+              <Grid item>
+                <Grid container>
+                  {views
+                    ?.filter((value) => value.viewer !== "guest")
+                    .slice(0, 50)
+                    ?.map((item, index) => (
+                      <Typography
+                        component={Link}
+                        to={`/user/profile/?id=${item.viewer?.user_id}`}
+                        key={index}
+                        sx={{ width: "max-content", mr: 0.5 }}
+                        color="secondary"
+                        fontSize={{
+                          md: "1.8rem",
+                          xs: "1.5rem",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {" "}
+                        {item.viewer.full_name},
+                      </Typography>
+                    ))}
+                  {views?.length > 50 ? (
                     <Typography
-                      component={Link}
-                      to={`/user/profile/?id=${item.viewer?.user_id}`}
-                      key={index}
-                      sx={{ width: "max-content", mr: 0.5 }}
-                      color="secondary"
+                      variant="span"
+                      color="#FF9B04"
                       fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
                     >
-                      {" "}
-                      {item.viewer.full_name},
+                      {`and ${views.length - 50}  guests`}
                     </Typography>
-                  ))}
-                {views?.length > 50 ? (
-                  <Typography
-                    variant="span"
-                    color="#FF9B04"
-                    fontSize={{ md: "1.8rem", xs: "1.5rem", fontWeight: 500 }}
-                  >
-                    {`and ${views.length - 50}  guests`}
-                  </Typography>
-                ) : null}
+                  ) : null}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
         <Grid item xs={3} sx={{ display: { xs: "none", md: "block" } }}>
           <Grid item container gap={2}>

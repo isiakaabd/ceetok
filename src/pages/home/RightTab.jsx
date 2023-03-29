@@ -1,15 +1,13 @@
 import { Grid, Button, List, Typography, Skeleton } from "@mui/material";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useState } from "react";
-
 import { useSelector } from "react-redux";
-
-import SinglePosts from "./SinglePosts";
 import Filters from "components/modals/Filters";
 import LoginModal from "components/modals/LoginModal";
 import { useGetPostQuery } from "redux/slices/postSlice";
 import Paginations from "components/modals/Paginations";
 import Error from "pages/pages/components/Error";
+import HomePageSinglePost from "./HomePageSinglePost";
 
 const RightTab = ({ setCreatePost, more }) => {
   const [register, setRegister] = useState(false);
@@ -133,7 +131,11 @@ const RightTab = ({ setCreatePost, more }) => {
                 >
                   {array?.posts?.map((post, index) => {
                     return (
-                      <SinglePosts key={index} index={index} post={post} />
+                      <HomePageSinglePost
+                        key={index}
+                        index={index}
+                        post={post}
+                      />
                     );
                   })}
                 </List>

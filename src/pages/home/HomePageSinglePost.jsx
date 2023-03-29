@@ -1,5 +1,4 @@
 import {
-  Grid,
   ListItemText,
   ListItem,
   ListItemAvatar,
@@ -7,18 +6,18 @@ import {
   ListItemIcon,
   ListItemButton,
   Typography,
-  Badge,
 } from "@mui/material";
-import { RemoveRedEyeOutlined } from "@mui/icons-material";
+// import { RemoveRedEyeOutlined, StarOutline } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getImage, getTimeMoment } from "helpers";
+import { getImage } from "helpers";
 import { useState } from "react";
 import LoginModal from "components/modals/LoginModal";
 import images from "assets";
 
-const AllPosts = ({ post, showUser, index }) => {
-  const { slug, user, media, title, category, views_count, updatedAt } = post;
+const HomePageSinglePost = ({ post, showUser, index }) => {
+  const { slug, media, title } = post;
   const { defaults } = images;
+  //   category, views_count, updatedAt user
   // const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -33,60 +32,60 @@ const AllPosts = ({ post, showUser, index }) => {
       >
         <ListItem
           dense
-          secondaryAction={
-            <Grid
-              item
-              container
-              flexWrap="nowrap"
-              gap={{ md: "4rem" }}
-              sx={{ mr: { md: 2, xs: 1 } }}
-              alignItems="center"
-            >
-              <ListItemIcon sx={{ minWidth: "1rem", m: 0 }}>
-                <RemoveRedEyeOutlined
-                  sx={{
-                    fontSize: "2.5rem",
-                    display: { md: "block", xs: "none" },
-                  }}
-                />
-              </ListItemIcon>
-              <Badge
-                badgeContent={views_count}
-                color="primary"
-                showZero
-                max={100}
-                sx={{
-                  color: "#9B9A9A",
-                  "& .MuiBadge-badge": {
-                    fontSize: "1.4rem",
-                    backgroundColor: "#D3D3D3",
-                    width: "3.4rem",
-                    height: "3.4rem",
-                    borderRadius: "1.7rem",
-                    fontWeight: 600,
-                  },
-                }}
-              />
-              {/* </Badge> */}
-              {/* <div
-                style={{
-                  width: "2.5rem",
-                  height: "2.5rem",
-                  borderRadius: "50%",
-                  backgroundColor: "#D3D3D3",
-                  display: "flex",
-                  fontWeight: 700,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Typography variant="h5" sx={{ m: 0 }}>
-                  {views_count}
-                </Typography>
-              </div> */}
-            </Grid>
-          }
-          alignItems="flex-start"
+          //   secondaryAction={
+          //     <Grid
+          //       item
+          //       container
+          //       flexWrap="nowrap"
+          //       gap={{ md: "4rem" }}
+          //       sx={{ mr: { md: 2, xs: 1 } }}
+          //       alignItems="center"
+          //     >
+          //       <ListItemIcon sx={{ minWidth: "1rem", m: 0 }}>
+          //         <RemoveRedEyeOutlined
+          //           sx={{
+          //             fontSize: "2.5rem",
+          //             display: { md: "block", xs: "none" },
+          //           }}
+          //         />
+          //       </ListItemIcon>
+          //       {/* <Badge
+          //         badgeContent={views_count}
+          //         color="primary"
+          //         showZero
+          //         max={100}
+          //         sx={{
+          //           color: "#9B9A9A",
+          //           "& .MuiBadge-badge": {
+          //             fontSize: "1.4rem",
+          //             backgroundColor: "#D3D3D3",
+          //             width: "3.4rem",
+          //             height: "3.4rem",
+          //             borderRadius: "1.7rem",
+          //             fontWeight: 600,
+          //           },
+          //         }}
+          //       /> */}
+          //       {/* </Badge> */}
+          //       {/* <div
+          //         style={{
+          //           width: "2.5rem",
+          //           height: "2.5rem",
+          //           borderRadius: "50%",
+          //           backgroundColor: "#D3D3D3",
+          //           display: "flex",
+          //           fontWeight: 700,
+          //           justifyContent: "center",
+          //           alignItems: "center",
+          //         }}
+          //       >
+          //         <Typography variant="h5" sx={{ m: 0 }}>
+          //           {views_count}
+          //         </Typography>
+          //       </div> */}
+          //     </Grid>
+          //   }
+          alignItems="center"
         >
           <ListItemIcon sx={{ minWidth: "2rem", mt: 0 }}>
             <Typography variant="h3">{index + 1}</Typography>
@@ -149,7 +148,7 @@ const AllPosts = ({ post, showUser, index }) => {
             //   maxWidth: "max-content",
             // }}
 
-            primary={category}
+            // primary={category}
             primaryTypographyProps={{
               backgroundColor: "#37D42A",
               padding: ".5rem 1.4rem",
@@ -166,22 +165,24 @@ const AllPosts = ({ post, showUser, index }) => {
             secondary={
               <>
                 <Typography
+                  nowrap
                   sx={{
                     color: "#5F5C5C",
                     // mt: { md: 2, xs: 1 },
                     fontSize: { md: "2rem", xs: "1.2rem" },
                     fontWeight: { md: 700, xs: 600 },
-                    width: "calc(98%)",
-                    maxWidth: { md: "90%", xs: "98%" },
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    display: "inlineBlock",
+                    textAlign: "justify",
+                    // width: "calc(98%)",
+                    // maxWidth: { md: "90%", xs: "98%" },
+                    // overflow: "hidden",
+                    // textOverflow: "ellipsis",
+                    // whiteSpace: "nowrap",
+                    // display: "inlineBlock",
                   }}
                 >
                   {title}
                 </Typography>
-                <Grid item container flexWrap="nowrap" gap={2}>
+                {/* <Grid item container flexWrap="nowrap" gap={2}>
                   {showUser ? (
                     <Typography
                       sx={{
@@ -202,7 +203,7 @@ const AllPosts = ({ post, showUser, index }) => {
                   >
                     {getTimeMoment(updatedAt)}
                   </Typography>
-                </Grid>
+                </Grid> */}
               </>
             }
             secondaryTypographyProps={{ p: 0 }}
@@ -215,7 +216,7 @@ const AllPosts = ({ post, showUser, index }) => {
   );
 };
 
-AllPosts.defaultProps = {
+HomePageSinglePost.defaultProps = {
   showUser: true,
 };
-export default AllPosts;
+export default HomePageSinglePost;

@@ -404,7 +404,7 @@ const SingleLivePage = () => {
             </Typography>
           </Grid>
         )}
-        {viewers?.length > 0 && (
+        {token && viewers?.length > 0 && (
           <Grid item container alignItems="center">
             <Typography
               variant="span"

@@ -8,25 +8,20 @@ import NotificationModal from "./NotificationModal";
 import * as Yup from "yup";
 import { useForgotPasswordMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
-const ForgottenPassword = ({ isOpen, handleClose, handleParentModalClose }) => {
+const ForgottenPassword = ({ isOpen, handleClose }) => {
   const [showConfirmMail, setShowConfirmMail] = useState(false);
   const [resetPassword, { isLoading }] = useForgotPasswordMutation();
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const navigate= useNavigate()
+
   const handleSubmit = async (values) => {
     const { data, error } = await resetPassword({ email: values.email });
 
     if (data) {
       toast.success(data);
-      // setSearchParams(`email=${values?.email.toString()}`);
       setTimeout(() => {
-        // navigate("/auth/rese")
-        // setShowConfirmMail(true);
         handleClose();
       }, 3000);
     }
     if (error) toast.error(error);
-    // }}
   };
   const validationSchema = Yup.object({
     email: Yup.string("Enter Email")

@@ -329,6 +329,13 @@ const CreatePost = ({
                         control="input"
                         name="title"
                         placeholder="Title"
+                        maxlength="180"
+                        helperTextColor="red"
+                        helperText={
+                          values.title.length >= 180
+                            ? "Max length of 180 characters"
+                            : null
+                        }
                       />
                     </Grid>
                     <Grid item container>
@@ -360,6 +367,10 @@ const CreatePost = ({
                                     admin && {
                                       label: "Live",
                                       value: "live",
+                                    },
+                                    admin && {
+                                      label: "Front Page",
+                                      value: "front_page",
                                     },
                                   ]
                             }

@@ -5,12 +5,12 @@ import ReactPlayer from "react-player";
 
 export default function MasonryImageList({ itemData }) {
   return (
-    <Grid item container>
+    <Grid item container sx={{ maxHeight: "100%" }}>
       <ImageList
         sx={{
           width: "100%",
           overflow: "hidden",
-          height: "100%",
+          maxHeight: "100%",
           borderRadius: "1.2rem",
           padding: { xs: "1rem", md: "1.5rem" },
         }}
@@ -22,7 +22,7 @@ export default function MasonryImageList({ itemData }) {
           <ImageListItem
             sx={{
               width: "100%",
-              height: "100%",
+              maxHeight: "100%",
               boxShadow: shadows[2],
               padding: "1rem",
             }}
@@ -35,7 +35,7 @@ export default function MasonryImageList({ itemData }) {
                 src={`${getImage(item?.storage_path)}`}
                 style={{
                   width: "100%",
-                  height: "100%",
+                  height: "10rem",
                   borderRadius: "1rem",
                 }}
                 alt={item.title}
@@ -47,7 +47,7 @@ export default function MasonryImageList({ itemData }) {
                 controls={true}
                 volume={0.6}
                 width="100%"
-                height="auto"
+                height="100%"
                 // className="react-player"
                 // style={{ maxheight: "10rem" }}
               />

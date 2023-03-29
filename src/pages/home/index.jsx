@@ -40,7 +40,10 @@ const Home = () => {
           gap={3}
         >
           <LeftTab />
-          <RightTab setCreatePost={setCreatePost} />
+          <RightTab
+            setCreatePost={setCreatePost}
+            more={{ category: "front_page" }}
+          />
         </Grid>
         {/* Adevert */}
         <Advert />

@@ -47,6 +47,7 @@ const OtherConversation = () => {
               <SinglePosts
                 key={index}
                 post={post}
+                index={index}
                 display={{ xs: "none", md: "flex" }}
               />
             );

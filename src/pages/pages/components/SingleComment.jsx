@@ -384,7 +384,8 @@ export function Text({ item, profile, displayDetail, type }) {
                             alignItems: "center",
                           }}
                           onClick={(e) => {
-                            token ? setOpenReport(true) : handleCloses(e);
+                            setOpenReport(true);
+                            handleCloses(e);
                           }}
                         >
                           <ListItemIcon>

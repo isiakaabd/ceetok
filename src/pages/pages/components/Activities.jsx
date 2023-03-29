@@ -216,7 +216,14 @@ const Activities = (props) => {
               xs={12}
             >
               {state?.data?.map((post, index) => {
-                return <SinglePosts key={index} post={post} showUser={false} />;
+                return (
+                  <SinglePosts
+                    key={index}
+                    post={post}
+                    index={index}
+                    showUser={false}
+                  />
+                );
               })}
             </List>
           ) : (

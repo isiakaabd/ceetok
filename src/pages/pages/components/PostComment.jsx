@@ -406,7 +406,14 @@ export const Comment = ({ handleShare, data, state, setState }) => {
             </Tooltips>
           )}
         </Grid>
-        <Grid item container sx={{ p: { xs: "1rem" } }}>
+        <Grid
+          item
+          container
+          sx={{
+            p: { xs: "1rem" },
+            height: { md: "30rem", xs: "20rem" },
+          }}
+        >
           {media?.length >= 2 ? (
             <MasonryImageList
               itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
@@ -416,7 +423,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               src={getImage(media[0]?.storage_path)}
               sx={{
                 width: "100%",
-                height: "auto",
+                height: "100%",
                 objectFit: "cover",
                 // maxHeight: "0rem",
               }}
@@ -430,9 +437,9 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               controls={true}
               volume={0.6}
               width="100%"
-              height="auto"
+              height="100%"
               // className="react-player"
-              // style={{ maxheight: "10rem" }}
+              style={{ aspectRatio: 1 }}
             />
           ) : (
             // </div>
@@ -440,7 +447,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               src={defaults}
               sx={{
                 width: "100%",
-                height: "auto",
+                height: "100%",
                 objectFit: "cover",
                 // maxHeight: "0rem",
               }}

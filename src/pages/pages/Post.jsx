@@ -400,7 +400,7 @@ const Post = () => {
               </Formik>
             </Grid>
           )}
-          {state && viewers.length > 0 && (
+          {state && token && viewers.length > 0 && (
             <Grid item md={7} xs={12}>
               <Grid
                 item

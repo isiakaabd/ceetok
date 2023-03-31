@@ -13,6 +13,11 @@ import {
   Button,
   InputBase,
   Menu,
+  MenuList,
+  ClickAwayListener,
+  Paper,
+  Grow,
+  Popper,
 } from "@mui/material";
 import images from "assets";
 import { Grid } from "@mui/material";
@@ -21,9 +26,14 @@ import { Link, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
-import { ArrowDropDown, SearchOutlined } from "@mui/icons-material";
+import {
+  ArrowDropDown,
+  KeyboardArrowDownOutlined,
+  SearchOutlined,
+} from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import UserAccount from "./UserAccount";
+import CustomizedMenus from "./EE";
 const pages = [
   {
     id: 1,
@@ -119,6 +129,51 @@ function Header() {
     setIsLogin(true);
   };
   const handleLoginClose = () => setIsLogin(false);
+
+  // const [openss, setOpenss] = useState(false);
+  // const anchorRefs = useRef(null);
+
+  // const handleToggles = () => {
+  //   setOpenss((prevOpen) => !prevOpen);
+  // };
+
+  // const handleClosess = (event) => {
+  //   if (anchorRefs.current && anchorRefs.current.contains(event.target)) {
+  //     return;
+  //   }
+
+  //   setOpenss(false);
+  // };
+
+  // function handleListKeyDowns(event) {
+  //   if (event.key === "Tab") {
+  //     event.preventDefault();
+  //     setOpenss(false);
+  //   } else if (event.key === "Escape") {
+  //     setOpenss(false);
+  //   }
+  // }
+
+  // // return focus to the button when we transitioned from !open -> open
+  // const prevOpens = useRef(openss);
+  // useEffect(() => {
+  //   if (prevOpens.current === true && openss === false) {
+  //     anchorRefs.current.focus();
+  //   }
+
+  //   prevOpens.current = openss;
+  // }, [openss]);
+  const [anchorElss, setAnchorElss] = useState(null);
+  //  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const openss = Boolean(anchorElss);
+  const handleClickListItem = (event) => {
+    setAnchorElss(event.currentTarget);
+  };
+
+  const options = ["Show some love to MUI"];
+  const handleClosess = () => {
+    setAnchorElss(null);
+  };
   const Search = () => {
     return (
       <Grid
@@ -126,7 +181,12 @@ function Header() {
         container
         alignItems="center"
         border="1px solid #D3D3D3"
-        sx={{ borderRadius: "3rem", height: "4rem", background: "#fff" }}
+        sx={{
+          borderRadius: "3rem",
+          overflow: "hidden",
+          height: "4rem",
+          background: "#fff",
+        }}
       >
         <IconButton>
           <SearchOutlined sx={{ fontSize: "2rem", color: "#9B9A9A" }} />
@@ -137,12 +197,97 @@ function Header() {
           color="#9B9A9A"
           fontSize="1.1rem"
         />
-        <Typography color="#9B9A9A" fontSize="1.1rem">
+        <CustomizedMenus />
+        {/* <Typography color="#9B9A9A" fontSize="1.1rem"></Typography> */}
+        {/* <div></div> */}
+        {/* <Button
+          endIcon={
+            <KeyboardArrowDownOutlined
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              variant="contained"
+              disableElevation
+              onClick={handleClick}
+            />
+          }
+        >
           All
-        </Typography>
-        <IconButton>
-          <ArrowDropDown />
-        </IconButton>
+        </Button> */}
+        <>
+          {/* <IconButton
+            // id="demo-customized-button"
+            // aria-controls={openss ? "demo-customized-menu" : undefined}
+            // aria-haspopup="true"
+            // aria-expanded={openss ? "true" : undefined}
+            // variant="contained"
+            // disableElevation
+            // onClick={handleToggles}
+            id="lock-button"
+            aria-haspopup="listbox"
+            aria-controls="lock-menu"
+            aria-expanded={openss ? "true" : undefined}
+            onClick={handleClickListItem}
+          >
+            <KeyboardArrowDownOutlined />
+          </IconButton>
+          <Menu
+            id="lock-menu"
+            anchorEl={anchorElss}
+            open={openss}
+            onClose={handleClosess}
+            MenuListProps={{
+              "aria-labelledby": "lock-button",
+              role: "listbox",
+            }}
+          >
+            {options.map((option, index) => (
+              <MenuItem
+                key={option}
+                // disabled={index === 0}
+                // selected={index === selectedIndex}
+                // onClick={(event) => handleMenuItemClick(event, index)}
+              >
+                {option}
+              </MenuItem>
+            ))}
+          </Menu> */}
+
+          {/* <Popper
+            open={openss}
+            anchorEl={anchorRefs?.current}
+            role={undefined}
+            placement="bottom-start"
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "bottom-start" ? "left top" : "left bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClosess}>
+                    <MenuList
+                      autoFocusItem={openss}
+                      id="composition-menu"
+                      aria-labelledby="composition-button"
+                      onKeyDown={handleListKeyDowns}
+                    >
+                      <MenuItem onClick={handleClosess}>Profile</MenuItem>
+                      <MenuItem onClick={handleClosess}>My account</MenuItem>
+                      <MenuItem onClick={handleClosess}>Logout</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper> */}
+        </>
       </Grid>
     );
   };

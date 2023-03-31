@@ -40,3 +40,14 @@ export const getTimeMoment = (startDate) => {
   }
   return "now";
 };
+
+export const getParent = (parent_type) => {
+  switch (parent_type) {
+    case "posts":
+      return "post";
+    case "comments":
+      return "comment";
+
+    default:
+  }
+};

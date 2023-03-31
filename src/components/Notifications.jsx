@@ -97,53 +97,6 @@ export default function Notifications({
     }
   };
 
-  // const notificationArr = [
-  //   {
-  //     title: "Chat",
-  //     Icon: EmailOutlined,
-  //     number: profile?.chat || 0,
-  //   },
-  //   {
-  //     title: "Like",
-  //     Icon: FavoriteBorderOutlined,
-  //     number: profile?.like || 0,
-  //   },
-  //   {
-  //     title: "Reply",
-  //     Icon: ReplyOutlined,
-  //     number: profile?.reply || 0,
-  //   },
-  //   {
-  //     title: "Tags",
-  //     Icon: PermIdentityOutlined,
-  //     number: profile?.tags || 0,
-  //   },
-  //   {
-  //     title: "Shares",
-  //     Icon: ShareOutlined,
-  //     number: profile?.share || 0,
-  //   },
-  //   {
-  //     title: "Followed Topics",
-  //     Icon: AddchartOutlined,
-  //     number: profile?.topics || 0,
-  //   },
-  //   {
-  //     title: "Followers",
-  //     Icon: PeopleOutlineOutlined,
-  //     number: profile?.followers_count || 0,
-  //   },
-  //   {
-  //     title: "Following",
-  //     Icon: PeopleOutlineOutlined,
-  //     number: profile?.following_count || 0,
-  //   },
-  //   {
-  //     title: "Post Count",
-  //     Icon: ManageAccountsOutlined,
-  //     number: profile?.post_count || 0,
-  //   },
-  // ];
   return (
     <>
       <Popper
@@ -171,7 +124,7 @@ export default function Notifications({
                   onKeyDown={handleListKeyDowns}
                   sx={{ p: 2 }}
                 >
-                  {accountDetails.map((account, index) => (
+                  {accountDetails?.map((account, index) => (
                     <MenuItem
                       sx={{
                         px: 2,

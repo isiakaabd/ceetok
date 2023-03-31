@@ -15,6 +15,7 @@ import Error from "./Error";
 import Paginations from "components/modals/Paginations";
 import { ReportOffOutlined } from "@mui/icons-material";
 import parse from "html-react-parser";
+import { getParent, getTimeMoment } from "helpers";
 const Infractions = (props) => {
   const [page, setPage] = useState(1);
   const { data, error, isLoading } = useGetInfractionsQuery({
@@ -23,55 +24,103 @@ const Infractions = (props) => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, reports } = data;
-  console.log(data);
   return (
     <Grid item container sx={{ p: 4 }}>
       {reports?.length > 0 ? (
         <List sx={{ width: "100%" }}>
-          {reports?.map(({ parent, reason, parent_type }) => {
-            // const likes = parent?.recent_likes?.map((like) => like?.full_name);
+          {reports?.map(
+            ({ parent, reason, yellow_card, parent_type, createdAt }) => {
+              // const likes = parent?.recent_likes?.map((like) => like?.full_name);
 
-            return (
-              <ListItem dense disableGutters>
-                <ListItemButton dense alignItems="flex-start">
-                  <ListItemIcon sx={{ minWidth: { md: "5rem", xs: "4rem" } }}>
-                    <IconButton
-                      size="small"
-                      sx={{ border: "1px solid #9B9A9A" }}
-                    >
-                      <ReportOffOutlined sx={{ fontSize: "2rem" }} />
-                    </IconButton>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
+              return (
+                <ListItemButton
+                  disableTouchRipple
+                  dense
+                  alignItems="flex-start"
+                >
+                  <ListItem
+                    dense
+                    disableGutters
+                    disablePadding
+                    secondaryAction={
                       <Typography
-                        variant="span"
-                        fontWeight={500}
-                        sx={{
-                          width: "max-content",
-                          fontSize: { md: "1.8rem", xs: "1.4rem" },
-                        }}
-                        className="likes-content"
+                        variant="h5"
+                        fontWeight={600}
+                        sx={{ display: { xs: "none", md: "block" } }}
                       >
-                        <Typography variant="span">{`Your ${parent_type}   was reported`}</Typography>
-
-                        <Typography
-                          variant="span"
-                          fontWeight={700}
-                          className="likes-content"
-                        >
-                          {parse(reason)}
-                        </Typography>
+                        {yellow_card
+                          ? "Yellow card(Warning!!"
+                          : "No Action yet"}
                       </Typography>
                     }
-                    // secondary={
+                  >
+                    <ListItemIcon sx={{ minWidth: { md: "5rem", xs: "4rem" } }}>
+                      <IconButton
+                        size="small"
+                        sx={{ border: "1px solid #9B9A9A" }}
+                      >
+                        <ReportOffOutlined sx={{ fontSize: "2rem" }} />
+                      </IconButton>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Grid
+                          item
+                          container
+                          // variant="span"
+                          // fontWeight={500}
+                          gap={1}
+                          sx={{
+                            width: "100%",
+                            //   fontSize: { md: "1.8rem", xs: "1.4rem" },
+                          }}
+                          // cla ssName="likes-content"
+                        >
+                          <Typography variant="p">{`Your ${getParent(
+                            parent_type
+                          )}`}</Typography>
 
-                    // }
-                  />
+                          <Typography
+                            variant="span"
+                            fontWeight={700}
+                            className="likes-content"
+                          >
+                            {parse(parent?.comment || parent?.post)}
+                            {"  "}
+                          </Typography>
+                          <Typography variant="p">was reported as</Typography>
+                          <Typography
+                            variant="span"
+                            fontWeight={700}
+                            className="likes-content"
+                          >
+                            {"  "}
+                            {parse(reason)}
+                          </Typography>
+                        </Grid>
+                      }
+                      secondary={
+                        <>
+                          <Typography variant="h6">
+                            {getTimeMoment(createdAt)}
+                          </Typography>
+                          <Typography
+                            variant="h5"
+                            fontWeight={600}
+                            sx={{ display: { md: "none" } }}
+                          >
+                            {yellow_card
+                              ? "Yellow card(Warning!!"
+                              : "No Action yet"}
+                          </Typography>
+                        </>
+                      }
+                    />
+                  </ListItem>
                 </ListItemButton>
-              </ListItem>
-            );
-          })}
+              );
+            }
+          )}
         </List>
       ) : (
         <Typography variant="h2" sx={{ width: "100%", textAlign: "center" }}>

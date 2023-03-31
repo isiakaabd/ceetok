@@ -71,6 +71,16 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    yellowCard: builder.mutation({
+      query: (body) => ({
+        url: `/admin/infraction/yellow-card`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["admin"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
     deleteLivePost: builder.mutation({
       query: (body) => ({
         url: `/admin/live`,
@@ -120,6 +130,7 @@ export const {
   useBanUsersMutation,
   useDeleteLivePostMutation,
   useGetLivePostsQuery,
+  useYellowCardMutation,
   useSendMailMutation,
   useEditLivePostMutation,
   useSendEmailMutation,

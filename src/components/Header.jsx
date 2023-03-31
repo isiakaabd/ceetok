@@ -58,6 +58,11 @@ const pages = [
   },
   {
     id: 5,
+    path: "/categories",
+    title: "Categories",
+  },
+  {
+    id: 6,
     path: "/contact-us",
     title: "Contact Us",
   },
@@ -130,50 +135,6 @@ function Header() {
   };
   const handleLoginClose = () => setIsLogin(false);
 
-  // const [openss, setOpenss] = useState(false);
-  // const anchorRefs = useRef(null);
-
-  // const handleToggles = () => {
-  //   setOpenss((prevOpen) => !prevOpen);
-  // };
-
-  // const handleClosess = (event) => {
-  //   if (anchorRefs.current && anchorRefs.current.contains(event.target)) {
-  //     return;
-  //   }
-
-  //   setOpenss(false);
-  // };
-
-  // function handleListKeyDowns(event) {
-  //   if (event.key === "Tab") {
-  //     event.preventDefault();
-  //     setOpenss(false);
-  //   } else if (event.key === "Escape") {
-  //     setOpenss(false);
-  //   }
-  // }
-
-  // // return focus to the button when we transitioned from !open -> open
-  // const prevOpens = useRef(openss);
-  // useEffect(() => {
-  //   if (prevOpens.current === true && openss === false) {
-  //     anchorRefs.current.focus();
-  //   }
-
-  //   prevOpens.current = openss;
-  // }, [openss]);
-  const [anchorElss, setAnchorElss] = useState(null);
-  //  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const openss = Boolean(anchorElss);
-  const handleClickListItem = (event) => {
-    setAnchorElss(event.currentTarget);
-  };
-
-  const options = ["Show some love to MUI"];
-  const handleClosess = () => {
-    setAnchorElss(null);
-  };
   const Search = () => {
     return (
       <Grid

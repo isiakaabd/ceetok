@@ -12,19 +12,21 @@ import { useGetPostQuery } from "redux/slices/postSlice";
 import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
 import {
+  useLazyUserProfileQuery,
   useUserProfileQuery,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import Tooltips from "components/ToolTips";
 import { CustomButton } from "components";
+import { useEffect } from "react";
 const Entertainment = () => {
   const [searchParams] = useSearchParams();
   const params = searchParams.get("category");
   const [value, setValue] = useState("");
   const loginStatus = useSelector((state) => state.auth.token);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const token = useSelector((state) => state.auth.token);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,12 +44,20 @@ const Entertainment = () => {
     category: params.toLowerCase(),
     from: value,
   });
-  const { data: profile, isLoading: loading } = useUserProfileQuery();
+  const [getProfile, { data: profile, isLoading: loading }] =
+    useLazyUserProfileQuery();
+  useEffect(() => {
+    if (token) {
+      getProfile();
+    }
+    //eslint-disable-next-line
+  }, [token]);
+
   const [opens, setOpens] = useState(false);
   const [createPostModal, setCreatePostModal] = useState(false);
   if (isLoading || loading) return <Skeleton />;
-  const { interests } = profile;
-  const check = interests?.includes(params.toLowerCase());
+  // const { interests } = profile;
+  const check = profile?.interests?.includes(params.toLowerCase());
   async function handleCheck() {
     const { interests } = profile;
     if (!check) {
@@ -194,7 +204,7 @@ const Entertainment = () => {
                 {array?.posts?.length > 0 ? (
                   array.posts?.map((post, index) => {
                     return (
-                      <SinglePosts key={index} post={post} index={index} />
+                      <SinglePosts key={index.id} post={post} index={index} />
                     );
                   })
                 ) : (

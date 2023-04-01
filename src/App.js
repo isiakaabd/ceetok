@@ -32,6 +32,7 @@ import Privacy from "pages/Privacy";
 import ContactUs from "pages/ContactUs";
 import Notification from "components/Notification";
 import Page404 from "pages/404";
+import Socials from "components/modals/Socials";
 
 const App = () => {
   const helmetContext = {};
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/categories" element={<Categories />} />
               <Route path="/auth/reset-password" element={<ResetPassword />} />
               <Route path="/auth/new-password" element={<NewPassword />} />
+              <Route path="/auth/social/google" element={<Socials />} />
               {/* <Route path="/post" element={<PrivateRoute />}></Route> */}
               <Route path="/post/:postId" element={<Post />} />
               <Route path="/posts" element={<Entertainment />} />

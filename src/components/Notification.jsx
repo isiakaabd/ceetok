@@ -83,7 +83,7 @@ const Notification = () => {
       });
       if (data) {
         setTimeout(() => handleClose(), 3000);
-        return toast.success(postData || dts || commentData);
+        return toast.success(data);
       } else {
         if (error) toast.error(error);
       }
@@ -93,16 +93,16 @@ const Notification = () => {
       });
       if (data) {
         setTimeout(() => handleClose(), 3000);
-        return toast.success(postData || dts || commentData);
+        return toast.success(data);
       } else {
         if (error) toast.error(error);
       }
     }
   };
-  console.log(user);
+  console.log(user, "user");
   const handleReport = async (values) => {
     const { data, error } = await yellowCard({
-      user_id: user?.reciever || user?.owner?.user_id,
+      user_id: user?.owner?.user_id,
       reason: values.body,
       parent_type: user?.owner_type,
       parent_id: user?.owner_id,
@@ -166,6 +166,7 @@ const Notification = () => {
                       creator,
                       owner_id,
                     } = item;
+                    console.log(item);
                     return (
                       <ListItem
                         dense

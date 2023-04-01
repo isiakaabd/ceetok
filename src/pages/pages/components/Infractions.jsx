@@ -24,6 +24,7 @@ const Infractions = (props) => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, reports } = data;
+  console.log(data);
   return (
     <Grid item container sx={{ p: 4 }}>
       {reports?.length > 0 ? (
@@ -85,8 +86,9 @@ const Infractions = (props) => {
                             fontWeight={700}
                             className="likes-content"
                           >
-                            {parse(parent?.comment || parent?.post)}
-                            {"  "}
+                            {parse(
+                              parent?.comment || parent?.post || "Something"
+                            )}
                           </Typography>
                           <Typography variant="p">was reported as</Typography>
                           <Typography

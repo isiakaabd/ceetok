@@ -79,7 +79,7 @@ export const adminSlice = api.injectEndpoints({
       }),
       invalidatesTags: ["admin"],
       transformResponse: (response) => response.message,
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     deleteLivePost: builder.mutation({
       query: (body) => ({

@@ -13,7 +13,6 @@ import CreatePost from "./user/modals/CreatePost";
 import LoginModal from "components/modals/LoginModal";
 import {
   useLazyUserProfileQuery,
-  useUserProfileQuery,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
 import { toast } from "react-toastify";

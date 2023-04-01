@@ -119,10 +119,19 @@ export const adminSlice = api.injectEndpoints({
       transformResponse: (response) => response.message,
       transformErrorResponse: (error) => error.data.message,
     }),
+    socials: builder.query({
+      query: () => ({
+        url: `/auth/social/google`,
+      }),
+      invalidatesTags: ["admin"],
+      transformResponse: (response) => response.message,
+      transformErrorResponse: (error) => error.data.message,
+    }),
   }),
 });
 
 export const {
+  useSocialsQuery,
   useApprovePostMutation,
   useGetUsersQuery,
   useLivePostMutation,

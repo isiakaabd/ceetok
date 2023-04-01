@@ -36,6 +36,7 @@ import Socials from "components/modals/Socials";
 
 const App = () => {
   const helmetContext = {};
+
   return (
     <HelmetProvider context={helmetContext}>
       <ThemeProvider theme={muiTheme}>
@@ -55,7 +56,7 @@ const App = () => {
               <Route path="/categories" element={<Categories />} />
               <Route path="/auth/reset-password" element={<ResetPassword />} />
               <Route path="/auth/new-password" element={<NewPassword />} />
-              <Route path="/auth/social/google" element={<Socials />} />
+              <Route path="/auth/social" element={<Socials />} />
               {/* <Route path="/post" element={<PrivateRoute />}></Route> */}
               <Route path="/post/:postId" element={<Post />} />
               <Route path="/posts" element={<Entertainment />} />

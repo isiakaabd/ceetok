@@ -20,6 +20,13 @@ export const authSlice = createSlice({
       state.user = action.payload;
       state.token = action.payload.auth.accessToken;
     },
+    loginActionSocial: (state, action) => {
+      state.auth = true;
+      localStorage.setItem("access_token", action.payload.accessToken);
+      localStorage.setItem("refresh_token", action.payload.refreshToken);
+      state.user = action.payload;
+      state.token = action.payload.accessToken;
+    },
     registerAction: (state, action) => {
       // localStorage.setItem("access_token", action.payload.auth.accessToken);
       state.user = action.payload;
@@ -50,8 +57,9 @@ const { reducer, actions } = authSlice;
 export const {
   registerAction,
   loginAction,
-  logoutAction,
   checkAdmin,
+  loginActionSocial,
+  logoutAction,
   getToken,
   getUserDetails,
 } = actions;

@@ -22,8 +22,7 @@ import { useLoginMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { checkAdmin, loginAction } from "redux/reducers/authReducer";
-import { useNavigate } from "react-router-dom";
-const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
+const LoginModal = ({ isLogin, handleClose }) => {
   const [loginUser, { isLoading, error, data }] = useLoginMutation();
   const [state, setState] = useState(true);
   const [register, setRegister] = useState(false);
@@ -56,7 +55,6 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
     password: Yup.string().required("Enter your password"),
   });
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const handleSubmit = async (values) => {
     const { email, password } = values;
 
@@ -66,7 +64,10 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
       await loginUser({ phone: email, password });
     }
   };
-
+  const url =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_SOCIAL_LOGIN_DEV
+      : process.env.REACT_APP_SOCIAL_LOGIN_LIVE;
   return (
     <>
       <Modals
@@ -137,7 +138,11 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
                   // sx={{ mt: 4, mb: 3 }}
                   justifyContent="center"
                 >
-                  <IconButton>
+                  <IconButton
+                    component="button"
+                    role="button"
+                    href={`${url}/facebook`}
+                  >
                     <img
                       src={images.fb}
                       style={{
@@ -148,8 +153,12 @@ const LoginModal = ({ isLogin, handleClose, setIsLogin }) => {
                       alt="facebook icon"
                     />
                   </IconButton>
-                  {/* ${process.env.REACT_APP_BASE_URL} */}
-                  <IconButton onClick={() => navigate(`/auth/social/google`)}>
+
+                  <IconButton
+                    component="button"
+                    role="button"
+                    href={`${url}/google`}
+                  >
                     <img
                       src={images.gmail}
                       style={{

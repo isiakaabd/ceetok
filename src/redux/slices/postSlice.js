@@ -24,14 +24,13 @@ export const postSlice = api.injectEndpoints({
         direction,
         //  ${`&approved=${approved}`}
       }) => ({
-        url: `post/?${offset ? `&offset=${offset}` : "&offset=0"}&limit=10
+        url: `post/?&offset=${offset ? offset : 0}&limit=10
         ${category ? `&category=${category}` : ""}${
           from ? `&from=${from}` : ""
         }${approved ? `&approved=${approved}` : ""}     
-        ${userId ? `&user_id=${userId}` : ""} ${
+        ${userId ? `&user_id=${userId}` : ""}${
           direction ? `&from_direction=${direction}` : ""
-        } 
-         ${latest ? `&latest=${latest}` : ""}   ${
+        }${latest ? `&latest=${latest}` : ""}${
           recent ? `&recent=${recent}` : ""
         } 
         

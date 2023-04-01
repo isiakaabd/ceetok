@@ -13,11 +13,6 @@ import {
   Button,
   InputBase,
   Menu,
-  MenuList,
-  ClickAwayListener,
-  Paper,
-  Grow,
-  Popper,
 } from "@mui/material";
 import images from "assets";
 import { Grid } from "@mui/material";
@@ -26,11 +21,7 @@ import { Link, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
-import {
-  ArrowDropDown,
-  KeyboardArrowDownOutlined,
-  SearchOutlined,
-} from "@mui/icons-material";
+import { SearchOutlined } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import UserAccount from "./UserAccount";
 import CustomizedMenus from "./EE";

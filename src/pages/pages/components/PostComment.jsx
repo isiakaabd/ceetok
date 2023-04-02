@@ -1,7 +1,12 @@
 import {
+  BlockOutlined,
+  Delete,
+  Edit,
   Favorite,
   FilterList,
   IosShareOutlined,
+  MoreVertOutlined,
+  PersonAddAltRounded,
   ReplyOutlined,
   ReportOutlined,
   SearchOutlined,
@@ -23,6 +28,12 @@ import {
   List,
   Skeleton,
   Avatar,
+  ListItemButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemIcon,
+  Menu,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState, useEffect, useRef } from "react";
@@ -39,12 +50,15 @@ import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import { Details } from "../Post";
 import {
+  useBlockUserMutation,
+  useFollowUserMutation,
   useLazyUserProfileQuery,
+  useUnBlockUserMutation,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
-import { getImage } from "helpers";
+import { getImage, getTimeMoment } from "helpers";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 import { useApprovePostMutation } from "redux/slices/adminSlice";
@@ -64,8 +78,10 @@ import Editor from "components/Quill";
 import { CustomButton } from "components";
 import Paginations from "components/modals/Paginations";
 import Error from "./Error";
+import Replies from "./Replies";
 export const Comment = ({ handleShare, data, state, setState }) => {
   const { id, category, user_id, body, media } = data;
+
   // recent_quotes, recent_comments,
   // const [page, setPage] = useState(0);
   // const {
@@ -231,7 +247,9 @@ export const Comment = ({ handleShare, data, state, setState }) => {
       });
       if (data) toast.success(data);
     } else {
-      const newArr = interests.filter((ite) => ite !== category?.toLowerCase());
+      const newArr = interests?.filter(
+        (ite) => ite !== category?.toLowerCase()
+      );
       const data = await update({
         interests: [...newArr],
       });
@@ -490,31 +508,31 @@ export const Comment = ({ handleShare, data, state, setState }) => {
         <Divider flexItem sx={{ pb: 2 }} />
       </Grid>
       <Grid item md={7} xs={12} sx={{ paddingInline: { xs: "1rem" } }}>
-        {state ? (
-          <Grid item container>
-            <Typography
-              color="secondary"
-              sx={{ my: 1 }}
-              fontSize={{ md: "3rem", xs: "2rem" }}
-              fontWeight={700}
-            >
-              Comments
-            </Typography>
-            <AllComments profile={profile} id={id} icons={icons} />
-          </Grid>
-        ) : (
-          <Grid item container>
-            <Typography
-              color="secondary"
-              sx={{ my: 1 }}
-              fontSize={{ md: "3rem", xs: "2rem" }}
-              fontWeight={700}
-            >
-              Quotes
-            </Typography>
-            <AllQuotes id={id} icons={icons} profile={profile} />
-          </Grid>
-        )}
+        {/* {state ? ( */}
+        <Grid item container>
+          <Typography
+            color="secondary"
+            sx={{ my: 1 }}
+            fontSize={{ md: "3rem", xs: "2rem" }}
+            fontWeight={700}
+          >
+            Comments
+          </Typography>
+          <AllComments profile={profile} id={id} icons={icons} />
+        </Grid>
+        {/* // ) : (
+        //   <Grid item container>
+        //     <Typography
+        //       color="secondary"
+        //       sx={{ my: 1 }}
+        //       fontSize={{ md: "3rem", xs: "2rem" }}
+        //       fontWeight={700}
+        //     >
+        //       Quotes
+        //     </Typography>
+        //     <AllQuotes id={id} icons={icons} profile={profile} />
+        //   </Grid>
+        // )} */}
       </Grid>
       <Popper
         open={open}
@@ -659,8 +677,18 @@ function AllComments({ id, profile, icons }) {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
+  const {
+    data: quotes,
+    // error,
+    // isLoading,
+  } = useGetPostQuotesQuery({
+    parent_type: "posts",
+    parentId: id,
+    offset: page - 1,
+  });
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+
   return (
     <>
       <Grid
@@ -668,7 +696,7 @@ function AllComments({ id, profile, icons }) {
         container
         flexDirection="column"
         sx={{
-          maxHeight: { xs: "70rem" },
+          // maxHeight: { xs: "70rem" },
           overflowY: "scroll",
           "&::-webkit-scrollbar": {
             width: ".85rem",
@@ -677,6 +705,17 @@ function AllComments({ id, profile, icons }) {
         }}
         // ref={root}
       >
+        {quotes?.quotes?.length > 0 ? (
+          <List sx={{ width: "100%" }}>
+            {quotes?.quotes?.map((item) => {
+              return <Replies item={item} />;
+            })}
+          </List>
+        ) : (
+          <Grid item container>
+            <Typography>No Quotes available</Typography>
+          </Grid>
+        )}
         {comments?.comments?.length > 0 ? (
           <Grid item container flexDirection="column">
             <List sx={{ width: "100%" }} dense>
@@ -706,11 +745,11 @@ function AllComments({ id, profile, icons }) {
             <Typography>No comments available</Typography>
           </Grid>
         )}
-        {comments?.total_pages > 1 && (
+        {quotes?.total_pages > 1 && (
           <Paginations
             page={page}
             setPage={setPage}
-            count={comments?.total_pages}
+            count={quotes?.total_pages}
           />
         )}
       </Grid>
@@ -735,6 +774,17 @@ function AllQuotes({ id, icons, profile }) {
     parentId: id,
     offset: page - 1,
   });
+  const {
+    data: comments,
+    // error,
+    // isLoading,
+    // isFetching,
+  } = useGetPostCommentsQuery({
+    parent_type: "posts",
+    parentId: id,
+    offset: page - 1,
+  });
+  // console.log(profile);
 
   // const hasNextPage = page + 1 < quotes?.total_pages;
 
@@ -745,8 +795,10 @@ function AllQuotes({ id, icons, profile }) {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
+
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
+  console.log(comments);
   return (
     <>
       <Grid
@@ -761,41 +813,29 @@ function AllQuotes({ id, icons, profile }) {
           },
         }}
       >
-        {quotes?.quotes?.length > 0 ? (
-          <List sx={{ width: "100%" }} dense>
-            {quotes?.quotes?.map((item) => (
-              <SingleComment
-                icons={icons}
-                key={item.id}
-                item={item}
-                profile={profile}
-                type="quote"
-              />
-            ))}
-            {/* {hasNextPage && <div ref={sentryRef} />}
-            {!hasNextPage && (
-              <Typography
-                fontWeight={700}
-                width="100%"
-                textAlign="center"
-                variant="h5"
-              >
-                No more Quotes
-              </Typography>
-            )} */}
-          </List>
-        ) : (
-          <Grid item container>
-            <Typography>No Quotes available</Typography>
-          </Grid>
-        )}
-        {quotes?.total_pages > 1 && (
-          <Paginations
-            page={page}
-            setPage={setPage}
-            count={quotes?.total_pages}
-          />
-        )}
+        {/* // <List sx={{ width: "100%" }} dense>
+          //   {quotes?.quotes?.map((item) => ( */}
+        {/* //     <SingleComment
+          //       icons={icons}
+          //       key={item.id}
+          //       item={item}
+          //       profile={profile}
+          //       type="quote"
+          //     />
+          //   ))}
+          //   {/* {hasNextPage && <div ref={sentryRef} />}
+          //   {!hasNextPage && (
+          //     <Typography
+          //       fontWeight={700}
+          //       width="100%"
+          //       textAlign="center"
+          //       variant="h5"
+          //     >
+          //       No more Quotes
+          //     </Typography>
+          //   )} 
+         </List>
+          */}
       </Grid>
       {/* {isFetching && hasNextPage && (
         <Typography width="100%" textAlign="center" variant="h4">

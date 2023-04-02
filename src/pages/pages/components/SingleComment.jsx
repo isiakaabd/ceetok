@@ -11,6 +11,7 @@ import {
   PersonAddAlt1Outlined,
   ExpandLess,
   ExpandMore,
+  PersonAddOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
 import * as Yup from "yup";
@@ -47,6 +48,7 @@ import EditModal from "./EditPost";
 import {
   useBlockUserMutation,
   useFollowUserMutation,
+  useLazyUserProfileQuery,
   useUnBlockUserMutation,
 } from "redux/slices/authSlice";
 import Quotes from "assets/svgs/Quote";
@@ -58,11 +60,14 @@ import {
   useCreateQuoteMutation,
   useDeleteQuoteMutation,
   useEditQuoteMutation,
+  useGetPostQuotesQuery,
 } from "redux/slices/quoteSlice";
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
 import MasonryImageList from "./ImageList";
 import ReactPlayer from "react-player";
+import { useEffect } from "react";
+import UserProfile from "../UserProfile";
 // import images from "assets";
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -90,7 +95,19 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   fontWeight: 600,
 }));
 
-const SingleComment = ({ item, icons, profile, type }) => {
+const SingleComment = ({ item }) => {
+  const {
+    body,
+    id,
+    createdAt,
+    edited,
+    updatedAt,
+    comment,
+    parent,
+    user,
+    user_id,
+  } = item;
+  console.log(item);
   // const x = (message) => {
   //   const messageWithMentions = message.replace(
   //     /@\w+/g,
@@ -98,6 +115,96 @@ const SingleComment = ({ item, icons, profile, type }) => {
   //   );
   //   return messageWithMentions;
   // };
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [getProfile, { data: profile }] = useLazyUserProfileQuery();
+  const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
+  const { token, admin } = useSelector((state) => state.auth);
+
+  const [followUser, { isLoading: following }] = useFollowUserMutation();
+  // const  = item;
+
+  useEffect(() => {
+    if (token) {
+      getProfile();
+    }
+    //eslint-disable-next-line
+  }, [token]);
+  const { is_followed, is_blocked_by_me } = user;
+  const opens = Boolean(anchorEl);
+
+  const [deleteComment, { isLoading }] = useDeleteCommentMutation();
+  const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
+
+  const [unBlockUser, { isLoading: unblocking }] = useUnBlockUserMutation();
+  const handleClick = (e) => {
+    e.stopPropagation();
+    setAnchorEl(e.currentTarget);
+  };
+  const handleCloses = (e) => {
+    // e.stopPropagation();
+    setAnchorEl(null);
+  };
+  const check = profile?.id !== user_id;
+  let type = false;
+  const handleDeleteComment = async (e) => {
+    if (type === "quote") {
+      const { data, error } = await deleteQuote({ id });
+      if (data) toast.success("comment deleted successfully");
+      if (error) toast.error(error);
+    } else {
+      const { data, error } = await deleteComment({ id });
+      if (data) toast.success("comment deleted successfully");
+      if (error) toast.error(error);
+    }
+    e.stopPropagation();
+
+    handleCloses(e);
+  };
+  const [open, setOpen] = useState(false);
+  const handleEditComment = (e) => {
+    setOpen(true);
+  };
+  const [openReport, setOpenReport] = useState(false);
+  const handleBlockUser = async (e) => {
+    if (!is_blocked_by_me) {
+      const { data, error } = await blockUser({
+        user_id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleCloses(e), 3000);
+      }
+      if (error) toast.success(error);
+    } else {
+      const { data, error } = await unBlockUser({
+        user_id,
+      });
+      if (data) {
+        toast.success(data);
+        setTimeout(() => handleCloses(e), 3000);
+      }
+      if (error) toast.success(error);
+    }
+  };
+  const handleFollowUser = async (e) => {
+    e.stopPropagation();
+    const { data, error } = await followUser({
+      user_id,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => handleCloses(e), 3000);
+    }
+    if (error) toast.success(error);
+  };
+  const { full_name, avatar } = user;
+  const navigate = useNavigate();
+  const handleClicks = () => {
+    navigate({
+      pathname: "/user/profile",
+      search: `?id=${id}`,
+    });
+  };
   return (
     <>
       <ListItem
@@ -112,23 +219,183 @@ const SingleComment = ({ item, icons, profile, type }) => {
           textDecoration: "none",
           color: "text.primary",
         }}
+        alignItems="start"
       >
         <ListItemButton
           disableRipple
           disableTouchRipple
-          component="div"
+          alignItems="flex-start"
+          // component="div"
           disableGutters
           dense
         >
-          <div style={{ width: "100%", display: "flex" }}>
-            <Image person={item} />
-            <Text
-              item={item}
-              profile={profile}
-              icons={icons}
-              type={type}
-            />{" "}
-          </div>
+          <ListItemAvatar>
+            <Avatar
+              alt={full_name}
+              src={getImage(avatar)}
+              onClick={handleClicks}
+              sx={{ cursor: "pointer" }}
+            >
+              {full_name?.slice(0, 1).toUpperCase()}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            sx={{ p: "0 !important" }}
+            primary={
+              <Grid item container alignItems={"center"} flexWrap={"nowrap"}>
+                <Grid item flex={1} sx={{ maxWidth: "90%", mr: "auto" }}>
+                  <Grid
+                    item
+                    alignItems={"center"}
+                    // sx={{ maxWidth: "90%" }}
+                    container
+                    flexWrap={"nowrap"}
+                  >
+                    <Typography
+                      fontWeight={700}
+                      //   flex={1}
+                      noWrap
+                      sx={{ maxWidth: "90%" }}
+                      color="color.text"
+                      fontSize={{ md: "1.8rem", xs: "1.4rem" }}
+                    >
+                      {user?.full_name}
+                    </Typography>
+                    <Typography
+                      variant="span"
+                      fontWeight={400}
+                      sx={{ ml: 1 }}
+                      noWrap
+                    >
+                      {getTimeMoment(edited ? updatedAt : createdAt)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    edge="start"
+                    id="basic-button"
+                    aria-controls={opens ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={opens ? "true" : undefined}
+                    onClick={handleClick}
+                    // sx={{ visibility: !check && "hidden"}}
+                    sx={{ ml: { xs: "1rem" } }}
+                  >
+                    <MoreVertOutlined />
+                  </IconButton>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={opens}
+                    onClose={handleCloses}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    {!check && (
+                      <MenuItem
+                        onClick={handleDeleteComment}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        disabled={check}
+                      >
+                        <ListItemIcon>
+                          <Delete sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+
+                        <ListItemText sx={{ fontSize: "3rem" }}>
+                          {isLoading || deleting ? "Deleting" : "Delete"}
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                    {!check && (
+                      <MenuItem
+                        onClick={handleEditComment}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        disabled={check}
+                      >
+                        <ListItemIcon>
+                          <Edit sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+
+                        <ListItemText sx={{ fontSize: "3rem" }}>
+                          Edit
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && !admin && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        onClick={(e) => {
+                          setOpenReport(true);
+                          handleCloses(e);
+                        }}
+                      >
+                        <ListItemIcon>
+                          <ReportOutlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>Report</ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        onClick={handleBlockUser}
+                      >
+                        <ListItemIcon>
+                          <BlockOutlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          {blocking
+                            ? "Blocking..."
+                            : unblocking
+                            ? "Unblocking..."
+                            : `${is_blocked_by_me ? "Unblock" : "Block"} User`}
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                    {check && (
+                      <MenuItem
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        onClick={handleFollowUser}
+                      >
+                        <ListItemIcon>
+                          <PersonAddOutlined sx={{ fontSize: "2rem" }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          {following
+                            ? "Following"
+                            : `${is_followed ? "Unfollow" : "Follow"} User`}
+                        </ListItemText>
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </Grid>
+              </Grid>
+            }
+            secondary={
+              <div>
+                {parse(comment)}
+
+                <Detail item={item} type="comments" />
+              </div>
+            }
+          />
         </ListItemButton>
       </ListItem>
     </>
@@ -272,215 +539,354 @@ export function Text({ item, profile, displayDetail, type }) {
     <>
       <ListItemText
         primary={
-          <Grid item container flexDirection="column" alignItems="center">
-            <Grid
-              item
-              container
-              justifyContent={"space-between"}
-              flexWrap="nowrap"
-              sx={{ overflow: "hidden" }}
-            >
-              <Grid item container alignItems="center" flexWrap="nowrap">
+          // <Grid item container flexDirection="column" alignItems="center">
+          //   <Grid
+          //     item
+          //     container
+          //     justifyContent={"space-between"}
+          //     flexWrap="nowrap"
+          //     sx={{ overflow: "hidden" }}
+          //   >
+          //     <Grid item container alignItems="center" flexWrap="nowrap">
+          //       <Typography
+          //         fontWeight={700}
+          //         // sx={{
+          //         //   whiteSpace: "nowrap",
+          //         //   overflow: "hidden",
+          //         //   textOverflow: "ellipsis",
+          //         //   // flex: 0.5,
+          //         // }}
+          //         noWrap
+          //         color="color.text"
+          //         fontSize={{ md: "1.8rem", xs: "1.4rem" }}
+          //       >
+          //         {full_name}
+          //       </Typography>
+          //       <Typography
+          //         fontWeight={500}
+          //         sx={{
+          //           whiteSpace: "nowrap",
+          //           overflow: "visible",
+          //           ml: ".4rem",
+          //         }}
+          //       >
+          //         {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
+          //       </Typography>
+          //       {edited && (
+          //         <Typography
+          //           fontWeight={700}
+          //           color="success"
+          //           fontSize={{ md: "1.2rem", xs: "1rem" }}
+          //           sx={{
+          //             ml: ".4rem",
+          //             alignSelf: "center",
+          //             color: "#37D42A",
+          //             whiteSpace: "nowrap",
+          //             overflow: "visible",
+          //           }}
+          //         >
+          //           Edited
+          //         </Typography>
+          //       )}
+          //       {token && (
+          //         <Grid item sx={{ ml: "auto" }}>
+          //           <IconButton
+          //             edge="start"
+          //             id="basic-button"
+          //             aria-controls={opens ? "basic-menu" : undefined}
+          //             aria-haspopup="true"
+          //             aria-expanded={opens ? "true" : undefined}
+          //             onClick={handleClick}
+          //             sx={{ ml: { xs: "1rem" } }}
+          //             //  sx={{ visibility: !check && "hidden" }}
+          //           >
+          //             <MoreVertOutlined />
+          //           </IconButton>
+          //           <Menu
+          //             id="basic-menu"
+          //             anchorEl={anchorEl}
+          //             open={opens}
+          //             onClose={handleCloses}
+          //             MenuListProps={{
+          //               "aria-labelledby": "basic-button",
+          //             }}
+          //           >
+          //             {!check && (
+          //               <MenuItem
+          //                 onClick={handleDeleteComment}
+          //                 sx={{
+          //                   display: "flex",
+          //                   alignItems: "center",
+          //                 }}
+          //                 disabled={check}
+          //               >
+          //                 <ListItemIcon>
+          //                   <Delete sx={{ fontSize: "2rem" }} />
+          //                 </ListItemIcon>
+
+          //                 <ListItemText sx={{ fontSize: "3rem" }}>
+          //                   {isLoading || deleting ? "Deleting" : "Delete"}
+          //                 </ListItemText>
+          //               </MenuItem>
+          //             )}
+          //             {!check && (
+          //               <MenuItem
+          //                 onClick={handleEditComment}
+          //                 sx={{
+          //                   display: "flex",
+          //                   alignItems: "center",
+          //                 }}
+          //                 disabled={check}
+          //               >
+          //                 <ListItemIcon>
+          //                   <Edit sx={{ fontSize: "2rem" }} />
+          //                 </ListItemIcon>
+
+          //                 <ListItemText sx={{ fontSize: "3rem" }}>
+          //                   Edit
+          //                 </ListItemText>
+          //               </MenuItem>
+          //             )}
+          //             {check && !admin && (
+          //               <MenuItem
+          //                 sx={{
+          //                   display: "flex",
+          //                   alignItems: "center",
+          //                 }}
+          //                 onClick={(e) => {
+          //                   setOpenReport(true);
+          //                   handleCloses(e);
+          //                 }}
+          //               >
+          //                 <ListItemIcon>
+          //                   <ReportOutlined sx={{ fontSize: "2rem" }} />
+          //                 </ListItemIcon>
+          //                 <ListItemText>Report</ListItemText>
+          //               </MenuItem>
+          //             )}
+          //             {check && (
+          //               <MenuItem
+          //                 sx={{
+          //                   display: "flex",
+          //                   alignItems: "center",
+          //                 }}
+          //                 onClick={handleBlockUser}
+          //               >
+          //                 <ListItemIcon>
+          //                   <BlockOutlined sx={{ fontSize: "2rem" }} />
+          //                 </ListItemIcon>
+          //                 <ListItemText>
+          //                   {blocking
+          //                     ? "Blocking..."
+          //                     : unblocking
+          //                     ? "Unblocking..."
+          //                     : `${
+          //                         is_blocked_by_me ? "Unblock" : "Block"
+          //                       } User`}
+          //                 </ListItemText>
+          //               </MenuItem>
+          //             )}
+          //             {check && (
+          //               <MenuItem
+          //                 sx={{
+          //                   display: "flex",
+          //                   alignItems: "center",
+          //                 }}
+          //                 onClick={handleFollowUser}
+          //               >
+          //                 <ListItemIcon>
+          //                   <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
+          //                 </ListItemIcon>
+          //                 <ListItemText>
+          //                   {following
+          //                     ? "Following"
+          //                     : `${is_followed ? "Unfollow" : "Follow"} User`}
+          //                 </ListItemText>
+          //               </MenuItem>
+          //             )}
+          //           </Menu>
+          //         </Grid>
+          //       )}
+          //     </Grid>
+          //   </Grid>
+          //   <Grid item container flexDirection={"column"} flexWrap="nowrap">
+          //     <div className="ql-text">{parse(x(comment || body))}</div>
+          //     <Grid item container sx={{ p: { xs: "1rem" } }}>
+          //       {media?.length >= 2 ? (
+          //         <MasonryImageList
+          //           itemData={media?.slice(
+          //             0,
+          //             media.length > 4 ? 3 : media.length
+          //           )}
+          //         />
+          //       ) : media?.length === 1 && media[0]?.type === "image" ? (
+          //         <Avatar
+          //           src={getImage(media[0]?.storage_path)}
+          //           sx={{
+          //             width: "100%",
+          //             height: "auto",
+          //             objectFit: "cover",
+          //             // maxHeight: "0rem",
+          //           }}
+          //           // alt={category}
+          //           variant="square"
+          //         />
+          //       ) : media?.length === 1 && media[0]?.type === "video" ? (
+          //         // <div className="player-wrapper">
+          //         <ReactPlayer
+          //           url={getImage(media[0]?.storage_path)}
+          //           controls={true}
+          //           volume={0.6}
+          //           width="100%"
+          //           height="auto"
+          //           // className="react-player"
+          //           // style={{ maxheight: "10rem" }}
+          //         />
+          //       ) : null}
+          //     </Grid>
+          //     {/* <MasonryImageList itemData={media} /> */}
+          //   </Grid>
+          // </Grid>
+          <Grid item container alignItems={"center"} flexWrap={"nowrap"}>
+            <Grid item>
+              <Grid item alignItems={"center"} container flexWrap={"nowrap"}>
                 <Typography
                   fontWeight={700}
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    // flex: 0.5,
-                  }}
+                  flex={1}
+                  noWrap
+                  color="color.text"
+                  fontSize={{ md: "1.8rem", xs: "1.4rem" }}
                 >
-                  {full_name}
+                  {user?.full_name}
                 </Typography>
                 <Typography
-                  fontWeight={500}
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "visible",
-                    ml: ".4rem",
-                  }}
+                  variant="span"
+                  fontWeight={400}
+                  sx={{ ml: 1 }}
+                  noWrap
                 >
-                  {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
+                  {getTimeMoment(edited ? updatedAt : createdAt)}
                 </Typography>
-                {edited && (
-                  <Typography
-                    fontWeight={700}
-                    color="success"
-                    fontSize={{ md: "1.2rem", xs: "1rem" }}
-                    sx={{
-                      ml: ".4rem",
-                      alignSelf: "center",
-                      color: "#37D42A",
-                      whiteSpace: "nowrap",
-                      overflow: "visible",
-                    }}
-                  >
-                    Edited
-                  </Typography>
-                )}
-                {token && (
-                  <Grid item sx={{ ml: "auto" }}>
-                    <IconButton
-                      edge="start"
-                      id="basic-button"
-                      aria-controls={opens ? "basic-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={opens ? "true" : undefined}
-                      onClick={handleClick}
-                      sx={{ ml: { xs: "1rem" } }}
-                      //  sx={{ visibility: !check && "hidden" }}
-                    >
-                      <MoreVertOutlined />
-                    </IconButton>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={opens}
-                      onClose={handleCloses}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      {!check && (
-                        <MenuItem
-                          onClick={handleDeleteComment}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          disabled={check}
-                        >
-                          <ListItemIcon>
-                            <Delete sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-
-                          <ListItemText sx={{ fontSize: "3rem" }}>
-                            {isLoading || deleting ? "Deleting" : "Delete"}
-                          </ListItemText>
-                        </MenuItem>
-                      )}
-                      {!check && (
-                        <MenuItem
-                          onClick={handleEditComment}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          disabled={check}
-                        >
-                          <ListItemIcon>
-                            <Edit sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-
-                          <ListItemText sx={{ fontSize: "3rem" }}>
-                            Edit
-                          </ListItemText>
-                        </MenuItem>
-                      )}
-                      {check && !admin && (
-                        <MenuItem
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          onClick={(e) => {
-                            setOpenReport(true);
-                            handleCloses(e);
-                          }}
-                        >
-                          <ListItemIcon>
-                            <ReportOutlined sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-                          <ListItemText>Report</ListItemText>
-                        </MenuItem>
-                      )}
-                      {check && (
-                        <MenuItem
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          onClick={handleBlockUser}
-                        >
-                          <ListItemIcon>
-                            <BlockOutlined sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            {blocking
-                              ? "Blocking..."
-                              : unblocking
-                              ? "Unblocking..."
-                              : `${
-                                  is_blocked_by_me ? "Unblock" : "Block"
-                                } User`}
-                          </ListItemText>
-                        </MenuItem>
-                      )}
-                      {check && (
-                        <MenuItem
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                          onClick={handleFollowUser}
-                        >
-                          <ListItemIcon>
-                            <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            {following
-                              ? "Following"
-                              : `${is_followed ? "Unfollow" : "Follow"} User`}
-                          </ListItemText>
-                        </MenuItem>
-                      )}
-                    </Menu>
-                  </Grid>
-                )}
               </Grid>
             </Grid>
-            <Grid item container flexDirection={"column"} flexWrap="nowrap">
-              <div className="ql-text">{parse(x(comment || body))}</div>
-              <Grid item container sx={{ p: { xs: "1rem" } }}>
-                {media?.length >= 2 ? (
-                  <MasonryImageList
-                    itemData={media?.slice(
-                      0,
-                      media.length > 4 ? 3 : media.length
-                    )}
-                  />
-                ) : media?.length === 1 && media[0]?.type === "image" ? (
-                  <Avatar
-                    src={getImage(media[0]?.storage_path)}
+            <Grid item gap={2} sx={{ ml: "auto" }}>
+              <IconButton
+                edge="start"
+                id="basic-button"
+                aria-controls={opens ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={opens ? "true" : undefined}
+                onClick={handleClick}
+                // sx={{ visibility: !check && "hidden"}}
+                sx={{ ml: { xs: "1rem" } }}
+              >
+                <MoreVertOutlined />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={opens}
+                onClose={handleCloses}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                {!check && (
+                  <MenuItem
+                    onClick={handleDeleteComment}
                     sx={{
-                      width: "100%",
-                      height: "auto",
-                      objectFit: "cover",
-                      // maxHeight: "0rem",
+                      display: "flex",
+                      alignItems: "center",
                     }}
-                    // alt={category}
-                    variant="square"
-                  />
-                ) : media?.length === 1 && media[0]?.type === "video" ? (
-                  // <div className="player-wrapper">
-                  <ReactPlayer
-                    url={getImage(media[0]?.storage_path)}
-                    controls={true}
-                    volume={0.6}
-                    width="100%"
-                    height="auto"
-                    // className="react-player"
-                    // style={{ maxheight: "10rem" }}
-                  />
-                ) : null}
-              </Grid>
-              {/* <MasonryImageList itemData={media} /> */}
+                    disabled={check}
+                  >
+                    <ListItemIcon>
+                      <Delete sx={{ fontSize: "2rem" }} />
+                    </ListItemIcon>
+
+                    <ListItemText sx={{ fontSize: "3rem" }}>
+                      {isLoading || deleting ? "Deleting" : "Delete"}
+                    </ListItemText>
+                  </MenuItem>
+                )}
+                {!check && (
+                  <MenuItem
+                    onClick={handleEditComment}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    disabled={check}
+                  >
+                    <ListItemIcon>
+                      <Edit sx={{ fontSize: "2rem" }} />
+                    </ListItemIcon>
+
+                    <ListItemText sx={{ fontSize: "3rem" }}>Edit</ListItemText>
+                  </MenuItem>
+                )}
+                {check && !admin && (
+                  <MenuItem
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onClick={(e) => {
+                      setOpenReport(true);
+                      handleCloses(e);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <ReportOutlined sx={{ fontSize: "2rem" }} />
+                    </ListItemIcon>
+                    <ListItemText>Report</ListItemText>
+                  </MenuItem>
+                )}
+                {check && (
+                  <MenuItem
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onClick={handleBlockUser}
+                  >
+                    <ListItemIcon>
+                      <BlockOutlined sx={{ fontSize: "2rem" }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      {blocking
+                        ? "Blocking..."
+                        : unblocking
+                        ? "Unblocking..."
+                        : `${is_blocked_by_me ? "Unblock" : "Block"} User`}
+                    </ListItemText>
+                  </MenuItem>
+                )}
+                {check && (
+                  <MenuItem
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onClick={handleFollowUser}
+                  >
+                    <ListItemIcon>
+                      <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      {following
+                        ? "Following"
+                        : `${is_followed ? "Unfollow" : "Follow"} User`}
+                    </ListItemText>
+                  </MenuItem>
+                )}
+              </Menu>
             </Grid>
           </Grid>
         }
-        secondary={
-          !displayDetail || type === "quote" ? null : <Detail item={item} />
-        }
+        // secondary={
+        //   !displayDetail || type === "quote" ? null : <Detail item={item} />
+        // }
       />
       <NotificationModal
         isOpen={openReport}
@@ -542,15 +948,20 @@ export function Text({ item, profile, displayDetail, type }) {
 Text.defaultProps = {
   displayDetail: true,
 };
-function Detail({ item }) {
-  const { id, recent_quotes, quotes_count, likes_count } = item;
+function Detail({ item, type }) {
+  const { id, recent_quotes, parent_type, quotes_count, likes_count } = item;
   const token = useSelector((state) => state.auth.token);
   const [isLogin, setIsLogin] = useState(false);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
   const [page] = useState(0);
   const { data: repliedComment } = useGetPostCommentsQuery({
-    type: "comments",
+    type,
+    parentId: id,
+    offset: page,
+  });
+  const { data: repliedQuotes } = useGetPostQuotesQuery({
+    type,
     parentId: id,
     offset: page,
   });
@@ -558,11 +969,12 @@ function Detail({ item }) {
   const handleLikePost = async (e) => {
     e.stopPropagation();
     const { data: dt } = await likePost({
-      parent_type: "comments",
+      parent_type: type,
       parent_id: item?.id,
     });
     if (dt) setLikeState(!likeState);
   };
+  console.log(repliedQuotes, "sss");
   const navigate = useNavigate();
   const [openQuoteModal, setOpenQuoteModal] = useState(false);
   const [open, setOpen] = useState(false);
@@ -573,7 +985,7 @@ function Detail({ item }) {
 
   return (
     <>
-      <Grid item md={6} xs={10} sm={8}>
+      <Grid item container>
         <Grid item container justifyContent="space-between" flexWrap="nowrap">
           <Grid
             item
@@ -619,23 +1031,175 @@ function Detail({ item }) {
             />
           </Grid>
         </Grid>
+
+        {repliedQuotes?.quotes.length > 0 &&
+          repliedQuotes?.quotes.map(
+            ({ user, edited, createdAt, updatedAt, body, parent }) => {
+              return (
+                <ListItem
+                  alignItems="flex-start"
+                  dense
+                  disableGutters
+                  key={id}
+                  // secondaryAction={
+
+                  // }
+                >
+                  {/* <Grid item container> */}
+                  <ListItemAvatar>
+                    <Avatar src={getImage(user?.avatar)} alt={user?.full_name}>
+                      {user?.full_name?.slice(0, 1).toUpperCase()}
+                    </Avatar>
+                  </ListItemAvatar>
+
+                  {/* </Grid> */}
+                  <ListItemText
+                    primary={
+                      <Grid
+                        item
+                        container
+                        alignItems={"center"}
+                        flexWrap={"nowrap"}
+                      >
+                        <Grid
+                          item
+                          flex={1}
+                          sx={{ maxWidth: "90%", mr: "auto" }}
+                        >
+                          <Grid
+                            item
+                            alignItems={"center"}
+                            // sx={{ maxWidth: "90%" }}
+                            container
+                            flexWrap={"nowrap"}
+                          >
+                            <Typography
+                              fontWeight={700}
+                              //   flex={1}
+                              noWrap
+                              sx={{ maxWidth: "90%" }}
+                              color="color.text"
+                              fontSize={{ md: "1.8rem", xs: "1.4rem" }}
+                            >
+                              {user?.full_name}
+                            </Typography>
+                            <Typography
+                              variant="span"
+                              fontWeight={400}
+                              sx={{ ml: 1 }}
+                              noWrap
+                            >
+                              {getTimeMoment(edited ? updatedAt : createdAt)}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    }
+                    // secondary={
+
+                    // }
+                    secondary={
+                      <>
+                        <Typography
+                          variant="span"
+                          noWrap
+                          fontWeight={500}
+                          sx={{
+                            // width: "max-content",
+                            fontSize: { md: "1.8rem", xs: "1.4rem" },
+                          }}
+                          className="likes-content"
+                        >
+                          {parse(body)}
+                        </Typography>
+
+                        <ListItemButton
+                          disableRipple
+                          disableTouchRipple
+                          // href={`/post/${parent?.slug}`}
+                        >
+                          <Grid
+                            item
+                            container
+                            sx={{
+                              mt: 1,
+                              p: 1,
+                              outline: "1px  solid #9B9A9A",
+                              borderRadius: "1rem",
+                            }}
+                            flexWrap="nowrap"
+                          >
+                            {/* Image */}
+                            <Grid item sx={{ mr: 2 }}>
+                              <Avatar
+                                src={getImage(parent?.user?.avatar)}
+                                alt={parent?.user?.full_name}
+                              >
+                                {parent?.user?.full_name
+                                  ?.slice(0, 1)
+                                  .toUpperCase()}
+                              </Avatar>
+                            </Grid>
+                            <Grid item container flexDirection="column">
+                              <Grid container gap={1} flexWrap="nowrap">
+                                <Typography
+                                  color="secondary"
+                                  fontWeight="600"
+                                  fontSize={"1.4rem"}
+                                >
+                                  {parent?.user?.full_name}
+                                </Typography>
+                                <Typography
+                                  color="#9B9A9A"
+                                  fontWeight={"400"}
+                                  fontSize="1.4rem"
+                                >
+                                  {getTimeMoment(parent?.createdAt)}
+                                </Typography>
+                              </Grid>
+                              <Typography
+                                variant="p"
+                                fontWeight={500}
+                                noWrap
+                                sx={{
+                                  // maxWidth: { md: "90%", xs: "80%" },
+                                  fontSize: { md: "1.8rem", xs: "1.4rem" },
+                                }}
+                                className="likes-content"
+                              >
+                                {/* {parent?.body
+                                            ? parse(parent?.body)
+                                            : parent?.comments &&
+                                              parse(parent?.comments)} */}
+                                {parse(body)}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </ListItemButton>
+                      </>
+                    }
+                  />
+                </ListItem>
+              );
+            }
+          )}
       </Grid>
-      <Grid item container flexDirection={"column"} sx={{ mt: 3 }}>
+      {/* <Grid item container flexDirection={"column"} sx={{ mt: 3 }}>
         <Grid item container flexDirection={"column"}>
           <Grid item container alignItems="center">
             <Typography flex={1} component="h5" variant="h5" fontWeight={700} b>
               {quotes_count > 1 ? "Quotes" : "Quote"} - {`${quotes_count || 0}`}
-              {/* {`Quote (${quotes_count})`} */}
+              {/*{`Quote (${quotes_count})`}
             </Typography>
-            <IconButton onClick={handleToggle}>
-              {open ? (
-                <ExpandLess sx={{ fontSize: "2rem" }} />
-              ) : (
-                <ExpandMore sx={{ fontSize: "2rem" }} />
-              )}
-            </IconButton>
-          </Grid>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+            {/* <IconButton onClick={handleToggle}>
+                {open ? (
+                  <ExpandLess sx={{ fontSize: "2rem" }} />
+                ) : (
+                  <ExpandMore sx={{ fontSize: "2rem" }} />
+                )}
+              </IconButton> 
+          </Grid>*/}
+      {/* <Collapse in={open} timeout="auto" unmountOnExit>
             {recent_quotes?.map((item) => (
               <ListItem
                 disableRipple
@@ -669,14 +1233,15 @@ function Detail({ item }) {
                 </ListItemButton>
               </ListItem>
             ))}
-          </Collapse>
+          </Collapse> 
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <CreateQuoteModal
         open={openQuoteModal}
         handleClose={(e) => setOpenQuoteModal(false)}
         item={item}
+        type="comments"
       />
       {isLogin && (
         <LoginModal
@@ -689,7 +1254,7 @@ function Detail({ item }) {
     </>
   );
 }
-function CreateQuoteModal({
+export function CreateQuoteModal({
   open,
   handleClose,
   item,
@@ -697,18 +1262,18 @@ function CreateQuoteModal({
   type,
   initialValues,
 }) {
-  const { id } = item;
+  const { id, parent_type } = item;
   const validationSchema = Yup.object({
     text: Yup.string("Enter Quote").required("Required"),
   });
-
+  console.log(item);
   const [createQuote] = useCreateQuoteMutation();
   const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values, { resetForm }) => {
     const { data, error } = await createQuote({
       body: values.text,
       parent_id: id,
-      parent_type: "comments",
+      parent_type: type,
     });
     if (data) toast.success(data);
     if (error) toast.error(error);
@@ -761,8 +1326,8 @@ function CreateQuoteModal({
             dense
           >
             <div style={{ width: "100%", display: "flex" }}>
-              <Image person={item} />
-              <Text item={item} profile={user} displayDetail={false} />
+              {/* <Image person={item} /> */}
+              {/* <Text item={item} profile={user} displayDetail={false} /> */}
             </div>
           </ListItemButton>
         </ListItem>

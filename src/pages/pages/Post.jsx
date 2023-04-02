@@ -27,6 +27,7 @@ import Error from "./components/Error";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import Seo from "components/Seo";
+import { CreateQuoteModal } from "./components/SingleComment";
 
 const StyledButton = styled(({ text, state, Icon, color, ...rest }) => (
   <Grid
@@ -72,6 +73,7 @@ export const Details = ({
 
   const [quote] = usePostCommentMutation();
 
+  const [openQuoteModal, setOpenQuoteModal] = useState(false);
   const handleSubmit = async (values) => {
     await quote({
       parent_type: type === "live" ? "live" : "comments",
@@ -89,6 +91,7 @@ export const Details = ({
     text: `${baseUrl}/post/${data?.slug}`,
     title: "Link",
   };
+  console.log(data);
 
   return (
     <>
@@ -126,8 +129,10 @@ export const Details = ({
             text={data?.likes_count}
           />
           <StyledButton
-            onClick={() =>
-              type === "posts" || type === "live" ? setState(false) : null
+            onClick={
+              () => setOpenQuoteModal(true)
+              //   type === "posts" || type === "live" ? setState(false) : null
+              //
             }
             Icon={<Quotes style={{ color: !state ? "#0f0" : "#5F5C5C" }} />}
             text={data?.quotes_count}
@@ -167,6 +172,12 @@ export const Details = ({
         userId={data?.user_id}
         handleClose={() => setOpen(false)}
       />
+      <CreateQuoteModal
+        open={openQuoteModal}
+        handleClose={(e) => setOpenQuoteModal(false)}
+        item={data}
+        type="posts"
+      />
     </>
   );
 };
@@ -205,37 +216,38 @@ const Post = () => {
   const handleSubmit = async (values, onSubmitProps) => {
     const { upload_id, comment } = values;
     const { id } = data;
-    if (changeCommentState) {
-      if (upload_id) {
-        await postAComment({
-          parent_id: id,
-          parent_type: "posts",
-          comment,
-          id: upload_id,
-        });
-      } else {
-        await postAComment({
-          parent_id: id,
-          parent_type: "posts",
-          comment,
-        });
-      }
+
+    if (upload_id) {
+      await postAComment({
+        parent_id: id,
+        parent_type: "posts",
+        comment,
+        id: upload_id,
+      });
     } else {
-      if (upload_id) {
-        await createQuote({
-          body: comment,
-          parent_id: id,
-          parent_type: "posts",
-          id: upload_id,
-        });
-      } else {
-        await createQuote({
-          body: comment,
-          parent_id: id,
-          parent_type: "posts",
-        });
-      }
+      await postAComment({
+        parent_id: id,
+        parent_type: "posts",
+        comment,
+      });
     }
+
+    // else {
+    //   if (upload_id) {
+    //     await createQuote({
+    //       body: comment,
+    //       parent_id: id,
+    //       parent_type: "posts",
+    //       id: upload_id,
+    //     });
+    //   } else {
+    //     await createQuote({
+    //       body: comment,
+    //       parent_id: id,
+    //       parent_type: "posts",
+    //     });
+    //   }
+    // }
     onSubmitProps.resetForm();
   };
   const baseUrl = process.env.REACT_APP_LIVE_LINK;

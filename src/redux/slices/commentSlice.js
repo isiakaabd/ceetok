@@ -69,7 +69,7 @@ export const commentSlice = api.injectEndpoints({
         method: "DELETE",
         body,
       }),
-      invalidatesTags: ["comment"],
+      invalidatesTags: ["comment", "post"],
       transformErrorResponse: (error) => error.message,
     }),
     updateComment: builder.mutation({
@@ -78,7 +78,7 @@ export const commentSlice = api.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["comment"],
+      invalidatesTags: ["comment", "post", "quote"],
       transformErrorResponse: (error) => error.data.message,
       transformResponse: (response) => response.message,
     }),
@@ -87,7 +87,7 @@ export const commentSlice = api.injectEndpoints({
         url: `/comment/${id}`,
         method: "GET",
       }),
-      providesTags: ["comment", "post"],
+      providesTags: ["comment", "post", "quote"],
 
       transformErrorResponse: (error) => error.data.message,
       transformResponse: (response) => response.body.comment,

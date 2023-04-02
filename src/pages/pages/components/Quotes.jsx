@@ -66,13 +66,13 @@ const Quotes = () => {
       </Grid>
       <Grid item container sx={{ maxHeight: "10%", overflowY: "scroll" }}>
         {quotes?.length > 0 ? (
-          <List sx={{ maxWidth: "100%" }}>
+          <List sx={{ width: "100%" }}>
             {quotes?.map((item) => {
               const { body, id, createdAt, parent } = item;
               return (
                 <>
-                  <ListItem dense disableGutters key={id}>
-                    <ListItemButton alignItems="flex-start">
+                  <ListItemButton alignItems="flex-start">
+                    <ListItem dense disableGutters key={id}>
                       <ListItemAvatar>
                         <Avatar src={getImage(avatar)} alt={full_name}>
                           {full_name?.slice(0, 1).toUpperCase()}
@@ -168,8 +168,8 @@ const Quotes = () => {
                           </>
                         }
                       />
-                    </ListItemButton>
-                  </ListItem>
+                    </ListItem>
+                  </ListItemButton>
                 </>
               );
             })}

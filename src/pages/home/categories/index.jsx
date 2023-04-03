@@ -6,6 +6,7 @@ import SinglePosts from "pages/home/SinglePosts";
 
 import Paginations from "components/modals/Paginations";
 import GroupedSelect from "components/modals/GroupSelect";
+import Error from "pages/pages/components/Error";
 const Categories = () => {
   const [page, setPage] = useState(1);
 
@@ -15,11 +16,14 @@ const Categories = () => {
     data: AllPosts,
     isLoading: loading,
     isFetching,
+    error,
+    isError,
   } = useGetPostQuery({
     offset: page - 1,
     category,
   });
   if (loading) return <Skeleton />;
+  if (isError) return <Error error={error} />;
   const { posts, total_pages } = AllPosts;
 
   return (

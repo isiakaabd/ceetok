@@ -70,7 +70,7 @@ export const Details = ({
   handleLikePost,
 }) => {
   const [open, setOpen] = useState(false);
-
+  const { quotes_count, comments_count, likes_count } = data;
   const [quote] = usePostCommentMutation();
 
   const [openQuoteModal, setOpenQuoteModal] = useState(false);
@@ -91,7 +91,7 @@ export const Details = ({
     text: `${baseUrl}/post/${data?.slug}`,
     title: "Link",
   };
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
@@ -104,7 +104,7 @@ export const Details = ({
           justifyContent={"space-around"}
         >
           <StyledButton
-            text={data?.comments_count}
+            text={comments_count}
             // {...de}
             state={state}
             onClick={() =>
@@ -126,16 +126,12 @@ export const Details = ({
                 <FavoriteBorderOutlined />
               )
             }
-            text={data?.likes_count}
+            text={likes_count}
           />
           <StyledButton
-            onClick={
-              () => setOpenQuoteModal(true)
-              //   type === "posts" || type === "live" ? setState(false) : null
-              //
-            }
+            onClick={() => setOpenQuoteModal(true)}
             Icon={<Quotes style={{ color: !state ? "#0f0" : "#5F5C5C" }} />}
-            text={data?.quotes_count}
+            text={quotes_count}
             state={!state}
           />
           <StyledButton

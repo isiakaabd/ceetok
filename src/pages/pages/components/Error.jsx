@@ -1,14 +1,20 @@
-import { Typography } from "@mui/material";
-import React from "react";
-
-const Error = () => {
+import { Avatar, Grid } from "@mui/material";
+import images from "assets";
+const Error = ({ error }) => {
   return (
-    <Typography
-      variant="h2"
-      sx={{ px: 1, py: 3, width: "100%", textAlign: "center" }}
-    >
-      Something went wrong...
-    </Typography>
+    <Grid item container justifyContent={"center"}>
+      <Grid item sx={{ height: "80vh" }}>
+        <Avatar src={images.err} sx={{ width: "100%", height: "100%" }} />
+      </Grid>
+    </Grid>
+    // <Typography
+    //   variant="h2"
+    //   sx={{ px: 1, py: 3, width: "100%", textAlign: "center" }}
+    // >
+    //   {error.status === "FETCH_ERROR"
+    //     ? "Network Error, Failed to fetch"
+    //     : "Something went wrong..."}
+    // </Typography>
   );
 };
 

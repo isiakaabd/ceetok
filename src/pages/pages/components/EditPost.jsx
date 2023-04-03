@@ -15,7 +15,7 @@ export default function EditModal({ open, item, handleClose, type }) {
     const { id } = item;
     const { edit } = values;
 
-    if (type === "quote") {
+    if (type === "quotes") {
       const { data, error } = await editQuote({
         body: edit,
         id,
@@ -40,7 +40,9 @@ export default function EditModal({ open, item, handleClose, type }) {
           sx={{ mb: 2, textAlign: "center", width: "100%" }}
           variant="h2"
         >
-          {`Edit ${type === "quote" ? "Quote" : "Comment"}`}
+          {`Edit ${
+            type === "quotes" ? "Quote" : "comments" ? "Comment" : "Post"
+          }`}
         </Typography>
         <Formik
           onSubmit={handleSubmit}
@@ -55,7 +57,13 @@ export default function EditModal({ open, item, handleClose, type }) {
                   <Editor name="edit" value={initialValues.edit} />
                   {/* </Grid> */}
                   <CustomButton
-                    title={"Edit Post"}
+                    title={`Edit ${
+                      type === "quotes"
+                        ? "Quote"
+                        : "comments"
+                        ? "Comment"
+                        : "Post"
+                    }`}
                     type="submit"
                     isSubmitting={isSubmitting}
                   />

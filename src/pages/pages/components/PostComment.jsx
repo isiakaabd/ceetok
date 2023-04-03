@@ -80,19 +80,31 @@ import Paginations from "components/modals/Paginations";
 import Error from "./Error";
 import Replies from "./Replies";
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, media } = data;
+  const {
+    id,
+    category,
+    user_id,
+    body,
+    media,
+    recent_comments,
+    quotes_count,
+    comments_count,
+    likes_count,
+  } = data;
 
   // recent_quotes, recent_comments,
-  // const [page, setPage] = useState(0);
-  // const {
-  //   data: comments,
-  //   error,
-  //   isFetching,
-  // } = useGetPostCommentsQuery({
-  //   parent_type: "posts",
-  //   parentId: id,
-  //   offset: page,
-  // });
+  const [page, setPage] = useState(1);
+  const {
+    data: commentsArray,
+    error,
+    isFetching,
+    isLoading: load,
+  } = useGetPostCommentsQuery({
+    parent_type: "posts",
+    parentId: id,
+    offset: page - 1,
+  });
+  // console.log(comments);
   // const hasNextPage = page + 1 < comments?.total_pages;
 
   // const [sentryRef] = useInfiniteScroll({
@@ -232,8 +244,8 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   const [likePost] = useLikeAndUnlikePostMutation();
   const [handlereport, setHandleReport] = useState(false);
   const [report] = useReportPostMutation();
-  if (isLoading) return <Skeleton />;
-
+  if (isLoading || load) return <Skeleton />;
+  const { comments, total_pages } = commentsArray;
   const { defaults } = images;
 
   const checkUser = profile?.id === user_id;
@@ -518,8 +530,18 @@ export const Comment = ({ handleShare, data, state, setState }) => {
           >
             Comments
           </Typography>
-          <AllComments profile={profile} id={id} icons={icons} />
+          <AllComments
+            profile={profile}
+            id={id}
+            icons={icons}
+            recent_comments={comments}
+          />
         </Grid>
+        {total_pages > 1 ? (
+          <Grid item container justifyContent={"center"}>
+            <Paginations page={page} setPage={setPage} count={total_pages} />
+          </Grid>
+        ) : null}
         {/* // ) : (
         //   <Grid item container>
         //     <Typography
@@ -653,7 +675,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     </>
   );
 };
-function AllComments({ id, profile, icons }) {
+function AllComments({ id, profile, icons, recent_comments }) {
   const [page, setPage] = useState(1);
   const {
     data: comments,
@@ -665,7 +687,7 @@ function AllComments({ id, profile, icons }) {
     parentId: id,
     offset: page - 1,
   });
-
+  // console.log(comments);
   // const hasNextPage = page + 1 < comments?.total_pages;
 
   // const [sentryRef] = useInfiniteScroll({
@@ -698,6 +720,7 @@ function AllComments({ id, profile, icons }) {
         sx={{
           // maxHeight: { xs: "70rem" },
           overflowY: "scroll",
+          overflowX: "hidden",
           "&::-webkit-scrollbar": {
             width: ".85rem",
             display: "none",
@@ -705,18 +728,27 @@ function AllComments({ id, profile, icons }) {
         }}
         // ref={root}
       >
-        {quotes?.quotes?.length > 0 ? (
+        {recent_comments?.length > 0 ? (
           <List sx={{ width: "100%" }}>
-            {quotes?.quotes?.map((item) => {
-              return <Replies item={item} />;
-            })}
+            {recent_comments?.map((item) =>
+              !item?.quote ? (
+                <SingleComment
+                  icons={icons}
+                  key={item.id}
+                  item={item}
+                  profile={profile}
+                />
+              ) : (
+                <Replies item={item} />
+              )
+            )}
           </List>
         ) : (
           <Grid item container>
-            <Typography>No Quotes available</Typography>
+            <Typography>No Interaction available</Typography>
           </Grid>
         )}
-        {comments?.comments?.length > 0 ? (
+        {/* {comments?.comments?.length > 0 ? (
           <Grid item container flexDirection="column">
             <List sx={{ width: "100%" }} dense>
               {comments?.comments?.map((item) => (
@@ -728,7 +760,7 @@ function AllComments({ id, profile, icons }) {
                 />
               ))}
               {/* {hasNextPage && <div ref={sentryRef} />} */}
-              {/* {!hasNextPage && (
+        {/* {!hasNextPage && (
                 <Typography
                   fontWeight={700}
                   width="100%"
@@ -737,14 +769,14 @@ function AllComments({ id, profile, icons }) {
                 >
                   No More comment
                 </Typography>
-              )} */}
+              )} 
             </List>
           </Grid>
         ) : (
-          <Grid item container>
-            <Typography>No comments available</Typography>
-          </Grid>
-        )}
+        <Grid item container>
+          <Typography>No comments available</Typography>
+        </Grid>
+        )} */}
         {quotes?.total_pages > 1 && (
           <Paginations
             page={page}

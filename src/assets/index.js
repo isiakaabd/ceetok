@@ -1,4 +1,6 @@
 import logo from "./images/logo.png";
+import err from "./images/err.jpg";
+import err404 from "./images/404.jpg";
 import defaults from "./images/defaults.png";
 import vedio from "./images/vedio.png";
 import play from "./images/play.png";
@@ -37,6 +39,8 @@ export default {
   logo,
   live,
   fb,
+  err404,
+  err,
   davido,
   facebook,
   instagram,

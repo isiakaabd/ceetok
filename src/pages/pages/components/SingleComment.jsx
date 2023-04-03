@@ -97,17 +97,18 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 
 const SingleComment = ({ item }) => {
   const {
-    body,
+    // body,
     id,
     createdAt,
     edited,
     updatedAt,
     comment,
-    parent,
+    // parent,
     user,
+    // recent_comments,
     user_id,
   } = item;
-  console.log(item);
+  // console.log(item);
   // const x = (message) => {
   //   const messageWithMentions = message.replace(
   //     /@\w+/g,
@@ -144,26 +145,20 @@ const SingleComment = ({ item }) => {
     // e.stopPropagation();
     setAnchorEl(null);
   };
+  const [report] = useReportPostMutation();
   const check = profile?.id !== user_id;
-  let type = false;
   const handleDeleteComment = async (e) => {
-    if (type === "quote") {
-      const { data, error } = await deleteQuote({ id });
-      if (data) toast.success("comment deleted successfully");
-      if (error) toast.error(error);
-    } else {
-      const { data, error } = await deleteComment({ id });
-      if (data) toast.success("comment deleted successfully");
-      if (error) toast.error(error);
-    }
+    const { data, error } = await deleteComment({ id });
+    if (data) toast.success("comment deleted successfully");
+    if (error) toast.error(error);
+
     e.stopPropagation();
 
     handleCloses(e);
   };
   const [open, setOpen] = useState(false);
-  const handleEditComment = (e) => {
-    setOpen(true);
-  };
+  const handleEditComment = (e) => setOpen(true);
+
   const [openReport, setOpenReport] = useState(false);
   const handleBlockUser = async (e) => {
     if (!is_blocked_by_me) {
@@ -205,6 +200,22 @@ const SingleComment = ({ item }) => {
       search: `?id=${id}`,
     });
   };
+  const handleReport = async (values) => {
+    const { body } = values;
+    const { data, error } = await report({
+      parent_type: "comments",
+      parent_id: id,
+      reason: body,
+    });
+    if (data) {
+      toast.success(data);
+      setTimeout(() => setOpenReport(false), 3000);
+    }
+    if (error) toast(error);
+  };
+  const validationSchema = Yup.object({
+    body: Yup.string().required("Required"),
+  });
   return (
     <>
       <ListItem
@@ -253,7 +264,6 @@ const SingleComment = ({ item }) => {
                   >
                     <Typography
                       fontWeight={700}
-                      //   flex={1}
                       noWrap
                       sx={{ maxWidth: "90%" }}
                       color="color.text"
@@ -398,6 +408,52 @@ const SingleComment = ({ item }) => {
           />
         </ListItemButton>
       </ListItem>
+      <EditModal
+        item={item}
+        open={open}
+        type={"comments"}
+        handleClose={(e) => {
+          handleCloses(e);
+          setOpen(false);
+        }}
+      />
+      <NotificationModal
+        isOpen={openReport}
+        handleClose={() => setOpenReport(false)}
+      >
+        <Formik
+          initialValues={{ body: "" }}
+          onSubmit={handleReport}
+          validationSchema={validationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Grid item container flexDirection="column" gap={4}>
+                <Typography
+                  color="#464646"
+                  sx={{
+                    textAlign: "center",
+                    fontSize: { md: "2rem", xs: "1.7rem" },
+                  }}
+                  fontWeight={700}
+                >
+                  Report Abuse
+                </Typography>
+                <Grid item>
+                  <Editor name="body" placeholder={"Report Abuse"} />
+                </Grid>
+                <Grid item>
+                  <CustomButton
+                    title={"Report"}
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                  />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </NotificationModal>
     </>
   );
 };
@@ -431,7 +487,7 @@ export function Text({ item, profile, displayDetail, type }) {
     media,
     createdAt,
     updatedAt,
-    body,
+    quote,
     edited,
     user_id,
     id,
@@ -911,7 +967,7 @@ export function Text({ item, profile, displayDetail, type }) {
                   Report Abuse
                 </Typography>
                 <Grid item>
-                  <Editor name="body" />
+                  <Editor name="body" placeholder={"Report Abuse..."} />
                 </Grid>
                 <Grid item>
                   <CustomButton
@@ -949,22 +1005,23 @@ Text.defaultProps = {
   displayDetail: true,
 };
 function Detail({ item, type }) {
-  const { id, recent_quotes, parent_type, quotes_count, likes_count } = item;
+  const { id, quotes_count, quote, likes_count, comment, recent_comments } =
+    item;
   const token = useSelector((state) => state.auth.token);
   const [isLogin, setIsLogin] = useState(false);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
   const [page] = useState(0);
-  const { data: repliedComment } = useGetPostCommentsQuery({
-    type,
-    parentId: id,
-    offset: page,
-  });
-  const { data: repliedQuotes } = useGetPostQuotesQuery({
-    type,
-    parentId: id,
-    offset: page,
-  });
+  // const { data: repliedComment } = useGetPostCommentsQuery({
+  //   type,
+  //   parentId: id,
+  //   offset: page,
+  // });
+  // const { data: repliedQuotes } = useGetPostQuotesQuery({
+  //   type,
+  //   parentId: id,
+  //   offset: page,
+  // });
 
   const handleLikePost = async (e) => {
     e.stopPropagation();
@@ -974,7 +1031,6 @@ function Detail({ item, type }) {
     });
     if (dt) setLikeState(!likeState);
   };
-  console.log(repliedQuotes, "sss");
   const navigate = useNavigate();
   const [openQuoteModal, setOpenQuoteModal] = useState(false);
   const [open, setOpen] = useState(false);
@@ -994,7 +1050,8 @@ function Detail({ item, type }) {
             justifyContent={"space-between"}
           >
             <StyledButton
-              text={repliedComment?.length}
+              // text={repliedComment?.comments?.length}
+              // text={quotes_count}
               onClick={(e) => {
                 token ? navigate(`/user/comment/?id=${id}`) : setIsLogin(true);
               }}
@@ -1032,9 +1089,9 @@ function Detail({ item, type }) {
           </Grid>
         </Grid>
 
-        {repliedQuotes?.quotes.length > 0 &&
-          repliedQuotes?.quotes.map(
-            ({ user, edited, createdAt, updatedAt, body, parent }) => {
+        {recent_comments?.length > 0 &&
+          recent_comments.map(
+            ({ user, edited, createdAt, updatedAt, body, comment, parent }) => {
               return (
                 <ListItem
                   alignItems="flex-start"
@@ -1045,14 +1102,12 @@ function Detail({ item, type }) {
 
                   // }
                 >
-                  {/* <Grid item container> */}
                   <ListItemAvatar>
                     <Avatar src={getImage(user?.avatar)} alt={user?.full_name}>
                       {user?.full_name?.slice(0, 1).toUpperCase()}
                     </Avatar>
                   </ListItemAvatar>
 
-                  {/* </Grid> */}
                   <ListItemText
                     primary={
                       <Grid
@@ -1110,72 +1165,69 @@ function Detail({ item, type }) {
                           }}
                           className="likes-content"
                         >
-                          {parse(body)}
+                          {parse(body || comment || "gdfgdfgd")}
                         </Typography>
 
-                        <ListItemButton
-                          disableRipple
-                          disableTouchRipple
-                          // href={`/post/${parent?.slug}`}
-                        >
-                          <Grid
-                            item
-                            container
-                            sx={{
-                              mt: 1,
-                              p: 1,
-                              outline: "1px  solid #9B9A9A",
-                              borderRadius: "1rem",
-                            }}
-                            flexWrap="nowrap"
+                        {quote && (
+                          <ListItemButton
+                            disableRipple
+                            disableTouchRipple
+                            // href={`/post/${parent?.slug}`}
                           >
-                            {/* Image */}
-                            <Grid item sx={{ mr: 2 }}>
-                              <Avatar
-                                src={getImage(parent?.user?.avatar)}
-                                alt={parent?.user?.full_name}
-                              >
-                                {parent?.user?.full_name
-                                  ?.slice(0, 1)
-                                  .toUpperCase()}
-                              </Avatar>
-                            </Grid>
-                            <Grid item container flexDirection="column">
-                              <Grid container gap={1} flexWrap="nowrap">
-                                <Typography
-                                  color="secondary"
-                                  fontWeight="600"
-                                  fontSize={"1.4rem"}
+                            <Grid
+                              item
+                              container
+                              sx={{
+                                mt: 1,
+                                p: 1,
+                                outline: "1px  solid #9B9A9A",
+                                borderRadius: "1rem",
+                              }}
+                              flexWrap="nowrap"
+                            >
+                              <Grid item sx={{ mr: 2 }}>
+                                <Avatar
+                                  src={getImage(parent?.user?.avatar)}
+                                  alt={parent?.user?.full_name}
                                 >
-                                  {parent?.user?.full_name}
-                                </Typography>
+                                  {parent?.user?.full_name
+                                    ?.slice(0, 1)
+                                    .toUpperCase()}
+                                </Avatar>
+                              </Grid>
+                              <Grid item container flexDirection="column">
+                                <Grid container gap={1} flexWrap="nowrap">
+                                  <Typography
+                                    color="secondary"
+                                    fontWeight="600"
+                                    fontSize={"1.4rem"}
+                                  >
+                                    {parent?.user?.full_name}
+                                  </Typography>
+                                  <Typography
+                                    color="#9B9A9A"
+                                    fontWeight={"400"}
+                                    fontSize="1.4rem"
+                                  >
+                                    {getTimeMoment(parent?.createdAt)}
+                                  </Typography>
+                                </Grid>
                                 <Typography
-                                  color="#9B9A9A"
-                                  fontWeight={"400"}
-                                  fontSize="1.4rem"
+                                  variant="p"
+                                  fontWeight={500}
+                                  noWrap
+                                  sx={{
+                                    // maxWidth: { md: "90%", xs: "80%" },
+                                    fontSize: { md: "1.8rem", xs: "1.4rem" },
+                                  }}
+                                  className="likes-content"
                                 >
-                                  {getTimeMoment(parent?.createdAt)}
+                                  {parse(parent?.comment || "error")}
                                 </Typography>
                               </Grid>
-                              <Typography
-                                variant="p"
-                                fontWeight={500}
-                                noWrap
-                                sx={{
-                                  // maxWidth: { md: "90%", xs: "80%" },
-                                  fontSize: { md: "1.8rem", xs: "1.4rem" },
-                                }}
-                                className="likes-content"
-                              >
-                                {/* {parent?.body
-                                            ? parse(parent?.body)
-                                            : parent?.comments &&
-                                              parse(parent?.comments)} */}
-                                {parse(body)}
-                              </Typography>
                             </Grid>
-                          </Grid>
-                        </ListItemButton>
+                          </ListItemButton>
+                        )}
                       </>
                     }
                   />
@@ -1183,6 +1235,59 @@ function Detail({ item, type }) {
               );
             }
           )}
+        {/* {repliedComment?.comments?.length > 0 &&
+          repliedComment?.comments.map(
+            ({ user, edited, createdAt, comment, updatedAt, body, parent }) => {
+              return (
+                <ListItemText
+                  sx={{ p: "0 !important" }}
+                  primary={
+                    <Grid
+                      item
+                      container
+                      alignItems={"center"}
+                      flexWrap={"nowrap"}
+                    >
+                      <Grid item flex={1} sx={{ maxWidth: "90%", mr: "auto" }}>
+                        <Grid
+                          item
+                          alignItems={"center"}
+                          // sx={{ maxWidth: "90%" }}
+                          container
+                          flexWrap={"nowrap"}
+                        >
+                          <Typography
+                            fontWeight={700}
+                            noWrap
+                            sx={{ maxWidth: "90%" }}
+                            color="color.text"
+                            fontSize={{ md: "1.8rem", xs: "1.4rem" }}
+                          >
+                            {user?.full_name}
+                          </Typography>
+                          <Typography
+                            variant="span"
+                            fontWeight={400}
+                            sx={{ ml: 1 }}
+                            noWrap
+                          >
+                            {getTimeMoment(edited ? updatedAt : createdAt)}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  }
+                  secondary={
+                    <div>
+                      {parse(comment)}
+
+                      <Detail item={item} type="comments" />
+                    </div>
+                  }
+                />
+              );
+            }
+          )} */}
       </Grid>
       {/* <Grid item container flexDirection={"column"} sx={{ mt: 3 }}>
         <Grid item container flexDirection={"column"}>

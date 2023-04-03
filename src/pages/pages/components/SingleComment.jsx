@@ -9,8 +9,6 @@ import {
   Edit,
   BlockOutlined,
   PersonAddAlt1Outlined,
-  ExpandLess,
-  ExpandMore,
   PersonAddOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
@@ -27,7 +25,6 @@ import {
   ListItemText,
   ListItemButton,
   ListItemAvatar,
-  Collapse,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
@@ -39,10 +36,7 @@ import {
 } from "redux/slices/postSlice";
 
 import { toast } from "react-toastify";
-import {
-  useDeleteCommentMutation,
-  useGetPostCommentsQuery,
-} from "redux/slices/commentSlice";
+import { useDeleteCommentMutation } from "redux/slices/commentSlice";
 import { getImage, getTimeMoment } from "helpers";
 import EditModal from "./EditPost";
 import {
@@ -60,14 +54,10 @@ import {
   useCreateQuoteMutation,
   useDeleteQuoteMutation,
   useEditQuoteMutation,
-  useGetPostQuotesQuery,
 } from "redux/slices/quoteSlice";
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
-import MasonryImageList from "./ImageList";
-import ReactPlayer from "react-player";
 import { useEffect } from "react";
-import UserProfile from "../UserProfile";
 // import images from "assets";
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid

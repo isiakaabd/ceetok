@@ -124,7 +124,6 @@ const SingleComment = ({ item }) => {
   const opens = Boolean(anchorEl);
 
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
-  const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
 
   const [unBlockUser, { isLoading: unblocking }] = useUnBlockUserMutation();
   const handleClick = (e) => {
@@ -307,7 +306,7 @@ const SingleComment = ({ item }) => {
                         </ListItemIcon>
 
                         <ListItemText sx={{ fontSize: "3rem" }}>
-                          {isLoading || deleting ? "Deleting" : "Delete"}
+                          {isLoading || isLoading ? "Deleting" : "Delete"}
                         </ListItemText>
                       </MenuItem>
                     )}
@@ -473,20 +472,17 @@ export function Image({ person: { user } }) {
 export function Text({ item, profile, displayDetail, type }) {
   const {
     user,
-    comment,
-    media,
+
     createdAt,
     updatedAt,
-    quote,
     edited,
     user_id,
     id,
   } = item;
 
   const [isLogin, setIsLogin] = useState(false);
-  const token = useSelector((state) => state.auth.token);
   const admin = useSelector((state) => state.auth.admin);
-  const { full_name, is_followed, is_blocked_by_me } = user;
+  const { is_followed, is_blocked_by_me } = user;
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
@@ -573,13 +569,13 @@ export function Text({ item, profile, displayDetail, type }) {
     }
     if (error) toast(error);
   };
-  const x = (message) => {
-    const messageWithMentions = message.replace(
-      /@\w+/g,
-      '<a class="mention" href="#">$&</a>'
-    );
-    return messageWithMentions;
-  };
+  // const x = (message) => {
+  //   const messageWithMentions = message.replace(
+  //     /@\w+/g,
+  //     '<a class="mention" href="#">$&</a>'
+  //   );
+  //   return messageWithMentions;
+  // };
 
   return (
     <>

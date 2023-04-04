@@ -29,7 +29,6 @@ import {
   PersonAddOutlined,
   ReportOutlined,
 } from "@mui/icons-material";
-import { useDeleteQuoteMutation } from "redux/slices/quoteSlice";
 import { toast } from "react-toastify";
 import { useDeleteCommentMutation } from "redux/slices/commentSlice";
 import { useEffect, useState } from "react";
@@ -44,17 +43,8 @@ const validationSchema = Yup.object({
   body: Yup.string().required("Required"),
 });
 const Replies = ({ item }) => {
-  let {
-    body,
-    id,
-    createdAt,
-    edited,
-    comment,
-    updatedAt,
-    parent,
-    user,
-    user_id,
-  } = item;
+  let { id, createdAt, edited, comment, updatedAt, parent, user, user_id } =
+    item;
   // console.log(item, "pare");
   const [anchorEl, setAnchorEl] = useState(null);
   const [getProfile, { data: profile }] = useLazyUserProfileQuery();
@@ -74,7 +64,6 @@ const Replies = ({ item }) => {
   const opens = Boolean(anchorEl);
 
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
-  const [deleteQuote, { isLoading: deleting }] = useDeleteQuoteMutation();
 
   const [unBlockUser, { isLoading: unblocking }] = useUnBlockUserMutation();
   const handleClick = (e) => {
@@ -88,8 +77,8 @@ const Replies = ({ item }) => {
   const check = profile?.id !== user_id;
 
   const handleDeleteComment = async (e) => {
-    const { data, error } = await deleteQuote({ id });
-    if (data) toast.success("comment deleted successfully");
+    const { data, error } = await deleteComment({ id });
+    if (data) toast.success(data || "Quotes deleted successfully");
     if (error) toast.error(error);
 
     e.stopPropagation();
@@ -231,7 +220,7 @@ const Replies = ({ item }) => {
                       </ListItemIcon>
 
                       <ListItemText sx={{ fontSize: "3rem" }}>
-                        {isLoading || deleting ? "Deleting" : "Delete"}
+                        {isLoading || isLoading ? "Deleting" : "Delete"}
                       </ListItemText>
                     </MenuItem>
                   )}

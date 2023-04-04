@@ -6,18 +6,16 @@ import NotificationModal from "components/modals/NotificationModal";
 import { Formik, Form } from "formik/dist";
 import Editor from "components/Quill";
 import { CustomButton } from "components";
-import { useEditQuoteMutation } from "redux/slices/quoteSlice";
 
 export default function EditModal({ open, item, handleClose, type }) {
   const [editComment] = useEditCommentMutation();
-  const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values) => {
     const { id } = item;
     const { edit } = values;
 
     if (type === "quotes") {
-      const { data, error } = await editQuote({
-        body: edit,
+      const { data, error } = await editComment({
+        comment: edit,
         id,
       });
       if (data) toast.success(data);

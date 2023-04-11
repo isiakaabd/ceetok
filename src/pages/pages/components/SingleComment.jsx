@@ -1353,11 +1353,10 @@ export function CreateQuoteModal({
   type,
   initialValues,
 }) {
-  const { id, parent_type } = item;
+  const { id } = item;
   const validationSchema = Yup.object({
     text: Yup.string("Enter Quote").required("Required"),
   });
-  console.log(item);
   const [createQuote] = useCreateQuoteMutation();
   const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values, { resetForm }) => {

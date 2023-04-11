@@ -24,7 +24,6 @@ const Infractions = (props) => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, reports } = data;
-  console.log(data);
   return (
     <Grid item container sx={{ p: 4 }}>
       {reports?.length > 0 ? (

@@ -1,12 +1,7 @@
 import {
-  BlockOutlined,
-  Delete,
-  Edit,
   Favorite,
   FilterList,
   IosShareOutlined,
-  MoreVertOutlined,
-  PersonAddAltRounded,
   ReplyOutlined,
   ReportOutlined,
   SearchOutlined,
@@ -28,12 +23,6 @@ import {
   List,
   Skeleton,
   Avatar,
-  ListItemButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  ListItemIcon,
-  Menu,
 } from "@mui/material";
 import { Formik, Form } from "formik/dist";
 import React, { useState, useEffect, useRef } from "react";
@@ -42,6 +31,7 @@ import FormikControl from "validation/FormikControl";
 import UserProfile from "../UserProfile";
 import {
   useDeleteAPostMutation,
+  useEditAPostMutation,
   useLikeAndUnlikePostMutation,
   useReportPostMutation,
 } from "redux/slices/postSlice";
@@ -50,18 +40,14 @@ import { toast } from "react-toastify";
 import CreatePost from "pages/user/modals/CreatePost";
 import { Details } from "../Post";
 import {
-  useBlockUserMutation,
-  useFollowUserMutation,
   useLazyUserProfileQuery,
-  useUnBlockUserMutation,
   useUserProfileUpdateMutation,
 } from "redux/slices/authSlice";
 import SingleComment from "./SingleComment";
 import Tooltips from "components/ToolTips";
-import { getImage, getTimeMoment } from "helpers";
+import { getImage } from "helpers";
 import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
-import { useApprovePostMutation } from "redux/slices/adminSlice";
 // import useInfiniteScroll from "react-infinite-scroll-hook";
 import images from "assets";
 import {
@@ -79,20 +65,12 @@ import { CustomButton } from "components";
 import Paginations from "components/modals/Paginations";
 import Error from "./Error";
 import Replies from "./Replies";
+
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const {
-    id,
-    category,
-    user_id,
-    body,
-    media,
-    recent_comments,
-    quotes_count,
-    comments_count,
-    likes_count,
-  } = data;
+  const { id, category, user_id, body, media, title } = data;
 
   // recent_quotes, recent_comments,
+  const [editPost, { isLoading: approvalLoading }] = useEditAPostMutation();
   const [page, setPage] = useState(1);
   const {
     data: commentsArray,
@@ -158,8 +136,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
 
   const [open, setOpen] = useState(false);
 
-  const [approvePost, { isLoading: approvalLoading }] =
-    useApprovePostMutation();
   const [editPostModal, setEditPostModal] = useState(false);
   const [deletePost, { isLoading: deleteLoading }] = useDeleteAPostMutation();
   const anchorRef = useRef(null);
@@ -198,14 +174,30 @@ export const Comment = ({ handleShare, data, state, setState }) => {
     handleClose(e);
   };
   const handleApproveTopic = async (e) => {
-    const { data, error } = await approvePost({
+    const details = {
+      title,
+      category: "front_page",
+      body,
       id,
-    });
-    if (data) {
-      toast.success(data);
-      handleClose(e);
+    };
+    const { data: dt, error } = await editPost(details);
+
+    if (dt) {
+      toast.success(dt);
+      setTimeout(() => handleClose(), 3000);
+      navigate("/");
     }
-    if (error) toast.error(error);
+    if (error) {
+      toast.error(error);
+    }
+    // const { data, error } = await approvePost({
+    //   id,
+    // });
+    // if (data) {
+    //   toast.success(data);
+    //   handleClose(e);
+    // }
+    // if (error) toast.error(error);
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -590,7 +582,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                   {admin && (
                     <MenuItem
                       onClick={handleApproveTopic}
-                      disabled={data?.approved}
+                      // disabled={data?.approved}
                     >
                       {approvalLoading
                         ? "Approving"
@@ -830,7 +822,7 @@ function AllQuotes({ id, icons, profile }) {
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
-  console.log(comments);
+
   return (
     <>
       <Grid

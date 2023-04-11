@@ -22,9 +22,12 @@ import { useLoginMutation } from "redux/slices/authSlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { checkAdmin, loginAction } from "redux/reducers/authReducer";
+import VerifyPage from "./VerifyPage";
+
 const LoginModal = ({ isLogin, handleClose }) => {
   const [loginUser, { isLoading, error, data }] = useLoginMutation();
   const [state, setState] = useState(true);
+  const [open, setOpen] = useState(false);
   const [register, setRegister] = useState(false);
   const [showForgottenPassword, setShowForgottenPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +36,20 @@ const LoginModal = ({ isLogin, handleClose }) => {
 
   useEffect(() => {
     if (data) {
-      toast.success(data.message);
-      dispatch(loginAction(data?.body));
-      setTimeout(() => {
-        handleClose();
-      }, 3000);
+      const { body, message } = data;
+      console.log(data);
+      toast.success(message);
+      dispatch(loginAction(body));
+      if (body.phone && body.username && body.full_name) {
+        setTimeout(() => {
+          handleClose();
+        }, 3000);
+      } else {
+        //
+        setTimeout(() => {
+          setOpen(true);
+        }, 3000);
+      }
     }
     if (data?.body?.role === "admin") {
       dispatch(checkAdmin(data?.body?.role));
@@ -452,6 +464,13 @@ const LoginModal = ({ isLogin, handleClose }) => {
           isOpen={showForgottenPassword}
         />
       )}
+      <VerifyPage
+        isOpen={open}
+        handleClose={() => {
+          handleClose();
+          setOpen(false);
+        }}
+      />
 
       {/* {showForgottenPassword && <ForgottenPassword />} */}
     </>

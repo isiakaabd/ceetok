@@ -37,10 +37,9 @@ const LoginModal = ({ isLogin, handleClose }) => {
   useEffect(() => {
     if (data) {
       const { body, message } = data;
-      console.log(data);
       toast.success(message);
       dispatch(loginAction(body));
-      if (body.phone && body.username && body.full_name) {
+      if (body.username && body.full_name) {
         setTimeout(() => {
           handleClose();
         }, 3000);
@@ -464,13 +463,15 @@ const LoginModal = ({ isLogin, handleClose }) => {
           isOpen={showForgottenPassword}
         />
       )}
-      <VerifyPage
-        isOpen={open}
-        handleClose={() => {
-          handleClose();
-          setOpen(false);
-        }}
-      />
+      {open && (
+        <VerifyPage
+          isOpen={open}
+          handleClose={() => {
+            handleClose();
+            setOpen(false);
+          }}
+        />
+      )}
 
       {/* {showForgottenPassword && <ForgottenPassword />} */}
     </>

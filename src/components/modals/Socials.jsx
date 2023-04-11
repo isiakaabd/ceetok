@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { loginActionSocial } from "redux/reducers/authReducer";
@@ -26,9 +26,20 @@ const Socials = () => {
   }, [accessToken, refreshToken]);
 
   return (
-    <Grid item container justifyContent={"center"}>
-      <Typography variant="h2">Welcome!!</Typography>
-    </Grid>
+    <>
+      <Grid item container justifyContent={"center"}>
+        <Typography variant="h2">Welcome!!</Typography>
+      </Grid>
+      {/* {open && (
+        <VerifyPage
+          isOpen={open}
+          handleClose={() => {
+            handleClose();
+            setOpen(false);
+          }}
+        />
+      )} */}
+    </>
   );
 };
 

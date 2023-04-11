@@ -372,7 +372,7 @@ const VerifyPage = ({ isOpen, handleClose }) => {
                           control="inputs"
                           name="full_name"
                           Icon={Person}
-                          placeholder="Full Name"
+                          placeholder="Name"
                         />
                       </Grid>
                     </Grid>

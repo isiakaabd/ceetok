@@ -22,7 +22,7 @@ import {
 import * as Yup from "yup";
 import { TextError } from "validation/TextError";
 import { toast } from "react-toastify";
-import { getDates, getImage } from "helpers";
+import { checkProperties, getDates, getImage } from "helpers";
 import { useRef } from "react";
 const VerifyPage = ({ isOpen, handleClose }) => {
   const likes = [
@@ -59,15 +59,16 @@ const VerifyPage = ({ isOpen, handleClose }) => {
   const [updateProfile] = useUserProfileUpdateMutation();
   const validationSchema = Yup.object({
     username: Yup.string("Enter Username").required("Required"),
-    location: Yup.string("Enter location").required("Required"),
-    // phone: Yup.number("Enter Phone").required("Required"),
-    occupation: Yup.string("Enter Occupation").required("Required"),
-    dob: Yup.string("Enter DOB").required("Required"),
-    gender: Yup.string("Enter DOB").required("Required"),
-    full_name: Yup.string("Enter  full Name").required("Required"),
-    interests: Yup.array().min(3, "At least 3").required("Required"),
+    location: Yup.string("Enter location"),
+    // phone: Yup.number("Enter Phone"),
+    occupation: Yup.string("Enter Occupation"),
+    dob: Yup.string("Enter DOB"),
+    gender: Yup.string("Enter DOB"),
+    full_name: Yup.string("Enter  full Name"),
+    interests: Yup.array().min(3, "At least 3"),
   });
   const handleSubmit = async (values) => {
+    const val = checkProperties(values);
     const {
       dob,
       location,
@@ -83,7 +84,9 @@ const VerifyPage = ({ isOpen, handleClose }) => {
     let realGender = gender === "Male" ? "m" : "f";
     form.append("gender", realGender);
     form.append("dob", dob);
-    form.append("phone", phone);
+    if (phone) {
+      form.append("phone", phone);
+    }
     form.append("full_name", full_name);
     form.append("occupation", occupation);
     form.append("location", location);

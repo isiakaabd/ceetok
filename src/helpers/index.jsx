@@ -51,3 +51,12 @@ export const getParent = (parent_type) => {
     default:
   }
 };
+export function checkProperties(value) {
+  let obj = value;
+  for (let key in obj) {
+    if (obj[key] === null || obj[key] === "") {
+      delete obj[key];
+    }
+  }
+  return obj;
+}

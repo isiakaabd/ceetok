@@ -50,6 +50,8 @@ const CreatePost = ({
   uploadType,
   data,
   editLive,
+  editPostId,
+  editPostBool,
 }) => {
   const [create] = useCreatePostMutation();
   const [livePost] = useLivePostMutation();
@@ -71,14 +73,15 @@ const CreatePost = ({
 
   const handleEditPost = async (values, onSubmitProps) => {
     const { title, category, text } = values;
+
     const details = {
       title,
       category,
       body: text,
       id: data?.id,
     };
-    const { data: dt, error } = await editPost(details);
 
+    const { data: dt, error } = await editPost(details);
     if (dt) {
       toast.success(dt);
       setTimeout(() => handleClose(), 3000);
@@ -392,6 +395,8 @@ const CreatePost = ({
                           ? "live"
                           : "posts"
                       }
+                      editPost={editPostBool}
+                      editPostId={editPostId}
                     />
                     {type === "live" && (
                       <Grid

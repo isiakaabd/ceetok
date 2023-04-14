@@ -7,6 +7,7 @@ import {
   SearchOutlined,
   TuneOutlined,
 } from "@mui/icons-material";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 import parse from "html-react-parser";
 import * as Yup from "yup";
 import {
@@ -67,17 +68,12 @@ import Error from "./Error";
 import Replies from "./Replies";
 
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, media, title } = data;
+  const { id, category, user_id, body, media, title, approved } = data;
 
   // recent_quotes, recent_comments,
   const [editPost, { isLoading: approvalLoading }] = useEditAPostMutation();
   const [page, setPage] = useState(1);
-  const {
-    data: commentsArray,
-    error,
-    isFetching,
-    isLoading: load,
-  } = useGetPostCommentsQuery({
+  const { data: commentsArray, isLoading: load } = useGetPostCommentsQuery({
     parent_type: "posts",
     parentId: id,
     offset: page - 1,
@@ -94,8 +90,8 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
-
-  const admin = useSelector((state) => state.auth.admin);
+  console.log(approved);
+  const admin = Boolean(useSelector((state) => state.auth.admin));
   // const targetRef = useRef(null);
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
@@ -241,7 +237,6 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   const { defaults } = images;
 
   const checkUser = profile?.id === user_id;
-
   const check = profile?.interests?.includes(category?.toLowerCase());
   async function handleCheck() {
     const { interests } = profile;
@@ -437,10 +432,33 @@ export const Comment = ({ handleShare, data, state, setState }) => {
           }}
         >
           {media?.length >= 2 ? (
-            <MasonryImageList
-              itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
-            />
-          ) : media?.length === 1 && media[0]?.type === "image" ? (
+            <PhotoProvider>
+              <div className="foo" style={{ width: "100%" }}>
+                {media.map((item, index) => (
+                  <PhotoView
+                    key={index}
+                    width="100%"
+                    src={getImage(media[index]?.storage_path)}
+                  >
+                    <img
+                      src={getImage(media[index]?.storage_path)}
+                      alt=""
+                      style={{
+                        maxHeight: "100%",
+                        objectFit: "cover",
+                        height: "15rem",
+                        marginRight: "1rem",
+                        minWidth: "15rem",
+                      }}
+                    />
+                  </PhotoView>
+                ))}
+              </div>
+            </PhotoProvider>
+          ) : // <MasonryImageList
+          //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+          // />
+          media?.length === 1 && media[0]?.type === "image" ? (
             <Avatar
               src={getImage(media[0]?.storage_path)}
               sx={{
@@ -458,8 +476,8 @@ export const Comment = ({ handleShare, data, state, setState }) => {
               url={getImage(media[0]?.storage_path)}
               controls={true}
               volume={0.6}
-              width="100%"
-              height="100%"
+              width="30rem"
+              height="30rem"
               // className="react-player"
               style={{ aspectRatio: 1 }}
             />
@@ -574,7 +592,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                   onKeyDown={handleListKeyDown}
                 >
                   {/* {user_id !=== profile?.id} */}
-                  {(check || admin) && (
+                  {((checkUser && !approved) || admin) && (
                     <MenuItem onClick={() => setEditPostModal(true)}>
                       Edit Topic
                     </MenuItem>
@@ -591,7 +609,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                         : "Approve Topic"}
                     </MenuItem>
                   )}
-                  {(!admin || !checkUser) && (
+                  {!checkUser && !admin && (
                     <MenuItem
                       onClick={(e) => {
                         handleClose(e);
@@ -601,7 +619,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
                       Report Topic
                     </MenuItem>
                   )}
-                  {(check || admin) && (
+                  {(checkUser || admin) && (
                     <MenuItem
                       onClick={handleDeleteTopic}
                       sx={{
@@ -663,22 +681,24 @@ export const Comment = ({ handleShare, data, state, setState }) => {
         handleClose={() => setEditPostModal(false)}
         data={data}
         type="edit"
+        editPostBool={true}
+        editPostId={id}
       />
     </>
   );
 };
 function AllComments({ id, profile, icons, recent_comments }) {
   const [page, setPage] = useState(1);
-  const {
-    data: comments,
-    error,
-    isLoading,
-    // isFetching,
-  } = useGetPostCommentsQuery({
-    parent_type: "posts",
-    parentId: id,
-    offset: page - 1,
-  });
+  // const {
+  //   data: comments,
+  //   error,
+  //   isLoading,
+  //   // isFetching,
+  // } = useGetPostCommentsQuery({
+  //   parent_type: "posts",
+  //   parentId: id,
+  //   offset: page - 1,
+  // });
   // console.log(comments);
   // const hasNextPage = page + 1 < comments?.total_pages;
 
@@ -691,17 +711,17 @@ function AllComments({ id, profile, icons, recent_comments }) {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
-  const {
-    data: quotes,
-    // error,
-    // isLoading,
-  } = useGetPostQuotesQuery({
-    parent_type: "posts",
-    parentId: id,
-    offset: page - 1,
-  });
-  if (isLoading) return <Skeletons />;
-  if (error) return <Error />;
+  // const {
+  //   data: quotes,
+  //   // error,
+  //   // isLoading,
+  // } = useGetPostQuotesQuery({
+  //   parent_type: "posts",
+  //   parentId: id,
+  //   offset: page - 1,
+  // });
+  // if (isLoading) return <Skeletons />;
+  // if (error) return <Error />;
 
   return (
     <>
@@ -769,11 +789,11 @@ function AllComments({ id, profile, icons, recent_comments }) {
           <Typography>No comments available</Typography>
         </Grid>
         )} */}
-        {quotes?.total_pages > 1 && (
+        {recent_comments?.total_pages > 1 && (
           <Paginations
             page={page}
             setPage={setPage}
-            count={quotes?.total_pages}
+            count={recent_comments?.total_pages}
           />
         )}
       </Grid>
@@ -787,88 +807,88 @@ function AllComments({ id, profile, icons, recent_comments }) {
   );
 }
 
-function AllQuotes({ id, icons, profile }) {
-  const [page, setPage] = useState(1);
-  const {
-    data: quotes,
-    error,
-    isLoading,
-  } = useGetPostQuotesQuery({
-    parent_type: "posts",
-    parentId: id,
-    offset: page - 1,
-  });
-  const {
-    data: comments,
-    // error,
-    // isLoading,
-    // isFetching,
-  } = useGetPostCommentsQuery({
-    parent_type: "posts",
-    parentId: id,
-    offset: page - 1,
-  });
-  // console.log(profile);
+// function AllQuotes({ id, icons, profile }) {
+//   const [page, setPage] = useState(1);
+//   const {
+//     data: quotes,
+//     error,
+//     isLoading,
+//   } = useGetPostQuotesQuery({
+//     parent_type: "posts",
+//     parentId: id,
+//     offset: page - 1,
+//   });
+//   const {
+//     data: comments,
+//     // error,
+//     // isLoading,
+//     // isFetching,
+//   } = useGetPostCommentsQuery({
+//     parent_type: "posts",
+//     parentId: id,
+//     offset: page - 1,
+//   });
+//   // console.log(profile);
 
-  // const hasNextPage = page + 1 < quotes?.total_pages;
+//   // const hasNextPage = page + 1 < quotes?.total_pages;
 
-  // const [sentryRef] = useInfiniteScroll({
-  //   loading: isFetching,
-  //   hasNextPage,
-  //   onLoadMore: () => setPage((page) => page + 1),
-  //   disabled: !!error,
-  //   rootMargin: "0px 0px 200px 0px",
-  // });
+//   // const [sentryRef] = useInfiniteScroll({
+//   //   loading: isFetching,
+//   //   hasNextPage,
+//   //   onLoadMore: () => setPage((page) => page + 1),
+//   //   disabled: !!error,
+//   //   rootMargin: "0px 0px 200px 0px",
+//   // });
 
-  if (isLoading) return <Skeletons />;
-  if (error) return <Error />;
+//   if (isLoading) return <Skeletons />;
+//   if (error) return <Error />;
 
-  return (
-    <>
-      <Grid
-        item
-        container
-        sx={{
-          maxHeight: { xs: "70rem" },
-          overflowY: "scroll",
-          "&::-webkit-scrollbar": {
-            width: ".85rem",
-            display: "none",
-          },
-        }}
-      >
-        {/* // <List sx={{ width: "100%" }} dense>
-          //   {quotes?.quotes?.map((item) => ( */}
-        {/* //     <SingleComment
-          //       icons={icons}
-          //       key={item.id}
-          //       item={item}
-          //       profile={profile}
-          //       type="quote"
-          //     />
-          //   ))}
-          //   {/* {hasNextPage && <div ref={sentryRef} />}
-          //   {!hasNextPage && (
-          //     <Typography
-          //       fontWeight={700}
-          //       width="100%"
-          //       textAlign="center"
-          //       variant="h5"
-          //     >
-          //       No more Quotes
-          //     </Typography>
-          //   )} 
-         </List>
-          */}
-      </Grid>
-      {/* {isFetching && hasNextPage && (
-        <Typography width="100%" textAlign="center" variant="h4">
-          Loading more qotes...
-        </Typography>
-      )} */}
-    </>
-  );
-}
+//   return (
+//     <>
+//       <Grid
+//         item
+//         container
+//         sx={{
+//           maxHeight: { xs: "70rem" },
+//           overflowY: "scroll",
+//           "&::-webkit-scrollbar": {
+//             width: ".85rem",
+//             display: "none",
+//           },
+//         }}
+//       >
+//         {/* // <List sx={{ width: "100%" }} dense>
+//           //   {quotes?.quotes?.map((item) => ( */}
+//         {/* //     <SingleComment
+//           //       icons={icons}
+//           //       key={item.id}
+//           //       item={item}
+//           //       profile={profile}
+//           //       type="quote"
+//           //     />
+//           //   ))}
+//           //   {/* {hasNextPage && <div ref={sentryRef} />}
+//           //   {!hasNextPage && (
+//           //     <Typography
+//           //       fontWeight={700}
+//           //       width="100%"
+//           //       textAlign="center"
+//           //       variant="h5"
+//           //     >
+//           //       No more Quotes
+//           //     </Typography>
+//           //   )}
+//          </List>
+//           */}
+//       </Grid>
+//       {/* {isFetching && hasNextPage && (
+//         <Typography width="100%" textAlign="center" variant="h4">
+//           Loading more qotes...
+//         </Typography>
+//       )} */}
+//     </>
+//   );
+// }
 const Skeletons = () => {
   return (
     <Grid item container flexDirection="column" gap={2}>

@@ -58,6 +58,8 @@ import {
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
 import { useEffect } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import ReactPlayer from "react-player";
 // import images from "assets";
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -95,6 +97,7 @@ const SingleComment = ({ item }) => {
     comment,
     // parent,
     user,
+    media,
     // recent_comments,
     user_id,
   } = item;
@@ -390,7 +393,68 @@ const SingleComment = ({ item }) => {
             secondary={
               <div>
                 {parse(comment)}
-
+                {media.length > 0 && (
+                  <Grid
+                    item
+                    container
+                    sx={{
+                      p: { xs: "1rem" },
+                      height: "100%",
+                    }}
+                  >
+                    {media[0]?.type === "image" ? (
+                      <PhotoProvider>
+                        <div className="foo" style={{ width: "100%" }}>
+                          {media.map((item, index) => (
+                            <PhotoView
+                              key={index}
+                              width="100%"
+                              src={getImage(media[index]?.storage_path)}
+                            >
+                              <img
+                                src={getImage(media[index]?.storage_path)}
+                                alt=""
+                                style={{
+                                  maxHeight: "100%",
+                                  objectFit: "cover",
+                                  height: "15rem",
+                                  marginRight: "1rem",
+                                  width: "15rem",
+                                }}
+                              />
+                            </PhotoView>
+                          ))}
+                        </div>
+                      </PhotoProvider>
+                    ) : // <MasonryImageList
+                    //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+                    // />
+                    // media?.length === 1 && media[0]?.type === "image" ? (
+                    //   <Avatar
+                    //     src={getImage(media[0]?.storage_path)}
+                    //     sx={{
+                    //       width: "100%",
+                    //       height: "100%",
+                    //       objectFit: "cover",
+                    //       // maxHeight: "0rem",
+                    //     }}
+                    //     variant="square"
+                    //   />
+                    // )
+                    media[0]?.type === "video" ? (
+                      // <div className="player-wrapper">
+                      <ReactPlayer
+                        url={getImage(media[0]?.storage_path)}
+                        controls={true}
+                        volume={0.6}
+                        width="30rem"
+                        height="30rem"
+                        // className="react-player"
+                        style={{ aspectRatio: 1 }}
+                      />
+                    ) : null}
+                  </Grid>
+                )}
                 <Detail item={item} type="comments" />
               </div>
             }
@@ -581,214 +645,6 @@ export function Text({ item, profile, displayDetail, type }) {
     <>
       <ListItemText
         primary={
-          // <Grid item container flexDirection="column" alignItems="center">
-          //   <Grid
-          //     item
-          //     container
-          //     justifyContent={"space-between"}
-          //     flexWrap="nowrap"
-          //     sx={{ overflow: "hidden" }}
-          //   >
-          //     <Grid item container alignItems="center" flexWrap="nowrap">
-          //       <Typography
-          //         fontWeight={700}
-          //         // sx={{
-          //         //   whiteSpace: "nowrap",
-          //         //   overflow: "hidden",
-          //         //   textOverflow: "ellipsis",
-          //         //   // flex: 0.5,
-          //         // }}
-          //         noWrap
-          //         color="color.text"
-          //         fontSize={{ md: "1.8rem", xs: "1.4rem" }}
-          //       >
-          //         {full_name}
-          //       </Typography>
-          //       <Typography
-          //         fontWeight={500}
-          //         sx={{
-          //           whiteSpace: "nowrap",
-          //           overflow: "visible",
-          //           ml: ".4rem",
-          //         }}
-          //       >
-          //         {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
-          //       </Typography>
-          //       {edited && (
-          //         <Typography
-          //           fontWeight={700}
-          //           color="success"
-          //           fontSize={{ md: "1.2rem", xs: "1rem" }}
-          //           sx={{
-          //             ml: ".4rem",
-          //             alignSelf: "center",
-          //             color: "#37D42A",
-          //             whiteSpace: "nowrap",
-          //             overflow: "visible",
-          //           }}
-          //         >
-          //           Edited
-          //         </Typography>
-          //       )}
-          //       {token && (
-          //         <Grid item sx={{ ml: "auto" }}>
-          //           <IconButton
-          //             edge="start"
-          //             id="basic-button"
-          //             aria-controls={opens ? "basic-menu" : undefined}
-          //             aria-haspopup="true"
-          //             aria-expanded={opens ? "true" : undefined}
-          //             onClick={handleClick}
-          //             sx={{ ml: { xs: "1rem" } }}
-          //             //  sx={{ visibility: !check && "hidden" }}
-          //           >
-          //             <MoreVertOutlined />
-          //           </IconButton>
-          //           <Menu
-          //             id="basic-menu"
-          //             anchorEl={anchorEl}
-          //             open={opens}
-          //             onClose={handleCloses}
-          //             MenuListProps={{
-          //               "aria-labelledby": "basic-button",
-          //             }}
-          //           >
-          //             {!check && (
-          //               <MenuItem
-          //                 onClick={handleDeleteComment}
-          //                 sx={{
-          //                   display: "flex",
-          //                   alignItems: "center",
-          //                 }}
-          //                 disabled={check}
-          //               >
-          //                 <ListItemIcon>
-          //                   <Delete sx={{ fontSize: "2rem" }} />
-          //                 </ListItemIcon>
-
-          //                 <ListItemText sx={{ fontSize: "3rem" }}>
-          //                   {isLoading || deleting ? "Deleting" : "Delete"}
-          //                 </ListItemText>
-          //               </MenuItem>
-          //             )}
-          //             {!check && (
-          //               <MenuItem
-          //                 onClick={handleEditComment}
-          //                 sx={{
-          //                   display: "flex",
-          //                   alignItems: "center",
-          //                 }}
-          //                 disabled={check}
-          //               >
-          //                 <ListItemIcon>
-          //                   <Edit sx={{ fontSize: "2rem" }} />
-          //                 </ListItemIcon>
-
-          //                 <ListItemText sx={{ fontSize: "3rem" }}>
-          //                   Edit
-          //                 </ListItemText>
-          //               </MenuItem>
-          //             )}
-          //             {check && !admin && (
-          //               <MenuItem
-          //                 sx={{
-          //                   display: "flex",
-          //                   alignItems: "center",
-          //                 }}
-          //                 onClick={(e) => {
-          //                   setOpenReport(true);
-          //                   handleCloses(e);
-          //                 }}
-          //               >
-          //                 <ListItemIcon>
-          //                   <ReportOutlined sx={{ fontSize: "2rem" }} />
-          //                 </ListItemIcon>
-          //                 <ListItemText>Report</ListItemText>
-          //               </MenuItem>
-          //             )}
-          //             {check && (
-          //               <MenuItem
-          //                 sx={{
-          //                   display: "flex",
-          //                   alignItems: "center",
-          //                 }}
-          //                 onClick={handleBlockUser}
-          //               >
-          //                 <ListItemIcon>
-          //                   <BlockOutlined sx={{ fontSize: "2rem" }} />
-          //                 </ListItemIcon>
-          //                 <ListItemText>
-          //                   {blocking
-          //                     ? "Blocking..."
-          //                     : unblocking
-          //                     ? "Unblocking..."
-          //                     : `${
-          //                         is_blocked_by_me ? "Unblock" : "Block"
-          //                       } User`}
-          //                 </ListItemText>
-          //               </MenuItem>
-          //             )}
-          //             {check && (
-          //               <MenuItem
-          //                 sx={{
-          //                   display: "flex",
-          //                   alignItems: "center",
-          //                 }}
-          //                 onClick={handleFollowUser}
-          //               >
-          //                 <ListItemIcon>
-          //                   <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
-          //                 </ListItemIcon>
-          //                 <ListItemText>
-          //                   {following
-          //                     ? "Following"
-          //                     : `${is_followed ? "Unfollow" : "Follow"} User`}
-          //                 </ListItemText>
-          //               </MenuItem>
-          //             )}
-          //           </Menu>
-          //         </Grid>
-          //       )}
-          //     </Grid>
-          //   </Grid>
-          //   <Grid item container flexDirection={"column"} flexWrap="nowrap">
-          //     <div className="ql-text">{parse(x(comment || body))}</div>
-          //     <Grid item container sx={{ p: { xs: "1rem" } }}>
-          //       {media?.length >= 2 ? (
-          //         <MasonryImageList
-          //           itemData={media?.slice(
-          //             0,
-          //             media.length > 4 ? 3 : media.length
-          //           )}
-          //         />
-          //       ) : media?.length === 1 && media[0]?.type === "image" ? (
-          //         <Avatar
-          //           src={getImage(media[0]?.storage_path)}
-          //           sx={{
-          //             width: "100%",
-          //             height: "auto",
-          //             objectFit: "cover",
-          //             // maxHeight: "0rem",
-          //           }}
-          //           // alt={category}
-          //           variant="square"
-          //         />
-          //       ) : media?.length === 1 && media[0]?.type === "video" ? (
-          //         // <div className="player-wrapper">
-          //         <ReactPlayer
-          //           url={getImage(media[0]?.storage_path)}
-          //           controls={true}
-          //           volume={0.6}
-          //           width="100%"
-          //           height="auto"
-          //           // className="react-player"
-          //           // style={{ maxheight: "10rem" }}
-          //         />
-          //       ) : null}
-          //     </Grid>
-          //     {/* <MasonryImageList itemData={media} /> */}
-          //   </Grid>
-          // </Grid>
           <Grid item container alignItems={"center"} flexWrap={"nowrap"}>
             <Grid item>
               <Grid item alignItems={"center"} container flexWrap={"nowrap"}>
@@ -926,9 +782,6 @@ export function Text({ item, profile, displayDetail, type }) {
             </Grid>
           </Grid>
         }
-        // secondary={
-        //   !displayDetail || type === "quote" ? null : <Detail item={item} />
-        // }
       />
       <NotificationModal
         isOpen={openReport}

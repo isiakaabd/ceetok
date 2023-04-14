@@ -39,12 +39,23 @@ import * as Yup from "yup";
 import NotificationModal from "components/modals/NotificationModal";
 import { useReportPostMutation } from "redux/slices/postSlice";
 import EditModal from "./EditPost";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import ReactPlayer from "react-player";
 const validationSchema = Yup.object({
   body: Yup.string().required("Required"),
 });
 const Replies = ({ item }) => {
-  let { id, createdAt, edited, comment, updatedAt, parent, user, user_id } =
-    item;
+  let {
+    id,
+    createdAt,
+    edited,
+    comment,
+    media,
+    updatedAt,
+    parent,
+    user,
+    user_id,
+  } = item;
   // console.log(item, "pare");
   const [anchorEl, setAnchorEl] = useState(null);
   const [getProfile, { data: profile }] = useLazyUserProfileQuery();
@@ -318,6 +329,68 @@ const Replies = ({ item }) => {
               >
                 {parse(comment || "somethig wrog")}
               </Typography>
+              {media.length > 0 && (
+                <Grid
+                  item
+                  container
+                  sx={{
+                    p: { xs: "1rem" },
+                    height: "100%",
+                  }}
+                >
+                  {media[0]?.type === "image" ? (
+                    <PhotoProvider>
+                      <div className="foo" style={{ width: "100%" }}>
+                        {media.map((item, index) => (
+                          <PhotoView
+                            key={index}
+                            width="100%"
+                            src={getImage(media[index]?.storage_path)}
+                          >
+                            <img
+                              src={getImage(media[index]?.storage_path)}
+                              alt=""
+                              style={{
+                                maxHeight: "100%",
+                                objectFit: "cover",
+                                height: "15rem",
+                                marginRight: "1rem",
+                                width: "15rem",
+                              }}
+                            />
+                          </PhotoView>
+                        ))}
+                      </div>
+                    </PhotoProvider>
+                  ) : // <MasonryImageList
+                  //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+                  // />
+                  // media?.length === 1 && media[0]?.type === "image" ? (
+                  //   <Avatar
+                  //     src={getImage(media[0]?.storage_path)}
+                  //     sx={{
+                  //       width: "100%",
+                  //       height: "100%",
+                  //       objectFit: "cover",
+                  //       // maxHeight: "0rem",
+                  //     }}
+                  //     variant="square"
+                  //   />
+                  // )
+                  media[0]?.type === "video" ? (
+                    // <div className="player-wrapper">
+                    <ReactPlayer
+                      url={getImage(media[0]?.storage_path)}
+                      controls={true}
+                      volume={0.6}
+                      width="30rem"
+                      height="30rem"
+                      // className="react-player"
+                      style={{ aspectRatio: 1 }}
+                    />
+                  ) : null}
+                </Grid>
+              )}
 
               <ListItemButton
                 disableRipple

@@ -13,11 +13,11 @@ import { CustomButton } from "components";
 import { toast } from "react-toastify";
 
 const validationSchema = Yup.object({
-  title: Yup.string().required("Required"),
+  title: Yup.string(),
   occupation: Yup.string(),
   location: Yup.string(),
   contact: Yup.string(),
-  web: Yup.string().url("must be a valid URL").required("Required"),
+  web: Yup.string().url("must be a valid URL"),
 });
 const ProfileSetting = (props) => {
   const CustomSubTypography = styled(({ text, ...rest }) => (
@@ -160,31 +160,6 @@ const ProfileSetting = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              {/* <Grid item container>
-                <Grid item xs={3} display={{ md: "block", xs: "none" }}>
-                  <CustomSubTypography
-                    fontSize={{ xs: "1.4rem" }}
-                    text="Contact"
-                  />
-                </Grid>
-                <Grid item md={8} xs={12}>
-                  <Grid
-                    item
-                    container
-                    gap={2}
-                    flexWrap="nowrap"
-                    justifyContent="space-between"
-                  >
-                    <Grid item container>
-                      <FormikControl
-                        name="contact"
-                        placeholder="Contact"
-                        control="input"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid> */}
 
               <Grid item container>
                 <Grid item xs={3} display={{ md: "block", xs: "none" }}>

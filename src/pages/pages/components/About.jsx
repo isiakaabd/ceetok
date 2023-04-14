@@ -41,7 +41,7 @@ const About = () => {
               >
                 DOB:
                 <Typography sx={{ ml: 1 }} variant="span">
-                  {getDate(dob) || "No Data yet"}
+                  {dob ? getDate(dob) : "No Data yet"}
                 </Typography>
               </Typography>
               <Typography

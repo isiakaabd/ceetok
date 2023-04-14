@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useQuill } from "react-quilljs";
 import hljs from "highlight.js";
 import javascript from "highlight.js/lib/languages/javascript";
-
+import MagicUrl from "quill-magic-url";
 // import BlotFormatter from "quill-blot-formatter";
 // import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -19,7 +19,16 @@ import { toast } from "react-toastify";
 // });
 
 hljs.registerLanguage("javascript", javascript);
-const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
+const Editor = ({
+  theme,
+  name,
+  placeholder,
+  type,
+  value,
+  upload_id,
+  editPost,
+  editPostId,
+}) => {
   const modules = {
     toolbar: [
       ["bold", "italic", "underline"],
@@ -43,11 +52,41 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     syntax: {
       highlight: (text) => hljs.highlightAuto(text).value,
     },
+    magicUrl: true,
+    // link: {
+    //   // Add support for social links
+    //   target: "_blank",
+    //   attributes: {
+    //     rel: "noopener noreferrer",
+    //   },
+    //   custom: [
+    //     {
+    //       // Match Twitter links
+    //       selector: /^https?:\/\/(www\.)?twitter\.com\/.+\/status\/\d+\/?$/,
+    //       render: (url) => {
+    //         return { ops: [{ insert: url }] };
+    //       },
+    //     },
+    //     {
+    //       // Match Facebook links
+    //       selector: /^https?:\/\/(www\.)?facebook\.com\/.+\/posts\/\d+\/?$/,
+    //       render: (url) => {
+    //         return { ops: [{ insert: url }] };
+    //       },
+    //     },
+    //   ],
+    // },
+    // {
+    //   // Regex used to check URLs during typing
+    //   urlRegularExpression: /(https?:\/\/[\S]+)|(www.[\S]+)|(tel:[\S]+)/g,
+    //   // Regex used to check URLs on paste
+    //   globalRegularExpression: /(https?:\/\/|www\.|tel:)[\S]+/g,
+    // },
 
     // link: true,
   };
 
-  const { quill, quillRef } = useQuill({
+  const { quill, quillRef, Quill } = useQuill({
     theme,
     // formats
     formats: [
@@ -64,6 +103,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
       "strike",
       "sub",
       "align",
+      "link",
       "header",
       "strike",
       "super",
@@ -72,6 +112,7 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     modules,
     placeholder,
   });
+  console.log(quill);
   const token = useSelector((state) => state.auth.token);
   const { setFieldValue, errors, values } = useFormikContext();
 
@@ -79,6 +120,9 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
   const saveToServer = async (files) => {
     const form = new FormData();
     form.append("type", type);
+    if (editPost) {
+      form.append("post_id", editPostId);
+    }
     if (files.length === 1) {
       form.append("media", files[0]);
     } else {
@@ -104,10 +148,22 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
 
     // insertToEditor(res.uploadedImageUrl);
   };
-  const addLink = () => {
+  const addLink = (val) => {
     const url = window.prompt("Enter the URL");
-    quill.format("link", url, "user");
-    quill.formatText(quill.getSelection(), { link: url }, "user");
+    const ww = quill.format("link", url, "user");
+    console.log(url);
+    const urld = quill.format("link", true);
+    console.log(urld);
+    const range = quill.getSelection();
+    const text = quill.getText();
+    console.log(range.index, text);
+    quill.insertText(range.index, url, "link", true);
+    // quillRef.current
+    //   .getEditor()
+    //   .insertEmbed(range.index, "video", url, Quill.sources.USER);
+    quill.insertEmbed(10, "p", "https://quilljs.com/images/cloud.png");
+    // quill.insertEmbed(range.index, "link", url);
+    // quill.formatText(quill.getSelection(), "link", ww);
   };
 
   // Open Dialog to select Image File
@@ -144,6 +200,10 @@ const Editor = ({ theme, name, placeholder, type, value, upload_id }) => {
     }
     //eslint-disable-next-line
   }, [quill]);
+  if (Quill) {
+    // Install with 'yarn add quill-magic-url'
+    Quill.register("modules/magicUrl", MagicUrl);
+  }
 
   useEffect(() => {
     if (quill && value) {

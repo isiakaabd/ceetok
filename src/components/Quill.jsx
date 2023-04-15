@@ -112,7 +112,6 @@ const Editor = ({
     modules,
     placeholder,
   });
-  console.log(quill);
   const token = useSelector((state) => state.auth.token);
   const { setFieldValue, errors, values } = useFormikContext();
 
@@ -141,29 +140,30 @@ const Editor = ({
     })
       .then((res) => res.json())
       .then((data) => {
-        toast.success(data.message);
-        setFieldValue(upload_id, data.body.post_id);
+        if (data?.status === 200) {
+          toast.success(data.message);
+
+          setFieldValue(upload_id, data.body.post_id);
+        } else {
+          toast.error(data.message || "Something went wrong...Try again");
+        }
       })
-      .catch((err) => toast.error(err));
+      .catch((err) => toast.error(err.message));
 
     // insertToEditor(res.uploadedImageUrl);
   };
   const addLink = (val) => {
     const url = window.prompt("Enter the URL");
-    const ww = quill.format("link", url, "user");
-    console.log(url);
-    const urld = quill.format("link", true);
-    console.log(urld);
+
     const range = quill.getSelection();
-    const text = quill.getText();
-    console.log(range.index, text);
+    // const text = quill.getText();
     quill.insertText(range.index, url, "link", true);
     // quillRef.current
     //   .getEditor()
     //   .insertEmbed(range.index, "video", url, Quill.sources.USER);
-    quill.insertEmbed(10, "p", "https://quilljs.com/images/cloud.png");
-    // quill.insertEmbed(range.index, "link", url);
-    // quill.formatText(quill.getSelection(), "link", ww);
+    // quill.insertEmbed(10, "p", "https://quilljs.com/images/cloud.png");
+    // // quill.insertEmbed(range.index, "link", url);
+    // // quill.formatText(quill.getSelection(), "link", ww);
   };
 
   // Open Dialog to select Image File

@@ -50,7 +50,7 @@ export const postSlice = api.injectEndpoints({
         body: JSON.stringify(body),
       }),
       invalidatesTags: ["post"],
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     reportPost: builder.mutation({
       query: (body) => ({

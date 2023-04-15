@@ -844,13 +844,12 @@ Text.defaultProps = {
   displayDetail: true,
 };
 function Detail({ item, type }) {
-  const { id, quotes_count, quote, likes_count, comment, recent_comments } =
-    item;
+  const { id, quotes_count, quote, likes_count, recent_comments } = item;
   const token = useSelector((state) => state.auth.token);
   const [isLogin, setIsLogin] = useState(false);
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
   const [likePost] = useLikeAndUnlikePostMutation();
-  const [page] = useState(0);
+
   // const { data: repliedComment } = useGetPostCommentsQuery({
   //   type,
   //   parentId: id,
@@ -872,11 +871,6 @@ function Detail({ item, type }) {
   };
   const navigate = useNavigate();
   const [openQuoteModal, setOpenQuoteModal] = useState(false);
-  const [open, setOpen] = useState(false);
-  const handleToggle = (e) => {
-    e.stopPropagation();
-    setOpen(!open);
-  };
 
   return (
     <>

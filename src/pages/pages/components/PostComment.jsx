@@ -90,7 +90,7 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   //   disabled: !!error,
   //   rootMargin: "0px 0px 200px 0px",
   // });
-  console.log(approved);
+
   const admin = Boolean(useSelector((state) => state.auth.admin));
   // const targetRef = useRef(null);
   const navigate = useNavigate();
@@ -889,66 +889,66 @@ function AllComments({ id, profile, icons, recent_comments }) {
 //     </>
 //   );
 // }
-const Skeletons = () => {
-  return (
-    <Grid item container flexDirection="column" gap={2}>
-      {Array(3)
-        .fill(undefined)
-        .map((_, index) => (
-          <Grid item key={index} container flexWrap={"nowrap"} gap={1}>
-            <Grid item>
-              <Skeleton
-                sx={{ height: "5rem", width: "5rem" }}
-                animation="wave"
-                variant="circular"
-              />
-            </Grid>
-            <Grid item container gap={1} flexDirection={"column"}>
-              <Grid item>
-                <Skeleton
-                  sx={{ height: ".9rem", width: "100%" }}
-                  animation="wave"
-                  variant="text"
-                />
-              </Grid>
-              <Grid item>
-                <Skeleton
-                  sx={{ height: ".9rem", width: "100%" }}
-                  animation="wave"
-                  variant="text"
-                />
-              </Grid>
+// const Skeletons = () => {
+//   return (
+//     <Grid item container flexDirection="column" gap={2}>
+//       {Array(3)
+//         .fill(undefined)
+//         .map((_, index) => (
+//           <Grid item key={index} container flexWrap={"nowrap"} gap={1}>
+//             <Grid item>
+//               <Skeleton
+//                 sx={{ height: "5rem", width: "5rem" }}
+//                 animation="wave"
+//                 variant="circular"
+//               />
+//             </Grid>
+//             <Grid item container gap={1} flexDirection={"column"}>
+//               <Grid item>
+//                 <Skeleton
+//                   sx={{ height: ".9rem", width: "100%" }}
+//                   animation="wave"
+//                   variant="text"
+//                 />
+//               </Grid>
+//               <Grid item>
+//                 <Skeleton
+//                   sx={{ height: ".9rem", width: "100%" }}
+//                   animation="wave"
+//                   variant="text"
+//                 />
+//               </Grid>
 
-              <Grid
-                item
-                justifyContent="space-between"
-                container
-                flexWrap="nowrap"
-              >
-                {Array(3)
-                  .fill(undefined)
-                  .map((i, index) => (
-                    <Grid item container key={index} flexWrap={"nowrap"}>
-                      <Grid item>
-                        <Skeleton
-                          sx={{ height: ".8rem", width: ".9rem" }}
-                          animation="wave"
-                          variant="text"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Skeleton
-                          sx={{ height: ".8rem", width: ".9rem" }}
-                          animation="wave"
-                          variant="text"
-                        />
-                      </Grid>
-                    </Grid>
-                  ))}
-              </Grid>
-            </Grid>
-          </Grid>
-        ))}
-    </Grid>
-  );
-};
+//               <Grid
+//                 item
+//                 justifyContent="space-between"
+//                 container
+//                 flexWrap="nowrap"
+//               >
+//                 {Array(3)
+//                   .fill(undefined)
+//                   .map((i, index) => (
+//                     <Grid item container key={index} flexWrap={"nowrap"}>
+//                       <Grid item>
+//                         <Skeleton
+//                           sx={{ height: ".8rem", width: ".9rem" }}
+//                           animation="wave"
+//                           variant="text"
+//                         />
+//                       </Grid>
+//                       <Grid item>
+//                         <Skeleton
+//                           sx={{ height: ".8rem", width: ".9rem" }}
+//                           animation="wave"
+//                           variant="text"
+//                         />
+//                       </Grid>
+//                     </Grid>
+//                   ))}
+//               </Grid>
+//             </Grid>
+//           </Grid>
+//         ))}
+//     </Grid>
+//   );
+// };

@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Skeleton,
+  Avatar,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled, alpha } from "@mui/material/styles";
@@ -46,6 +47,8 @@ import { useValidateAnnoucementMutation } from "redux/slices/annoucementSlice";
 import { getImage } from "helpers";
 import { useApproveAnnoucementMutation } from "redux/slices/adminSlice";
 import Paginations from "components/modals/Paginations";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import ReactPlayer from "react-player";
 
 export const StyledMenu = styled((props) => (
   <Menu
@@ -115,7 +118,6 @@ const Shares = ({ data: item }) => {
     useValidateAnnoucementMutation();
   const check = profile?.id === user_id;
   const handleLikePost = async (e) => {
-    e.stopPropagation();
     const { error } = await likePost({
       parent_type: "announcements",
       parent_id: id,
@@ -131,39 +133,34 @@ const Shares = ({ data: item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
-    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   const handleCloses = (e) => {
-    e.stopPropagation();
     setAnchorEl(null);
   };
   const handleDeleteComment = async (e) => {
-    e.stopPropagation();
     const { data, error } = await deleteAnnoucement({ id });
 
     if (data) toast.success(data);
-    handleCloses(e);
+
     if (error) toast.error(error);
   };
   const handleApproval = async (e) => {
-    e.stopPropagation();
     const { data, error } = await approveAnnoucement({ id });
     if (data) {
       toast.success(data);
-      handleCloses();
+      handleCloses(e);
     }
     if (error) toast.success(error);
   };
 
   const validatePayment = async (e) => {
-    e.stopPropagation();
     const { data, error } = await validate({
       payment_id: item?.payment?.id,
     });
     if (data) toast.success(data);
     if (error) toast.error(error);
-    handleCloses();
+    handleCloses(e);
   };
   const [editModal, setEditModal] = useState(false);
   const [paymentModal, setPaymentModal] = useState(false);
@@ -214,7 +211,6 @@ const Shares = ({ data: item }) => {
           edge="start"
           size="small"
           onClick={(e) => {
-            e.stopPropagation();
             setOpenShareModal(true);
           }}
         >
@@ -281,7 +277,9 @@ const Shares = ({ data: item }) => {
           )}
           {(check || admin) && (
             <MenuItem
-              onClick={() => setEditModal(true)}
+              onClick={(e) => {
+                setEditModal(true);
+              }}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -349,10 +347,11 @@ const Shares = ({ data: item }) => {
       />
       <CreatePost
         open={editModal}
+        uploadType="annoucement"
         postHeading={"Edit Annoucment"}
-        handleClose={() => {
+        handleClose={(e) => {
           setEditModal(false);
-          handleCloses();
+          handleCloses(e);
         }}
         type="annoucement"
         initialValues={{
@@ -361,6 +360,8 @@ const Shares = ({ data: item }) => {
           title: title,
           duration: duration,
         }}
+        editPostBool={true}
+        editPostId={id}
       />
       <PaymentModal
         open={paymentModal}
@@ -540,7 +541,6 @@ const Announcement = () => {
                 <Grid
                   item
                   container
-                  onClick={() => navigate(`/user/annoucement/${slug}`)}
                   key={index}
                   flexWrap="nowrap"
                   sx={{
@@ -566,16 +566,81 @@ const Announcement = () => {
                     }}
                   >
                     <Grid item>
-                      <img
-                        src={
-                          media?.length > 0
-                            ? getImage(media[0]?.storage_path)
-                            : images.davido
-                        }
-                        // src={item.media>0? getImage() images.davido}
-                        style={{ width: "100%", height: "100%" }}
-                        alt="davido"
-                      />
+                      <Grid
+                        item
+                        container
+                        onClick={() => navigate(`/user/annoucement/${slug}`)}
+                        sx={{
+                          p: { xs: "1rem" },
+                          height: { md: "30rem", xs: "20rem" },
+                        }}
+                      >
+                        {media?.length >= 2 ? (
+                          <PhotoProvider>
+                            <div className="foo" style={{ width: "100%" }}>
+                              {media.map((item, index) => (
+                                <PhotoView
+                                  key={index}
+                                  width="100%"
+                                  src={getImage(media[index]?.storage_path)}
+                                >
+                                  <img
+                                    src={getImage(media[index]?.storage_path)}
+                                    alt=""
+                                    style={{
+                                      maxHeight: "100%",
+                                      objectFit: "cover",
+                                      height: "15rem",
+                                      marginRight: "1rem",
+                                      minWidth: "15rem",
+                                    }}
+                                  />
+                                </PhotoView>
+                              ))}
+                            </div>
+                          </PhotoProvider>
+                        ) : // <MasonryImageList
+                        //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+                        // />
+                        media?.length === 1 && media[0]?.type === "image" ? (
+                          <Avatar
+                            src={getImage(media[0]?.storage_path)}
+                            sx={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              // maxHeight: "0rem",
+                            }}
+                            alt={slug}
+                            variant="square"
+                          />
+                        ) : media?.length === 1 &&
+                          media[0]?.type === "video" ? (
+                          // <div className="player-wrapper">
+                          <ReactPlayer
+                            url={getImage(media[0]?.storage_path)}
+                            controls={true}
+                            volume={0.6}
+                            width="30rem"
+                            height="30rem"
+                            // className="react-player"
+                            style={{ aspectRatio: 1 }}
+                          />
+                        ) : (
+                          // </div>
+                          <Avatar
+                            src={images.defaults}
+                            sx={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              // maxHeight: "0rem",
+                            }}
+                            alt={slug}
+                            variant="square"
+                          />
+                        )}
+                      </Grid>
                     </Grid>
                     <Grid item sx={{ mt: 2 }}>
                       <Typography

@@ -23,7 +23,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import images from "assets";
 import Editor from "components/Quill";
-import { CustomButton } from "components";
+import { BackIcon, CustomButton } from "components";
 
 import {
   useLikeAndUnlikePostMutation,
@@ -46,6 +46,9 @@ import {
 } from "redux/slices/authSlice";
 import SingleComment from "./components/SingleComment";
 import { useSelector } from "react-redux";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import ReactPlayer from "react-player";
+import Error from "./components/Error";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -122,7 +125,7 @@ const SingleAnnoucement = () => {
   const { data: annoucements, isLoading: annoucementLoading } =
     useGetAnnoucementsQuery({ page });
 
-  const [followOrUnfollow] = useFollowUserMutation();
+  const [followOrUnfollow, { isLoading: following }] = useFollowUserMutation();
   const { data: views } = useGetViewsQuery({
     type: "announcements",
     parentId: data?.id,
@@ -136,7 +139,7 @@ const SingleAnnoucement = () => {
   const { data: profile } = useUserProfileQuery();
   if (isLoading || annoucementLoading)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
-  if (error) return <p>Soemthing went wrong...</p>;
+  if (error) return <Error />;
   const {
     body,
     media,
@@ -144,9 +147,10 @@ const SingleAnnoucement = () => {
     id: parent_id,
     user_id,
     recent_comments,
-    followed,
-    user: { avatar, full_name, username },
+
+    user: { avatar, full_name, username, is_followed: followed },
   } = data;
+  console.log(data);
   const handleFollow = async () => {
     const { data, error } = await followOrUnfollow({
       user_id,
@@ -195,9 +199,7 @@ const SingleAnnoucement = () => {
         >
           <Grid container item flexDirection="column" gap={3}>
             <Grid item container>
-              <IconButton onClick={() => navigate(-1)}>
-                <ArrowBack sx={{ fontSize: "3rem" }} />
-              </IconButton>
+              <BackIcon />
             </Grid>
 
             <Grid item>
@@ -228,9 +230,13 @@ const SingleAnnoucement = () => {
                     borderRadius={"0px"}
                     title={followed ? "Unfollow" : "Follow"}
                     width="8rem"
-                    sx={{ fontWeight: 400 }}
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { md: "1.4rem", xs: "1.2rem" },
+                    }}
                     height="3rem"
                     onClick={handleFollow}
+                    isSubmitting={following}
                     // width={"max-content"}
                   />
                 </Grid>
@@ -246,19 +252,50 @@ const SingleAnnoucement = () => {
               >
                 {title}
               </Typography>
-              <img
-                src={
-                  media?.length > 0
-                    ? getImage(media[0]?.storage_path)
-                    : images.adeleke
-                }
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  height: "60rem",
+              <Grid
+                item
+                container
+                sx={{
+                  p: { xs: "1rem" },
                 }}
-                alt={title}
-              />
+              >
+                {media[0]?.type === "image" ? (
+                  <PhotoProvider>
+                    <div className="foo" style={{ width: "100%" }}>
+                      {media.map((item, index) => (
+                        <PhotoView
+                          key={index}
+                          width="100%"
+                          src={getImage(item?.storage_path)}
+                        >
+                          <img
+                            src={getImage(item?.storage_path)}
+                            alt=""
+                            style={{
+                              maxHeight: "100%",
+                              objectFit: "cover",
+                              height: "15rem",
+                              marginRight: "1rem",
+                              minWidth: "15rem",
+                            }}
+                          />
+                        </PhotoView>
+                      ))}
+                    </div>
+                  </PhotoProvider>
+                ) : media[0]?.type === "video" ? (
+                  // <div className="player-wrapper">
+                  <ReactPlayer
+                    url={getImage(media[0]?.storage_path)}
+                    controls={true}
+                    volume={0.6}
+                    width="30rem"
+                    height="30rem"
+                    // className="react-player"
+                    style={{ aspectRatio: 1 }}
+                  />
+                ) : null}
+              </Grid>
               <Grid
                 color="#5F5C5C"
                 fontWeight={400}
@@ -428,7 +465,7 @@ const SingleAnnoucement = () => {
                 {annoucements?.announcements
                   ?.slice(0, 5)
                   ?.map((item, index) => {
-                    const { media, body } = item;
+                    const { media, body, slug } = item;
                     return (
                       <Grid
                         item
@@ -451,7 +488,7 @@ const SingleAnnoucement = () => {
                           }}
                         >
                           <Grid item>
-                            <img
+                            {/* <img
                               src={
                                 media?.length > 0
                                   ? getImage(media[0]?.storage_path)
@@ -460,7 +497,90 @@ const SingleAnnoucement = () => {
                               // src={item.media>0? getImage() images.davido}
                               style={{ width: "100%", height: "100%" }}
                               alt="davido"
-                            />
+                            /> */}
+
+                            <Grid
+                              item
+                              container
+                              sx={{
+                                p: { xs: "1rem" },
+                                height: { md: "30rem", xs: "20rem" },
+                              }}
+                            >
+                              {media?.length >= 2 ? (
+                                <PhotoProvider>
+                                  <div
+                                    className="foo"
+                                    style={{ width: "100%" }}
+                                  >
+                                    {media.map((item, index) => (
+                                      <PhotoView
+                                        key={index}
+                                        width="100%"
+                                        src={getImage(
+                                          media[index]?.storage_path
+                                        )}
+                                      >
+                                        <img
+                                          src={getImage(
+                                            media[index]?.storage_path
+                                          )}
+                                          alt=""
+                                          style={{
+                                            maxHeight: "100%",
+                                            objectFit: "cover",
+                                            height: "15rem",
+                                            marginRight: "1rem",
+                                            minWidth: "15rem",
+                                          }}
+                                        />
+                                      </PhotoView>
+                                    ))}
+                                  </div>
+                                </PhotoProvider>
+                              ) : // <MasonryImageList
+                              //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
+                              // />
+                              media?.length === 1 &&
+                                media[0]?.type === "image" ? (
+                                <Avatar
+                                  src={getImage(media[0]?.storage_path)}
+                                  sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    // maxHeight: "0rem",
+                                  }}
+                                  alt={slug}
+                                  variant="square"
+                                />
+                              ) : media?.length === 1 &&
+                                media[0]?.type === "video" ? (
+                                // <div className="player-wrapper">
+                                <ReactPlayer
+                                  url={getImage(media[0]?.storage_path)}
+                                  controls={true}
+                                  volume={0.6}
+                                  width="30rem"
+                                  height="30rem"
+                                  // className="react-player"
+                                  style={{ aspectRatio: 1 }}
+                                />
+                              ) : (
+                                // </div>
+                                <Avatar
+                                  src={images.defaults}
+                                  sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    // maxHeight: "0rem",
+                                  }}
+                                  alt={slug}
+                                  variant="square"
+                                />
+                              )}
+                            </Grid>
                           </Grid>
                           <Grid item sx={{ mt: 2 }}>
                             <Typography

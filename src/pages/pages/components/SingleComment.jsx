@@ -1207,13 +1207,24 @@ export function CreateQuoteModal({
   const [createQuote] = useCreateQuoteMutation();
   const [editQuote] = useEditQuoteMutation();
   const handleSubmit = async (values, { resetForm }) => {
-    const { data, error } = await createQuote({
-      body: values.text,
-      parent_id: id,
-      parent_type: type,
-    });
-    if (data) toast.success(data);
-    if (error) toast.error(error);
+    if (values.post_id) {
+      const { data, error } = await createQuote({
+        body: values.text,
+        parent_id: id,
+        parent_type: type,
+        post_id: values.post_id,
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+    } else {
+      const { data, error } = await createQuote({
+        body: values.text,
+        parent_id: id,
+        parent_type: type,
+      });
+      if (data) toast.success(data);
+      if (error) toast.error(error);
+    }
 
     setTimeout(() => resetForm(), 2000);
     setTimeout(() => handleClose(), 3000);
@@ -1227,7 +1238,7 @@ export function CreateQuoteModal({
     if (error) toast.error(error);
     setTimeout(() => handleClose(), 3000);
   };
-  const initial = { text: "" };
+  const initial = { text: "", post_id: "" };
   // const navigate = useNavigate();
   return (
     <NotificationModal isOpen={open} handleClose={handleClose}>
@@ -1274,7 +1285,7 @@ export function CreateQuoteModal({
           enableReinitialize
           validationSchema={validationSchema}
         >
-          {({ isSubmitting, initialValues }) => {
+          {({ isSubmitting, initialValues, values }) => {
             return (
               <Form>
                 <Grid item container gap={2}>
@@ -1283,11 +1294,12 @@ export function CreateQuoteModal({
                       name="text"
                       value={initialValues.text}
                       placeholder="Enter Quote here"
+                      type={"comments"}
+                      upload_id={"post_id"}
                     />
                   </Grid>
                   <Grid item>
                     <CustomButton
-                      // onClick={(e) => e.stopPropagation()}
                       isSubmitting={isSubmitting}
                       title="Add Quote"
                       type="submit"

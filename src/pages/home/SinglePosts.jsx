@@ -19,7 +19,6 @@ import images from "assets";
 const AllPosts = ({ post, showUser, index }) => {
   const { slug, user, media, title, category, views_count, updatedAt } = post;
   const { defaults } = images;
-  // const loginStatus = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 

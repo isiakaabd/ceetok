@@ -2,7 +2,6 @@ import {
   FavoriteBorderOutlined,
   Favorite,
   IosShareOutlined,
-  ReplyOutlined,
   ReportOutlined,
 } from "@mui/icons-material";
 import parse from "html-react-parser";
@@ -19,7 +18,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
 import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import images from "assets";
 import Editor from "components/Quill";
@@ -32,23 +31,29 @@ import {
 
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { usePostCommentMutation } from "redux/slices/commentSlice";
+import {
+  useGetPostCommentsQuery,
+  usePostCommentMutation,
+} from "redux/slices/commentSlice";
 
 import {
   useGetAnnoucementQuery,
   useGetAnnoucementsQuery,
 } from "redux/slices/annoucementSlice";
-import ArrowBack from "assets/svgs/ArrowBack";
+
 import { getImage } from "helpers";
 import {
   useFollowUserMutation,
   useUserProfileQuery,
 } from "redux/slices/authSlice";
-import SingleComment from "./components/SingleComment";
+import SingleComment, { CreateQuoteModal } from "./components/SingleComment";
 import { useSelector } from "react-redux";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import ReactPlayer from "react-player";
 import Error from "./components/Error";
+import Quotes from "assets/svgs/Quote";
+import Replies from "./components/Replies";
+import Paginations from "components/modals/Paginations";
 
 const StyledButton = styled(({ text, Icon, color, ...rest }) => (
   <Grid
@@ -79,7 +84,7 @@ const StyledButton = styled(({ text, Icon, color, ...rest }) => (
 }));
 const Details = ({ handleShare, data }) => {
   const liked = Boolean(data?.liked);
-
+  const [openQuoteModal, setOpenQuoteModal] = useState(false);
   const [likeAnnoucement] = useLikeAndUnlikePostMutation();
 
   const handleLikePost = async () => {
@@ -90,26 +95,38 @@ const Details = ({ handleShare, data }) => {
   };
 
   return (
-    <Grid item container justifyContent="space-between" flexWrap="nowrap">
-      <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
-        <StyledButton text="Reply" Icon={<ReplyOutlined />} />
-        <StyledButton
-          onClick={handleLikePost}
-          color={liked ? "#f00" : ""}
-          Icon={
-            liked ? (
-              <Favorite sx={{ fill: "#f00" }} />
-            ) : (
-              <FavoriteBorderOutlined />
-            )
-          }
-          text={data?.likes_count}
-        />
+    <>
+      <Grid item container justifyContent="space-between" flexWrap="nowrap">
+        <Grid item container flexWrap="nowrap" justifyContent={"space-between"}>
+          {/* <StyledButton Icon={<ChatBubbleOutline />} />{" "} */}
+          <StyledButton
+            onClick={() => setOpenQuoteModal(true)}
+            Icon={<Quotes style={{ color: "#5F5C5C" }} />}
+          />
+          <StyledButton
+            onClick={handleLikePost}
+            color={liked ? "#f00" : ""}
+            Icon={
+              liked ? (
+                <Favorite sx={{ fill: "#f00" }} />
+              ) : (
+                <FavoriteBorderOutlined />
+              )
+            }
+            text={data?.likes_count}
+          />
 
-        <StyledButton text="Share" Icon={<IosShareOutlined />} />
-        <StyledButton text="Report" Icon={<ReportOutlined />} />
+          <StyledButton text="Share" Icon={<IosShareOutlined />} />
+          <StyledButton text="Report" Icon={<ReportOutlined />} />
+        </Grid>
       </Grid>
-    </Grid>
+      <CreateQuoteModal
+        open={openQuoteModal}
+        handleClose={(e) => setOpenQuoteModal(false)}
+        item={data}
+        type="announcements"
+      />
+    </>
   );
 };
 const SingleAnnoucement = () => {
@@ -121,9 +138,9 @@ const SingleAnnoucement = () => {
   });
 
   const [postAComment, { isLoading: loading }] = usePostCommentMutation();
-  const [page] = useState(0);
+  const [page, setPage] = useState(1);
   const { data: annoucements, isLoading: annoucementLoading } =
-    useGetAnnoucementsQuery({ page });
+    useGetAnnoucementsQuery({ page: page - 1 });
 
   const [followOrUnfollow, { isLoading: following }] = useFollowUserMutation();
   const { data: views } = useGetViewsQuery({
@@ -134,12 +151,17 @@ const SingleAnnoucement = () => {
 
   // const [openShareModal, setOpenShareModal] = useState(false);
   // const handleShare = () => setOpenShareModal(true);
-
-  const navigate = useNavigate();
+  const { data: commentsArray, isLoading: load } = useGetPostCommentsQuery({
+    type: "announcements",
+    parentId: data?.id,
+    offset: page - 1,
+  });
+  // const navigate = useNavigate();
   const { data: profile } = useUserProfileQuery();
-  if (isLoading || annoucementLoading)
+  if (isLoading || annoucementLoading || load)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
   if (error) return <Error />;
+  const { total_pages, comments } = commentsArray;
   const {
     body,
     media,
@@ -148,15 +170,17 @@ const SingleAnnoucement = () => {
     user_id,
     recent_comments,
 
-    user: { avatar, full_name, username, is_followed: followed },
+    user: { avatar, full_name, id: userId, username, is_followed: followed },
   } = data;
-  console.log(data);
+  const check = user_id === userId;
+
   const handleFollow = async () => {
     const { data, error } = await followOrUnfollow({
       user_id,
     });
+
     if (data) toast.success(data);
-    if (error) toast.success(error);
+    if (error) toast.error(error.message);
   };
   const handleSubmit = async (values, onSubmitProps) => {
     const { data: dt, error } = await postAComment({
@@ -226,24 +250,26 @@ const SingleAnnoucement = () => {
                   >
                     @{username || "No Username yet"}
                   </Typography>
-                  <CustomButton
-                    borderRadius={"0px"}
-                    title={followed ? "Unfollow" : "Follow"}
-                    width="8rem"
-                    sx={{
-                      fontWeight: 600,
-                      fontSize: { md: "1.4rem", xs: "1.2rem" },
-                    }}
-                    height="3rem"
-                    onClick={handleFollow}
-                    isSubmitting={following}
-                    // width={"max-content"}
-                  />
+                  {!check && (
+                    <CustomButton
+                      borderRadius={"0px"}
+                      title={followed ? "Unfollow" : "Follow"}
+                      width="8rem"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: { md: "1.4rem", xs: "1.2rem" },
+                      }}
+                      height="3rem"
+                      onClick={handleFollow}
+                      isSubmitting={following}
+                      // width={"max-content"}
+                    />
+                  )}
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item container flexDirection="column" gap={3}>
+            <Grid item container flexDirection="column" gap={2}>
               <Typography
                 sx={{
                   color: "#464646",
@@ -329,9 +355,9 @@ const SingleAnnoucement = () => {
             >
               Comments
             </Typography>
-            {recent_comments?.length > 0 ? (
+            {comments?.length > 0 ? (
               <List sx={{ width: "100%" }} dense>
-                {recent_comments?.map((item) => (
+                {/* {comments?.map((item) => (
                   <SingleComment
                     // icons={icons}
                     key={item.id}
@@ -339,7 +365,19 @@ const SingleAnnoucement = () => {
                     type="annoucements"
                     profile={profile}
                   />
-                ))}
+                ))} */}
+                {recent_comments?.map((item) =>
+                  !item?.quote ? (
+                    <SingleComment
+                      // icons={icons}
+                      key={item.id}
+                      item={item}
+                      profile={profile}
+                    />
+                  ) : (
+                    <Replies item={item} annoucement={true} />
+                  )
+                )}
               </List>
             ) : (
               <Grid item container>
@@ -347,6 +385,12 @@ const SingleAnnoucement = () => {
               </Grid>
             )}
           </Grid>
+          {total_pages > 1 && (
+            <Grid item container justifyContent={"center"} my={2}>
+              <Paginations count={total_pages} page={page} setPage={setPage} />
+            </Grid>
+          )}
+
           <Grid
             sx={{
               mt: { md: 3, xs: 1.5 },
@@ -398,12 +442,7 @@ const SingleAnnoucement = () => {
             </Formik>
           </Grid>
           {token && (
-            <Grid
-              item
-              container
-              alignItems="center"
-              sx={{ mt: 2, paddingInline: { xs: "3rem", md: "6rem" } }}
-            >
+            <Grid item container alignItems="center" sx={{ mt: 2 }}>
               <Typography
                 variant="span"
                 color="#FF9B04"

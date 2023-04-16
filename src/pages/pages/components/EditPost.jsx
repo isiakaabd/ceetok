@@ -52,7 +52,12 @@ export default function EditModal({ open, item, handleClose, type }) {
               <Form>
                 <Grid item container flexDirection={"column"} gap={2}>
                   {/* <Grid item container> */}
-                  <Editor name="edit" value={initialValues.edit} />
+                  <Editor
+                    name="edit"
+                    value={initialValues.edit}
+                    type={type}
+                    upload_id={"upload_id"}
+                  />
                   {/* </Grid> */}
                   <CustomButton
                     title={`Edit ${

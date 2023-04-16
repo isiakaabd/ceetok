@@ -55,16 +55,11 @@ import {
   useGetPostCommentsQuery,
   // useLazyGetPostCommentsQuery,
 } from "redux/slices/commentSlice";
-import {
-  useGetPostQuotesQuery,
-  // useGetUserQuotesQuery,
-} from "redux/slices/quoteSlice";
-import MasonryImageList from "./ImageList";
+
 import NotificationModal from "components/modals/NotificationModal";
 import Editor from "components/Quill";
 import { CustomButton } from "components";
 import Paginations from "components/modals/Paginations";
-import Error from "./Error";
 import Replies from "./Replies";
 
 export const Comment = ({ handleShare, data, state, setState }) => {

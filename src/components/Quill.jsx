@@ -152,19 +152,6 @@ const Editor = ({
 
     // insertToEditor(res.uploadedImageUrl);
   };
-  const addLink = (val) => {
-    const url = window.prompt("Enter the URL");
-
-    const range = quill.getSelection();
-    // const text = quill.getText();
-    quill.insertText(range.index, url, "link", true);
-    // quillRef.current
-    //   .getEditor()
-    //   .insertEmbed(range.index, "video", url, Quill.sources.USER);
-    // quill.insertEmbed(10, "p", "https://quilljs.com/images/cloud.png");
-    // // quill.insertEmbed(range.index, "link", url);
-    // // quill.formatText(quill.getSelection(), "link", ww);
-  };
 
   // Open Dialog to select Image File
   const selectLocalImage = () => {
@@ -220,7 +207,7 @@ const Editor = ({
       // Add custom handler for Image Upload
       quill.getModule("toolbar").addHandler("image", selectLocalImage);
       quill.getModule("toolbar").addHandler("video", selectLocalVideo);
-      quill.getModule("toolbar").addHandler("link", addLink);
+      // quill.getModule("toolbar").addHandler("link", addLink);
     }
 
     //eslint-disable-next-line

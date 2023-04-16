@@ -44,7 +44,7 @@ import ReactPlayer from "react-player";
 const validationSchema = Yup.object({
   body: Yup.string().required("Required"),
 });
-const Replies = ({ item }) => {
+const Replies = ({ item, annoucement }) => {
   let {
     id,
     createdAt,
@@ -56,7 +56,7 @@ const Replies = ({ item }) => {
     user,
     user_id,
   } = item;
-  console.log(parent, "pare");
+  // console.log(parent, "pare");
   const [anchorEl, setAnchorEl] = useState(null);
   const [getProfile, { data: profile }] = useLazyUserProfileQuery();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
@@ -395,7 +395,12 @@ const Replies = ({ item }) => {
               <ListItemButton
                 disableRipple
                 disableTouchRipple
-                href={parent?.slug && `/post/${parent?.slug}`}
+                href={
+                  parent?.slug &&
+                  `/${annoucement ? "user/annoucement" : "post"}/${
+                    parent?.slug
+                  }`
+                }
               >
                 <Grid
                   item
@@ -435,19 +440,21 @@ const Replies = ({ item }) => {
                       </Typography>
                     </Grid>
                     {/* sds */}
-                    <Grid item container flexDirection="column" rowGap={2}>
-                      <Typography
-                        variant="p"
-                        fontWeight={500}
-                        noWrap
-                        sx={{
-                          maxWidth: { md: "90%", xs: "80%" },
-                          fontSize: { md: "1.8rem", xs: "1.4rem" },
-                        }}
-                        // className="likes-content"
-                      >
-                        {/* {parent?.title || parse(parent?.comment || "...")} */}
-                      </Typography>
+                    <Grid item container rowGap={2}>
+                      <Grid item width="100%">
+                        <Typography
+                          variant="h5"
+                          fontWeight={500}
+                          noWrap
+                          sx={{
+                            maxWidth: { md: "90%", xs: "80%" },
+                            fontSize: { md: "1.8rem", xs: "1.4rem" },
+                          }}
+                          // className="likes-content"
+                        >
+                          {parent?.title || parse(parent?.comment || "...")}
+                        </Typography>
+                      </Grid>
                       {parent?.media.length > 0 && (
                         <Grid
                           item
@@ -481,22 +488,7 @@ const Replies = ({ item }) => {
                                 ))}
                               </div>
                             </PhotoProvider>
-                          ) : // <MasonryImageList
-                          //   itemData={media?.slice(0, media.length > 4 ? 3 : media.length)}
-                          // />
-                          // media?.length === 1 && media[0]?.type === "image" ? (
-                          //   <Avatar
-                          //     src={getImage(media[0]?.storage_path)}
-                          //     sx={{
-                          //       width: "100%",
-                          //       height: "100%",
-                          //       objectFit: "cover",
-                          //       // maxHeight: "0rem",
-                          //     }}
-                          //     variant="square"
-                          //   />
-                          // )
-                          media[0]?.type === "video" ? (
+                          ) : media[0]?.type === "video" ? (
                             // <div className="player-wrapper">
                             <ReactPlayer
                               url={getImage(media[0]?.storage_path)}
@@ -559,6 +551,7 @@ const Replies = ({ item }) => {
         item={item}
         open={open}
         type={"quotes"}
+        annoucement={annoucement}
         handleClose={() => {
           handleCloses();
           setOpen(false);

@@ -529,14 +529,7 @@ const Announcement = () => {
             }}
           >
             {announcements?.map((item, index) => {
-              const {
-                payment,
-                slug,
-                approved,
-                media,
-
-                body,
-              } = item;
+              const { payment, slug, approved, media, body } = item;
               return (
                 <Grid
                   item

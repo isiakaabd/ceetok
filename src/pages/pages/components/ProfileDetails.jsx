@@ -109,7 +109,7 @@ const ProfileDetails = (props) => {
   const [listNumber, setListNumber] = useState(5);
 
   if (isLoading || usersLoading || load) return <Skeletons />;
-  if (error || err || isError) return <Error />;
+  if (error || err || isError) return <Error error={error || err || isError} />;
   const { users } = data;
   const condition = !id || dt?.id === userProfile?.id;
   const list = users;

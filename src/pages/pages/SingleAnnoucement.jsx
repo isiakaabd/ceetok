@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Formik, Form } from "formik/dist";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import images from "assets";
@@ -42,10 +42,7 @@ import {
 } from "redux/slices/annoucementSlice";
 
 import { getImage } from "helpers";
-import {
-  useFollowUserMutation,
-  useUserProfileQuery,
-} from "redux/slices/authSlice";
+import { useFollowUserMutation } from "redux/slices/authSlice";
 import SingleComment, { CreateQuoteModal } from "./components/SingleComment";
 import { useSelector } from "react-redux";
 import { PhotoProvider, PhotoView } from "react-photo-view";
@@ -156,8 +153,6 @@ const SingleAnnoucement = () => {
     parentId: data?.id,
     offset: page - 1,
   });
-  // const navigate = useNavigate();
-  const { data: profile } = useUserProfileQuery();
   if (isLoading || annoucementLoading || load)
     return <Skeleton animation="wave" height="12rem" width="100%" />;
   if (error) return <Error />;
@@ -368,12 +363,7 @@ const SingleAnnoucement = () => {
                 ))} */}
                 {recent_comments?.map((item) =>
                   !item?.quote ? (
-                    <SingleComment
-                      // icons={icons}
-                      key={item.id}
-                      item={item}
-                      profile={profile}
-                    />
+                    <SingleComment key={item.id} item={item} />
                   ) : (
                     <Replies item={item} annoucement={true} />
                   )

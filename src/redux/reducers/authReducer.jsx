@@ -17,6 +17,7 @@ export const authSlice = createSlice({
       state.auth = true;
       localStorage.setItem("access_token", action.payload.auth.accessToken);
       localStorage.setItem("refresh_token", action.payload.auth.refreshToken);
+      localStorage.setItem("user_id", action.payload.id);
       state.user = action.payload;
       state.token = action.payload.auth.accessToken;
     },
@@ -24,6 +25,7 @@ export const authSlice = createSlice({
       state.auth = true;
       localStorage.setItem("access_token", action.payload.accessToken);
       localStorage.setItem("refresh_token", action.payload.refreshToken);
+
       state.user = action.payload;
       state.token = action.payload.accessToken;
     },

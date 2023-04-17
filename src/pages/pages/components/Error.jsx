@@ -1,11 +1,17 @@
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Grid, Typography } from "@mui/material";
 import images from "assets";
 const Error = ({ error }) => {
   return (
     <Grid item container justifyContent={"center"}>
-      <Grid item sx={{ height: "80vh" }}>
-        <Avatar src={images.err} sx={{ width: "100%", height: "100%" }} />
-      </Grid>
+      {error === "Unauthorized request" ? (
+        <Typography variant="h4" gutterBottom>
+          {error}
+        </Typography>
+      ) : (
+        <Grid item sx={{ height: "80vh" }}>
+          <Avatar src={images.err} sx={{ width: "100%", height: "100%" }} />
+        </Grid>
+      )}
     </Grid>
     // <Typography
     //   variant="h2"

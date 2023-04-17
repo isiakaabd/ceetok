@@ -42,7 +42,6 @@ import EditModal from "./EditPost";
 import {
   useBlockUserMutation,
   useFollowUserMutation,
-  useLazyUserProfileQuery,
   useUnBlockUserMutation,
 } from "redux/slices/authSlice";
 import Quotes from "assets/svgs/Quote";
@@ -57,7 +56,6 @@ import {
 } from "redux/slices/quoteSlice";
 import { useSelector } from "react-redux";
 import LoginModal from "components/modals/LoginModal";
-import { useEffect } from "react";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import ReactPlayer from "react-player";
 // import images from "assets";
@@ -110,19 +108,11 @@ const SingleComment = ({ item }) => {
   //   return messageWithMentions;
   // };
   const [anchorEl, setAnchorEl] = useState(null);
-  const [getProfile, { data: profile }] = useLazyUserProfileQuery();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
-  const { token, admin } = useSelector((state) => state.auth);
+  const {  admin } = useSelector((state) => state.auth);
 
   const [followUser, { isLoading: following }] = useFollowUserMutation();
-  // const  = item;
 
-  useEffect(() => {
-    if (token) {
-      getProfile();
-    }
-    //eslint-disable-next-line
-  }, [token]);
   const { is_followed, is_blocked_by_me } = user;
   const opens = Boolean(anchorEl);
 
@@ -138,7 +128,9 @@ const SingleComment = ({ item }) => {
     setAnchorEl(null);
   };
   const [report] = useReportPostMutation();
-  const check = profile?.id !== user_id;
+  const userId = localStorage.getItem("user_id");
+
+  const check = userId !== user_id;
   const handleDeleteComment = async (e) => {
     const { data, error } = await deleteComment({ id });
     if (data) toast.success("comment deleted successfully");

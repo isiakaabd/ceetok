@@ -31,7 +31,7 @@ import {
 } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { useDeleteCommentMutation } from "redux/slices/commentSlice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CustomButton } from "components";
 import Editor from "components/Quill";
 import { Form, Formik } from "formik/dist";
@@ -58,19 +58,12 @@ const Replies = ({ item, annoucement }) => {
   } = item;
   // console.log(parent, "pare");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [getProfile, { data: profile }] = useLazyUserProfileQuery();
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
-  const { token, admin } = useSelector((state) => state.auth);
+  const { admin } = useSelector((state) => state.auth);
   const [report] = useReportPostMutation();
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   // const  = item;
 
-  useEffect(() => {
-    if (token) {
-      getProfile();
-    }
-    //eslint-disable-next-line
-  }, [token]);
   const { is_followed, is_blocked_by_me } = user;
   const opens = Boolean(anchorEl);
 
@@ -81,11 +74,11 @@ const Replies = ({ item, annoucement }) => {
     e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
-  const handleCloses = (e) => {
-    // e.stopPropagation();
+  const handleCloses = () => {
     setAnchorEl(null);
   };
-  const check = profile?.id !== user_id;
+  const userId = localStorage.getItem("user_id");
+  const check = user_id !== userId;
 
   const handleDeleteComment = async (e) => {
     const { data, error } = await deleteComment({ id });

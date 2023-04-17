@@ -37,7 +37,6 @@ import {
 } from "redux/slices/commentSlice";
 import { getImage, getTimeMoment } from "helpers";
 import NotificationModal from "components/modals/NotificationModal";
-import { useUserProfileQuery } from "redux/slices/authSlice";
 import ArrowBack from "assets/svgs/ArrowBack";
 import { useSelector } from "react-redux";
 import { useReportPostMutation } from "redux/slices/postSlice";
@@ -217,7 +216,7 @@ function Single({ comments }) {
       search: `?id=${id}`,
     });
   };
-  const { data: profile } = useUserProfileQuery();
+
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
   const [openReport, setOpenReport] = useState(false);
   const handleCloses = () => setAnchorEl(null);
@@ -238,7 +237,8 @@ function Single({ comments }) {
   };
   const [editComment, setEditComment] = useState(false);
   const [updateComment, { isLoading: submitting }] = useUpdateCommentMutation();
-  let check = profile?.id !== user_id;
+  const userId = localStorage.getItem("user_id");
+  let check = userId !== user_id;
 
   const handleSubmit = async (values) => {
     const { comment } = values;

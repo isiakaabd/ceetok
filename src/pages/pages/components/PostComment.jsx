@@ -51,10 +51,7 @@ import ReactPlayer from "react-player";
 import { useSelector } from "react-redux";
 // import useInfiniteScroll from "react-infinite-scroll-hook";
 import images from "assets";
-import {
-  useGetPostCommentsQuery,
-  // useLazyGetPostCommentsQuery,
-} from "redux/slices/commentSlice";
+import { useGetPostCommentsQuery } from "redux/slices/commentSlice";
 
 import NotificationModal from "components/modals/NotificationModal";
 import Editor from "components/Quill";

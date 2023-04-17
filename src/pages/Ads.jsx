@@ -35,7 +35,6 @@ import { toast } from "react-toastify";
 import SocialMedia from "components/modals/SocialMedia";
 import { useNavigate, useParams } from "react-router-dom";
 import PaymentModal from "components/modals/PaymentModal";
-import { useUserProfileQuery } from "redux/slices/authSlice";
 import { getImage } from "helpers";
 import { useViewAdQuery } from "redux/slices/adsSlice";
 
@@ -84,10 +83,10 @@ export const StyledMenu = styled((props) => (
 
 const Shares = ({ data: item }) => {
   const [likeState, setLikeState] = useState(Boolean(item?.liked));
-  const { data: profile } = useUserProfileQuery();
+  const user_id = localStorage.getItem("user_id");
+  const check = user_id === item?.user_id;
   const [openShareModal, setOpenShareModal] = useState(false);
   const [likePost] = useLikeAndUnlikePostMutation();
-  const check = profile?.id === item?.user_id;
 
   const handleLikePost = async () => {
     const { error } = await likePost({

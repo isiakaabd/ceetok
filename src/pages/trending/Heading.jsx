@@ -3,11 +3,17 @@ import { useGetPostQuery } from "redux/slices/postSlice";
 import parser from "html-react-parser";
 import { Link } from "react-router-dom";
 import { getImage } from "helpers";
+import Error from "pages/pages/components/Error";
 const Heading = () => {
-  const { data: array, isLoading } = useGetPostQuery({
+  const {
+    data: array,
+    isLoading,
+    error,
+  } = useGetPostQuery({
     category: "trending",
   });
   if (isLoading) return;
+  if (error) return <Error error={error} />;
   const { posts } = array;
   const post = posts?.at(0);
 

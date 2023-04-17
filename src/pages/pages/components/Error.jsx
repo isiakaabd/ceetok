@@ -4,7 +4,7 @@ const Error = ({ error }) => {
   return (
     <Grid item container justifyContent={"center"}>
       {error === "Unauthorized request" ? (
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom py={3}>
           {error}
         </Typography>
       ) : (

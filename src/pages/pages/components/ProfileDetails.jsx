@@ -83,14 +83,6 @@ const ProfileDetails = (props) => {
     // following: admin ? false : true,
   }); //
 
-  // {
-  //   followers: true,
-  // }
-  //   const handleSubmit=async()=>{
-  // listUser({
-
-  // })
-
   useEffect(() => {
     if (id) {
       async function x() {

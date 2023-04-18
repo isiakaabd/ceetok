@@ -127,13 +127,14 @@ const UserAccount = () => {
             <Typography
               variant="h5"
               fontWeight={700}
+              noWrap
               color="#9B9A9A"
               fontSize={{ md: "2rem", xs: "1.4rem", sm: "1.8rem" }}
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                maxWidth: { xs: "12ch", sm: "100%" },
+                maxWidth: { xs: "12ch" },
               }}
             >
               {full_name || userProfile?.full_name}

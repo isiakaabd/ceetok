@@ -2,8 +2,10 @@ import { Grid, Skeleton, Typography } from "@mui/material";
 import Error from "pages/pages/components/Error";
 import { useGetStatsQuery } from "redux/slices/authSlice";
 
-const OnlineActivity = () => {
-  const { data, isLoading, error } = useGetStatsQuery();
+const OnlineActivity = (x) => {
+  const { data, isLoading, error } = useGetStatsQuery(x, {
+    pollingInterval: 10800,
+  });
 
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;

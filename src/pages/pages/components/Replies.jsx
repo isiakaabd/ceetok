@@ -17,7 +17,6 @@ import {
 import {
   useBlockUserMutation,
   useFollowUserMutation,
-  useLazyUserProfileQuery,
   useUnBlockUserMutation,
 } from "redux/slices/authSlice";
 import { getImage, getTimeMoment } from "helpers";
@@ -543,7 +542,10 @@ const Replies = ({ item, annoucement }) => {
       <EditModal
         item={item}
         open={open}
-        type={"quotes"}
+        types={"quotes"}
+        type={"comments"}
+        editPostBool={true}
+        editPostId={id}
         annoucement={annoucement}
         handleClose={() => {
           handleCloses();

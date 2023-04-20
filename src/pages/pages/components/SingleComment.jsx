@@ -99,7 +99,6 @@ const SingleComment = ({ item }) => {
     // recent_comments,
     user_id,
   } = item;
-  // console.log(item);
   // const x = (message) => {
   //   const messageWithMentions = message.replace(
   //     /@\w+/g,
@@ -109,7 +108,7 @@ const SingleComment = ({ item }) => {
   // };
   const [anchorEl, setAnchorEl] = useState(null);
   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
-  const {  admin } = useSelector((state) => state.auth);
+  const { admin } = useSelector((state) => state.auth);
 
   const [followUser, { isLoading: following }] = useFollowUserMutation();
 
@@ -141,7 +140,7 @@ const SingleComment = ({ item }) => {
     handleCloses(e);
   };
   const [open, setOpen] = useState(false);
-  const handleEditComment = (e) => setOpen(true);
+  const handleEditComment = () => setOpen(true);
 
   const [openReport, setOpenReport] = useState(false);
   const handleBlockUser = async (e) => {
@@ -457,6 +456,9 @@ const SingleComment = ({ item }) => {
         item={item}
         open={open}
         type={"comments"}
+        types={"comments"}
+        editPostBool={true}
+        editPostId={id}
         handleClose={(e) => {
           handleCloses(e);
           setOpen(false);
@@ -816,6 +818,7 @@ export function Text({ item, profile, displayDetail, type }) {
         item={item}
         open={open}
         type={type}
+        types={"comments"}
         handleClose={() => {
           handleCloses();
           setOpen(false);
@@ -1306,242 +1309,242 @@ export function CreateQuoteModal({
     </NotificationModal>
   );
 }
-function TextQuote({ item, profile }) {
-  const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
-    item;
-  const { full_name } = user;
+// function TextQuote({ item, profile }) {
+//   const { user, comment, createdAt, updatedAt, body, edited, user_id, id } =
+//     item;
+//   const { full_name } = user;
 
-  const [deleteQuote, { isLoading }] = useDeleteQuoteMutation();
-  const [followUser, { isLoading: following }] = useFollowUserMutation();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
-  const handleCloses = (e) => {
-    setAnchorEl(null);
-  };
+//   const [deleteQuote, { isLoading }] = useDeleteQuoteMutation();
+//   const [followUser, { isLoading: following }] = useFollowUserMutation();
+//   const [anchorEl, setAnchorEl] = useState(null);
+//   const [blockUser, { isLoading: blocking }] = useBlockUserMutation();
+//   const handleCloses = (e) => {
+//     setAnchorEl(null);
+//   };
 
-  const opens = Boolean(anchorEl);
-  const handleClick = (e) => {
-    e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-  };
-  const check = profile?.id === user_id;
+//   const opens = Boolean(anchorEl);
+//   const handleClick = (e) => {
+//     e.stopPropagation();
+//     setAnchorEl(e.currentTarget);
+//   };
+//   const check = profile?.id === user_id;
 
-  const handleDeleteQuote = async (e) => {
-    e.stopPropagation();
-    const { data, error } = await deleteQuote({ id });
-    if (data) toast.success("comment deleted successfully");
-    if (error) toast.error(error);
+//   const handleDeleteQuote = async (e) => {
+//     e.stopPropagation();
+//     const { data, error } = await deleteQuote({ id });
+//     if (data) toast.success("comment deleted successfully");
+//     if (error) toast.error(error);
 
-    handleCloses(e);
-  };
-  const [open, setOpen] = useState(false);
-  const handleEditQuote = (e) => {
-    e.stopPropagation();
+//     handleCloses(e);
+//   };
+//   const [open, setOpen] = useState(false);
+//   const handleEditQuote = (e) => {
+//     e.stopPropagation();
 
-    setOpen(true);
-  };
-  const handleReportUser = (e) => {
-    e.stopPropagation();
-  };
-  const handleBlockUser = async (e) => {
-    // e.stopPropagation();
-    const { data, error } = await blockUser({
-      user_id,
-    });
-    if (data) {
-      toast.success(data);
-      setTimeout(() => handleCloses(e), 3000);
-    }
-    if (error) toast.success(error);
-  };
-  const handleFollowUser = async (e) => {
-    // e.stopPropagation();
-    const { data, error } = await followUser({
-      user_id,
-    });
-    if (data) {
-      toast.success(data);
-      setTimeout(() => handleCloses(e), 3000);
-    }
-    if (error) toast.success(error);
-  };
+//     setOpen(true);
+//   };
+//   const handleReportUser = (e) => {
+//     e.stopPropagation();
+//   };
+//   const handleBlockUser = async (e) => {
+//     // e.stopPropagation();
+//     const { data, error } = await blockUser({
+//       user_id,
+//     });
+//     if (data) {
+//       toast.success(data);
+//       setTimeout(() => handleCloses(e), 3000);
+//     }
+//     if (error) toast.success(error);
+//   };
+//   const handleFollowUser = async (e) => {
+//     // e.stopPropagation();
+//     const { data, error } = await followUser({
+//       user_id,
+//     });
+//     if (data) {
+//       toast.success(data);
+//       setTimeout(() => handleCloses(e), 3000);
+//     }
+//     if (error) toast.success(error);
+//   };
 
-  return (
-    <>
-      <ListItemText
-        primary={
-          <Grid item container flexDirection="column" alignItems="center">
-            <Grid
-              item
-              container
-              justifyContent={"space-between"}
-              flexWrap="nowrap"
-              sx={{ overflow: "hidden" }}
-            >
-              <Grid item container alignItems="center" flexWrap="nowrap">
-                <Typography
-                  fontWeight={700}
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    // flex: 0.5,
-                  }}
-                >
-                  {full_name}
-                </Typography>
-                <Typography
-                  fontWeight={500}
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "visible",
-                    ml: ".4rem",
-                  }}
-                >
-                  {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
-                </Typography>
-                {edited && (
-                  <Typography
-                    fontWeight={700}
-                    color="success"
-                    fontSize={{ md: "1.2rem", xs: "1rem" }}
-                    sx={{
-                      ml: ".4rem",
-                      alignSelf: "center",
-                      color: "#37D42A",
-                      whiteSpace: "nowrap",
-                      overflow: "visible",
-                    }}
-                  >
-                    Edited
-                  </Typography>
-                )}
-                <Grid item sx={{ ml: "auto" }}>
-                  <IconButton
-                    edge="start"
-                    id="basic-button"
-                    aria-controls={opens ? "basic-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={opens ? "true" : undefined}
-                    onClick={handleClick}
-                    sx={{ ml: { xs: "1rem" } }}
-                    //  sx={{ visibility: !check && "hidden" }}
-                  >
-                    <MoreVertOutlined />
-                  </IconButton>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={opens}
-                    onClose={handleCloses}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                  >
-                    {!check && (
-                      <MenuItem
-                        onClick={handleDeleteQuote}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        disabled={check}
-                      >
-                        <ListItemIcon>
-                          <Delete sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
+//   return (
+//     <>
+//       <ListItemText
+//         primary={
+//           <Grid item container flexDirection="column" alignItems="center">
+//             <Grid
+//               item
+//               container
+//               justifyContent={"space-between"}
+//               flexWrap="nowrap"
+//               sx={{ overflow: "hidden" }}
+//             >
+//               <Grid item container alignItems="center" flexWrap="nowrap">
+//                 <Typography
+//                   fontWeight={700}
+//                   sx={{
+//                     whiteSpace: "nowrap",
+//                     overflow: "hidden",
+//                     textOverflow: "ellipsis",
+//                     // flex: 0.5,
+//                   }}
+//                 >
+//                   {full_name}
+//                 </Typography>
+//                 <Typography
+//                   fontWeight={500}
+//                   sx={{
+//                     whiteSpace: "nowrap",
+//                     overflow: "visible",
+//                     ml: ".4rem",
+//                   }}
+//                 >
+//                   {edited ? getTimeMoment(updatedAt) : getTimeMoment(createdAt)}
+//                 </Typography>
+//                 {edited && (
+//                   <Typography
+//                     fontWeight={700}
+//                     color="success"
+//                     fontSize={{ md: "1.2rem", xs: "1rem" }}
+//                     sx={{
+//                       ml: ".4rem",
+//                       alignSelf: "center",
+//                       color: "#37D42A",
+//                       whiteSpace: "nowrap",
+//                       overflow: "visible",
+//                     }}
+//                   >
+//                     Edited
+//                   </Typography>
+//                 )}
+//                 <Grid item sx={{ ml: "auto" }}>
+//                   <IconButton
+//                     edge="start"
+//                     id="basic-button"
+//                     aria-controls={opens ? "basic-menu" : undefined}
+//                     aria-haspopup="true"
+//                     aria-expanded={opens ? "true" : undefined}
+//                     onClick={handleClick}
+//                     sx={{ ml: { xs: "1rem" } }}
+//                     //  sx={{ visibility: !check && "hidden" }}
+//                   >
+//                     <MoreVertOutlined />
+//                   </IconButton>
+//                   <Menu
+//                     id="basic-menu"
+//                     anchorEl={anchorEl}
+//                     open={opens}
+//                     onClose={handleCloses}
+//                     MenuListProps={{
+//                       "aria-labelledby": "basic-button",
+//                     }}
+//                   >
+//                     {!check && (
+//                       <MenuItem
+//                         onClick={handleDeleteQuote}
+//                         sx={{
+//                           display: "flex",
+//                           alignItems: "center",
+//                         }}
+//                         disabled={check}
+//                       >
+//                         <ListItemIcon>
+//                           <Delete sx={{ fontSize: "2rem" }} />
+//                         </ListItemIcon>
 
-                        <ListItemText sx={{ fontSize: "3rem" }}>
-                          {isLoading ? "Deleting" : "Delete"}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {!check && (
-                      <MenuItem
-                        onClick={handleEditQuote}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        disabled={check}
-                      >
-                        <ListItemIcon>
-                          <Edit sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
+//                         <ListItemText sx={{ fontSize: "3rem" }}>
+//                           {isLoading ? "Deleting" : "Delete"}
+//                         </ListItemText>
+//                       </MenuItem>
+//                     )}
+//                     {!check && (
+//                       <MenuItem
+//                         onClick={handleEditQuote}
+//                         sx={{
+//                           display: "flex",
+//                           alignItems: "center",
+//                         }}
+//                         disabled={check}
+//                       >
+//                         <ListItemIcon>
+//                           <Edit sx={{ fontSize: "2rem" }} />
+//                         </ListItemIcon>
 
-                        <ListItemText sx={{ fontSize: "3rem" }}>
-                          Edit
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={handleReportUser}
-                      >
-                        <ListItemIcon>
-                          <ReportOutlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>Report</ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={handleBlockUser}
-                      >
-                        <ListItemIcon>
-                          <BlockOutlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>
-                          {blocking ? "Blocking" : "Block User"}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                    {check && (
-                      <MenuItem
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                        onClick={handleFollowUser}
-                      >
-                        <ListItemIcon>
-                          <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
-                        </ListItemIcon>
-                        <ListItemText>
-                          {following ? "Following" : "Follow User"}
-                        </ListItemText>
-                      </MenuItem>
-                    )}
-                  </Menu>
-                </Grid>
-              </Grid>
-            </Grid>
+//                         <ListItemText sx={{ fontSize: "3rem" }}>
+//                           Edit
+//                         </ListItemText>
+//                       </MenuItem>
+//                     )}
+//                     {check && (
+//                       <MenuItem
+//                         sx={{
+//                           display: "flex",
+//                           alignItems: "center",
+//                         }}
+//                         onClick={handleReportUser}
+//                       >
+//                         <ListItemIcon>
+//                           <ReportOutlined sx={{ fontSize: "2rem" }} />
+//                         </ListItemIcon>
+//                         <ListItemText>Report</ListItemText>
+//                       </MenuItem>
+//                     )}
+//                     {check && (
+//                       <MenuItem
+//                         sx={{
+//                           display: "flex",
+//                           alignItems: "center",
+//                         }}
+//                         onClick={handleBlockUser}
+//                       >
+//                         <ListItemIcon>
+//                           <BlockOutlined sx={{ fontSize: "2rem" }} />
+//                         </ListItemIcon>
+//                         <ListItemText>
+//                           {blocking ? "Blocking" : "Block User"}
+//                         </ListItemText>
+//                       </MenuItem>
+//                     )}
+//                     {check && (
+//                       <MenuItem
+//                         sx={{
+//                           display: "flex",
+//                           alignItems: "center",
+//                         }}
+//                         onClick={handleFollowUser}
+//                       >
+//                         <ListItemIcon>
+//                           <PersonAddAlt1Outlined sx={{ fontSize: "2rem" }} />
+//                         </ListItemIcon>
+//                         <ListItemText>
+//                           {following ? "Following" : "Follow User"}
+//                         </ListItemText>
+//                       </MenuItem>
+//                     )}
+//                   </Menu>
+//                 </Grid>
+//               </Grid>
+//             </Grid>
 
-            <div className="ql-text">{parse(comment || body)}</div>
-          </Grid>
-        }
-      />
+//             <div className="ql-text">{parse(comment || body)}</div>
+//           </Grid>
+//         }
+//       />
 
-      <CreateQuoteModal
-        open={open}
-        item={item}
-        type="edit"
-        initialValues={{ text: body }}
-        handleClose={(e) => {
-          handleCloses(e);
-          setOpen(false);
-        }}
-      />
-    </>
-  );
-}
+//       <CreateQuoteModal
+//         open={open}
+//         item={item}
+//         type="edit"
+//         initialValues={{ text: body }}
+//         handleClose={(e) => {
+//           handleCloses(e);
+//           setOpen(false);
+//         }}
+//       />
+//     </>
+//   );
+// }
 
 export default SingleComment;

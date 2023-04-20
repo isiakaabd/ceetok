@@ -32,7 +32,6 @@ import FormikControl from "validation/FormikControl";
 import UserProfile from "../UserProfile";
 import {
   useDeleteAPostMutation,
-  useEditAPostMutation,
   useLikeAndUnlikePostMutation,
   useReportPostMutation,
 } from "redux/slices/postSlice";
@@ -58,12 +57,14 @@ import Editor from "components/Quill";
 import { CustomButton } from "components";
 import Paginations from "components/modals/Paginations";
 import Replies from "./Replies";
+import { useApprovePostMutation } from "redux/slices/adminSlice";
 
 export const Comment = ({ handleShare, data, state, setState }) => {
-  const { id, category, user_id, body, media, title, approved } = data;
+  const { id, category, user_id, body, media, approved } = data;
 
   // recent_quotes, recent_comments,
-  const [editPost, { isLoading: approvalLoading }] = useEditAPostMutation();
+  const [approvePost, { isLoading: approvalLoading }] =
+    useApprovePostMutation();
   const [page, setPage] = useState(1);
   const { data: commentsArray, isLoading: load } = useGetPostCommentsQuery({
     parent_type: "posts",
@@ -163,17 +164,13 @@ export const Comment = ({ handleShare, data, state, setState }) => {
   };
   const handleApproveTopic = async (e) => {
     const details = {
-      title,
-      category: "front_page",
-      body,
       id,
     };
-    const { data: dt, error } = await editPost(details);
+    const { data: dt, error } = await approvePost(details);
 
     if (dt) {
       toast.success(dt);
       setTimeout(() => handleClose(), 3000);
-      navigate("/");
     }
     if (error) {
       toast.error(error);

@@ -7,29 +7,27 @@ import { Formik, Form } from "formik/dist";
 import Editor from "components/Quill";
 import { CustomButton } from "components";
 
-export default function EditModal({ open, item, handleClose, type }) {
+export default function EditModal({
+  open,
+  item,
+  handleClose,
+  type,
+  types,
+  editPostBool,
+  editPostId,
+}) {
   const [editComment] = useEditCommentMutation();
   const handleSubmit = async (values) => {
     const { id } = item;
     const { edit } = values;
 
-    if (type === "quotes") {
-      const { data, error } = await editComment({
-        comment: edit,
-        id,
-      });
-      if (data) toast.success(data);
-      if (error) toast.error(error);
-      setTimeout(() => handleClose(), 3000);
-    } else {
-      const { data, error } = await editComment({
-        comment: edit,
-        id: item?.id,
-      });
-      setTimeout(() => handleClose(), 500);
-      if (data) toast.success(data);
-      if (error) toast.error(error);
-    }
+    const { data, error } = await editComment({
+      comment: edit,
+      id,
+    });
+    if (data) toast.success(data);
+    if (error) toast.error(error);
+    setTimeout(() => handleClose(), 3000);
   };
   return (
     <NotificationModal isOpen={open} handleClose={handleClose}>
@@ -39,7 +37,7 @@ export default function EditModal({ open, item, handleClose, type }) {
           variant="h2"
         >
           {`Edit ${
-            type === "quotes" ? "Quote" : "comments" ? "Comment" : "Post"
+            types === "quotes" ? "Quote" : "comments" ? "Comment" : "Post"
           }`}
         </Typography>
         <Formik
@@ -56,12 +54,14 @@ export default function EditModal({ open, item, handleClose, type }) {
                     name="edit"
                     value={initialValues.edit}
                     type={type}
-                    upload_id={"upload_id"}
+                    upload_id={"post_id"}
+                    editPost={editPostBool}
+                    editPostId={editPostId}
                   />
                   {/* </Grid> */}
                   <CustomButton
                     title={`Edit ${
-                      type === "quotes"
+                      types === "quotes"
                         ? "Quote"
                         : "comments"
                         ? "Comment"

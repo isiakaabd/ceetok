@@ -68,7 +68,7 @@ const Message = () => {
       });
       socket.onmessage = ({ data }) => {
         const dat = JSON.parse(data);
-        console.log(dat);
+
         const { type, body, messages: mess } = dat;
 
         if (type === "messages") return setMessages(body?.messages?.reverse());

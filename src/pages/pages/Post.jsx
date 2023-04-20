@@ -22,7 +22,6 @@ import { usePostCommentMutation } from "redux/slices/commentSlice";
 import { Comment } from "./components/PostComment";
 import SocialMedia from "components/modals/SocialMedia";
 import Quotes from "assets/svgs/Quote";
-import { useCreateQuoteMutation } from "redux/slices/quoteSlice";
 import Error from "./components/Error";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -185,8 +184,6 @@ const Post = () => {
   const { data, isLoading, error } = useGetAPostQuery(postId);
   const [postAComment, { isLoading: loading, error: errs, data: dts }] =
     usePostCommentMutation();
-  const [createQuote, { error: quoteError, data: quoteData }] =
-    useCreateQuoteMutation();
 
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
@@ -197,12 +194,12 @@ const Post = () => {
   const [openShareModal, setOpenShareModal] = useState(false);
   const [changeCommentState, setChangeCommentState] = useState(true);
   useEffect(() => {
-    if (dts || quoteData) {
+    if (dts) {
       toast.success(dts);
-    } else if (errs || quoteError) {
-      toast.error(dts || "something went wrong, try again...");
+    } else if (errs) {
+      toast.error(errs || "something went wrong, try again...");
     }
-  }, [errs, quoteError, quoteData, dts]);
+  }, [errs, dts]);
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { recent_views, user_id, slug, body, category, user, title, media } =
@@ -228,22 +225,6 @@ const Post = () => {
       });
     }
 
-    // else {
-    //   if (upload_id) {
-    //     await createQuote({
-    //       body: comment,
-    //       parent_id: id,
-    //       parent_type: "posts",
-    //       id: upload_id,
-    //     });
-    //   } else {
-    //     await createQuote({
-    //       body: comment,
-    //       parent_id: id,
-    //       parent_type: "posts",
-    //     });
-    //   }
-    // }
     onSubmitProps.resetForm();
   };
   const baseUrl = process.env.REACT_APP_LIVE_LINK;

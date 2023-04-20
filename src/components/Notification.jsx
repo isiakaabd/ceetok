@@ -6,7 +6,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
@@ -26,7 +25,6 @@ import Error from "pages/pages/components/Error";
 import { getImage, getParent } from "helpers";
 import { useDeleteAPostMutation } from "redux/slices/postSlice";
 import { useDeleteCommentMutation } from "redux/slices/commentSlice";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import CustomButton from "./CustomButton";
 import Editor from "./Quill";
@@ -39,16 +37,12 @@ import {
 
 const Notification = () => {
   const [page, setPage] = useState(1);
-  const [yellowCard, { data: dts, error: errs }] = useYellowCardMutation();
-  const [ban, { isLoading: banning }] = useBanUsersMutation();
-  const [
-    deletePost,
-    { data: postData, error: postErr, isLoading: postLoading },
-  ] = useDeleteAPostMutation();
-  const [
-    deleteComment,
-    { data: commentData, isLoading: commentLoading, error: commentErr },
-  ] = useDeleteCommentMutation();
+  const [yellowCard, { data: dts }] = useYellowCardMutation();
+  const [ban] = useBanUsersMutation();
+  const [deletePost, { data: postData, isLoading: postLoading }] =
+    useDeleteAPostMutation();
+  const [deleteComment, { data: commentData, isLoading: commentLoading }] =
+    useDeleteCommentMutation();
   const { data, isLoading, error } = useGetNotificationsQuery({
     offset: page - 1,
   });
@@ -75,7 +69,7 @@ const Notification = () => {
   if (isLoading) return <Skeletons />;
   if (error) return <Error />;
   const { total_pages, notifications } = data;
-  console.log(data);
+
   const handleDeleteComment = (owner_type, owner_id) => {
     if (owner_type === "comments") {
       const { data, error } = deleteComment({
@@ -99,7 +93,6 @@ const Notification = () => {
       }
     }
   };
-  console.log(user, "user");
   const handleReport = async (values) => {
     const { data, error } = await yellowCard({
       user_id: user?.owner?.user_id,
@@ -166,7 +159,6 @@ const Notification = () => {
                       creator,
                       owner_id,
                     } = item;
-                    console.log(item);
                     return (
                       <ListItem
                         dense

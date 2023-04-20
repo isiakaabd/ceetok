@@ -40,7 +40,7 @@ export const commentSlice = api.injectEndpoints({
       // },
       providesTags: ["comment"],
       transformResponse: (response) => response.body,
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
     }),
     postComment: builder.mutation({
       query: (body) => ({
@@ -79,7 +79,7 @@ export const commentSlice = api.injectEndpoints({
         body,
       }),
       invalidatesTags: ["comment", "post", "quote"],
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
       transformResponse: (response) => response.message,
     }),
     getSingleComment: builder.query({
@@ -89,7 +89,7 @@ export const commentSlice = api.injectEndpoints({
       }),
       providesTags: ["comment", "post", "quote"],
 
-      transformErrorResponse: (error) => error.data.message,
+      transformErrorResponse: (error) => error.message,
       transformResponse: (response) => response.body.comment,
     }),
   }),

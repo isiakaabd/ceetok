@@ -188,29 +188,34 @@ const Post = () => {
   const [postAComment, { isLoading: loading, error: errs, data: dts }] =
     usePostCommentMutation();
 
-  useEffect(() => {
-    let interval = setInterval(async () => {
-      if (data.id) {
-        try {
-          let request = await fetch(`${process.env.REACT_APP_BASE_URL}/view/live-views?parent_type=posts&parent_id=${data.id}`)
-          let response = await request.json();
-          setViewers(response.body.views);
-        } catch (error) {
-          console.error(error);
-        }
+  const pullLiveViews = async ()=>{
+    if (data.id) {
+      try {
+        let request = await fetch(`${process.env.REACT_APP_BASE_URL}/view/live-views?parent_type=posts&parent_id=${data.id}`)
+        let response = await request.json();
+        setViewers(response.body.views);
+      } catch (error) {
+        console.error(error);
       }
+    }
+  }
+
+  useEffect(() => {
+    pullLiveViews();
+    let interval = setInterval(async () => {
+      await pullLiveViews();
     }, 10000);
     return () => { clearInterval(interval); }
 
   }, [data]);
 
-  useEffect(()=>{
+  useEffect(() => {
     let guestCount = 0;
     let members = [];
-    for(let i = 0; i < viewers.length; i++){
-      if(viewers[i].viewer.full_name){
+    for (let i = 0; i < viewers.length; i++) {
+      if (viewers[i].viewer.full_name) {
         members.push(viewers[i]);
-      }else{
+      } else {
         guestCount += 1;
       }
     }
@@ -442,7 +447,7 @@ const Post = () => {
                 </Typography>
                 <Grid item>
                   <Grid container>
-                    {viewers?.slice(0, 50).map((item, index) => (
+                    {memberViewers?.map((item, index) => (
                       <Typography
                         component={Link}
                         to={`/user/profile/?id=${item.viewer?.id}`}
@@ -455,23 +460,34 @@ const Post = () => {
                           fontWeight: 500,
                         }}
                       >
-                        {item.viewer.full_name},
+                        {item.viewer.full_name}{index == memberViewers.length - 1 ? null : ','}
                       </Typography>
                     ))}
-
-                    {viewers?.length > 50 ? (
-                      <Typography
-                        variant="span"
-                        color="#FF9B04"
-                        fontSize={{
-                          md: "1.8rem",
-                          xs: "1.5rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {`and ${viewers - 50}  guests`}
-                      </Typography>
+                    {memberViewers.length > 0 ? (
+                    <Typography
+                      variant="span"
+                      color="#FF9B04"
+                      fontSize={{
+                        md: "1.8rem",
+                        xs: "1.5rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      &nbsp;and&nbsp;
+                    </Typography>
                     ) : null}
+                    <Typography
+                      variant="span"
+                      color="#FF9B04"
+                      fontSize={{
+                        md: "1.8rem",
+                        xs: "1.5rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {`${guestViewersCount}  guests`}
+                    </Typography>
+
                   </Grid>
                 </Grid>
               </Grid>

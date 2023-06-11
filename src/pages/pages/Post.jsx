@@ -110,8 +110,8 @@ export const Details = ({
               type === "comments"
                 ? setOpen(true)
                 : type === "posts" || type === "live"
-                ? setState(true)
-                : null
+                  ? setState(true)
+                  : null
             }
             Icon={<ChatBubbleOutline sx={{ fill: state && "#0f0" }} />}
           />
@@ -182,8 +182,48 @@ const Post = () => {
   const [page, setPage] = useState(0);
   const token = useSelector((state) => state.auth.token);
   const { data, isLoading, error } = useGetAPostQuery(postId);
+  const [viewers, setViewers] = useState([]);
+  const [guestViewersCount, setGuestViewersCount] = useState(0);
+  const [memberViewers, setMemberViewers] = useState([]);
   const [postAComment, { isLoading: loading, error: errs, data: dts }] =
     usePostCommentMutation();
+
+  const pullLiveViews = async ()=>{
+    if (data.id) {
+      try {
+        let request = await fetch(`${process.env.REACT_APP_BASE_URL}/view/live-views?parent_type=posts&parent_id=${data.id}`)
+        let response = await request.json();
+        setViewers(response.body.views);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    pullLiveViews();
+    let interval = setInterval(async () => {
+      await pullLiveViews();
+    }, 10000);
+    return () => { clearInterval(interval); }
+
+  }, [data]);
+
+  useEffect(() => {
+    let guestCount = 0;
+    let members = [];
+    for (let i = 0; i < viewers.length; i++) {
+      if (viewers[i].viewer.full_name) {
+        members.push(viewers[i]);
+      } else {
+        guestCount += 1;
+      }
+    }
+
+    setGuestViewersCount(guestCount);
+    setMemberViewers([...members]);
+
+  }, [viewers]);
 
   const validationSchema = Yup.object({
     comment: Yup.string().required("Enter your Comment"),
@@ -204,6 +244,7 @@ const Post = () => {
   if (error) return <Error />;
   const { recent_views, user_id, slug, body, category, user, title, media } =
     data;
+
   const handleShare = () => setOpenShareModal(true);
 
   const handleSubmit = async (values, onSubmitProps) => {
@@ -233,7 +274,7 @@ const Post = () => {
     title: "Link",
   };
 
-  const viewers = recent_views?.filter((value) => value.viewer !== "guest");
+  // const viewers = recent_views?.filter((value) => value.viewer !== "guest");
 
   const tempElement = document.createElement("div");
   tempElement.innerHTML = body;
@@ -389,7 +430,7 @@ const Post = () => {
               </Formik>
             </Grid>
           )}
-          {state && token && viewers.length > 0 && (
+          {viewers.length > 0 ? (
             <Grid item md={7} xs={12}>
               <Grid
                 item
@@ -406,7 +447,7 @@ const Post = () => {
                 </Typography>
                 <Grid item>
                   <Grid container>
-                    {viewers?.slice(0, 50).map((item, index) => (
+                    {memberViewers?.map((item, index) => (
                       <Typography
                         component={Link}
                         to={`/user/profile/?id=${item.viewer?.id}`}
@@ -419,28 +460,39 @@ const Post = () => {
                           fontWeight: 500,
                         }}
                       >
-                        {item.viewer.full_name},
+                        {item.viewer.full_name}{index == memberViewers.length - 1 ? null : ','}
                       </Typography>
                     ))}
-
-                    {viewers?.length > 50 ? (
-                      <Typography
-                        variant="span"
-                        color="#FF9B04"
-                        fontSize={{
-                          md: "1.8rem",
-                          xs: "1.5rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {`and ${viewers - 50}  guests`}
-                      </Typography>
+                    {memberViewers.length > 0 ? (
+                    <Typography
+                      variant="span"
+                      color="#FF9B04"
+                      fontSize={{
+                        md: "1.8rem",
+                        xs: "1.5rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      &nbsp;and&nbsp;
+                    </Typography>
                     ) : null}
+                    <Typography
+                      variant="span"
+                      color="#FF9B04"
+                      fontSize={{
+                        md: "1.8rem",
+                        xs: "1.5rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {`${guestViewersCount}  guests`}
+                    </Typography>
+
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          )}
+          ) : null}
         </Grid>
       </Grid>
       <SocialMedia
